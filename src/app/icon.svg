@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0F172A" />
+      <stop offset="55%" stop-color="#1E293B" />
+      <stop offset="100%" stop-color="#0F766E" />
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="12" y1="14" x2="52" y2="50" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FBBF24" />
+      <stop offset="50%" stop-color="#F97316" />
+      <stop offset="100%" stop-color="#EA580C" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#bgGrad)" />
+  <rect x="2" y="2" width="60" height="60" rx="14" stroke="#FFFFFF" stroke-opacity="0.12" stroke-width="1.5" />
+  <!-- Railway & Flight Trajectory Arc -->
+  <path d="M14 46C21 31 32 22 50 16" stroke="url(#accentGrad)" stroke-width="4.5" stroke-linecap="round" />
+  <!-- Wing / Arrowhead -->
+  <path d="M38 15L51 15.5L46 27.5" stroke="url(#accentGrad)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- Sleek Rail Track Base -->
+  <path d="M16 49H46" stroke="#2DD4BF" stroke-width="3" stroke-linecap="round" />
+  <path d="M22 44H42" stroke="#2DD4BF" stroke-opacity="0.65" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="4 4" />
+  <!-- Departure Node -->
+  <circle cx="15" cy="45" r="4" fill="#FBBF24" />
+</svg>
+
