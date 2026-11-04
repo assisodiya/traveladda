@@ -1,14 +1,18 @@
+import Link from "next/link";
+
 const categories = [
   { id: "flight-tools", label: "BY AIR", title: "Flight tools", icon: "↗", description: "A smoother journey starts before takeoff.", tools: ["Baggage allowance guide", "Airport code finder", "Flight duration calculator"] },
   { id: "train-tools", label: "BY RAIL", title: "Train tools", icon: "↔", description: "A little clarity for every stop along the way.", tools: ["Train journey planner", "Station code finder", "Rail travel checklist"] },
 ];
 
-export default function Home() {
+export default async function Home() {
+  "use cache";
+
   return (
     <div className="min-h-screen bg-[#f8faf7] text-slate-900">
       <header className="border-b border-slate-200/80 bg-white">
         <nav aria-label="Main navigation" className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-6">
-          <a href="/" className="flex items-center gap-2 text-xl font-bold tracking-tight"><span className="grid size-9 place-items-center rounded-xl bg-emerald-800 text-white" aria-hidden="true">↗</span>Travel<span className="-ml-2 text-emerald-800">Adda</span></a>
+          <Link href="/" className="flex items-center gap-2 text-xl font-bold tracking-tight"><span className="grid size-9 place-items-center rounded-xl bg-emerald-800 text-white" aria-hidden="true">↗</span>Travel<span className="-ml-2 text-emerald-800">Adda</span></Link>
           <div className="flex gap-6 text-sm font-medium text-slate-600"><a className="hover:text-emerald-800" href="#flight-tools">Flight tools</a><a className="hover:text-emerald-800" href="#train-tools">Train tools</a><a className="hover:text-emerald-800" href="#about">About</a></div>
         </nav>
       </header>
