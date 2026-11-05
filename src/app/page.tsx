@@ -3,28 +3,37 @@ import Link from "next/link";
 import { HeroSearchWidget } from "@/components/HeroSearchWidget";
 import {
   ArrowRightIcon,
+  BedIcon,
   BookOpenIcon,
   CalculatorIcon,
-  CheckCircleIcon,
   ClockIcon,
+  CoachTrainIcon,
+  CompassIcon,
   HotelIcon,
   LuggageIcon,
+  MapPinIcon,
   PlaneIcon,
+  RadarLiveIcon,
+  RouteTrackIcon,
+  ShieldCheckIcon,
+  SparklesIcon,
   TicketIcon,
   TrainIcon,
+  UserCheckIcon,
 } from "@/components/Icons";
 import { RAIL_BLOG_POSTS } from "@/lib/blog-data";
 
 const SCENIC_CORRIDORS = [
   {
-    routeCode: "AWR → GADJ",
+    routeCode: "DEE → JP",
     title: "Rajasthan Double Decker Corridor",
-    trainTag: "Double Decker Express",
+    trainTag: "#12986 Double Decker Express",
     bestSeat: "Upper Deck CC · Window Side (WS)",
-    duration: "2h 15m Express",
+    duration: "4h 35m Superfast",
+    liveHref: "/rail/live-status?train=12986",
     routePill: "bg-orange-500/18 text-orange-800 dark:text-orange-300",
     description:
-      "Elevated double-decker AC Chair Car views across Aravalli hills into Gandhinagar Jaipur.",
+      "Elevated double-decker AC Chair Car views across Gurgaon, Alwar & Aravalli hills into Jaipur Jn.",
   },
   {
     routeCode: "CSMT → MAO",
@@ -32,6 +41,7 @@ const SCENIC_CORRIDORS = [
     trainTag: "Vistadome Jan Shatabdi",
     bestSeat: "Vistadome EV · Rotatable Glass Seat",
     duration: "8h 40m Scenic",
+    liveHref: "/rail/live-status",
     routePill: "bg-amber-500/20 text-amber-900 dark:text-amber-300",
     description:
       "2,000+ bridges, coastal estuaries, and misty Sahyadri viaducts along India's western coast.",
@@ -42,6 +52,7 @@ const SCENIC_CORRIDORS = [
     trainTag: "Vande Bharat Express",
     bestSeat: "Executive Chair Car (EC)",
     duration: "8h 00m Semi-High Speed",
+    liveHref: "/rail/live-status",
     routePill: "bg-yellow-500/20 text-amber-900 dark:text-yellow-300",
     description:
       "Aerodynamic reclining comfort from New Delhi straight into the Shivalik foothills.",
@@ -52,6 +63,7 @@ const SCENIC_CORRIDORS = [
     trainTag: "Shivalik Deluxe Express",
     bestSeat: "Right-Side Valley Window",
     duration: "4h 55m Mountain Gauge",
+    liveHref: "/rail/live-status",
     routePill: "bg-rose-500/18 text-rose-800 dark:text-rose-300",
     description:
       "102 historic mountain tunnels, pine forests, and stone arch bridges climbing to 2,076m.",
@@ -60,24 +72,28 @@ const SCENIC_CORRIDORS = [
 
 const PORTAL_HIGHLIGHTS = [
   {
-    stat: "Real-Time",
-    label: "Live Rail PNR Tracker",
-    detail: "Instant seat, coach & chart confirmation status",
+    stat: "Live Radar",
+    label: "PNR & Train Running",
+    detail: "Spot live stations, delays, coach order & PNR seats",
+    icon: <RadarLiveIcon className="h-5 w-5" />,
   },
   {
     stat: "17 Zones",
     label: "Pan-India Coverage",
-    detail: "Works for IRCTC e-tickets & PRS counter slips",
+    detail: "Works across Superfast, Vande Bharat & Express routes",
+    icon: <CompassIcon className="h-5 w-5" />,
   },
   {
     stat: "Air · Rail · Hotel",
     label: "Unified Travel Suite",
-    detail: "PNR status, baggage rules & GST stay calculators",
+    detail: "Live rail status, baggage rules & GST stay calculators",
+    icon: <SparklesIcon className="h-5 w-5" />,
   },
   {
     stat: "100% Clear",
-    label: "Coach & Berth Decoder",
-    detail: "Plain-English translation for CNF, RAC & WL",
+    label: "Coach & Rake Decoder",
+    detail: "Visual coach order from engine + CNF/RAC/WL decoder",
+    icon: <CoachTrainIcon className="h-5 w-5" />,
   },
 ];
 
@@ -92,8 +108,8 @@ export default async function Home() {
         <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 py-16 sm:px-6 md:py-24 lg:grid-cols-[1.08fr_1fr] lg:px-8">
           {/* Left Hero Pitch */}
           <div>
-            <div className="inline-flex items-center gap-2.5 rounded-full border border-orange-500/30 bg-orange-500/12 px-4 py-1.5 text-xs font-bold text-orange-700 dark:text-amber-300">
-              <span className="h-2 w-2 animate-pulse rounded-full bg-orange-500 dark:bg-amber-400" />
+            <div className="inline-flex items-center gap-2 rounded-full border border-orange-500/30 bg-orange-500/12 px-4 py-1.5 text-xs font-bold text-orange-700 dark:text-amber-300">
+              <SparklesIcon className="h-3.5 w-3.5" />
               <span>Air · Rail · Hotel Smart Travel Portal</span>
             </div>
 
@@ -106,9 +122,9 @@ export default async function Home() {
 
             <p className="mt-6 max-w-xl text-base leading-relaxed text-ink-soft sm:text-lg">
               Welcome to <strong className="font-bold text-ink">TravelAdda</strong>{" "}
-              — check live 10-digit Indian Railways PNR status, verify airline
-              baggage &amp; airport buffers, and calculate hotel stay tariffs in
-              one smooth, modern portal.
+              — check live 10-digit PNR status, track real-time train running
+              status &amp; coach positions, verify flight baggage, and estimate
+              hotel tariffs in one smooth portal.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-3.5">
@@ -121,26 +137,27 @@ export default async function Home() {
                 <ArrowRightIcon className="h-4 w-4" />
               </Link>
               <Link
-                href="#toolkit"
-                className="inline-flex items-center gap-2 rounded-2xl border border-line-strong bg-card px-5 py-3.5 text-sm font-bold text-ink shadow-2xs transition hover:bg-subcard"
+                href="/rail/live-status"
+                className="inline-flex items-center gap-2 rounded-2xl border border-line-strong bg-card px-5 py-3.5 text-sm font-extrabold text-ink shadow-2xs transition hover:border-orange-500 hover:bg-subcard"
               >
-                <span>Explore All Tools</span>
+                <RadarLiveIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
+                <span>Track Live Train</span>
               </Link>
             </div>
 
             {/* Aligned SVG Feature Strip */}
             <div className="mt-10 flex flex-wrap items-center gap-6 border-t border-line pt-6 text-xs font-semibold text-ink-soft">
               <div className="inline-flex items-center gap-2">
-                <CheckCircleIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
-                <span>Live Coach &amp; Seat Numbers</span>
+                <RadarLiveIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
+                <span>Live Train Station &amp; Delay</span>
               </div>
               <div className="inline-flex items-center gap-2">
-                <ClockIcon className="h-4 w-4 text-amber-600 dark:text-yellow-300" />
-                <span>Charting Status Updates</span>
+                <CoachTrainIcon className="h-4 w-4 text-amber-600 dark:text-yellow-300" />
+                <span>Coach Rake &amp; Seat Numbers</span>
               </div>
               <div className="inline-flex items-center gap-2">
-                <BookOpenIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
-                <span>Expert Travel Guides</span>
+                <ShieldCheckIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
+                <span>1st &amp; 2nd Charting Updates</span>
               </div>
             </div>
           </div>
@@ -158,15 +175,20 @@ export default async function Home() {
           {PORTAL_HIGHLIGHTS.map((item) => (
             <div
               key={item.label}
-              className="rounded-2xl border border-line bg-subcard p-4"
+              className="flex items-start gap-3.5 rounded-2xl border border-line bg-subcard p-4"
             >
-              <p className="font-mono text-lg font-black text-ink sm:text-xl">
-                {item.stat}
-              </p>
-              <p className="mt-1 text-sm font-bold text-orange-600 dark:text-amber-400">
-                {item.label}
-              </p>
-              <p className="mt-0.5 text-xs text-ink-muted">{item.detail}</p>
+              <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-orange-500/15 text-orange-700 dark:text-amber-300">
+                {item.icon}
+              </span>
+              <div className="min-w-0">
+                <p className="font-mono text-base font-black text-ink sm:text-lg">
+                  {item.stat}
+                </p>
+                <p className="mt-0.5 text-xs font-extrabold text-orange-600 dark:text-amber-400 sm:text-sm">
+                  {item.label}
+                </p>
+                <p className="mt-0.5 text-xs text-ink-muted">{item.detail}</p>
+              </div>
             </div>
           ))}
         </div>
@@ -179,8 +201,9 @@ export default async function Home() {
       >
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-orange-600 dark:text-amber-400">
-              AIR · RAIL · HOTEL SUITE
+            <p className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-[0.18em] text-orange-600 dark:text-amber-400">
+              <SparklesIcon className="h-3.5 w-3.5" />
+              <span>AIR · RAIL · HOTEL SUITE</span>
             </p>
             <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-ink sm:text-4xl">
               Precision tools for every stage of your trip.
@@ -210,8 +233,8 @@ export default async function Home() {
                 Rail Tools
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-                Real-time 10-digit Indian Railways PNR status, coach &amp; berth
-                decoders, and reservation charting guides.
+                Real-time 10-digit PNR status, live train running radar,
+                engine-to-guard coach rake positions, and charting guides.
               </p>
 
               <ul className="mt-6 space-y-3 border-t border-line pt-5 text-sm">
@@ -229,11 +252,23 @@ export default async function Home() {
                 </li>
                 <li>
                   <Link
+                    href="/rail/live-status"
+                    className="group flex items-center justify-between font-bold text-ink hover:text-orange-600 dark:hover:text-amber-300"
+                  >
+                    <span className="inline-flex items-center gap-2.5">
+                      <RadarLiveIcon className="h-4 w-4 text-amber-600 dark:text-amber-300" />
+                      <span>Live Train Running Status</span>
+                    </span>
+                    <ArrowRightIcon className="h-4 w-4 text-ink-muted transition-transform group-hover:translate-x-0.5 group-hover:text-orange-600 dark:group-hover:text-amber-300" />
+                  </Link>
+                </li>
+                <li>
+                  <Link
                     href="/rail/pnr-status#decoder"
                     className="group flex items-center justify-between font-semibold text-ink-soft hover:text-orange-600 dark:hover:text-amber-300"
                   >
                     <span className="inline-flex items-center gap-2.5">
-                      <CheckCircleIcon className="h-4 w-4 text-amber-600 dark:text-yellow-300" />
+                      <CoachTrainIcon className="h-4 w-4 text-amber-600 dark:text-yellow-300" />
                       <span>Coach &amp; Berth Code Decoder</span>
                     </span>
                     <ArrowRightIcon className="h-4 w-4 text-ink-muted transition-transform group-hover:translate-x-0.5 group-hover:text-orange-600 dark:group-hover:text-amber-300" />
@@ -254,13 +289,22 @@ export default async function Home() {
               </ul>
             </div>
 
-            <Link
-              href="/rail/pnr-status"
-              className="ta-btn-primary mt-7 inline-flex w-full items-center justify-center gap-2 rounded-2xl px-5 py-3.5 text-sm font-extrabold"
-            >
-              <span>Open PNR Status Tool</span>
-              <ArrowRightIcon className="h-4 w-4" />
-            </Link>
+            <div className="mt-7 grid grid-cols-2 gap-2.5">
+              <Link
+                href="/rail/pnr-status"
+                className="ta-btn-primary inline-flex items-center justify-center gap-1.5 rounded-2xl px-4 py-3.5 text-xs font-extrabold sm:text-sm"
+              >
+                <TicketIcon className="h-4 w-4" />
+                <span>PNR Status</span>
+              </Link>
+              <Link
+                href="/rail/live-status"
+                className="inline-flex items-center justify-center gap-1.5 rounded-2xl border-2 border-line bg-subcard px-4 py-3.5 text-xs font-extrabold text-ink transition hover:border-orange-500 sm:text-sm"
+              >
+                <RadarLiveIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
+                <span>Live Train</span>
+              </Link>
+            </div>
           </article>
 
           {/* AIR CARD */}
@@ -314,7 +358,7 @@ export default async function Home() {
                     className="group flex items-center justify-between font-semibold text-ink-soft hover:text-orange-600 dark:hover:text-amber-300"
                   >
                     <span className="inline-flex items-center gap-2.5">
-                      <CheckCircleIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
+                      <ShieldCheckIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
                       <span>Boarding &amp; DigiYatra Checklist</span>
                     </span>
                     <ArrowRightIcon className="h-4 w-4 text-ink-muted transition-transform group-hover:translate-x-0.5 group-hover:text-orange-600 dark:group-hover:text-amber-300" />
@@ -327,6 +371,7 @@ export default async function Home() {
               href="/tools/air"
               className="mt-7 inline-flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-line bg-subcard px-5 py-3.5 text-sm font-extrabold text-ink transition hover:border-orange-500"
             >
+              <PlaneIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
               <span>Explore Air Tools</span>
               <ArrowRightIcon className="h-4 w-4" />
             </Link>
@@ -383,7 +428,7 @@ export default async function Home() {
                     className="group flex items-center justify-between font-semibold text-ink-soft hover:text-orange-600 dark:hover:text-amber-300"
                   >
                     <span className="inline-flex items-center gap-2.5">
-                      <CheckCircleIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
+                      <MapPinIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
                       <span>Guest ID &amp; Stay Essentials</span>
                     </span>
                     <ArrowRightIcon className="h-4 w-4 text-ink-muted transition-transform group-hover:translate-x-0.5 group-hover:text-orange-600 dark:group-hover:text-amber-300" />
@@ -396,6 +441,7 @@ export default async function Home() {
               href="/tools/hotel"
               className="mt-7 inline-flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-line bg-subcard px-5 py-3.5 text-sm font-extrabold text-ink transition hover:border-orange-500"
             >
+              <HotelIcon className="h-4 w-4 text-amber-600 dark:text-amber-300" />
               <span>Explore Hotel Tools</span>
               <ArrowRightIcon className="h-4 w-4" />
             </Link>
@@ -411,18 +457,20 @@ export default async function Home() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-orange-600 dark:text-amber-400">
-                ICONIC INDIAN JOURNEYS
+              <p className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-[0.18em] text-orange-600 dark:text-amber-400">
+                <RouteTrackIcon className="h-3.5 w-3.5" />
+                <span>ICONIC INDIAN JOURNEYS</span>
               </p>
               <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-ink sm:text-4xl">
                 Routes worth booking a window seat for.
               </h2>
             </div>
             <Link
-              href="/rail/pnr-status"
+              href="/rail/live-status"
               className="inline-flex items-center gap-1.5 text-sm font-bold text-orange-600 hover:text-orange-800 dark:text-amber-300 dark:hover:text-amber-200"
             >
-              <span>Already booked? Check your PNR</span>
+              <RadarLiveIcon className="h-4 w-4" />
+              <span>Spot live trains on any corridor</span>
               <ArrowRightIcon className="h-4 w-4" />
             </Link>
           </div>
@@ -436,17 +484,22 @@ export default async function Home() {
                 <div className="ta-ticket-header p-6">
                   <div className="flex items-center justify-between gap-2 text-xs font-bold">
                     <span
-                      className={`rounded-lg px-2.5 py-1 font-mono ${corridor.routePill}`}
+                      className={`inline-flex items-center gap-1 rounded-lg px-2.5 py-1 font-mono ${corridor.routePill}`}
                     >
-                      {corridor.routeCode}
+                      <RouteTrackIcon className="h-3.5 w-3.5" />
+                      <span>{corridor.routeCode}</span>
                     </span>
-                    <span className="text-ink-muted">{corridor.duration}</span>
+                    <span className="inline-flex items-center gap-1 text-ink-muted">
+                      <ClockIcon className="h-3.5 w-3.5" />
+                      <span>{corridor.duration}</span>
+                    </span>
                   </div>
                   <h3 className="mt-5 text-lg font-extrabold leading-snug text-ink">
                     {corridor.title}
                   </h3>
-                  <p className="mt-1.5 font-mono text-xs font-semibold text-ink-soft">
-                    {corridor.trainTag}
+                  <p className="mt-1.5 inline-flex items-center gap-1.5 font-mono text-xs font-semibold text-ink-soft">
+                    <TrainIcon className="h-3.5 w-3.5 text-orange-600 dark:text-amber-400" />
+                    <span>{corridor.trainTag}</span>
                   </p>
                 </div>
 
@@ -455,8 +508,9 @@ export default async function Home() {
                     {corridor.description}
                   </p>
                   <div className="mt-4 border-t border-line pt-3">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-ink-muted">
-                      Recommended Seat
+                    <p className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-ink-muted">
+                      <BedIcon className="h-3.5 w-3.5 text-orange-600 dark:text-amber-400" />
+                      <span>Recommended Seat</span>
                     </p>
                     <p className="mt-0.5 text-xs font-bold text-ink">
                       {corridor.bestSeat}
@@ -473,8 +527,9 @@ export default async function Home() {
       <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-orange-600 dark:text-amber-400">
-              TRAVELADDA JOURNAL
+            <p className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-[0.18em] text-orange-600 dark:text-amber-400">
+              <BookOpenIcon className="h-3.5 w-3.5" />
+              <span>TRAVELADDA JOURNAL</span>
             </p>
             <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-ink sm:text-4xl">
               Smart guides for stress-free travel.
@@ -500,8 +555,9 @@ export default async function Home() {
                   <span className="rounded-full bg-orange-500/15 px-3 py-1 font-bold text-orange-800 dark:text-amber-300">
                     {post.category}
                   </span>
-                  <span className="font-medium text-ink-muted">
-                    {post.readTime}
+                  <span className="inline-flex items-center gap-1 font-medium text-ink-muted">
+                    <ClockIcon className="h-3.5 w-3.5" />
+                    <span>{post.readTime}</span>
                   </span>
                 </div>
                 <h3 className="mt-4 text-lg font-extrabold leading-snug text-ink">
@@ -518,8 +574,9 @@ export default async function Home() {
               </div>
 
               <div className="mt-6 flex items-center justify-between border-t border-line pt-4 text-xs">
-                <span className="font-semibold text-ink-muted">
-                  {post.author.name}
+                <span className="inline-flex items-center gap-1.5 font-semibold text-ink-muted">
+                  <UserCheckIcon className="h-3.5 w-3.5 text-orange-600 dark:text-amber-400" />
+                  <span>{post.author.name}</span>
                 </span>
                 <Link
                   href={`/blog/${post.slug}`}
@@ -539,26 +596,36 @@ export default async function Home() {
         <div className="ta-cta-banner relative overflow-hidden rounded-3xl p-8 sm:p-12">
           <div className="relative z-10 flex flex-col items-start justify-between gap-6 lg:flex-row lg:items-center">
             <div className="max-w-2xl">
-              <span className="inline-flex rounded-full border border-orange-500/35 bg-orange-500/15 px-3 py-1 text-xs font-bold text-orange-800 dark:text-amber-200">
-                INSTANT PNR VERIFICATION
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-orange-500/35 bg-orange-500/15 px-3 py-1 text-xs font-bold text-orange-800 dark:text-amber-200">
+                <SparklesIcon className="h-3.5 w-3.5" />
+                <span>LIVE INDIAN RAILWAYS SUITE</span>
               </span>
               <h2 className="mt-4 text-2xl font-black tracking-tight text-ink sm:text-3xl">
-                Holding an Indian Railways ticket right now?
+                Travelling by train today?
               </h2>
               <p className="mt-2 text-sm text-ink-soft sm:text-base">
-                Check live seat confirmation, charting status, and coach
-                position in under a second using TravelAdda&apos;s PNR Status
-                tool.
+                Verify your 10-digit PNR seat confirmation or spot your
+                train&apos;s live station, platform number, and coach rake order
+                in seconds.
               </p>
             </div>
-            <Link
-              href="/rail/pnr-status"
-              className="ta-btn-primary inline-flex shrink-0 items-center gap-2 rounded-2xl px-6 py-4 text-sm font-extrabold"
-            >
-              <TicketIcon className="h-4 w-4" />
-              <span>Check PNR Status Now</span>
-              <ArrowRightIcon className="h-4 w-4" />
-            </Link>
+            <div className="flex flex-wrap items-center gap-3">
+              <Link
+                href="/rail/live-status"
+                className="inline-flex items-center gap-2 rounded-2xl border border-line-strong bg-card px-5 py-4 text-sm font-extrabold text-ink transition hover:border-orange-500"
+              >
+                <RadarLiveIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
+                <span>Spot Live Train</span>
+              </Link>
+              <Link
+                href="/rail/pnr-status"
+                className="ta-btn-primary inline-flex shrink-0 items-center gap-2 rounded-2xl px-6 py-4 text-sm font-extrabold"
+              >
+                <TicketIcon className="h-4 w-4" />
+                <span>Check PNR Status</span>
+                <ArrowRightIcon className="h-4 w-4" />
+              </Link>
+            </div>
           </div>
         </div>
       </section>

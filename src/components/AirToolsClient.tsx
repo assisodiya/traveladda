@@ -5,8 +5,10 @@ import {
   CheckCircleIcon,
   ClockIcon,
   LuggageIcon,
+  NavigationIcon,
   PlaneIcon,
   ShieldCheckIcon,
+  SparklesIcon,
 } from "./Icons";
 
 const AIRLINES = [
@@ -105,9 +107,10 @@ export function AirToolsClient() {
         <div className="mt-6">
           <label
             htmlFor="airline-select"
-            className="block text-xs font-extrabold uppercase tracking-wider text-ink-soft"
+            className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-ink-soft"
           >
-            Choose Carrier &amp; Fare Sector
+            <PlaneIcon className="h-3.5 w-3.5 text-orange-600 dark:text-amber-400" />
+            <span>Choose Carrier &amp; Fare Sector</span>
           </label>
           <select
             id="airline-select"
@@ -125,32 +128,36 @@ export function AirToolsClient() {
 
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div className="rounded-2xl border border-orange-500/25 bg-subcard p-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-orange-700 dark:text-orange-300">
-              Cabin Baggage
+            <p className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-orange-700 dark:text-orange-300">
+              <LuggageIcon className="h-3.5 w-3.5" />
+              <span>Cabin Baggage</span>
             </p>
             <p className="mt-1.5 text-sm font-extrabold text-ink">
               {selectedAirline.cabin}
             </p>
           </div>
           <div className="rounded-2xl border border-amber-500/30 bg-subcard p-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-amber-800 dark:text-amber-300">
-              Check-In Allowance
+            <p className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-800 dark:text-amber-300">
+              <LuggageIcon className="h-3.5 w-3.5" />
+              <span>Check-In Allowance</span>
             </p>
             <p className="mt-1.5 text-sm font-extrabold text-ink">
               {selectedAirline.checkin}
             </p>
           </div>
           <div className="rounded-2xl border border-yellow-500/30 bg-subcard p-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-amber-800 dark:text-yellow-300">
-              Bag Drop Closes
+            <p className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-800 dark:text-yellow-300">
+              <ClockIcon className="h-3.5 w-3.5" />
+              <span>Bag Drop Closes</span>
             </p>
             <p className="mt-1.5 text-sm font-extrabold text-ink">
               {selectedAirline.checkinClose}
             </p>
           </div>
           <div className="rounded-2xl border border-rose-500/25 bg-subcard p-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-rose-700 dark:text-rose-300">
-              Boarding Gate Closes
+            <p className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-rose-700 dark:text-rose-300">
+              <NavigationIcon className="h-3.5 w-3.5" />
+              <span>Boarding Gate Closes</span>
             </p>
             <p className="mt-1.5 text-sm font-extrabold text-ink">
               {selectedAirline.gateClose}
@@ -235,8 +242,11 @@ export function AirToolsClient() {
               onClick={() => setHasCheckinBag((v) => !v)}
               className="mt-2 flex w-full cursor-pointer items-center justify-between rounded-2xl border-2 border-line bg-input px-4 py-2.5 text-sm font-bold text-ink transition hover:border-orange-500"
             >
-              <span>
-                {hasCheckinBag ? "With Check-In Bag" : "Cabin Bag Only"}
+              <span className="inline-flex items-center gap-2">
+                <LuggageIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
+                <span>
+                  {hasCheckinBag ? "With Check-In Bag" : "Cabin Bag Only"}
+                </span>
               </span>
               <PlaneIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
             </button>
@@ -245,8 +255,9 @@ export function AirToolsClient() {
 
         <div className="ta-cta-banner mt-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl p-5">
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-orange-800 dark:text-amber-300">
-              Recommended Terminal Entry Time
+            <p className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-orange-800 dark:text-amber-300">
+              <SparklesIcon className="h-3.5 w-3.5" />
+              <span>Recommended Terminal Entry Time</span>
             </p>
             <p className="mt-1 text-sm text-ink-soft">
               Includes security queue, bag drop &amp; boarding gate buffer

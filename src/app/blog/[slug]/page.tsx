@@ -4,7 +4,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   ArrowRightIcon,
+  BookOpenIcon,
+  CalendarIcon,
   CheckCircleIcon,
+  ClockIcon,
+  RadarLiveIcon,
+  SparklesIcon,
   TicketIcon,
 } from "@/components/Icons";
 import { getBlogPostBySlug, RAIL_BLOG_POSTS } from "@/lib/blog-data";
@@ -79,12 +84,19 @@ export default async function BlogArticlePage({
           </nav>
 
           <div className="mt-6 flex flex-wrap items-center gap-3 text-xs font-bold">
-            <span className="rounded-full border border-orange-500/35 bg-orange-500/15 px-3 py-1 text-orange-800 dark:text-amber-200">
-              {post.category}
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-orange-500/35 bg-orange-500/15 px-3 py-1 text-orange-800 dark:text-amber-200">
+              <BookOpenIcon className="h-3.5 w-3.5" />
+              <span>{post.category}</span>
             </span>
-            <span className="text-ink-soft">{post.readTime}</span>
+            <span className="inline-flex items-center gap-1 text-ink-soft">
+              <ClockIcon className="h-3.5 w-3.5 text-orange-600 dark:text-amber-400" />
+              <span>{post.readTime}</span>
+            </span>
             <span className="text-ink-muted">·</span>
-            <span className="text-ink-soft">{post.publishedDate}</span>
+            <span className="inline-flex items-center gap-1 text-ink-soft">
+              <CalendarIcon className="h-3.5 w-3.5 text-amber-600 dark:text-amber-300" />
+              <span>{post.publishedDate}</span>
+            </span>
           </div>
 
           <h1 className="mt-4 text-3xl font-black leading-tight tracking-tight text-ink sm:text-5xl">
@@ -112,8 +124,9 @@ export default async function BlogArticlePage({
         <article className="space-y-8 rounded-3xl border border-line bg-card p-7 shadow-xs sm:p-10">
           {/* Key Takeaways Box */}
           <div className="rounded-2xl border border-amber-500/30 bg-amber-500/12 p-6">
-            <h2 className="text-xs font-extrabold uppercase tracking-[0.18em] text-orange-700 dark:text-amber-300">
-              Quick Summary
+            <h2 className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-[0.18em] text-orange-700 dark:text-amber-300">
+              <SparklesIcon className="h-3.5 w-3.5" />
+              <span>Quick Summary</span>
             </h2>
             <ul className="mt-3 space-y-2.5">
               {post.keyTakeaways.map((item) => (
@@ -149,8 +162,9 @@ export default async function BlogArticlePage({
                       key={b.label}
                       className="rounded-2xl border border-line bg-subcard p-4"
                     >
-                      <p className="text-sm font-extrabold text-ink">
-                        {b.label}
+                      <p className="inline-flex items-center gap-2 text-sm font-extrabold text-ink">
+                        <CheckCircleIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
+                        <span>{b.label}</span>
                       </p>
                       <p className="mt-1 text-sm leading-relaxed text-ink-soft">
                         {b.detail}
@@ -162,8 +176,9 @@ export default async function BlogArticlePage({
 
               {section.callout && (
                 <div className="rounded-2xl border-l-4 border-orange-500 bg-subcard p-5">
-                  <p className="text-xs font-extrabold uppercase tracking-wider text-orange-700 dark:text-amber-300">
-                    {section.callout.title}
+                  <p className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-orange-700 dark:text-amber-300">
+                    <SparklesIcon className="h-3.5 w-3.5" />
+                    <span>{section.callout.title}</span>
                   </p>
                   <p className="mt-1 text-sm leading-relaxed text-ink-soft">
                     {section.callout.text}
@@ -178,29 +193,40 @@ export default async function BlogArticlePage({
         <aside className="space-y-6">
           <div className="sticky top-24 space-y-6">
             <div className="ta-cta-banner rounded-3xl p-6 shadow-lg">
-              <span className="inline-flex rounded-full border border-orange-500/35 bg-orange-500/15 px-3 py-1 text-[11px] font-bold text-orange-800 dark:text-amber-200">
-                LIVE PNR TOOL
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-orange-500/35 bg-orange-500/15 px-3 py-1 text-[11px] font-bold text-orange-800 dark:text-amber-200">
+                <SparklesIcon className="h-3.5 w-3.5" />
+                <span>LIVE RAIL TOOLS</span>
               </span>
               <h3 className="mt-4 text-xl font-extrabold text-ink">
-                Check Your 10-Digit PNR Now
+                Check PNR or Spot Your Train Live
               </h3>
               <p className="mt-2 text-xs leading-relaxed text-ink-soft">
-                Verify live seat confirmation, reservation charting status, and
-                exact coach &amp; berth numbers in seconds.
+                Verify live seat confirmation, charting status, live station
+                location, and exact coach rake order in seconds.
               </p>
-              <Link
-                href="/rail/pnr-status"
-                className="ta-btn-primary mt-5 inline-flex w-full items-center justify-center gap-2 rounded-2xl px-4 py-3 text-sm font-extrabold"
-              >
-                <TicketIcon className="h-4 w-4" />
-                <span>Open PNR Status Tool</span>
-                <ArrowRightIcon className="h-4 w-4" />
-              </Link>
+              <div className="mt-5 space-y-2.5">
+                <Link
+                  href="/rail/pnr-status"
+                  className="ta-btn-primary inline-flex w-full items-center justify-center gap-2 rounded-2xl px-4 py-3 text-sm font-extrabold"
+                >
+                  <TicketIcon className="h-4 w-4" />
+                  <span>Open PNR Status Tool</span>
+                  <ArrowRightIcon className="h-4 w-4" />
+                </Link>
+                <Link
+                  href="/rail/live-status"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-line-strong bg-card px-4 py-3 text-sm font-extrabold text-ink transition hover:border-orange-500"
+                >
+                  <RadarLiveIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
+                  <span>Spot Live Train Status</span>
+                </Link>
+              </div>
             </div>
 
             <div className="rounded-3xl border border-line bg-card p-6">
-              <h3 className="text-xs font-extrabold uppercase tracking-wider text-ink-muted">
-                More Rail Guides
+              <h3 className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-ink-muted">
+                <BookOpenIcon className="h-3.5 w-3.5 text-orange-600 dark:text-amber-400" />
+                <span>More Rail Guides</span>
               </h3>
               <div className="mt-4 space-y-3.5">
                 {relatedPosts.map((rel) => (

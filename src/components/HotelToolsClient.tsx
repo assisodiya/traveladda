@@ -2,11 +2,14 @@
 
 import { useState } from "react";
 import {
+  BedIcon,
   CalculatorIcon,
   CheckCircleIcon,
   ClockIcon,
   HotelIcon,
   MapPinIcon,
+  RupeeBadgeIcon,
+  ShieldCheckIcon,
 } from "./Icons";
 
 export function HotelToolsClient() {
@@ -49,9 +52,10 @@ export function HotelToolsClient() {
           <div>
             <label
               htmlFor="hotel-rate"
-              className="block text-xs font-extrabold uppercase tracking-wider text-ink-soft"
+              className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-ink-soft"
             >
-              Room Tariff / Night (₹)
+              <RupeeBadgeIcon className="h-3.5 w-3.5 text-orange-600 dark:text-amber-400" />
+              <span>Room Tariff / Night (₹)</span>
             </label>
             <input
               id="hotel-rate"
@@ -66,9 +70,10 @@ export function HotelToolsClient() {
           <div>
             <label
               htmlFor="hotel-nights"
-              className="block text-xs font-extrabold uppercase tracking-wider text-ink-soft"
+              className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-ink-soft"
             >
-              Number of Nights
+              <BedIcon className="h-3.5 w-3.5 text-amber-600 dark:text-amber-300" />
+              <span>Number of Nights</span>
             </label>
             <input
               id="hotel-nights"
@@ -84,9 +89,10 @@ export function HotelToolsClient() {
           <div>
             <label
               htmlFor="hotel-rooms"
-              className="block text-xs font-extrabold uppercase tracking-wider text-ink-soft"
+              className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-ink-soft"
             >
-              Number of Rooms
+              <HotelIcon className="h-3.5 w-3.5 text-orange-600 dark:text-amber-400" />
+              <span>Number of Rooms</span>
             </label>
             <input
               id="hotel-rooms"
@@ -102,24 +108,27 @@ export function HotelToolsClient() {
 
         <div className="ta-cta-banner mt-6 grid gap-4 rounded-2xl p-6 sm:grid-cols-3">
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-ink-muted">
-              Base Stay Subtotal
+            <p className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-ink-muted">
+              <BedIcon className="h-3.5 w-3.5" />
+              <span>Base Stay Subtotal</span>
             </p>
             <p className="mt-1 font-mono text-xl font-extrabold text-ink">
               ₹{subtotal.toLocaleString("en-IN")}
             </p>
           </div>
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-amber-800 dark:text-amber-300">
-              Applicable GST ({gstPercent}%)
+            <p className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-800 dark:text-amber-300">
+              <CalculatorIcon className="h-3.5 w-3.5" />
+              <span>Applicable GST ({gstPercent}%)</span>
             </p>
             <p className="mt-1 font-mono text-xl font-extrabold text-amber-800 dark:text-amber-300">
               ₹{gstAmount.toLocaleString("en-IN")}
             </p>
           </div>
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-orange-700 dark:text-orange-300">
-              Total Payable Estimate
+            <p className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-orange-700 dark:text-orange-300">
+              <RupeeBadgeIcon className="h-3.5 w-3.5" />
+              <span>Total Payable Estimate</span>
             </p>
             <p className="mt-1 font-mono text-2xl font-black text-orange-700 dark:text-amber-300">
               ₹{grandTotal.toLocaleString("en-IN")}
@@ -198,10 +207,21 @@ export function HotelToolsClient() {
         id="stay-checklist"
         className="scroll-mt-24 rounded-3xl border border-line bg-card p-6 shadow-lg shadow-black/5 dark:shadow-black/25 sm:p-8"
       >
-        <h2 className="text-xl font-extrabold text-ink">
-          Hotel Check-In Essentials in India
-        </h2>
-        <div className="mt-4 grid gap-3.5 sm:grid-cols-2">
+        <div className="flex items-center gap-3">
+          <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-yellow-500/20 text-amber-900 dark:text-yellow-300">
+            <ShieldCheckIcon className="h-5 w-5" />
+          </span>
+          <div>
+            <h2 className="text-xl font-extrabold text-ink">
+              Hotel Check-In Essentials in India
+            </h2>
+            <p className="text-sm text-ink-soft">
+              Keep these guest identity and reservation rules handy at check-in.
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-6 grid gap-3.5 sm:grid-cols-2">
           {[
             "Every adult guest must carry an original physical or DigiLocker Government ID (Aadhaar, Passport, Driving Licence, or Voter ID).",
             "Note that PAN Cards are generally NOT accepted as address/identity proof at hotel check-in desks.",

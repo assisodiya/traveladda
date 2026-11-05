@@ -7,13 +7,16 @@ import {
   ArrowRightIcon,
   BookOpenIcon,
   CalculatorIcon,
-  CheckCircleIcon,
   ChevronDownIcon,
   ClockIcon,
+  CloseIcon,
+  CoachTrainIcon,
   HotelIcon,
   LuggageIcon,
   MapPinIcon,
+  MenuIcon,
   PlaneIcon,
+  RadarLiveIcon,
   ShieldCheckIcon,
   TicketIcon,
   TrainIcon,
@@ -81,7 +84,7 @@ const MENU_CATEGORIES: MenuCategory[] = [
     tagline: "Live Indian Railways tools & guides",
     mainIcon: <TrainIcon className="h-4 w-4" />,
     viewAllHref: "/rail/pnr-status",
-    viewAllLabel: "Open Rail PNR Hub",
+    viewAllLabel: "Explore Full Rail Hub",
     items: [
       {
         title: "Live PNR Status Checker",
@@ -92,11 +95,20 @@ const MENU_CATEGORIES: MenuCategory[] = [
         iconBg: "bg-orange-500/15 text-orange-700 dark:text-orange-300",
       },
       {
+        title: "Live Train Running Status",
+        description:
+          "Spot live station, platform, delay, route map & coach order",
+        href: "/rail/live-status",
+        badge: "LIVE",
+        icon: <RadarLiveIcon className="h-5 w-5" />,
+        iconBg: "bg-amber-500/18 text-amber-800 dark:text-amber-300",
+      },
+      {
         title: "Coach & Berth Code Decoder",
         description: "Translate CNF, RAC, GNWL, WS, LB, CC, 3E & EV codes",
         href: "/rail/pnr-status#decoder",
-        icon: <CheckCircleIcon className="h-5 w-5" />,
-        iconBg: "bg-amber-500/15 text-amber-800 dark:text-amber-300",
+        icon: <CoachTrainIcon className="h-5 w-5" />,
+        iconBg: "bg-yellow-500/20 text-amber-900 dark:text-yellow-300",
       },
       {
         title: "Rail Travel Blog & Chart Rules",
@@ -212,7 +224,7 @@ function DesktopDropdownBar({ pathname }: { pathname: string }) {
 
             {/* Dropdown Panel */}
             {isOpen && (
-              <div className="absolute left-1/2 top-full z-50 w-[380px] -translate-x-1/2 pt-2.5">
+              <div className="absolute left-1/2 top-full z-50 w-[395px] -translate-x-1/2 pt-2.5">
                 <div className="overflow-hidden rounded-2xl border border-line bg-card shadow-2xl shadow-black/20">
                   {/* Dropdown Header */}
                   <div className="ta-ticket-header flex items-center justify-between px-4 py-3">
@@ -310,12 +322,19 @@ export function Navbar() {
           <ActiveDesktopNav />
         </Suspense>
 
-        {/* Right Theme Toggle + Primary CTA */}
+        {/* Right Theme Toggle + Quick Rail Actions */}
         <div className="hidden items-center gap-2.5 md:flex">
           <ThemeToggle />
           <Link
+            href="/rail/live-status"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-line-strong bg-subcard px-3.5 py-2.5 text-xs font-extrabold text-ink transition hover:border-orange-500 lg:text-sm"
+          >
+            <RadarLiveIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
+            <span>Live Train</span>
+          </Link>
+          <Link
             href="/rail/pnr-status"
-            className="ta-btn-primary inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-extrabold"
+            className="ta-btn-primary inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-extrabold lg:px-5 lg:text-sm"
           >
             <TicketIcon className="h-4 w-4" />
             <span>PNR Status</span>
@@ -333,37 +352,9 @@ export function Navbar() {
             aria-label="Toggle navigation menu"
           >
             {mobileOpen ? (
-              <svg
-                viewBox="0 0 24 24"
-                width="20"
-                height="20"
-                className="h-5 w-5 shrink-0"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.2"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
+              <CloseIcon className="h-5 w-5" />
             ) : (
-              <svg
-                viewBox="0 0 24 24"
-                width="20"
-                height="20"
-                className="h-5 w-5 shrink-0"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.2"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M4 7h16M4 12h16M4 17h16"
-                />
-              </svg>
+              <MenuIcon className="h-5 w-5" />
             )}
           </button>
         </div>
@@ -432,14 +423,24 @@ export function Navbar() {
               );
             })}
 
-            <Link
-              href="/rail/pnr-status"
-              onClick={() => setMobileOpen(false)}
-              className="ta-btn-primary mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-extrabold"
-            >
-              <TicketIcon className="h-4 w-4" />
-              <span>Check Live PNR Status</span>
-            </Link>
+            <div className="grid grid-cols-2 gap-2 pt-2">
+              <Link
+                href="/rail/live-status"
+                onClick={() => setMobileOpen(false)}
+                className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-line-strong bg-subcard px-3 py-3 text-xs font-extrabold text-ink"
+              >
+                <RadarLiveIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
+                <span>Live Train</span>
+              </Link>
+              <Link
+                href="/rail/pnr-status"
+                onClick={() => setMobileOpen(false)}
+                className="ta-btn-primary inline-flex items-center justify-center gap-1.5 rounded-xl px-3 py-3 text-xs font-extrabold"
+              >
+                <TicketIcon className="h-4 w-4" />
+                <span>PNR Status</span>
+              </Link>
+            </div>
           </div>
         </div>
       )}
