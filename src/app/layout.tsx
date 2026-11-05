@@ -17,11 +17,9 @@ const THEME_INIT_SCRIPT = `
   try {
     var saved = localStorage.getItem('traveladda-theme');
     var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    if (saved === 'dark' || (!saved && prefersDark)) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    var useDark = saved === 'dark' || (!saved && prefersDark);
+    document.documentElement.classList.toggle('dark', useDark);
+    document.documentElement.style.colorScheme = useDark ? 'dark' : 'light';
   } catch (e) {}
 })();
 `;
@@ -36,7 +34,7 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>
-      <body className="flex min-h-screen flex-col bg-slate-50 text-slate-900 antialiased transition-colors duration-200 dark:bg-slate-950 dark:text-slate-100">
+      <body className="flex min-h-screen flex-col bg-canvas text-ink antialiased">
         <Navbar />
         <div className="flex-1">{children}</div>
         <Footer />

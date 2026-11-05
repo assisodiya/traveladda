@@ -85,17 +85,17 @@ export function AirToolsClient() {
       {/* Tool 1: Baggage Allowance Checker */}
       <section
         id="baggage"
-        className="scroll-mt-24 rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-900/5 transition-colors dark:border-slate-800 dark:bg-slate-900 sm:p-8"
+        className="scroll-mt-24 rounded-3xl border border-line bg-card p-6 shadow-lg shadow-black/5 dark:shadow-black/25 sm:p-8"
       >
         <div className="flex items-center gap-3">
-          <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-sky-100 text-sky-700 dark:bg-sky-500/20 dark:text-sky-300">
+          <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-sky-500/15 text-sky-700 dark:text-sky-300">
             <LuggageIcon className="h-5 w-5" />
           </span>
           <div>
-            <h2 className="text-xl font-extrabold text-slate-900 dark:text-white">
+            <h2 className="text-xl font-extrabold text-ink">
               Airline Baggage Allowance Checker
             </h2>
-            <p className="text-sm text-slate-600 dark:text-slate-400">
+            <p className="text-sm text-ink-soft">
               Select your carrier &amp; sector to inspect standard cabin and
               check-in limits.
             </p>
@@ -105,7 +105,7 @@ export function AirToolsClient() {
         <div className="mt-6">
           <label
             htmlFor="airline-select"
-            className="block text-xs font-extrabold uppercase tracking-wider text-slate-700 dark:text-slate-300"
+            className="block text-xs font-extrabold uppercase tracking-wider text-ink-soft"
           >
             Choose Carrier &amp; Fare Sector
           </label>
@@ -113,7 +113,7 @@ export function AirToolsClient() {
             id="airline-select"
             value={selectedAirlineId}
             onChange={(e) => setSelectedAirlineId(e.target.value)}
-            className="mt-2 w-full rounded-2xl border-2 border-slate-200 bg-slate-50 px-4 py-3.5 text-sm font-bold text-slate-900 focus:border-indigo-600 focus:bg-white focus:outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-400"
+            className="mt-2 w-full rounded-2xl border-2 border-line bg-input px-4 py-3.5 text-sm font-bold text-ink focus:border-teal-500 focus:outline-none"
           >
             {AIRLINES.map((airline) => (
               <option key={airline.id} value={airline.id}>
@@ -124,35 +124,35 @@ export function AirToolsClient() {
         </div>
 
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="rounded-2xl border border-sky-200 bg-sky-50 p-4 dark:border-sky-800/60 dark:bg-sky-950/40">
-            <p className="text-xs font-bold uppercase tracking-wider text-sky-800 dark:text-sky-300">
+          <div className="rounded-2xl border border-sky-500/25 bg-subcard p-4">
+            <p className="text-xs font-bold uppercase tracking-wider text-sky-700 dark:text-sky-300">
               Cabin Baggage
             </p>
-            <p className="mt-1.5 text-sm font-extrabold text-slate-900 dark:text-white">
+            <p className="mt-1.5 text-sm font-extrabold text-ink">
               {selectedAirline.cabin}
             </p>
           </div>
-          <div className="rounded-2xl border border-indigo-200 bg-indigo-50 p-4 dark:border-indigo-800/60 dark:bg-indigo-950/40">
-            <p className="text-xs font-bold uppercase tracking-wider text-indigo-800 dark:text-indigo-300">
+          <div className="rounded-2xl border border-teal-500/25 bg-subcard p-4">
+            <p className="text-xs font-bold uppercase tracking-wider text-teal-700 dark:text-teal-300">
               Check-In Allowance
             </p>
-            <p className="mt-1.5 text-sm font-extrabold text-slate-900 dark:text-white">
+            <p className="mt-1.5 text-sm font-extrabold text-ink">
               {selectedAirline.checkin}
             </p>
           </div>
-          <div className="rounded-2xl border border-teal-200 bg-teal-50 p-4 dark:border-teal-800/60 dark:bg-teal-950/40">
-            <p className="text-xs font-bold uppercase tracking-wider text-teal-800 dark:text-teal-300">
+          <div className="rounded-2xl border border-emerald-500/25 bg-subcard p-4">
+            <p className="text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">
               Bag Drop Closes
             </p>
-            <p className="mt-1.5 text-sm font-extrabold text-slate-900 dark:text-white">
+            <p className="mt-1.5 text-sm font-extrabold text-ink">
               {selectedAirline.checkinClose}
             </p>
           </div>
-          <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-800/60 dark:bg-amber-950/40">
-            <p className="text-xs font-bold uppercase tracking-wider text-amber-900 dark:text-amber-300">
+          <div className="rounded-2xl border border-amber-500/25 bg-subcard p-4">
+            <p className="text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-amber-300">
               Boarding Gate Closes
             </p>
-            <p className="mt-1.5 text-sm font-extrabold text-slate-900 dark:text-white">
+            <p className="mt-1.5 text-sm font-extrabold text-ink">
               {selectedAirline.gateClose}
             </p>
           </div>
@@ -162,17 +162,17 @@ export function AirToolsClient() {
       {/* Tool 2: Airport Arrival Buffer Planner */}
       <section
         id="buffer"
-        className="scroll-mt-24 rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-900/5 transition-colors dark:border-slate-800 dark:bg-slate-900 sm:p-8"
+        className="scroll-mt-24 rounded-3xl border border-line bg-card p-6 shadow-lg shadow-black/5 dark:shadow-black/25 sm:p-8"
       >
         <div className="flex items-center gap-3">
-          <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-100 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-300">
+          <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-teal-500/15 text-teal-700 dark:text-teal-300">
             <ClockIcon className="h-5 w-5" />
           </span>
           <div>
-            <h2 className="text-xl font-extrabold text-slate-900 dark:text-white">
+            <h2 className="text-xl font-extrabold text-ink">
               Airport Arrival &amp; Buffer Calculator
             </h2>
-            <p className="text-sm text-slate-600 dark:text-slate-400">
+            <p className="text-sm text-ink-soft">
               Find the stress-free terminal arrival time for your scheduled
               flight departure.
             </p>
@@ -181,17 +181,17 @@ export function AirToolsClient() {
 
         <div className="mt-6 grid gap-5 md:grid-cols-3">
           <div>
-            <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+            <label className="block text-xs font-extrabold uppercase tracking-wider text-ink-soft">
               Flight Type
             </label>
-            <div className="mt-2 grid grid-cols-2 gap-2 rounded-2xl bg-slate-100 p-1.5 dark:bg-slate-800">
+            <div className="mt-2 grid grid-cols-2 gap-2 rounded-2xl bg-subcard p-1.5">
               <button
                 type="button"
                 onClick={() => setFlightType("domestic")}
-                className={`cursor-pointer rounded-xl py-2 text-xs font-bold transition ${
+                className={`cursor-pointer rounded-xl py-2 text-xs font-extrabold transition ${
                   flightType === "domestic"
-                    ? "bg-indigo-600 text-white dark:bg-indigo-500"
-                    : "text-slate-700 hover:bg-white dark:text-slate-300 dark:hover:bg-slate-700"
+                    ? "ta-btn-primary"
+                    : "text-ink-soft hover:bg-card hover:text-ink"
                 }`}
               >
                 Domestic
@@ -199,10 +199,10 @@ export function AirToolsClient() {
               <button
                 type="button"
                 onClick={() => setFlightType("international")}
-                className={`cursor-pointer rounded-xl py-2 text-xs font-bold transition ${
+                className={`cursor-pointer rounded-xl py-2 text-xs font-extrabold transition ${
                   flightType === "international"
-                    ? "bg-indigo-600 text-white dark:bg-indigo-500"
-                    : "text-slate-700 hover:bg-white dark:text-slate-300 dark:hover:bg-slate-700"
+                    ? "ta-btn-primary"
+                    : "text-ink-soft hover:bg-card hover:text-ink"
                 }`}
               >
                 International
@@ -213,7 +213,7 @@ export function AirToolsClient() {
           <div>
             <label
               htmlFor="dep-time"
-              className="block text-xs font-extrabold uppercase tracking-wider text-slate-700 dark:text-slate-300"
+              className="block text-xs font-extrabold uppercase tracking-wider text-ink-soft"
             >
               Scheduled Takeoff Time
             </label>
@@ -222,37 +222,37 @@ export function AirToolsClient() {
               type="time"
               value={departureHour}
               onChange={(e) => setDepartureHour(e.target.value)}
-              className="mt-2 w-full rounded-2xl border-2 border-slate-200 bg-slate-50 px-4 py-2.5 font-mono text-sm font-bold text-slate-900 focus:border-indigo-600 focus:bg-white focus:outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-sky-400"
+              className="mt-2 w-full rounded-2xl border-2 border-line bg-input px-4 py-2.5 font-mono text-sm font-bold text-ink focus:border-teal-500 focus:outline-none"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+            <label className="block text-xs font-extrabold uppercase tracking-wider text-ink-soft">
               Luggage Mode
             </label>
             <button
               type="button"
               onClick={() => setHasCheckinBag((v) => !v)}
-              className="mt-2 flex w-full cursor-pointer items-center justify-between rounded-2xl border-2 border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-bold text-slate-900 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:hover:bg-slate-800"
+              className="mt-2 flex w-full cursor-pointer items-center justify-between rounded-2xl border-2 border-line bg-input px-4 py-2.5 text-sm font-bold text-ink transition hover:border-teal-500"
             >
               <span>
                 {hasCheckinBag ? "With Check-In Bag" : "Cabin Bag Only"}
               </span>
-              <PlaneIcon className="h-4 w-4 text-indigo-600 dark:text-sky-400" />
+              <PlaneIcon className="h-4 w-4 text-teal-600 dark:text-teal-300" />
             </button>
           </div>
         </div>
 
-        <div className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-indigo-200 bg-indigo-50 p-5 text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white">
+        <div className="ta-cta-banner mt-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl p-5">
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-indigo-700 dark:text-sky-300">
+            <p className="text-xs font-bold uppercase tracking-wider text-teal-800 dark:text-teal-300">
               Recommended Terminal Entry Time
             </p>
-            <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
+            <p className="mt-1 text-sm text-ink-soft">
               Includes security queue, bag drop &amp; boarding gate buffer
             </p>
           </div>
-          <p className="font-mono text-2xl font-black text-indigo-700 dark:text-emerald-300 sm:text-3xl">
+          <p className="font-mono text-2xl font-black text-emerald-700 dark:text-emerald-300 sm:text-3xl">
             {computeArrivalRecommendation()}
           </p>
         </div>
@@ -261,17 +261,17 @@ export function AirToolsClient() {
       {/* Tool 3: Boarding & DigiYatra Checklist */}
       <section
         id="checklist"
-        className="scroll-mt-24 rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-900/5 transition-colors dark:border-slate-800 dark:bg-slate-900 sm:p-8"
+        className="scroll-mt-24 rounded-3xl border border-line bg-card p-6 shadow-lg shadow-black/5 dark:shadow-black/25 sm:p-8"
       >
         <div className="flex items-center gap-3">
-          <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-teal-100 text-teal-700 dark:bg-teal-500/20 dark:text-teal-300">
+          <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
             <ShieldCheckIcon className="h-5 w-5" />
           </span>
           <div>
-            <h2 className="text-xl font-extrabold text-slate-900 dark:text-white">
+            <h2 className="text-xl font-extrabold text-ink">
               Pre-Flight &amp; DigiYatra Boarding Checklist
             </h2>
-            <p className="text-sm text-slate-600 dark:text-slate-400">
+            <p className="text-sm text-ink-soft">
               Avoid last-minute counter surprises with these essential aviation
               checks.
             </p>
@@ -287,10 +287,10 @@ export function AirToolsClient() {
           ].map((tip) => (
             <div
               key={tip}
-              className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-800/60"
+              className="flex items-start gap-3 rounded-2xl border border-line bg-subcard p-4"
             >
               <CheckCircleIcon className="mt-0.5 h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-              <p className="text-sm font-medium leading-relaxed text-slate-800 dark:text-slate-200">
+              <p className="text-sm font-medium leading-relaxed text-ink">
                 {tip}
               </p>
             </div>

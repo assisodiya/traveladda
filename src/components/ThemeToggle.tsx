@@ -13,6 +13,9 @@ function subscribeTheme(listener: () => void) {
     const handleMedia = () => {
       if (!window.localStorage.getItem(THEME_STORAGE_KEY)) {
         document.documentElement.classList.toggle("dark", mq.matches);
+        document.documentElement.style.colorScheme = mq.matches
+          ? "dark"
+          : "light";
         listener();
       }
     };
@@ -46,6 +49,7 @@ export function ThemeToggle() {
   const toggleTheme = () => {
     const nextDark = !document.documentElement.classList.contains("dark");
     document.documentElement.classList.toggle("dark", nextDark);
+    document.documentElement.style.colorScheme = nextDark ? "dark" : "light";
     try {
       window.localStorage.setItem(
         THEME_STORAGE_KEY,
@@ -63,14 +67,19 @@ export function ThemeToggle() {
       onClick={toggleTheme}
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
       title={isDark ? "Switch to light mode" : "Switch to dark mode"}
-      className="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-slate-700 transition hover:bg-slate-100 hover:text-slate-950 dark:border-slate-700 dark:bg-slate-800 dark:text-amber-300 dark:hover:bg-slate-700"
+      className="inline-flex h-10 cursor-pointer items-center gap-2 rounded-xl border border-line bg-subcard px-3 text-xs font-bold text-ink transition hover:border-line-strong"
     >
       {isDark ? (
-        <SunIcon className="h-5 w-5" />
+        <>
+          <SunIcon className="h-4 w-4 text-amber-300" />
+          <span className="hidden sm:inline">Light</span>
+        </>
       ) : (
-        <MoonIcon className="h-5 w-5" />
+        <>
+          <MoonIcon className="h-4 w-4 text-teal-700" />
+          <span className="hidden sm:inline">Dark</span>
+        </>
       )}
     </button>
   );
 }
-
