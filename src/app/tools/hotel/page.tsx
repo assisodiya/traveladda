@@ -16,32 +16,37 @@ export default async function HotelToolsPage() {
 
   return (
     <main className="pb-20">
-      <section className="bg-travel-grid bg-gradient-to-br from-slate-950 via-teal-950 to-slate-900 py-16 text-white">
+      <section className="border-b border-slate-200 bg-teal-50/70 bg-gradient-to-br from-teal-50 via-white to-indigo-50 py-16 transition-colors dark:border-slate-800 dark:bg-slate-950 dark:from-slate-950 dark:via-teal-950/75 dark:to-slate-900">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <nav
             aria-label="Breadcrumb"
-            className="flex items-center gap-2 text-xs font-semibold text-slate-300"
+            className="flex items-center gap-2 text-xs font-semibold text-slate-600 dark:text-slate-300"
           >
-            <Link href="/" className="hover:text-white">
+            <Link
+              href="/"
+              className="hover:text-indigo-600 dark:hover:text-white"
+            >
               Home
             </Link>
             <span>/</span>
-            <span className="text-teal-300">Hotel Tools</span>
+            <span className="font-bold text-teal-800 dark:text-teal-300">
+              Hotel Tools
+            </span>
           </nav>
 
           <div className="mt-6 flex items-center gap-3">
-            <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-teal-500/20 text-teal-300 ring-1 ring-teal-400/30">
+            <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-teal-100 text-teal-700 ring-1 ring-teal-600/20 dark:bg-teal-500/20 dark:text-teal-300 dark:ring-teal-400/30">
               <HotelIcon className="h-5 w-5" />
             </span>
-            <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-teal-300">
+            <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-teal-800 dark:text-teal-300">
               STAY &amp; HOSPITALITY HUB
             </span>
           </div>
 
-          <h1 className="mt-4 text-3xl font-black tracking-tight text-white sm:text-5xl">
+          <h1 className="mt-4 text-3xl font-black tracking-tight text-slate-950 dark:text-white sm:text-5xl">
             Hotel Budget &amp; Transit Stay Tools
           </h1>
-          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-200 sm:text-base">
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-700 dark:text-slate-300 sm:text-base">
             Calculate room tariffs with GST slabs, coordinate early train or
             flight check-ins, and travel prepared.
           </p>
@@ -54,4 +59,3 @@ export default async function HotelToolsPage() {
     </main>
   );
 }
-

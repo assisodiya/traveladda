@@ -5,12 +5,26 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "TravelAdda | Live Indian Railways PNR Status, Rail & Flight Portal",
+    default: "TravelAdda | Air, Rail & Hotel Smart Travel Portal",
     template: "%s | TravelAdda",
   },
   description:
-    "Track live 10-digit Indian Railways PNR status, decode coach & berth numbers, explore scenic corridors, and read smart rail & air travel guides on TravelAdda.",
+    "Track live 10-digit Indian Railways PNR status, check flight baggage & airport buffers, estimate hotel tariffs with GST, and read smart travel guides on TravelAdda.",
 };
+
+const THEME_INIT_SCRIPT = `
+(function() {
+  try {
+    var saved = localStorage.getItem('traveladda-theme');
+    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (saved === 'dark' || (!saved && prefersDark)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  } catch (e) {}
+})();
+`;
 
 export default function RootLayout({
   children,
@@ -18,8 +32,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className="flex min-h-screen flex-col antialiased">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
+      <body className="flex min-h-screen flex-col bg-slate-50 text-slate-900 antialiased transition-colors duration-200 dark:bg-slate-950 dark:text-slate-100">
         <Navbar />
         <div className="flex-1">{children}</div>
         <Footer />

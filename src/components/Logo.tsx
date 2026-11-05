@@ -1,11 +1,10 @@
 import Link from "next/link";
 
 interface LogoProps {
-  theme?: "dark" | "light";
   size?: "sm" | "md" | "lg";
 }
 
-export function Logo({ theme = "light", size = "md" }: LogoProps) {
+export function Logo({ size = "md" }: LogoProps) {
   const iconSizes = {
     sm: "h-9 w-9",
     md: "h-10 w-10",
@@ -18,8 +17,6 @@ export function Logo({ theme = "light", size = "md" }: LogoProps) {
     lg: "text-2xl",
   };
 
-  const isDarkSurface = theme === "dark";
-
   return (
     <Link
       href="/"
@@ -27,7 +24,7 @@ export function Logo({ theme = "light", size = "md" }: LogoProps) {
       aria-label="TravelAdda Home"
     >
       <span
-        className={`relative inline-flex ${iconSizes[size]} shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-indigo-950 via-indigo-800 to-teal-700 shadow-sm ring-1 ring-slate-900/10 transition-transform duration-200 group-hover:scale-105`}
+        className={`relative inline-flex ${iconSizes[size]} shrink-0 items-center justify-center overflow-hidden rounded-xl bg-indigo-950 bg-gradient-to-br from-indigo-950 via-indigo-800 to-teal-700 shadow-sm ring-1 ring-slate-900/10 transition-transform duration-200 group-hover:scale-105 dark:ring-white/15`}
       >
         <svg
           viewBox="0 0 64 64"
@@ -61,20 +58,10 @@ export function Logo({ theme = "light", size = "md" }: LogoProps) {
       </span>
 
       <span
-        className={`${textSizes[size]} font-extrabold leading-none tracking-tight ${
-          isDarkSurface ? "text-white" : "text-slate-900"
-        }`}
+        className={`${textSizes[size]} font-extrabold leading-none tracking-tight text-slate-900 dark:text-white`}
       >
         Travel
-        <span
-          className={
-            isDarkSurface
-              ? "text-sky-400"
-              : "text-indigo-600"
-          }
-        >
-          Adda
-        </span>
+        <span className="text-indigo-600 dark:text-sky-400">Adda</span>
       </span>
     </Link>
   );
