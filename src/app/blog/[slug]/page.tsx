@@ -52,7 +52,7 @@ export default async function BlogArticlePage({
 
   return (
     <main className="pb-20">
-      {/* Smooth Article Header */}
+      {/* Warm Article Header */}
       <section className="ta-hero py-16 sm:py-20">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <nav
@@ -61,25 +61,25 @@ export default async function BlogArticlePage({
           >
             <Link
               href="/"
-              className="transition hover:text-teal-700 dark:hover:text-teal-300"
+              className="transition hover:text-orange-600 dark:hover:text-amber-300"
             >
               Home
             </Link>
             <span className="text-ink-muted">/</span>
             <Link
               href="/rail/pnr-status#rail-blog"
-              className="transition hover:text-teal-700 dark:hover:text-teal-300"
+              className="transition hover:text-orange-600 dark:hover:text-amber-300"
             >
               Rail Blog
             </Link>
             <span className="text-ink-muted">/</span>
-            <span className="font-bold text-teal-700 dark:text-teal-300">
+            <span className="font-bold text-orange-700 dark:text-amber-300">
               {post.category}
             </span>
           </nav>
 
           <div className="mt-6 flex flex-wrap items-center gap-3 text-xs font-bold">
-            <span className="rounded-full border border-teal-500/30 bg-teal-500/15 px-3 py-1 text-teal-800 dark:text-teal-200">
+            <span className="rounded-full border border-orange-500/35 bg-orange-500/15 px-3 py-1 text-orange-800 dark:text-amber-200">
               {post.category}
             </span>
             <span className="text-ink-soft">{post.readTime}</span>
@@ -111,8 +111,8 @@ export default async function BlogArticlePage({
         {/* Article Body */}
         <article className="space-y-8 rounded-3xl border border-line bg-card p-7 shadow-xs sm:p-10">
           {/* Key Takeaways Box */}
-          <div className="rounded-2xl border border-emerald-500/25 bg-emerald-500/10 p-6">
-            <h2 className="text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-700 dark:text-emerald-300">
+          <div className="rounded-2xl border border-amber-500/30 bg-amber-500/12 p-6">
+            <h2 className="text-xs font-extrabold uppercase tracking-[0.18em] text-orange-700 dark:text-amber-300">
               Quick Summary
             </h2>
             <ul className="mt-3 space-y-2.5">
@@ -121,7 +121,7 @@ export default async function BlogArticlePage({
                   key={item}
                   className="flex items-start gap-2.5 text-sm font-medium text-ink"
                 >
-                  <CheckCircleIcon className="mt-0.5 h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                  <CheckCircleIcon className="mt-0.5 h-4 w-4 text-orange-600 dark:text-amber-400" />
                   <span>{item}</span>
                 </li>
               ))}
@@ -161,8 +161,8 @@ export default async function BlogArticlePage({
               )}
 
               {section.callout && (
-                <div className="rounded-2xl border-l-4 border-teal-500 bg-subcard p-5">
-                  <p className="text-xs font-extrabold uppercase tracking-wider text-teal-700 dark:text-teal-300">
+                <div className="rounded-2xl border-l-4 border-orange-500 bg-subcard p-5">
+                  <p className="text-xs font-extrabold uppercase tracking-wider text-orange-700 dark:text-amber-300">
                     {section.callout.title}
                   </p>
                   <p className="mt-1 text-sm leading-relaxed text-ink-soft">
@@ -178,7 +178,7 @@ export default async function BlogArticlePage({
         <aside className="space-y-6">
           <div className="sticky top-24 space-y-6">
             <div className="ta-cta-banner rounded-3xl p-6 shadow-lg">
-              <span className="inline-flex rounded-full border border-emerald-500/30 bg-emerald-500/15 px-3 py-1 text-[11px] font-bold text-emerald-800 dark:text-emerald-300">
+              <span className="inline-flex rounded-full border border-orange-500/35 bg-orange-500/15 px-3 py-1 text-[11px] font-bold text-orange-800 dark:text-amber-200">
                 LIVE PNR TOOL
               </span>
               <h3 className="mt-4 text-xl font-extrabold text-ink">
@@ -207,9 +207,9 @@ export default async function BlogArticlePage({
                   <Link
                     key={rel.slug}
                     href={`/blog/${rel.slug}`}
-                    className="block rounded-2xl border border-line bg-subcard p-3.5 transition hover:border-teal-500"
+                    className="block rounded-2xl border border-line bg-subcard p-3.5 transition hover:border-orange-500"
                   >
-                    <span className="text-[10px] font-extrabold uppercase text-teal-700 dark:text-teal-300">
+                    <span className="text-[10px] font-extrabold uppercase text-orange-600 dark:text-amber-400">
                       {rel.category}
                     </span>
                     <p className="mt-1 text-xs font-extrabold leading-snug text-ink">

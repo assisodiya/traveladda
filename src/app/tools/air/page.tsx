@@ -24,21 +24,21 @@ export default async function AirToolsPage() {
           >
             <Link
               href="/"
-              className="transition hover:text-teal-700 dark:hover:text-teal-300"
+              className="transition hover:text-orange-600 dark:hover:text-amber-300"
             >
               Home
             </Link>
             <span className="text-ink-muted">/</span>
-            <span className="font-bold text-teal-700 dark:text-teal-300">
+            <span className="font-bold text-orange-700 dark:text-amber-300">
               Air Tools
             </span>
           </nav>
 
           <div className="mt-6 flex items-center gap-3">
-            <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-sky-500/25 bg-sky-500/15 text-sky-700 dark:text-sky-300">
+            <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-orange-500/30 bg-orange-500/15 text-orange-700 dark:text-amber-300">
               <PlaneIcon className="h-5 w-5" />
             </span>
-            <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-sky-700 dark:text-sky-300">
+            <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-orange-700 dark:text-amber-300">
               AVIATION UTILITY HUB
             </span>
           </div>

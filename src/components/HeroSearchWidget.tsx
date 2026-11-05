@@ -85,8 +85,8 @@ export function HeroSearchWidget() {
           </button>
         </div>
 
-        <span className="hidden items-center gap-1.5 rounded-full border border-emerald-500/25 bg-emerald-500/12 px-3 py-1 text-xs font-bold text-emerald-700 dark:text-emerald-300 sm:inline-flex">
-          <span className="h-2 w-2 rounded-full bg-emerald-500" />
+        <span className="hidden items-center gap-1.5 rounded-full border border-orange-500/30 bg-orange-500/12 px-3 py-1 text-xs font-bold text-orange-700 dark:text-amber-300 sm:inline-flex">
+          <span className="h-2 w-2 rounded-full bg-orange-500 dark:bg-amber-400" />
           <span>Instant Tools</span>
         </span>
       </div>
@@ -101,7 +101,7 @@ export function HeroSearchWidget() {
             >
               Indian Railways PNR Status
             </label>
-            <span className="font-mono text-xs font-bold text-teal-700 dark:text-teal-300">
+            <span className="font-mono text-xs font-bold text-orange-600 dark:text-amber-400">
               {pnr.length}/10 digits
             </span>
           </div>
@@ -123,7 +123,7 @@ export function HeroSearchWidget() {
                   if (validationMsg) setValidationMsg("");
                 }}
                 placeholder="Enter 10-digit PNR number"
-                className="w-full rounded-2xl border-2 border-line bg-input py-3.5 pl-11 pr-4 font-mono text-base font-bold tracking-wider text-ink placeholder:font-sans placeholder:text-sm placeholder:font-medium placeholder:tracking-normal placeholder:text-ink-muted focus:border-teal-500 focus:outline-none"
+                className="w-full rounded-2xl border-2 border-line bg-input py-3.5 pl-11 pr-4 font-mono text-base font-bold tracking-wider text-ink placeholder:font-sans placeholder:text-sm placeholder:font-medium placeholder:tracking-normal placeholder:text-ink-muted focus:border-orange-500 focus:outline-none"
               />
             </div>
             <button
@@ -143,11 +143,11 @@ export function HeroSearchWidget() {
 
           <div className="mt-4 grid grid-cols-2 gap-2.5 rounded-2xl bg-subcard p-3.5 text-xs text-ink-soft">
             <div className="flex items-center gap-2 font-semibold">
-              <CheckCircleIcon className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+              <CheckCircleIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
               <span>Coach &amp; Seat Decoder</span>
             </div>
             <div className="flex items-center gap-2 font-semibold">
-              <ClockIcon className="h-4 w-4 text-teal-600 dark:text-teal-300" />
+              <ClockIcon className="h-4 w-4 text-amber-600 dark:text-yellow-300" />
               <span>Live Charting Updates</span>
             </div>
           </div>
@@ -166,11 +166,11 @@ export function HeroSearchWidget() {
                 Domestic Economy Flights
               </p>
               <div className="mt-2 flex flex-wrap gap-2 text-xs font-semibold">
-                <span className="inline-flex items-center gap-1.5 rounded-lg bg-sky-500/15 px-2.5 py-1 text-sky-800 dark:text-sky-300">
+                <span className="inline-flex items-center gap-1.5 rounded-lg bg-orange-500/15 px-2.5 py-1 text-orange-800 dark:text-orange-300">
                   <LuggageIcon className="h-3.5 w-3.5" />
                   <span>7 kg Cabin + 15 kg Check-in</span>
                 </span>
-                <span className="inline-flex items-center gap-1.5 rounded-lg bg-teal-500/15 px-2.5 py-1 text-teal-800 dark:text-teal-300">
+                <span className="inline-flex items-center gap-1.5 rounded-lg bg-amber-500/18 px-2.5 py-1 text-amber-900 dark:text-amber-300">
                   <ClockIcon className="h-3.5 w-3.5" />
                   <span>Report 2 hrs prior</span>
                 </span>
@@ -182,11 +182,11 @@ export function HeroSearchWidget() {
                 International Economy Flights
               </p>
               <div className="mt-2 flex flex-wrap gap-2 text-xs font-semibold">
-                <span className="inline-flex items-center gap-1.5 rounded-lg bg-teal-500/15 px-2.5 py-1 text-teal-800 dark:text-teal-300">
+                <span className="inline-flex items-center gap-1.5 rounded-lg bg-amber-500/18 px-2.5 py-1 text-amber-900 dark:text-amber-300">
                   <LuggageIcon className="h-3.5 w-3.5" />
                   <span>7 kg Cabin + 23–30 kg Check-in</span>
                 </span>
-                <span className="inline-flex items-center gap-1.5 rounded-lg bg-sky-500/15 px-2.5 py-1 text-sky-800 dark:text-sky-300">
+                <span className="inline-flex items-center gap-1.5 rounded-lg bg-orange-500/15 px-2.5 py-1 text-orange-800 dark:text-orange-300">
                   <ClockIcon className="h-3.5 w-3.5" />
                   <span>Report 3 hrs prior</span>
                 </span>
@@ -211,7 +211,7 @@ export function HeroSearchWidget() {
             <span className="text-xs font-extrabold uppercase tracking-wider text-ink-soft">
               Quick Hotel Room &amp; GST Estimator
             </span>
-            <span className="rounded-full bg-teal-500/15 px-2.5 py-0.5 text-xs font-bold text-teal-800 dark:text-teal-300">
+            <span className="rounded-full bg-amber-500/18 px-2.5 py-0.5 text-xs font-bold text-amber-900 dark:text-amber-300">
               {gstRate}% GST Slab
             </span>
           </div>
@@ -230,7 +230,7 @@ export function HeroSearchWidget() {
                 min={0}
                 value={roomRate}
                 onChange={(e) => setRoomRate(e.target.value)}
-                className="mt-1 w-full rounded-xl border border-line bg-input px-3.5 py-2.5 font-mono text-sm font-bold text-ink focus:border-teal-500 focus:outline-none"
+                className="mt-1 w-full rounded-xl border border-line bg-input px-3.5 py-2.5 font-mono text-sm font-bold text-ink focus:border-orange-500 focus:outline-none"
               />
             </div>
             <div>
@@ -247,17 +247,17 @@ export function HeroSearchWidget() {
                 max={30}
                 value={nights}
                 onChange={(e) => setNights(e.target.value)}
-                className="mt-1 w-full rounded-xl border border-line bg-input px-3.5 py-2.5 font-mono text-sm font-bold text-ink focus:border-teal-500 focus:outline-none"
+                className="mt-1 w-full rounded-xl border border-line bg-input px-3.5 py-2.5 font-mono text-sm font-bold text-ink focus:border-orange-500 focus:outline-none"
               />
             </div>
           </div>
 
           <div className="flex items-center justify-between rounded-2xl border border-line bg-subcard px-4 py-3 text-ink">
             <div className="flex items-center gap-2 text-xs font-semibold text-ink-soft">
-              <CalculatorIcon className="h-4 w-4 text-teal-600 dark:text-teal-300" />
+              <CalculatorIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
               <span>Estimated Stay Total (incl. GST)</span>
             </div>
-            <span className="font-mono text-lg font-extrabold text-emerald-700 dark:text-emerald-300">
+            <span className="font-mono text-lg font-extrabold text-orange-700 dark:text-amber-300">
               ₹{totalWithTax.toLocaleString("en-IN")}
             </span>
           </div>

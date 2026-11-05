@@ -4,32 +4,32 @@
 
 :root {
   color-scheme: light;
-  --ta-canvas: #f3f6fb;
+  --ta-canvas: #faf7f2;
   --ta-band: #ffffff;
   --ta-card: #ffffff;
-  --ta-subcard: #edf2f9;
-  --ta-input: #f8fafc;
-  --ta-nav: rgba(255, 255, 255, 0.9);
-  --ta-border: #dce4f0;
-  --ta-border-strong: #c6d3e6;
-  --ta-ink: #0f172a;
-  --ta-ink-soft: #334155;
-  --ta-ink-muted: #64748b;
+  --ta-subcard: #f5efe6;
+  --ta-input: #fcf9f5;
+  --ta-nav: rgba(255, 252, 248, 0.92);
+  --ta-border: #eae0d3;
+  --ta-border-strong: #d8c8b4;
+  --ta-ink: #1c1917;
+  --ta-ink-soft: #44403c;
+  --ta-ink-muted: #78716c;
 }
 
 html.dark {
   color-scheme: dark;
-  --ta-canvas: #101726;
-  --ta-band: #141e30;
-  --ta-card: #1a2639;
-  --ta-subcard: #223149;
-  --ta-input: #131c2c;
-  --ta-nav: rgba(16, 23, 38, 0.9);
-  --ta-border: #2a3b55;
-  --ta-border-strong: #384f70;
-  --ta-ink: #f1f5f9;
-  --ta-ink-soft: #cbd5e1;
-  --ta-ink-muted: #94a3b8;
+  --ta-canvas: #141210;
+  --ta-band: #1a1714;
+  --ta-card: #221e1a;
+  --ta-subcard: #2c2621;
+  --ta-input: #181512;
+  --ta-nav: rgba(20, 18, 16, 0.92);
+  --ta-border: #383028;
+  --ta-border-strong: #4d4237;
+  --ta-ink: #faf7f2;
+  --ta-ink-soft: #d6cfc7;
+  --ta-ink-muted: #a39a90;
 }
 
 @theme inline {
@@ -71,79 +71,79 @@ body {
   -webkit-backdrop-filter: blur(16px);
 }
 
-/* Smooth Hero Atmosphere (Daylight Horizon vs Velvet Aurora Dark) */
+/* Warm Sunrise / Sunset Ember Hero Atmosphere */
 .ta-hero {
-  background-color: #ecf5ff;
+  background-color: #fff7ed;
   background-image:
-    radial-gradient(circle at 16% 18%, rgba(13, 148, 136, 0.11), transparent 45%),
-    radial-gradient(circle at 84% 16%, rgba(2, 132, 199, 0.12), transparent 45%),
-    linear-gradient(180deg, #eaf4ff 0%, #f3f8fc 58%, #f3f6fb 100%);
+    radial-gradient(circle at 16% 18%, rgba(234, 88, 12, 0.12), transparent 46%),
+    radial-gradient(circle at 84% 16%, rgba(245, 158, 11, 0.14), transparent 46%),
+    linear-gradient(180deg, #fff7ed 0%, #fefce8 55%, #faf7f2 100%);
   border-bottom: 1px solid var(--ta-border);
 }
 
 html.dark .ta-hero {
-  background-color: #121c2e;
+  background-color: #191512;
   background-image:
-    radial-gradient(circle at 16% 18%, rgba(45, 212, 191, 0.13), transparent 48%),
-    radial-gradient(circle at 84% 16%, rgba(56, 189, 248, 0.12), transparent 46%),
-    linear-gradient(180deg, #142136 0%, #121c2f 58%, #101726 100%);
+    radial-gradient(circle at 16% 18%, rgba(249, 115, 22, 0.15), transparent 48%),
+    radial-gradient(circle at 84% 16%, rgba(251, 191, 36, 0.12), transparent 46%),
+    linear-gradient(180deg, #211a14 0%, #191512 58%, #141210 100%);
   border-bottom: 1px solid var(--ta-border);
 }
 
 /* Boarding Pass Header & Editorial Cover Surface */
 .ta-ticket-header {
-  background-color: #e6f4f8;
+  background-color: #ffedd5;
   background-image: linear-gradient(
     135deg,
-    #e0f2fe 0%,
-    #e6f7f5 52%,
-    #eef4ff 100%
+    #ffedd5 0%,
+    #fef3c7 52%,
+    #fff7ed 100%
   );
-  border-bottom: 1px solid #cde2ee;
-  color: #0f172a;
+  border-bottom: 1px solid #f3d5b5;
+  color: #1c1917;
 }
 
 html.dark .ta-ticket-header {
-  background-color: #162b42;
+  background-color: #2b2017;
   background-image: linear-gradient(
     135deg,
-    #162a42 0%,
-    #153347 52%,
-    #14353c 100%
+    #2d2016 0%,
+    #2f2417 52%,
+    #261d16 100%
   );
-  border-bottom: 1px solid #2b4460;
-  color: #f1f5f9;
+  border-bottom: 1px solid #4a3828;
+  color: #faf7f2;
 }
 
-/* Smooth Bottom / Sidebar CTA Banner */
+/* Warm Bottom / Sidebar CTA Banner */
 .ta-cta-banner {
-  background-color: #e8f5f6;
+  background-color: #fff3e0;
   background-image: linear-gradient(
     135deg,
-    #e0f2fe 0%,
-    #e6f9f6 55%,
-    #eef2ff 100%
+    #ffedd5 0%,
+    #fef3c7 55%,
+    #fffbeb 100%
   );
-  border: 1px solid #c7e1ec;
+  border: 1px solid #f2d2ad;
 }
 
 html.dark .ta-cta-banner {
-  background-color: #182940;
+  background-color: #291f16;
   background-image: linear-gradient(
     135deg,
-    #182940 0%,
-    #163346 55%,
-    #15363d 100%
+    #2c2016 0%,
+    #2f2417 55%,
+    #251c15 100%
   );
-  border: 1px solid #2c4663;
+  border: 1px solid #4d3a27;
 }
 
-/* Primary Ocean-Teal Action Button */
+/* Primary Sunset Orange -> Golden Amber Action Button */
 .ta-btn-primary {
-  background-color: #0d9488;
-  background-image: linear-gradient(135deg, #0d9488 0%, #0284c7 100%);
+  background-color: #ea580c;
+  background-image: linear-gradient(135deg, #ea580c 0%, #f59e0b 100%);
   color: #ffffff;
-  box-shadow: 0 10px 24px -8px rgba(13, 148, 136, 0.42);
+  box-shadow: 0 10px 24px -8px rgba(234, 88, 12, 0.45);
   transition:
     transform 160ms ease,
     filter 160ms ease,
@@ -152,14 +152,14 @@ html.dark .ta-cta-banner {
 
 .ta-btn-primary:hover {
   filter: brightness(1.06);
-  box-shadow: 0 12px 28px -6px rgba(2, 132, 199, 0.48);
+  box-shadow: 0 12px 28px -6px rgba(234, 88, 12, 0.52);
 }
 
 html.dark .ta-btn-primary {
-  background-color: #14b8a6;
-  background-image: linear-gradient(135deg, #14b8a6 0%, #0ea5e9 100%);
-  color: #08121e;
-  box-shadow: 0 10px 26px -8px rgba(20, 184, 166, 0.35);
+  background-color: #f97316;
+  background-image: linear-gradient(135deg, #f97316 0%, #fbbf24 100%);
+  color: #1c1308;
+  box-shadow: 0 10px 26px -8px rgba(249, 115, 22, 0.38);
 }
 
 /* Prevent Chrome/Safari autofill from painting white/light-blue boxes in dark mode */
@@ -172,7 +172,7 @@ input:-webkit-autofill:focus {
 }
 
 :focus-visible {
-  outline: 2.5px solid #14b8a6;
+  outline: 2.5px solid #f97316;
   outline-offset: 3px;
 }
 
@@ -185,6 +185,6 @@ input:-webkit-autofill:focus {
   html,
   body {
     background: #ffffff !important;
-    color: #0f172a !important;
+    color: #1c1917 !important;
   }
 }

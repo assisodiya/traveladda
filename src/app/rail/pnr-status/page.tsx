@@ -24,39 +24,39 @@ const WAITLIST_PRIORITY_CARDS = [
     code: "CNF",
     title: "Confirmed Seat / Berth",
     chance: "100% Confirmed",
-    badge: "bg-emerald-500/20 text-emerald-800 dark:text-emerald-300",
-    border: "border-emerald-500/25",
+    badge: "bg-amber-500/20 text-amber-900 dark:text-amber-300",
+    border: "border-amber-500/30",
     desc: "Full seat or sleeping berth guaranteed. Coach & berth appear immediately or upon chart preparation.",
   },
   {
     code: "RAC",
     title: "Reservation Against Cancellation",
     chance: "Board Guaranteed",
-    badge: "bg-amber-500/20 text-amber-800 dark:text-amber-300",
-    border: "border-amber-500/25",
+    badge: "bg-orange-500/18 text-orange-800 dark:text-orange-300",
+    border: "border-orange-500/30",
     desc: "Permitted to board! Shares a side-lower seat initially and upgrades to a full berth as cancellations/no-shows occur.",
   },
   {
     code: "GNWL",
     title: "General Waiting List",
     chance: "High Priority",
-    badge: "bg-teal-500/20 text-teal-800 dark:text-teal-300",
-    border: "border-teal-500/25",
+    badge: "bg-yellow-500/20 text-amber-900 dark:text-yellow-300",
+    border: "border-yellow-500/30",
     desc: "Origin-station general pool with the largest seat allocation and fastest confirmation movement.",
   },
   {
     code: "RLWL / PQWL",
     title: "Remote / Pooled Waitlist",
     chance: "Moderate Priority",
-    badge: "bg-sky-500/20 text-sky-800 dark:text-sky-300",
-    border: "border-sky-500/25",
+    badge: "bg-orange-500/15 text-orange-800 dark:text-orange-300",
+    border: "border-orange-500/25",
     desc: "Quota reserved for intermediate boarding stations; clears when passengers on that route leg cancel.",
   },
   {
     code: "TQWL",
     title: "Tatkal Waiting List",
     chance: "Last-Minute Pool",
-    badge: "bg-rose-500/20 text-rose-800 dark:text-rose-300",
+    badge: "bg-rose-500/18 text-rose-800 dark:text-rose-300",
     border: "border-rose-500/25",
     desc: "Booked during the 10 AM / 11 AM Tatkal window; jumps directly to CNF if confirmed Tatkal seats cancel.",
   },
@@ -88,7 +88,7 @@ export default async function PnrStatusPage() {
 
   return (
     <main className="pb-20">
-      {/* Smooth Rail Hero Banner */}
+      {/* Warm Sunset / Golden Rail Hero Banner */}
       <section className="ta-hero relative overflow-hidden pb-24 pt-12 sm:pb-28 sm:pt-16">
         <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           {/* Breadcrumbs */}
@@ -98,26 +98,26 @@ export default async function PnrStatusPage() {
           >
             <Link
               href="/"
-              className="transition hover:text-teal-700 dark:hover:text-teal-300"
+              className="transition hover:text-orange-600 dark:hover:text-amber-300"
             >
               Home
             </Link>
             <span className="text-ink-muted">/</span>
             <span>Rail</span>
             <span className="text-ink-muted">/</span>
-            <span className="font-bold text-teal-700 dark:text-teal-300">
+            <span className="font-bold text-orange-700 dark:text-amber-300">
               PNR Status
             </span>
           </nav>
 
           <div className="mt-6 max-w-3xl">
-            <span className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/12 px-3.5 py-1 text-xs font-bold text-emerald-700 dark:text-emerald-300">
-              <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
+            <span className="inline-flex items-center gap-2 rounded-full border border-orange-500/30 bg-orange-500/12 px-3.5 py-1 text-xs font-bold text-orange-700 dark:text-amber-300">
+              <span className="h-2 w-2 animate-pulse rounded-full bg-orange-500 dark:bg-amber-400" />
               <span>INDIAN RAILWAYS LIVE PRS TRACKER</span>
             </span>
             <h1 className="mt-4 text-3xl font-black tracking-tight text-ink sm:text-5xl">
               Check Your 10-Digit{" "}
-              <span className="text-teal-700 dark:text-teal-300">
+              <span className="text-orange-600 dark:text-amber-400">
                 PNR Status
               </span>{" "}
               Instantly
@@ -140,15 +140,15 @@ export default async function PnrStatusPage() {
         {/* Traveller Highlights Strip */}
         <div className="mt-5 grid gap-3 rounded-2xl border border-line bg-card px-5 py-4 text-xs font-semibold text-ink-soft shadow-xs sm:grid-cols-3">
           <div className="flex items-center gap-2.5">
-            <ShieldCheckIcon className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+            <ShieldCheckIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
             <span>Instant Coach &amp; Berth Verification</span>
           </div>
           <div className="flex items-center gap-2.5">
-            <ClockIcon className="h-4 w-4 text-teal-600 dark:text-teal-300" />
+            <ClockIcon className="h-4 w-4 text-amber-600 dark:text-yellow-300" />
             <span>1st &amp; 2nd Reservation Chart Tracking</span>
           </div>
           <div className="flex items-center gap-2.5">
-            <TrainIcon className="h-4 w-4 text-sky-600 dark:text-sky-300" />
+            <TrainIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
             <span>Supports All 17 Indian Railway Zones</span>
           </div>
         </div>
@@ -160,7 +160,7 @@ export default async function PnrStatusPage() {
         className="mx-auto mt-20 max-w-6xl scroll-mt-24 px-4 sm:px-6 lg:px-8"
       >
         <div className="max-w-2xl">
-          <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-teal-700 dark:text-teal-300">
+          <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-orange-600 dark:text-amber-400">
             INSTANT TICKET DECODER
           </p>
           <h2 className="mt-2 text-2xl font-extrabold tracking-tight text-ink sm:text-3xl">
@@ -211,7 +211,7 @@ export default async function PnrStatusPage() {
                   key={code}
                   className="flex items-center gap-2.5 rounded-xl bg-subcard px-3 py-2"
                 >
-                  <span className="rounded bg-teal-500/20 px-2 py-0.5 font-mono font-bold text-teal-800 dark:text-teal-300">
+                  <span className="rounded bg-orange-500/18 px-2 py-0.5 font-mono font-bold text-orange-800 dark:text-orange-300">
                     {code}
                   </span>
                   <span className="font-semibold text-ink-soft">{label}</span>
@@ -232,7 +232,7 @@ export default async function PnrStatusPage() {
                     key={code}
                     className="flex items-center gap-2.5 rounded-xl bg-subcard px-3 py-2"
                   >
-                    <span className="rounded bg-sky-500/20 px-2 py-0.5 font-mono font-bold text-sky-800 dark:text-sky-300">
+                    <span className="rounded bg-amber-500/20 px-2 py-0.5 font-mono font-bold text-amber-900 dark:text-amber-300">
                       {code}
                     </span>
                     <span className="truncate font-semibold text-ink-soft">
@@ -253,7 +253,7 @@ export default async function PnrStatusPage() {
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div className="max-w-2xl">
-              <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-teal-700 dark:text-teal-300">
+              <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-orange-600 dark:text-amber-400">
                 RAILWAY INSIGHTS &amp; TRAVEL BLOG
               </p>
               <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-ink sm:text-4xl">
@@ -265,7 +265,7 @@ export default async function PnrStatusPage() {
                 Vande Bharat coaches.
               </p>
             </div>
-            <span className="rounded-full border border-teal-500/25 bg-teal-500/12 px-4 py-1.5 text-xs font-extrabold text-teal-800 dark:text-teal-300">
+            <span className="rounded-full border border-orange-500/30 bg-orange-500/12 px-4 py-1.5 text-xs font-extrabold text-orange-700 dark:text-amber-300">
               {RAIL_BLOG_POSTS.length} Editorial Guides
             </span>
           </div>
@@ -282,7 +282,7 @@ export default async function PnrStatusPage() {
                   <div className="ta-ticket-header flex flex-col justify-between p-7 lg:border-b-0 lg:border-r lg:border-line sm:p-8">
                     <div>
                       <div className="flex flex-wrap items-center gap-2.5 text-xs font-bold">
-                        <span className="rounded-full border border-teal-500/30 bg-teal-500/15 px-3 py-1 text-teal-800 dark:text-teal-200">
+                        <span className="rounded-full border border-orange-500/35 bg-orange-500/15 px-3 py-1 text-orange-800 dark:text-amber-200">
                           0{index + 1} · {post.category}
                         </span>
                         <span className="text-ink-muted">{post.readTime}</span>
@@ -290,7 +290,7 @@ export default async function PnrStatusPage() {
                       <h3 className="mt-5 text-2xl font-black leading-snug text-ink">
                         <Link
                           href={`/blog/${post.slug}`}
-                          className="transition hover:text-teal-700 dark:hover:text-teal-300"
+                          className="transition hover:text-orange-600 dark:hover:text-amber-300"
                         >
                           {post.title}
                         </Link>
@@ -311,7 +311,7 @@ export default async function PnrStatusPage() {
                   {/* Right Substantive In-Page Blog Content */}
                   <div className="flex flex-col justify-between bg-card p-7 sm:p-8">
                     <div>
-                      <p className="text-xs font-extrabold uppercase tracking-widest text-teal-700 dark:text-teal-300">
+                      <p className="text-xs font-extrabold uppercase tracking-widest text-orange-600 dark:text-amber-400">
                         Key Takeaways
                       </p>
                       <ul className="mt-3 space-y-2.5">
@@ -320,7 +320,7 @@ export default async function PnrStatusPage() {
                             key={point}
                             className="flex items-start gap-2.5 text-sm text-ink-soft"
                           >
-                            <CheckCircleIcon className="mt-0.5 h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                            <CheckCircleIcon className="mt-0.5 h-4 w-4 text-orange-600 dark:text-amber-400" />
                             <span>{point}</span>
                           </li>
                         ))}
@@ -364,7 +364,7 @@ export default async function PnrStatusPage() {
         className="mx-auto mt-20 max-w-4xl scroll-mt-24 px-4 sm:px-6 lg:px-8"
       >
         <div className="text-center">
-          <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-teal-700 dark:text-teal-300">
+          <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-orange-600 dark:text-amber-400">
             FREQUENTLY ASKED QUESTIONS
           </p>
           <h2 className="mt-2 text-2xl font-extrabold tracking-tight text-ink sm:text-3xl">
@@ -381,7 +381,7 @@ export default async function PnrStatusPage() {
             >
               <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-sm font-extrabold text-ink sm:text-base">
                 <span>{faq.question}</span>
-                <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-subcard text-ink-soft transition group-open:rotate-45 group-open:bg-teal-500/20 group-open:text-teal-700 dark:group-open:text-teal-300">
+                <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-subcard text-ink-soft transition group-open:rotate-45 group-open:bg-orange-500/20 group-open:text-orange-700 dark:group-open:text-amber-300">
                   +
                 </span>
               </summary>

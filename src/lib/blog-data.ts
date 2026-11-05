@@ -106,7 +106,7 @@ export const RAIL_BLOG_POSTS: BlogPost[] = [
     readTime: "6 min read",
     publishedDate: "November 2026",
     author: { name: "Meera Deshmukh", role: "Indian Rail Data Analyst" },
-    accentColor: "from-slate-950 via-teal-950 to-emerald-950",
+    accentColor: "from-orange-600 via-amber-500 to-yellow-500",
     heroTagline: "Smart Quota Strategy for High-Demand Seasons",
     keyTakeaways: [
       "GNWL (General Waitlist) receives top priority whenever end-to-end passengers cancel.",
@@ -217,7 +217,7 @@ export const RAIL_BLOG_POSTS: BlogPost[] = [
     readTime: "5 min read",
     publishedDate: "October 2026",
     author: { name: "Sanya Nair", role: "Rail & Aviation Experience Writer" },
-    accentColor: "from-slate-950 via-sky-950 to-teal-950",
+    accentColor: "from-amber-600 via-orange-500 to-yellow-500",
     heroTagline: "Pick the Right Seat Before You Book",
     keyTakeaways: [
       "In Double Decker Chair Car coaches, 'U' denotes Upper Deck and 'L' denotes Lower Deck.",

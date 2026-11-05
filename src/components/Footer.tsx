@@ -16,8 +16,8 @@ export function Footer() {
               real-time Indian Railways PNR status, calculate baggage &amp; stay
               budgets, and read practical travel guides.
             </p>
-            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/12 px-3 py-1 text-xs font-bold text-emerald-700 dark:text-emerald-300">
-              <span className="h-2 w-2 rounded-full bg-emerald-500" />
+            <div className="inline-flex items-center gap-2 rounded-full border border-orange-500/30 bg-orange-500/12 px-3 py-1 text-xs font-bold text-orange-700 dark:text-amber-300">
+              <span className="h-2 w-2 rounded-full bg-orange-500 dark:bg-amber-400" />
               <span>Live Rail PNR Status Ready</span>
             </div>
           </div>
@@ -25,17 +25,17 @@ export function Footer() {
           {/* Rail Tools */}
           <div>
             <h3 className="inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.16em] text-ink">
-              <TrainIcon className="h-4 w-4 text-teal-700 dark:text-teal-300" />
+              <TrainIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
               <span>Rail Tools</span>
             </h3>
             <ul className="mt-4 space-y-2.5 text-sm">
               <li>
                 <Link
                   href="/rail/pnr-status"
-                  className="inline-flex items-center gap-2 font-semibold text-ink transition hover:text-teal-700 dark:hover:text-teal-300"
+                  className="inline-flex items-center gap-2 font-semibold text-ink transition hover:text-orange-600 dark:hover:text-amber-300"
                 >
                   <span>Live PNR Status Checker</span>
-                  <span className="rounded bg-emerald-500/15 px-1.5 py-0.5 text-[10px] font-bold text-emerald-700 dark:text-emerald-300">
+                  <span className="rounded bg-orange-500/18 px-1.5 py-0.5 text-[10px] font-bold text-orange-700 dark:text-amber-300">
                     LIVE
                   </span>
                 </Link>
@@ -43,7 +43,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/rail/pnr-status#decoder"
-                  className="text-ink-soft transition hover:text-teal-700 dark:hover:text-teal-300"
+                  className="text-ink-soft transition hover:text-orange-600 dark:hover:text-amber-300"
                 >
                   Coach &amp; Berth Code Decoder
                 </Link>
@@ -51,7 +51,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/rail/pnr-status#rail-blog"
-                  className="text-ink-soft transition hover:text-teal-700 dark:hover:text-teal-300"
+                  className="text-ink-soft transition hover:text-orange-600 dark:hover:text-amber-300"
                 >
                   Chart Timings &amp; Rail Blog
                 </Link>
@@ -59,7 +59,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/rail/pnr-status#faq"
-                  className="text-ink-soft transition hover:text-teal-700 dark:hover:text-teal-300"
+                  className="text-ink-soft transition hover:text-orange-600 dark:hover:text-amber-300"
                 >
                   PNR Status FAQs
                 </Link>
@@ -70,14 +70,14 @@ export function Footer() {
           {/* Air & Hotel Tools */}
           <div>
             <h3 className="inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.16em] text-ink">
-              <PlaneIcon className="h-4 w-4 text-sky-700 dark:text-sky-300" />
+              <PlaneIcon className="h-4 w-4 text-amber-600 dark:text-amber-400" />
               <span>Air &amp; Hotel Tools</span>
             </h3>
             <ul className="mt-4 space-y-2.5 text-sm">
               <li>
                 <Link
                   href="/tools/air#baggage"
-                  className="text-ink-soft transition hover:text-teal-700 dark:hover:text-teal-300"
+                  className="text-ink-soft transition hover:text-orange-600 dark:hover:text-amber-300"
                 >
                   Flight Baggage Allowance Checker
                 </Link>
@@ -85,7 +85,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/tools/air#buffer"
-                  className="text-ink-soft transition hover:text-teal-700 dark:hover:text-teal-300"
+                  className="text-ink-soft transition hover:text-orange-600 dark:hover:text-amber-300"
                 >
                   Airport Arrival Buffer Planner
                 </Link>
@@ -93,16 +93,16 @@ export function Footer() {
               <li>
                 <Link
                   href="/tools/hotel#gst-calculator"
-                  className="inline-flex items-center gap-1.5 text-ink-soft transition hover:text-teal-700 dark:hover:text-teal-300"
+                  className="inline-flex items-center gap-1.5 text-ink-soft transition hover:text-orange-600 dark:hover:text-amber-300"
                 >
-                  <HotelIcon className="h-3.5 w-3.5 text-teal-700 dark:text-teal-300" />
+                  <HotelIcon className="h-3.5 w-3.5 text-orange-600 dark:text-amber-400" />
                   <span>Hotel Tariff &amp; GST Calculator</span>
                 </Link>
               </li>
               <li>
                 <Link
                   href="/tools/hotel#transit-planner"
-                  className="text-ink-soft transition hover:text-teal-700 dark:hover:text-teal-300"
+                  className="text-ink-soft transition hover:text-orange-600 dark:hover:text-amber-300"
                 >
                   Check-in &amp; Transit Stay Guide
                 </Link>
@@ -120,7 +120,7 @@ export function Footer() {
                 <li key={post.slug}>
                   <Link
                     href={`/blog/${post.slug}`}
-                    className="line-clamp-1 text-ink-soft transition hover:text-teal-700 dark:hover:text-teal-300"
+                    className="line-clamp-1 text-ink-soft transition hover:text-orange-600 dark:hover:text-amber-300"
                   >
                     {post.title}
                   </Link>
@@ -135,19 +135,19 @@ export function Footer() {
           <div className="flex flex-wrap items-center gap-5">
             <Link
               href="/tools/air"
-              className="text-ink-soft transition hover:text-teal-700 dark:hover:text-teal-300"
+              className="text-ink-soft transition hover:text-orange-600 dark:hover:text-amber-300"
             >
               Air
             </Link>
             <Link
               href="/rail/pnr-status"
-              className="text-ink-soft transition hover:text-teal-700 dark:hover:text-teal-300"
+              className="text-ink-soft transition hover:text-orange-600 dark:hover:text-amber-300"
             >
               Rail
             </Link>
             <Link
               href="/tools/hotel"
-              className="text-ink-soft transition hover:text-teal-700 dark:hover:text-teal-300"
+              className="text-ink-soft transition hover:text-orange-600 dark:hover:text-amber-300"
             >
               Hotel
             </Link>

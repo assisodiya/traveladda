@@ -236,22 +236,22 @@ export function PnrChecker({ compact = false }: { compact?: boolean }) {
 
   const overallBadgeStyles: Record<string, string> = {
     Confirmed:
-      "bg-emerald-500/15 text-emerald-800 border-emerald-500/30 dark:text-emerald-300",
-    RAC: "bg-amber-500/15 text-amber-800 border-amber-500/30 dark:text-amber-300",
+      "bg-amber-500/18 text-amber-900 border-amber-500/35 dark:text-amber-300",
+    RAC: "bg-orange-500/18 text-orange-800 border-orange-500/35 dark:text-orange-300",
     Waitlisted:
-      "bg-rose-500/15 text-rose-800 border-rose-500/30 dark:text-rose-300",
+      "bg-rose-500/18 text-rose-800 border-rose-500/35 dark:text-rose-300",
     "Partially Confirmed":
-      "bg-sky-500/15 text-sky-800 border-sky-500/30 dark:text-sky-300",
-    Cancelled:
-      "bg-slate-500/15 text-ink-soft border-line-strong",
+      "bg-yellow-500/20 text-amber-900 border-yellow-500/35 dark:text-yellow-300",
+    Cancelled: "bg-subcard text-ink-soft border-line-strong",
   };
 
   const passengerPillStyles: Record<string, string> = {
-    CNF: "bg-emerald-500/15 text-emerald-800 ring-1 ring-emerald-500/30 dark:text-emerald-300",
-    RAC: "bg-amber-500/15 text-amber-800 ring-1 ring-amber-500/30 dark:text-amber-300",
-    WL: "bg-rose-500/15 text-rose-800 ring-1 ring-rose-500/30 dark:text-rose-300",
+    CNF: "bg-amber-500/20 text-amber-900 ring-1 ring-amber-500/35 dark:text-amber-300",
+    RAC: "bg-orange-500/18 text-orange-800 ring-1 ring-orange-500/35 dark:text-orange-300",
+    WL: "bg-rose-500/18 text-rose-800 ring-1 ring-rose-500/35 dark:text-rose-300",
     CAN: "bg-subcard text-ink-soft ring-1 ring-line",
-    OTHER: "bg-sky-500/15 text-sky-800 ring-1 ring-sky-500/30 dark:text-sky-300",
+    OTHER:
+      "bg-yellow-500/20 text-amber-900 ring-1 ring-yellow-500/35 dark:text-yellow-300",
   };
 
   return (
@@ -260,7 +260,7 @@ export function PnrChecker({ compact = false }: { compact?: boolean }) {
       <div className="rounded-3xl border border-line bg-card p-5 shadow-xl shadow-black/8 dark:shadow-black/35 sm:p-7">
         <div className="flex flex-wrap items-center justify-between gap-3 pb-4">
           <div className="flex items-center gap-3">
-            <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-teal-500/15 text-teal-700 dark:text-teal-300">
+            <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-orange-500/15 text-orange-700 dark:text-amber-300">
               <TrainIcon className="h-5 w-5" />
             </span>
             <div>
@@ -274,8 +274,8 @@ export function PnrChecker({ compact = false }: { compact?: boolean }) {
             </div>
           </div>
 
-          <span className="inline-flex items-center gap-2 rounded-full border border-emerald-500/25 bg-emerald-500/12 px-3 py-1 text-xs font-bold text-emerald-700 dark:text-emerald-300">
-            <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
+          <span className="inline-flex items-center gap-2 rounded-full border border-orange-500/30 bg-orange-500/12 px-3 py-1 text-xs font-bold text-orange-700 dark:text-amber-300">
+            <span className="h-2 w-2 animate-pulse rounded-full bg-orange-500 dark:bg-amber-400" />
             <span>Live Railway Sync</span>
           </span>
         </div>
@@ -303,12 +303,12 @@ export function PnrChecker({ compact = false }: { compact?: boolean }) {
                 if (errorMsg) setErrorMsg(null);
               }}
               placeholder="Enter 10-digit PNR number"
-              className="w-full rounded-2xl border-2 border-line bg-input py-4 pl-12 pr-20 font-mono text-lg font-bold tracking-wider text-ink placeholder:font-sans placeholder:text-sm placeholder:font-medium placeholder:tracking-normal placeholder:text-ink-muted transition focus:border-teal-500 focus:outline-none"
+              className="w-full rounded-2xl border-2 border-line bg-input py-4 pl-12 pr-20 font-mono text-lg font-bold tracking-wider text-ink placeholder:font-sans placeholder:text-sm placeholder:font-medium placeholder:tracking-normal placeholder:text-ink-muted transition focus:border-orange-500 focus:outline-none"
             />
             <span
               className={`pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 rounded-lg px-2.5 py-1 font-mono text-xs font-bold ${
                 digitCount === 10
-                  ? "bg-emerald-500/18 text-emerald-700 dark:text-emerald-300"
+                  ? "bg-amber-500/20 text-amber-800 dark:text-amber-300"
                   : "bg-subcard text-ink-muted"
               }`}
             >
@@ -347,7 +347,7 @@ export function PnrChecker({ compact = false }: { compact?: boolean }) {
                   key={item.pnr}
                   type="button"
                   onClick={() => void checkPnrStatus(item.pnr, true)}
-                  className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-line bg-subcard px-3 py-1 font-mono font-bold text-ink transition hover:border-teal-500"
+                  className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-line bg-subcard px-3 py-1 font-mono font-bold text-ink transition hover:border-orange-500"
                 >
                   <span>{item.pnr}</span>
                   <span className="font-sans text-[11px] font-medium text-ink-muted">
@@ -401,11 +401,11 @@ export function PnrChecker({ compact = false }: { compact?: boolean }) {
       {/* Boarding Pass Result Card */}
       {pnrData && (
         <div className="mt-6 overflow-hidden rounded-3xl border border-line bg-card shadow-2xl shadow-black/10 dark:shadow-black/45">
-          {/* Smooth Ticket Header (Zero White Leak in Dark Mode!) */}
+          {/* Warm Sunset/Golden Ticket Header */}
           <div className="ta-ticket-header px-6 py-6 sm:px-8 sm:py-7">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="flex flex-wrap items-center gap-2.5">
-                <span className="rounded-lg border border-teal-500/30 bg-teal-500/15 px-3 py-1 font-mono text-xs font-extrabold tracking-wider text-teal-800 dark:text-teal-200">
+                <span className="rounded-lg border border-orange-500/35 bg-orange-500/15 px-3 py-1 font-mono text-xs font-extrabold tracking-wider text-orange-800 dark:text-amber-200">
                   PNR {pnrData.formattedPnr}
                 </span>
                 <span
@@ -420,8 +420,8 @@ export function PnrChecker({ compact = false }: { compact?: boolean }) {
                 <span
                   className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold ${
                     pnrData.charting.isPrepared
-                      ? "border-teal-500/30 bg-teal-500/15 text-teal-800 dark:text-teal-200"
-                      : "border-line-strong bg-card/70 text-ink-soft"
+                      ? "border-amber-500/35 bg-amber-500/18 text-amber-900 dark:text-amber-200"
+                      : "border-line-strong bg-card/75 text-ink-soft"
                   }`}
                 >
                   {pnrData.charting.isPrepared ? (
@@ -438,7 +438,7 @@ export function PnrChecker({ compact = false }: { compact?: boolean }) {
                   <span className="text-[11px] font-bold uppercase tracking-wider text-ink-muted">
                     Ticket Fare
                   </span>
-                  <p className="font-mono text-lg font-extrabold text-emerald-700 dark:text-emerald-300">
+                  <p className="font-mono text-lg font-extrabold text-orange-700 dark:text-amber-300">
                     ₹{pnrData.train.bookingFare.toLocaleString("en-IN")}
                   </p>
                 </div>
@@ -451,8 +451,9 @@ export function PnrChecker({ compact = false }: { compact?: boolean }) {
                 <div className="flex flex-wrap items-center gap-2.5">
                   <span
                     style={{
-                      backgroundColor: "#14b8a6",
-                      color: "#07131f",
+                      backgroundImage:
+                        "linear-gradient(135deg, #ea580c 0%, #f59e0b 100%)",
+                      color: "#ffffff",
                     }}
                     className="rounded-xl px-3 py-1 font-mono text-sm font-black shadow-xs"
                   >
@@ -472,7 +473,7 @@ export function PnrChecker({ compact = false }: { compact?: boolean }) {
 
               <div className="inline-flex self-start rounded-2xl border border-line bg-card/85 px-4 py-2.5 shadow-2xs md:self-auto">
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-teal-700 dark:text-teal-300">
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-orange-700 dark:text-amber-300">
                     Journey Class
                   </p>
                   <p className="mt-0.5 text-sm font-bold text-ink">
@@ -517,16 +518,16 @@ export function PnrChecker({ compact = false }: { compact?: boolean }) {
               </div>
 
               <div className="flex items-center justify-center gap-3">
-                <span className="h-2.5 w-2.5 rounded-full bg-teal-500 ring-4 ring-teal-500/20" />
+                <span className="h-2.5 w-2.5 rounded-full bg-orange-500 ring-4 ring-orange-500/20" />
                 <div className="flex items-center gap-1.5">
                   <span className="h-0.5 w-10 bg-line-strong sm:w-16" />
                   <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-card px-3 py-1 text-xs font-bold text-ink-soft shadow-2xs">
-                    <TrainIcon className="h-3.5 w-3.5 text-teal-600 dark:text-teal-300" />
+                    <TrainIcon className="h-3.5 w-3.5 text-orange-600 dark:text-amber-400" />
                     <span>Direct Rail</span>
                   </span>
                   <span className="h-0.5 w-10 bg-line-strong sm:w-16" />
                 </div>
-                <span className="h-2.5 w-2.5 rounded-full bg-sky-500 ring-4 ring-sky-500/20" />
+                <span className="h-2.5 w-2.5 rounded-full bg-amber-500 ring-4 ring-amber-500/20" />
               </div>
 
               <div className="md:text-right">
@@ -584,7 +585,7 @@ export function PnrChecker({ compact = false }: { compact?: boolean }) {
                     >
                       <td className="px-4 py-4 font-bold text-ink">
                         <span className="inline-flex items-center gap-2.5">
-                          <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-teal-500/20 text-xs font-extrabold text-teal-800 dark:text-teal-300">
+                          <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-orange-500/18 text-xs font-extrabold text-orange-800 dark:text-amber-300">
                             {pax.serialNumber}
                           </span>
                           <span>Passenger {pax.serialNumber}</span>
@@ -600,12 +601,12 @@ export function PnrChecker({ compact = false }: { compact?: boolean }) {
                         {pax.current.coachId || pax.current.berthNo ? (
                           <div className="flex flex-wrap items-center gap-1.5">
                             {pax.current.coachId && (
-                              <span className="rounded-lg bg-sky-500/15 px-2.5 py-1 font-mono text-xs font-bold text-sky-800 ring-1 ring-sky-500/25 dark:text-sky-300">
+                              <span className="rounded-lg bg-orange-500/15 px-2.5 py-1 font-mono text-xs font-bold text-orange-800 ring-1 ring-orange-500/25 dark:text-orange-300">
                                 Coach {pax.current.coachId}
                               </span>
                             )}
                             {pax.current.berthNo !== null && (
-                              <span className="rounded-lg bg-teal-500/15 px-2.5 py-1 font-mono text-xs font-bold text-teal-800 ring-1 ring-teal-500/25 dark:text-teal-300">
+                              <span className="rounded-lg bg-amber-500/18 px-2.5 py-1 font-mono text-xs font-bold text-amber-900 ring-1 ring-amber-500/30 dark:text-amber-300">
                                 Seat #{pax.current.berthNo}
                               </span>
                             )}
@@ -650,25 +651,25 @@ export function PnrChecker({ compact = false }: { compact?: boolean }) {
               </table>
             </div>
 
-            {/* Clean Ticket Action Bar (No Raw JSON Developer Button!) */}
+            {/* Clean Ticket Action Bar */}
             <div className="no-print mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4">
               <div className="flex flex-wrap items-center gap-2.5">
                 <button
                   type="button"
                   onClick={() => void checkPnrStatus(pnrData.pnrNumber, false)}
                   disabled={loading}
-                  className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-line bg-subcard px-3.5 py-2 text-xs font-bold text-ink transition hover:border-teal-500"
+                  className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-line bg-subcard px-3.5 py-2 text-xs font-bold text-ink transition hover:border-orange-500"
                 >
-                  <RefreshIcon className="h-3.5 w-3.5 text-teal-600 dark:text-teal-300" />
+                  <RefreshIcon className="h-3.5 w-3.5 text-orange-600 dark:text-amber-400" />
                   <span>Refresh Status</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => void handleCopySummary()}
-                  className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-line bg-subcard px-3.5 py-2 text-xs font-bold text-ink transition hover:border-teal-500"
+                  className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-line bg-subcard px-3.5 py-2 text-xs font-bold text-ink transition hover:border-orange-500"
                 >
-                  <CopyIcon className="h-3.5 w-3.5 text-teal-600 dark:text-teal-300" />
+                  <CopyIcon className="h-3.5 w-3.5 text-orange-600 dark:text-amber-400" />
                   <span>
                     {copied ? "Copied Summary!" : "Copy Ticket Summary"}
                   </span>
@@ -677,9 +678,9 @@ export function PnrChecker({ compact = false }: { compact?: boolean }) {
                 <button
                   type="button"
                   onClick={() => window.print()}
-                  className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-line bg-subcard px-3.5 py-2 text-xs font-bold text-ink transition hover:border-teal-500"
+                  className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-line bg-subcard px-3.5 py-2 text-xs font-bold text-ink transition hover:border-orange-500"
                 >
-                  <PrinterIcon className="h-3.5 w-3.5 text-teal-600 dark:text-teal-300" />
+                  <PrinterIcon className="h-3.5 w-3.5 text-orange-600 dark:text-amber-400" />
                   <span>Print / Save PDF</span>
                 </button>
               </div>

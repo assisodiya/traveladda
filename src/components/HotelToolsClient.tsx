@@ -31,7 +31,7 @@ export function HotelToolsClient() {
         className="scroll-mt-24 rounded-3xl border border-line bg-card p-6 shadow-lg shadow-black/5 dark:shadow-black/25 sm:p-8"
       >
         <div className="flex items-center gap-3">
-          <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-teal-500/15 text-teal-700 dark:text-teal-300">
+          <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-orange-500/15 text-orange-700 dark:text-amber-300">
             <CalculatorIcon className="h-5 w-5" />
           </span>
           <div>
@@ -59,7 +59,7 @@ export function HotelToolsClient() {
               min={0}
               value={tariffPerNight}
               onChange={(e) => setTariffPerNight(e.target.value)}
-              className="mt-2 w-full rounded-2xl border-2 border-line bg-input px-4 py-3 font-mono text-base font-bold text-ink focus:border-teal-500 focus:outline-none"
+              className="mt-2 w-full rounded-2xl border-2 border-line bg-input px-4 py-3 font-mono text-base font-bold text-ink focus:border-orange-500 focus:outline-none"
             />
           </div>
 
@@ -77,7 +77,7 @@ export function HotelToolsClient() {
               max={60}
               value={numNights}
               onChange={(e) => setNumNights(e.target.value)}
-              className="mt-2 w-full rounded-2xl border-2 border-line bg-input px-4 py-3 font-mono text-base font-bold text-ink focus:border-teal-500 focus:outline-none"
+              className="mt-2 w-full rounded-2xl border-2 border-line bg-input px-4 py-3 font-mono text-base font-bold text-ink focus:border-orange-500 focus:outline-none"
             />
           </div>
 
@@ -95,7 +95,7 @@ export function HotelToolsClient() {
               max={20}
               value={numRooms}
               onChange={(e) => setNumRooms(e.target.value)}
-              className="mt-2 w-full rounded-2xl border-2 border-line bg-input px-4 py-3 font-mono text-base font-bold text-ink focus:border-teal-500 focus:outline-none"
+              className="mt-2 w-full rounded-2xl border-2 border-line bg-input px-4 py-3 font-mono text-base font-bold text-ink focus:border-orange-500 focus:outline-none"
             />
           </div>
         </div>
@@ -110,18 +110,18 @@ export function HotelToolsClient() {
             </p>
           </div>
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-sky-700 dark:text-sky-300">
+            <p className="text-xs font-bold uppercase tracking-wider text-amber-800 dark:text-amber-300">
               Applicable GST ({gstPercent}%)
             </p>
-            <p className="mt-1 font-mono text-xl font-extrabold text-sky-700 dark:text-sky-300">
+            <p className="mt-1 font-mono text-xl font-extrabold text-amber-800 dark:text-amber-300">
               ₹{gstAmount.toLocaleString("en-IN")}
             </p>
           </div>
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">
+            <p className="text-xs font-bold uppercase tracking-wider text-orange-700 dark:text-orange-300">
               Total Payable Estimate
             </p>
-            <p className="mt-1 font-mono text-2xl font-black text-emerald-700 dark:text-emerald-300">
+            <p className="mt-1 font-mono text-2xl font-black text-orange-700 dark:text-amber-300">
               ₹{grandTotal.toLocaleString("en-IN")}
             </p>
           </div>
@@ -134,7 +134,7 @@ export function HotelToolsClient() {
         className="scroll-mt-24 rounded-3xl border border-line bg-card p-6 shadow-lg shadow-black/5 dark:shadow-black/25 sm:p-8"
       >
         <div className="flex items-center gap-3">
-          <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-sky-500/15 text-sky-700 dark:text-sky-300">
+          <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-amber-500/18 text-amber-800 dark:text-amber-300">
             <ClockIcon className="h-5 w-5" />
           </span>
           <div>
@@ -150,7 +150,7 @@ export function HotelToolsClient() {
 
         <div className="mt-6 grid gap-4 md:grid-cols-3">
           <div className="rounded-2xl border border-line bg-subcard p-5">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-teal-500/15 px-3 py-1 text-xs font-bold text-teal-800 dark:text-teal-300">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-500/15 px-3 py-1 text-xs font-bold text-orange-800 dark:text-orange-300">
               <HotelIcon className="h-3.5 w-3.5" />
               <span>Standard Window</span>
             </span>
@@ -164,7 +164,7 @@ export function HotelToolsClient() {
           </div>
 
           <div className="rounded-2xl border border-line bg-subcard p-5">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/15 px-3 py-1 text-xs font-bold text-amber-800 dark:text-amber-300">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/18 px-3 py-1 text-xs font-bold text-amber-900 dark:text-amber-300">
               <ClockIcon className="h-3.5 w-3.5" />
               <span>Early Morning Trains</span>
             </span>
@@ -178,7 +178,7 @@ export function HotelToolsClient() {
           </div>
 
           <div className="rounded-2xl border border-line bg-subcard p-5">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-sky-500/15 px-3 py-1 text-xs font-bold text-sky-800 dark:text-sky-300">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-yellow-500/20 px-3 py-1 text-xs font-bold text-amber-900 dark:text-yellow-300">
               <MapPinIcon className="h-3.5 w-3.5" />
               <span>Location Tip</span>
             </span>
@@ -212,7 +212,7 @@ export function HotelToolsClient() {
               key={item}
               className="flex items-start gap-3 rounded-2xl border border-line bg-subcard p-4"
             >
-              <CheckCircleIcon className="mt-0.5 h-5 w-5 text-teal-600 dark:text-teal-300" />
+              <CheckCircleIcon className="mt-0.5 h-5 w-5 text-orange-600 dark:text-amber-400" />
               <p className="text-sm font-medium leading-relaxed text-ink">
                 {item}
               </p>

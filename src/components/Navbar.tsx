@@ -57,21 +57,21 @@ const MENU_CATEGORIES: MenuCategory[] = [
         href: "/tools/air#baggage",
         badge: "TOOL",
         icon: <LuggageIcon className="h-5 w-5" />,
-        iconBg: "bg-sky-500/15 text-sky-700 dark:text-sky-300",
+        iconBg: "bg-orange-500/15 text-orange-700 dark:text-orange-300",
       },
       {
         title: "Airport Arrival & Layover Planner",
         description: "Calculate ideal terminal reporting & gate buffer times",
         href: "/tools/air#buffer",
         icon: <ClockIcon className="h-5 w-5" />,
-        iconBg: "bg-teal-500/15 text-teal-700 dark:text-teal-300",
+        iconBg: "bg-amber-500/15 text-amber-800 dark:text-amber-300",
       },
       {
         title: "Boarding & DigiYatra Checklist",
         description: "Essential cabin rules, ID docs & web check-in guide",
         href: "/tools/air#checklist",
         icon: <ShieldCheckIcon className="h-5 w-5" />,
-        iconBg: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300",
+        iconBg: "bg-yellow-500/20 text-amber-900 dark:text-yellow-300",
       },
     ],
   },
@@ -89,21 +89,21 @@ const MENU_CATEGORIES: MenuCategory[] = [
         href: "/rail/pnr-status",
         badge: "LIVE",
         icon: <TicketIcon className="h-5 w-5" />,
-        iconBg: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300",
+        iconBg: "bg-orange-500/15 text-orange-700 dark:text-orange-300",
       },
       {
         title: "Coach & Berth Code Decoder",
         description: "Translate CNF, RAC, GNWL, WS, LB, CC, 3E & EV codes",
         href: "/rail/pnr-status#decoder",
         icon: <CheckCircleIcon className="h-5 w-5" />,
-        iconBg: "bg-teal-500/15 text-teal-700 dark:text-teal-300",
+        iconBg: "bg-amber-500/15 text-amber-800 dark:text-amber-300",
       },
       {
         title: "Rail Travel Blog & Chart Rules",
         description: "1st & 2nd chart timings, waitlist priority & coach tips",
         href: "/rail/pnr-status#rail-blog",
         icon: <BookOpenIcon className="h-5 w-5" />,
-        iconBg: "bg-sky-500/15 text-sky-700 dark:text-sky-300",
+        iconBg: "bg-rose-500/15 text-rose-700 dark:text-rose-300",
       },
     ],
   },
@@ -121,21 +121,21 @@ const MENU_CATEGORIES: MenuCategory[] = [
         href: "/tools/hotel#gst-calculator",
         badge: "TOOL",
         icon: <CalculatorIcon className="h-5 w-5" />,
-        iconBg: "bg-teal-500/15 text-teal-700 dark:text-teal-300",
+        iconBg: "bg-amber-500/15 text-amber-800 dark:text-amber-300",
       },
       {
         title: "Check-in & Transit Stay Planner",
         description: "Plan early railway/flight arrivals & transit room windows",
         href: "/tools/hotel#transit-planner",
         icon: <ClockIcon className="h-5 w-5" />,
-        iconBg: "bg-amber-500/15 text-amber-700 dark:text-amber-300",
+        iconBg: "bg-orange-500/15 text-orange-700 dark:text-orange-300",
       },
       {
         title: "Guest ID & Booking Guide",
         description: "Accepted ID proofs, cancellation tips & hub locations",
         href: "/tools/hotel#stay-checklist",
         icon: <MapPinIcon className="h-5 w-5" />,
-        iconBg: "bg-sky-500/15 text-sky-700 dark:text-sky-300",
+        iconBg: "bg-rose-500/15 text-rose-700 dark:text-rose-300",
       },
     ],
   },
@@ -195,7 +195,7 @@ function DesktopDropdownBar({ pathname }: { pathname: string }) {
               aria-expanded={isOpen}
               className={`inline-flex cursor-pointer items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold transition-all ${
                 isOpen || isActive
-                  ? "bg-teal-500/15 text-teal-800 ring-1 ring-teal-600/25 dark:text-teal-300 dark:ring-teal-400/30"
+                  ? "bg-orange-500/15 text-orange-700 ring-1 ring-orange-500/30 dark:text-amber-300 dark:ring-amber-400/35"
                   : "text-ink-soft hover:bg-subcard hover:text-ink"
               }`}
             >
@@ -204,7 +204,7 @@ function DesktopDropdownBar({ pathname }: { pathname: string }) {
               <ChevronDownIcon
                 className={`h-4 w-4 transition-transform duration-200 ${
                   isOpen
-                    ? "rotate-180 text-teal-700 dark:text-teal-300"
+                    ? "rotate-180 text-orange-600 dark:text-amber-400"
                     : "text-ink-muted"
                 }`}
               />
@@ -216,7 +216,7 @@ function DesktopDropdownBar({ pathname }: { pathname: string }) {
                 <div className="overflow-hidden rounded-2xl border border-line bg-card shadow-2xl shadow-black/20">
                   {/* Dropdown Header */}
                   <div className="ta-ticket-header flex items-center justify-between px-4 py-3">
-                    <div className="flex items-center gap-2 text-teal-800 dark:text-teal-300">
+                    <div className="flex items-center gap-2 text-orange-700 dark:text-amber-300">
                       {category.mainIcon}
                       <span className="text-xs font-extrabold uppercase tracking-wider">
                         {category.label} Toolkit
@@ -243,19 +243,19 @@ function DesktopDropdownBar({ pathname }: { pathname: string }) {
                         </span>
                         <span className="min-w-0 flex-1">
                           <span className="flex items-center gap-2">
-                            <span className="text-sm font-bold text-ink group-hover:text-teal-700 dark:group-hover:text-teal-300">
+                            <span className="text-sm font-bold text-ink group-hover:text-orange-600 dark:group-hover:text-amber-300">
                               {tool.title}
                             </span>
                             {tool.badge && (
                               <span
                                 className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-extrabold tracking-wide ${
                                   tool.badge === "LIVE"
-                                    ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300"
-                                    : "bg-sky-500/15 text-sky-700 dark:text-sky-300"
+                                    ? "bg-orange-500/18 text-orange-700 dark:text-orange-300"
+                                    : "bg-amber-500/18 text-amber-800 dark:text-amber-300"
                                 }`}
                               >
                                 {tool.badge === "LIVE" && (
-                                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                                  <span className="h-1.5 w-1.5 rounded-full bg-orange-500 dark:bg-amber-400" />
                                 )}
                                 {tool.badge}
                               </span>
@@ -274,7 +274,7 @@ function DesktopDropdownBar({ pathname }: { pathname: string }) {
                     <Link
                       href={category.viewAllHref}
                       onClick={() => setOpenMenu(null)}
-                      className="inline-flex w-full items-center justify-between text-xs font-extrabold text-teal-700 hover:text-teal-900 dark:text-teal-300 dark:hover:text-teal-200"
+                      className="inline-flex w-full items-center justify-between text-xs font-extrabold text-orange-700 hover:text-orange-900 dark:text-amber-300 dark:hover:text-amber-200"
                     >
                       <span>{category.viewAllLabel}</span>
                       <ArrowRightIcon className="h-3.5 w-3.5" />
@@ -390,7 +390,7 @@ export function Navbar() {
                     className="flex w-full items-center justify-between px-4 py-3 text-left text-sm font-extrabold text-ink"
                   >
                     <span className="inline-flex items-center gap-2.5">
-                      <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-teal-500/15 text-teal-700 dark:text-teal-300">
+                      <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-orange-500/15 text-orange-700 dark:text-amber-300">
                         {cat.mainIcon}
                       </span>
                       <span>{cat.label}</span>
