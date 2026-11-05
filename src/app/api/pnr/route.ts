@@ -12,14 +12,14 @@ export async function GET(request: NextRequest) {
         provider: "TravelAdda Owned Rail API v1",
         endpoint: "/api/pnr",
         usage: {
-          byPath: "/api/pnr/2528012827",
-          byQuery: "/api/pnr?pnr=2528012827",
-          byPost: "POST /api/pnr with JSON body { \"pnr\": \"2528012827\" }",
+          byPath: "/api/pnr/{pnr}",
+          byQuery: "/api/pnr?pnr={pnr}",
+          byPost: "POST /api/pnr with JSON body { \"pnr\": \"<10-digit-pnr>\" }",
         },
         error: {
           code: "MISSING_PNR",
           message:
-            "Provide a 10-digit PNR number via /api/pnr/{pnr} or /api/pnr?pnr=2528012827",
+            "Provide a 10-digit PNR number via /api/pnr/{pnr} or /api/pnr?pnr={pnr}",
         },
       },
       { status: 400, headers: { "Cache-Control": "no-store, must-revalidate" } }

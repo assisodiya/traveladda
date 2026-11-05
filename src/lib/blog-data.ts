@@ -9,7 +9,11 @@ export interface BlogPost {
   slug: string;
   title: string;
   excerpt: string;
-  category: "PNR Masterclass" | "Waitlist & Quotas" | "Charting Rules" | "Rail Comfort";
+  category:
+    | "PNR Masterclass"
+    | "Waitlist & Quotas"
+    | "Charting Rules"
+    | "Rail Comfort";
   readTime: string;
   publishedDate: string;
   author: {
@@ -32,7 +36,7 @@ export const RAIL_BLOG_POSTS: BlogPost[] = [
     readTime: "5 min read",
     publishedDate: "November 2026",
     author: { name: "Aarav Kulkarni", role: "Senior Rail Transit Editor" },
-    accentColor: "from-amber-500 to-orange-600",
+    accentColor: "from-slate-950 via-indigo-950 to-blue-950",
     heroTagline: "Inside CRIS & Passenger Reservation System Architecture",
     keyTakeaways: [
       "The 1st digit identifies the originating Railway Zone (e.g., 2 or 3 for Northern/NWR zones).",
@@ -50,28 +54,33 @@ export const RAIL_BLOG_POSTS: BlogPost[] = [
       {
         heading: "Decoding the First Three Digits (Zonal PRS Mapping)",
         paragraphs: [
-          "The very first digit of your PNR depends on the train's originating zone (not necessarily the city from where you booked online). That is why a Jaipur or New Delhi corridor train like 12986 Double Decker Express starts with a '2':",
+          "The very first digit of your PNR depends on the train's originating zone (not necessarily the city from where you booked online):",
         ],
         bullets: [
           {
             label: "Digits 2 & 3 (New Delhi PRS)",
-            detail: "Covers Northern, North Western, North Central, and North Eastern Railway trains.",
+            detail:
+              "Covers Northern, North Western, North Central, and North Eastern Railway trains.",
           },
           {
             label: "Digits 4 & 5 (Chennai PRS)",
-            detail: "Covers Southern, South Western, and South Central Railway corridors.",
+            detail:
+              "Covers Southern, South Western, and South Central Railway corridors.",
           },
           {
             label: "Digits 6 & 7 (Kolkata PRS)",
-            detail: "Covers Eastern, East Coast, South Eastern, and Northeast Frontier zones.",
+            detail:
+              "Covers Eastern, East Coast, South Eastern, and Northeast Frontier zones.",
           },
           {
             label: "Digits 8 & 9 (Mumbai PRS)",
-            detail: "Covers Western, Central, and West Central Railway routes including Konkan links.",
+            detail:
+              "Covers Western, Central, and West Central Railway routes including Konkan links.",
           },
           {
             label: "Digit 1 (Secunderabad PRS)",
-            detail: "Dedicated South Central PRS node handling high-volume Deccan express trains.",
+            detail:
+              "Dedicated South Central PRS node handling high-volume Deccan express trains.",
           },
         ],
         callout: {
@@ -82,7 +91,7 @@ export const RAIL_BLOG_POSTS: BlogPost[] = [
       {
         heading: "Booking Status vs. Current Status: Why Both Matter",
         paragraphs: [
-          "When you run a live PNR check on TravelAdda, you see two columns: Booking Status and Current Status. Booking Status is frozen forever at the moment of payment — for instance, 'WL/14/GN' or 'CNF/C8U/71/WS/GN'.",
+          "When you run a live PNR check on TravelAdda, you see two columns: Booking Status and Current Status. Booking Status is frozen forever at the moment of payment.",
           "Current Status reflects real-time cancellations and chart allocations. If your ticket was already confirmed at booking, Coach & Berth numbers appear immediately; if you were RAC or Waitlisted, final coach and berth numbers lock in when the reservation chart is prepared.",
         ],
       },
@@ -97,7 +106,7 @@ export const RAIL_BLOG_POSTS: BlogPost[] = [
     readTime: "6 min read",
     publishedDate: "November 2026",
     author: { name: "Meera Deshmukh", role: "Indian Rail Data Analyst" },
-    accentColor: "from-emerald-500 to-teal-700",
+    accentColor: "from-slate-950 via-teal-950 to-emerald-950",
     heroTagline: "Smart Quota Strategy for High-Demand Seasons",
     keyTakeaways: [
       "GNWL (General Waitlist) receives top priority whenever end-to-end passengers cancel.",
@@ -155,7 +164,7 @@ export const RAIL_BLOG_POSTS: BlogPost[] = [
     readTime: "4 min read",
     publishedDate: "October 2026",
     author: { name: "Rohan Verma", role: "Travel Operations Specialist" },
-    accentColor: "from-indigo-500 to-slate-800",
+    accentColor: "from-slate-950 via-violet-950 to-indigo-950",
     heroTagline: "Never Miss Last-Minute Current Booking & Upgrades",
     keyTakeaways: [
       "Day & afternoon trains prepare their 1st chart roughly 4 hours prior to scheduled departure.",
@@ -167,7 +176,7 @@ export const RAIL_BLOG_POSTS: BlogPost[] = [
         heading: "Why Does My Status Say 'Chart Not Prepared'?",
         paragraphs: [
           "Until a few hours before your train departs from its originating or charting-control station, CRIS keeps seat rebalancing dynamic. During this phase, our PNR Status tool displays 'Chart Not Prepared' — which is completely normal even for 100% Confirmed (CNF) tickets!",
-          "For confirmed tickets in Chair Car (CC), AC 3-Tier (3A), or Sleeper (SL), you will usually already see your coach and berth (such as C8U / 71 / Window Side), while RAC passengers receive their exact coach and seat number the moment charting completes.",
+          "For confirmed tickets in Chair Car (CC), AC 3-Tier (3A), or Sleeper (SL), you will usually already see your coach and berth, while RAC passengers receive their exact coach and seat number the moment charting completes.",
         ],
       },
       {
@@ -178,7 +187,8 @@ export const RAIL_BLOG_POSTS: BlogPost[] = [
         bullets: [
           {
             label: "Trains Departing 12:00 Noon to 11:59 PM",
-            detail: "First reservation chart is prepared at least 4 hours before scheduled departure.",
+            detail:
+              "First reservation chart is prepared at least 4 hours before scheduled departure.",
           },
           {
             label: "Morning Trains (05:00 AM to 12:00 Noon)",
@@ -202,15 +212,15 @@ export const RAIL_BLOG_POSTS: BlogPost[] = [
     slug: "indian-railways-coach-classes-explained-cc-ec-3e-2a",
     title: "From Double Decker CC to Vistadome EV & 3E Economy: Choosing the Best Coach",
     excerpt:
-      "Confused between 3A and 3E, or C8U vs C8L in Double Decker trains? Our visual guide breaks down every coach prefix and comfort level.",
+      "Confused between 3A and 3E, or Upper vs Lower Deck in Double Decker trains? Our visual guide breaks down every coach prefix and comfort level.",
     category: "Rail Comfort",
     readTime: "5 min read",
     publishedDate: "October 2026",
     author: { name: "Sanya Nair", role: "Rail & Aviation Experience Writer" },
-    accentColor: "from-rose-500 to-orange-600",
+    accentColor: "from-slate-950 via-sky-950 to-teal-950",
     heroTagline: "Pick the Right Seat Before You Book",
     keyTakeaways: [
-      "In Double Decker Chair Car coaches (like C8U / C8L), 'U' denotes Upper Deck and 'L' denotes Lower Deck.",
+      "In Double Decker Chair Car coaches, 'U' denotes Upper Deck and 'L' denotes Lower Deck.",
       "3E (AC 3-Tier Economy) packs 83 redesigned ergonomic berths with individual AC vents and USB-C ports at lower fares than 3A.",
       "EV (Vistadome) features rotatable 180-degree pushback chairs and panoramic glass roofs on scenic ghat routes.",
     ],
@@ -222,13 +232,14 @@ export const RAIL_BLOG_POSTS: BlogPost[] = [
         ],
         bullets: [
           {
-            label: "C1–C12 / C8U & C8L (AC Chair Car - CC)",
+            label: "C1–C12 / Upper & Lower Deck (AC Chair Car - CC)",
             detail:
-              "Standard Shatabdi & Vande Bharat Chair Cars use C1, C2... while Double Decker Express trains append U (Upper Deck), M (Middle level), or L (Lower Deck) — e.g., C8U means Coach C8, Upper Deck!",
+              "Standard Shatabdi & Vande Bharat Chair Cars use C1, C2... while Double Decker Express trains append U (Upper Deck), M (Middle level), or L (Lower Deck).",
           },
           {
             label: "E1–E2 (Executive Chair Car - EC)",
-            detail: "2x2 wide business-style reclining seats with leg rests on Vande Bharat, Tejas, and Shatabdi trains.",
+            detail:
+              "2x2 wide business-style reclining seats with leg rests on Vande Bharat, Tejas, and Shatabdi trains.",
           },
           {
             label: "B1–B15 & M1–M5 (AC 3-Tier 3A vs Economy 3E)",
@@ -243,7 +254,7 @@ export const RAIL_BLOG_POSTS: BlogPost[] = [
         ],
         callout: {
           title: "Double Decker Luggage Tip",
-          text: "Booking Upper Deck (e.g. C8U) gives fantastic elevated window views! Pack medium-sized backpacks or cabin trolleys, as staircase turns into upper/lower decks are compact.",
+          text: "Booking Upper Deck gives fantastic elevated window views! Pack medium-sized backpacks or cabin trolleys, as staircase turns into upper/lower decks are compact.",
         },
       },
     ],
@@ -259,12 +270,12 @@ export const PNR_FAQ_ITEMS = [
   {
     question: "Where do I find the 10-digit PNR number on my ticket?",
     answer:
-      "On an IRCTC e-ticket (ERS/SMS/WhatsApp), the 10-digit PNR is printed at the top-left or top-right under 'PNR No'. On a physical counter PRS ticket, it appears in the upper-left box in a 3-3-4 digit grouping (for example, 252-801-2827).",
+      "On an IRCTC e-ticket (ERS/SMS/WhatsApp), the 10-digit PNR is printed at the top-left or top-right under 'PNR No'. On a physical counter PRS ticket, it appears in the upper-left box in a 3-3-4 digit grouping.",
   },
   {
-    question: "What does CNF/C8U/71/WS/GN mean on my PNR result?",
+    question: "What do coach, seat, and quota codes mean on my PNR result?",
     answer:
-      "CNF means Confirmed; C8U is Coach C8 (Upper Deck on Double Decker Express); 71 is Seat/Berth #71; WS stands for Window Side; and GN indicates the ticket was booked under General Quota.",
+      "CNF means Confirmed; RAC means Reservation Against Cancellation; WL means Waitlisted. Coach IDs indicate your compartment (such as B1 for 3A, A1 for 2A, or C-series for AC Chair Car), followed by your seat number, berth position (such as LB for Lower Berth or WS for Window Side), and booking quota (such as GN for General or TQ for Tatkal).",
   },
   {
     question: "Do I need to carry a printed ticket if my PNR status is Confirmed?",
@@ -281,4 +292,3 @@ export const PNR_FAQ_ITEMS = [
 export function getBlogPostBySlug(slug: string): BlogPost | undefined {
   return RAIL_BLOG_POSTS.find((post) => post.slug === slug);
 }
-

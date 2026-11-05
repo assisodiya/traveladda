@@ -1,0 +1,303 @@
+"use client";
+
+import { useState } from "react";
+import {
+  CheckCircleIcon,
+  ClockIcon,
+  LuggageIcon,
+  PlaneIcon,
+  ShieldCheckIcon,
+} from "./Icons";
+
+const AIRLINES = [
+  {
+    id: "indigo-dom",
+    name: "IndiGo (Domestic Economy)",
+    cabin: "7 kg (1 Cabin Bag + 1 Laptop Bag up to 3 kg)",
+    checkin: "15 kg (1 Piece Free)",
+    checkinClose: "60 mins before departure",
+    gateClose: "25 mins before departure",
+  },
+  {
+    id: "airindia-dom",
+    name: "Air India (Domestic Economy)",
+    cabin: "7 kg Hand Baggage",
+    checkin: "15 kg (Comfort) / 25 kg (Flex)",
+    checkinClose: "60 mins before departure",
+    gateClose: "25 mins before departure",
+  },
+  {
+    id: "akasa-dom",
+    name: "Akasa Air (Domestic Economy)",
+    cabin: "7 kg Hand Baggage",
+    checkin: "15 kg (1 Piece Free)",
+    checkinClose: "60 mins before departure",
+    gateClose: "25 mins before departure",
+  },
+  {
+    id: "intl-econ",
+    name: "International Economy (Middle East / SE Asia)",
+    cabin: "7 kg Cabin Bag",
+    checkin: "20 kg – 30 kg (Route Dependent)",
+    checkinClose: "75 mins before departure",
+    gateClose: "30 mins before departure",
+  },
+];
+
+export function AirToolsClient() {
+  const [selectedAirlineId, setSelectedAirlineId] = useState(AIRLINES[0].id);
+  const [flightType, setFlightType] = useState<"domestic" | "international">(
+    "domestic"
+  );
+  const [departureHour, setDepartureHour] = useState("09:30");
+  const [hasCheckinBag, setHasCheckinBag] = useState(true);
+
+  const selectedAirline =
+    AIRLINES.find((a) => a.id === selectedAirlineId) ?? AIRLINES[0];
+
+  const computeArrivalRecommendation = () => {
+    const [hStr, mStr] = departureHour.split(":");
+    const h = Number(hStr);
+    const m = Number(mStr);
+    if (!Number.isFinite(h) || !Number.isFinite(m)) return "2.5 hours prior";
+
+    const bufferMinutes =
+      flightType === "international"
+        ? 195
+        : hasCheckinBag
+          ? 135
+          : 100;
+
+    const depTotal = h * 60 + m;
+    const arriveTotal = (depTotal - bufferMinutes + 1440) % 1440;
+    const arrH = Math.floor(arriveTotal / 60);
+    const arrM = arriveTotal % 60;
+    const period = arrH >= 12 ? "PM" : "AM";
+    const h12 = arrH % 12 === 0 ? 12 : arrH % 12;
+    return `${String(h12).padStart(2, "0")}:${String(arrM).padStart(
+      2,
+      "0"
+    )} ${period}`;
+  };
+
+  return (
+    <div className="space-y-12">
+      {/* Tool 1: Baggage Allowance Checker */}
+      <section
+        id="baggage"
+        className="scroll-mt-24 rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-900/5 sm:p-8"
+      >
+        <div className="flex items-center gap-3">
+          <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-sky-100 text-sky-700">
+            <LuggageIcon className="h-5 w-5" />
+          </span>
+          <div>
+            <h2 className="text-xl font-extrabold text-slate-900">
+              Airline Baggage Allowance Checker
+            </h2>
+            <p className="text-sm text-slate-600">
+              Select your carrier &amp; sector to inspect standard cabin and
+              check-in limits.
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-6">
+          <label
+            htmlFor="airline-select"
+            className="block text-xs font-extrabold uppercase tracking-wider text-slate-700"
+          >
+            Choose Carrier &amp; Fare Sector
+          </label>
+          <select
+            id="airline-select"
+            value={selectedAirlineId}
+            onChange={(e) => setSelectedAirlineId(e.target.value)}
+            className="mt-2 w-full rounded-2xl border-2 border-slate-200 bg-slate-50 px-4 py-3.5 text-sm font-bold text-slate-900 focus:border-indigo-600 focus:bg-white focus:outline-none"
+          >
+            {AIRLINES.map((airline) => (
+              <option key={airline.id} value={airline.id}>
+                {airline.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="rounded-2xl border border-sky-100 bg-sky-50/70 p-4">
+            <p className="text-xs font-bold uppercase tracking-wider text-sky-800">
+              Cabin Baggage
+            </p>
+            <p className="mt-1.5 text-sm font-extrabold text-slate-900">
+              {selectedAirline.cabin}
+            </p>
+          </div>
+          <div className="rounded-2xl border border-indigo-100 bg-indigo-50/70 p-4">
+            <p className="text-xs font-bold uppercase tracking-wider text-indigo-800">
+              Check-In Allowance
+            </p>
+            <p className="mt-1.5 text-sm font-extrabold text-slate-900">
+              {selectedAirline.checkin}
+            </p>
+          </div>
+          <div className="rounded-2xl border border-teal-100 bg-teal-50/70 p-4">
+            <p className="text-xs font-bold uppercase tracking-wider text-teal-800">
+              Bag Drop Closes
+            </p>
+            <p className="mt-1.5 text-sm font-extrabold text-slate-900">
+              {selectedAirline.checkinClose}
+            </p>
+          </div>
+          <div className="rounded-2xl border border-amber-200 bg-amber-50/80 p-4">
+            <p className="text-xs font-bold uppercase tracking-wider text-amber-900">
+              Boarding Gate Closes
+            </p>
+            <p className="mt-1.5 text-sm font-extrabold text-slate-900">
+              {selectedAirline.gateClose}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Tool 2: Airport Arrival Buffer Planner */}
+      <section
+        id="buffer"
+        className="scroll-mt-24 rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-900/5 sm:p-8"
+      >
+        <div className="flex items-center gap-3">
+          <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-100 text-indigo-700">
+            <ClockIcon className="h-5 w-5" />
+          </span>
+          <div>
+            <h2 className="text-xl font-extrabold text-slate-900">
+              Airport Arrival &amp; Buffer Calculator
+            </h2>
+            <p className="text-sm text-slate-600">
+              Find the stress-free terminal arrival time for your scheduled
+              flight departure.
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-6 grid gap-5 md:grid-cols-3">
+          <div>
+            <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-700">
+              Flight Type
+            </label>
+            <div className="mt-2 grid grid-cols-2 gap-2 rounded-2xl bg-slate-100 p-1.5">
+              <button
+                type="button"
+                onClick={() => setFlightType("domestic")}
+                className={`cursor-pointer rounded-xl py-2 text-xs font-bold transition ${
+                  flightType === "domestic"
+                    ? "bg-indigo-600 text-white"
+                    : "text-slate-700 hover:bg-white"
+                }`}
+              >
+                Domestic
+              </button>
+              <button
+                type="button"
+                onClick={() => setFlightType("international")}
+                className={`cursor-pointer rounded-xl py-2 text-xs font-bold transition ${
+                  flightType === "international"
+                    ? "bg-indigo-600 text-white"
+                    : "text-slate-700 hover:bg-white"
+                }`}
+              >
+                International
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label
+              htmlFor="dep-time"
+              className="block text-xs font-extrabold uppercase tracking-wider text-slate-700"
+            >
+              Scheduled Takeoff Time
+            </label>
+            <input
+              id="dep-time"
+              type="time"
+              value={departureHour}
+              onChange={(e) => setDepartureHour(e.target.value)}
+              className="mt-2 w-full rounded-2xl border-2 border-slate-200 bg-slate-50 px-4 py-2.5 font-mono text-sm font-bold text-slate-900 focus:border-indigo-600 focus:bg-white focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-700">
+              Luggage Mode
+            </label>
+            <button
+              type="button"
+              onClick={() => setHasCheckinBag((v) => !v)}
+              className="mt-2 flex w-full cursor-pointer items-center justify-between rounded-2xl border-2 border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-bold text-slate-900 hover:bg-slate-100"
+            >
+              <span>
+                {hasCheckinBag ? "With Check-In Bag" : "Cabin Bag Only"}
+              </span>
+              <PlaneIcon className="h-4 w-4 text-indigo-600" />
+            </button>
+          </div>
+        </div>
+
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-slate-900 p-5 text-white">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-wider text-sky-300">
+              Recommended Terminal Entry Time
+            </p>
+            <p className="mt-1 text-sm text-slate-300">
+              Includes security queue, bag drop &amp; boarding gate buffer
+            </p>
+          </div>
+          <p className="font-mono text-2xl font-black text-emerald-300 sm:text-3xl">
+            {computeArrivalRecommendation()}
+          </p>
+        </div>
+      </section>
+
+      {/* Tool 3: Boarding & DigiYatra Checklist */}
+      <section
+        id="checklist"
+        className="scroll-mt-24 rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-900/5 sm:p-8"
+      >
+        <div className="flex items-center gap-3">
+          <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-teal-100 text-teal-700">
+            <ShieldCheckIcon className="h-5 w-5" />
+          </span>
+          <div>
+            <h2 className="text-xl font-extrabold text-slate-900">
+              Pre-Flight &amp; DigiYatra Boarding Checklist
+            </h2>
+            <p className="text-sm text-slate-600">
+              Avoid last-minute counter surprises with these essential aviation
+              checks.
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-6 grid gap-4 sm:grid-cols-2">
+          {[
+            "Complete online Web Check-In 48h to 2h prior to departure to lock your seat.",
+            "Keep power banks, lithium batteries & e-devices strictly inside Cabin Baggage.",
+            "Liquids, gels & aerosols in hand luggage must be in containers <= 100 ml each.",
+            "Upload your boarding pass in DigiYatra for contactless facial gate entry at major Indian airports.",
+          ].map((tip) => (
+            <div
+              key={tip}
+              className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4"
+            >
+              <CheckCircleIcon className="mt-0.5 h-5 w-5 text-emerald-600" />
+              <p className="text-sm font-medium leading-relaxed text-slate-800">
+                {tip}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+

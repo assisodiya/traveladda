@@ -2,6 +2,11 @@ import type { Metadata } from "next";
 import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import {
+  ArrowRightIcon,
+  CheckCircleIcon,
+  TicketIcon,
+} from "@/components/Icons";
 import { getBlogPostBySlug, RAIL_BLOG_POSTS } from "@/lib/blog-data";
 
 export function generateStaticParams() {
@@ -47,49 +52,49 @@ export default async function BlogArticlePage({
 
   return (
     <main className="pb-20">
-      {/* Article Header */}
+      {/* High-Contrast Deep Sapphire Header */}
       <section
-        className={`bg-gradient-to-br ${post.accentColor} py-16 text-white sm:py-20`}
+        className={`bg-travel-grid bg-gradient-to-br ${post.accentColor} py-16 text-white sm:py-20`}
       >
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <nav
             aria-label="Breadcrumb"
-            className="flex flex-wrap items-center gap-2 text-xs font-semibold text-white/80"
+            className="flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-300"
           >
             <Link href="/" className="hover:text-white">
               Home
             </Link>
             <span>/</span>
             <Link href="/rail/pnr-status#rail-blog" className="hover:text-white">
-              PNR Hub &amp; Blog
+              Rail Blog
             </Link>
             <span>/</span>
-            <span className="text-white">{post.category}</span>
+            <span className="text-sky-300">{post.category}</span>
           </nav>
 
           <div className="mt-6 flex flex-wrap items-center gap-3 text-xs font-bold">
-            <span className="rounded-full bg-black/25 px-3 py-1 backdrop-blur-xs">
+            <span className="rounded-full bg-white/15 px-3 py-1 text-sky-200 ring-1 ring-white/20">
               {post.category}
             </span>
-            <span>{post.readTime}</span>
-            <span>·</span>
-            <span>{post.publishedDate}</span>
+            <span className="text-slate-200">{post.readTime}</span>
+            <span className="text-slate-400">·</span>
+            <span className="text-slate-200">{post.publishedDate}</span>
           </div>
 
-          <h1 className="mt-4 text-3xl font-black leading-tight tracking-tight sm:text-5xl">
+          <h1 className="mt-4 text-3xl font-black leading-tight tracking-tight text-white sm:text-5xl">
             {post.title}
           </h1>
-          <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/90 sm:text-lg">
+          <p className="mt-4 max-w-2xl text-base leading-relaxed text-slate-200 sm:text-lg">
             {post.excerpt}
           </p>
 
-          <div className="mt-8 flex items-center gap-3 border-t border-white/20 pt-5 text-sm">
-            <div className="grid size-10 place-items-center rounded-full bg-white/20 font-black">
+          <div className="mt-8 flex items-center gap-3 border-t border-white/15 pt-5 text-sm">
+            <div className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-indigo-600 font-black text-white">
               {post.author.name[0]}
             </div>
             <div>
-              <p className="font-bold">{post.author.name}</p>
-              <p className="text-xs text-white/80">{post.author.role}</p>
+              <p className="font-bold text-white">{post.author.name}</p>
+              <p className="text-xs text-slate-300">{post.author.role}</p>
             </div>
           </div>
         </div>
@@ -100,17 +105,17 @@ export default async function BlogArticlePage({
         {/* Article Body */}
         <article className="space-y-8 rounded-3xl border border-slate-200 bg-white p-7 shadow-xs sm:p-10">
           {/* Key Takeaways Box */}
-          <div className="rounded-2xl border border-emerald-200 bg-emerald-50/70 p-6">
-            <h2 className="text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-800">
+          <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-6">
+            <h2 className="text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-900">
               Quick Summary
             </h2>
-            <ul className="mt-3 space-y-2">
+            <ul className="mt-3 space-y-2.5">
               {post.keyTakeaways.map((item) => (
                 <li
                   key={item}
                   className="flex items-start gap-2.5 text-sm font-medium text-emerald-950"
                 >
-                  <span className="mt-0.5 font-bold text-emerald-700">✓</span>
+                  <CheckCircleIcon className="mt-0.5 h-4 w-4 text-emerald-700" />
                   <span>{item}</span>
                 </li>
               ))}
@@ -136,12 +141,12 @@ export default async function BlogArticlePage({
                   {section.bullets.map((b) => (
                     <div
                       key={b.label}
-                      className="rounded-2xl border border-slate-200/80 bg-slate-50/80 p-4"
+                      className="rounded-2xl border border-slate-200 bg-slate-50 p-4"
                     >
                       <p className="text-sm font-extrabold text-slate-900">
                         {b.label}
                       </p>
-                      <p className="mt-1 text-sm leading-relaxed text-slate-600">
+                      <p className="mt-1 text-sm leading-relaxed text-slate-700">
                         {b.detail}
                       </p>
                     </div>
@@ -150,11 +155,11 @@ export default async function BlogArticlePage({
               )}
 
               {section.callout && (
-                <div className="rounded-2xl border-l-4 border-orange-500 bg-orange-50/80 p-5">
-                  <p className="text-xs font-extrabold uppercase tracking-wider text-orange-800">
-                    💡 {section.callout.title}
+                <div className="rounded-2xl border-l-4 border-indigo-600 bg-indigo-50 p-5">
+                  <p className="text-xs font-extrabold uppercase tracking-wider text-indigo-900">
+                    {section.callout.title}
                   </p>
-                  <p className="mt-1 text-sm leading-relaxed text-orange-950">
+                  <p className="mt-1 text-sm leading-relaxed text-indigo-950">
                     {section.callout.text}
                   </p>
                 </div>
@@ -166,44 +171,39 @@ export default async function BlogArticlePage({
         {/* Sticky Sidebar CTA + More Articles */}
         <aside className="space-y-6">
           <div className="sticky top-24 space-y-6">
-            <div className="rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-teal-950 p-6 text-white shadow-xl">
-              <span className="rounded-full bg-emerald-500/20 px-3 py-1 text-[11px] font-bold text-emerald-300">
+            <div className="rounded-3xl bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 p-6 text-white shadow-xl">
+              <span className="inline-flex rounded-full bg-emerald-500/20 px-3 py-1 text-[11px] font-bold text-emerald-300 ring-1 ring-emerald-400/30">
                 LIVE PNR TOOL
               </span>
-              <h3 className="mt-4 text-xl font-extrabold">
+              <h3 className="mt-4 text-xl font-extrabold text-white">
                 Check Your 10-Digit PNR Now
               </h3>
-              <p className="mt-2 text-xs leading-relaxed text-slate-300">
+              <p className="mt-2 text-xs leading-relaxed text-slate-200">
                 Verify live seat confirmation, charting status, and coach number
                 via TravelAdda&apos;s owned PNR API.
               </p>
               <Link
                 href="/rail/pnr-status"
-                className="mt-5 flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-orange-600 to-amber-500 px-4 py-3 text-sm font-extrabold text-white transition hover:from-orange-700 hover:to-amber-600"
+                className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-indigo-600 px-4 py-3 text-sm font-extrabold text-white transition hover:bg-indigo-500"
               >
+                <TicketIcon className="h-4 w-4" />
                 <span>Open PNR Status Tool</span>
-                <span>→</span>
-              </Link>
-              <Link
-                href="/rail/pnr-status?pnr=2528012827"
-                className="mt-2.5 flex w-full items-center justify-center rounded-2xl border border-white/15 bg-white/5 px-4 py-2.5 font-mono text-xs font-semibold text-orange-200 hover:bg-white/10"
-              >
-                Try Sample: 2528012827
+                <ArrowRightIcon className="h-4 w-4" />
               </Link>
             </div>
 
             <div className="rounded-3xl border border-slate-200 bg-white p-6">
-              <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-400">
+              <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-500">
                 More Rail Guides
               </h3>
-              <div className="mt-4 space-y-4">
+              <div className="mt-4 space-y-3.5">
                 {relatedPosts.map((rel) => (
                   <Link
                     key={rel.slug}
                     href={`/blog/${rel.slug}`}
-                    className="block rounded-2xl border border-slate-100 bg-slate-50/70 p-3.5 transition hover:border-orange-200 hover:bg-orange-50/40"
+                    className="block rounded-2xl border border-slate-200/80 bg-slate-50 p-3.5 transition hover:border-indigo-300 hover:bg-indigo-50/50"
                   >
-                    <span className="text-[10px] font-bold uppercase text-orange-600">
+                    <span className="text-[10px] font-extrabold uppercase text-indigo-600">
                       {rel.category}
                     </span>
                     <p className="mt-1 text-xs font-extrabold leading-snug text-slate-900">
@@ -219,4 +219,3 @@ export default async function BlogArticlePage({
     </main>
   );
 }
-

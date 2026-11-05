@@ -1,162 +1,277 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
-
-const FLIGHT_QUICK_GUIDES = [
-  {
-    carrier: "Domestic Economy (IndiGo / Air India / Akasa)",
-    cabin: "7 kg Hand Baggage",
-    checkin: "15 kg Check-in (1 Piece)",
-    gateRule: "Check-in closes 60 mins prior",
-  },
-  {
-    carrier: "International Short-Haul (DXB / SIN / BKK)",
-    cabin: "7 kg Cabin + Laptop Bag",
-    checkin: "20–30 kg Check-in",
-    gateRule: "Arrive 3 hours prior to departure",
-  },
-];
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import {
+  ArrowRightIcon,
+  CalculatorIcon,
+  CheckCircleIcon,
+  ClockIcon,
+  HotelIcon,
+  LuggageIcon,
+  PlaneIcon,
+  SearchIcon,
+  TrainIcon,
+} from "./Icons";
 
 export function HeroSearchWidget() {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<"rail" | "air">("rail");
+  const [activeTab, setActiveTab] = useState<"rail" | "air" | "hotel">("rail");
   const [pnr, setPnr] = useState("");
   const [validationMsg, setValidationMsg] = useState("");
+
+  // Quick Hotel Estimator state inside Hero
+  const [roomRate, setRoomRate] = useState("4500");
+  const [nights, setNights] = useState("2");
 
   const handleRailSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const clean = pnr.replace(/\D/g, "");
     if (clean.length !== 10) {
-      setValidationMsg("Enter a 10-digit PNR number (or click sample 2528012827 below).");
+      setValidationMsg("Please enter a valid 10-digit numeric PNR number.");
       return;
     }
     router.push(`/rail/pnr-status?pnr=${clean}`);
   };
 
+  const numericRate = Math.max(0, Number(roomRate) || 0);
+  const numericNights = Math.max(1, Number(nights) || 1);
+  const gstRate = numericRate > 7500 ? 18 : numericRate > 1000 ? 12 : 0;
+  const totalRoomBase = numericRate * numericNights;
+  const totalWithTax = Math.round(totalRoomBase * (1 + gstRate / 100));
+
   return (
-    <div className="rounded-3xl border border-white/15 bg-white/95 p-5 text-slate-900 shadow-2xl shadow-black/35 backdrop-blur-xl sm:p-7">
-      {/* Mode Switcher Tabs */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200/80 pb-4">
-        <div className="inline-flex rounded-2xl bg-slate-100 p-1">
+    <div className="rounded-3xl border border-slate-200 bg-white p-5 text-slate-900 shadow-2xl shadow-slate-950/30 sm:p-7">
+      {/* Mode Switcher Tabs: Rail, Air, Hotel */}
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-4">
+        <div className="grid w-full grid-cols-3 gap-1.5 rounded-2xl bg-slate-100 p-1.5 sm:w-auto">
           <button
             type="button"
             onClick={() => setActiveTab("rail")}
-            className={`cursor-pointer inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-extrabold transition sm:text-sm ${
+            className={`inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-xs font-extrabold transition sm:text-sm ${
               activeTab === "rail"
-                ? "bg-slate-900 text-white shadow-xs"
-                : "text-slate-600 hover:text-slate-900"
+                ? "bg-indigo-600 text-white shadow-sm"
+                : "text-slate-700 hover:bg-white/70 hover:text-slate-950"
             }`}
           >
-            <span>🚂 Indian Rail PNR</span>
-            <span className="rounded-full bg-emerald-500/20 px-1.5 py-0.5 text-[10px] font-bold text-emerald-400">
-              LIVE
-            </span>
+            <TrainIcon className="h-4 w-4" />
+            <span>Rail</span>
           </button>
+
           <button
             type="button"
             onClick={() => setActiveTab("air")}
-            className={`cursor-pointer inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-extrabold transition sm:text-sm ${
+            className={`inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-xs font-extrabold transition sm:text-sm ${
               activeTab === "air"
-                ? "bg-slate-900 text-white shadow-xs"
-                : "text-slate-600 hover:text-slate-900"
+                ? "bg-indigo-600 text-white shadow-sm"
+                : "text-slate-700 hover:bg-white/70 hover:text-slate-950"
             }`}
           >
-            <span>✈️ Flight Allowance</span>
+            <PlaneIcon className="h-4 w-4" />
+            <span>Air</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab("hotel")}
+            className={`inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-xs font-extrabold transition sm:text-sm ${
+              activeTab === "hotel"
+                ? "bg-indigo-600 text-white shadow-sm"
+                : "text-slate-700 hover:bg-white/70 hover:text-slate-950"
+            }`}
+          >
+            <HotelIcon className="h-4 w-4" />
+            <span>Hotel</span>
           </button>
         </div>
 
-        <Link
-          href="/rail/pnr-status"
-          className="text-xs font-bold text-orange-600 hover:text-orange-700"
-        >
-          Open Full Rail Hub →
-        </Link>
+        <span className="hidden items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-800 ring-1 ring-emerald-600/20 sm:inline-flex">
+          <span className="h-2 w-2 rounded-full bg-emerald-600" />
+          <span>Instant Tools</span>
+        </span>
       </div>
 
-      {activeTab === "rail" ? (
+      {/* RAIL TAB */}
+      {activeTab === "rail" && (
         <div className="mt-5">
-          <label
-            htmlFor="hero-pnr-input"
-            className="block text-xs font-bold uppercase tracking-wider text-slate-500"
-          >
-            Instant 10-Digit PNR Verification
-          </label>
+          <div className="flex items-center justify-between">
+            <label
+              htmlFor="hero-pnr-input"
+              className="text-xs font-extrabold uppercase tracking-wider text-slate-700"
+            >
+              Indian Railways PNR Status
+            </label>
+            <span className="font-mono text-xs font-bold text-indigo-600">
+              {pnr.length}/10 digits
+            </span>
+          </div>
+
           <form
             onSubmit={handleRailSubmit}
-            className="mt-2 flex flex-col gap-3 sm:flex-row"
+            className="mt-2.5 flex flex-col gap-3 sm:flex-row"
           >
-            <input
-              id="hero-pnr-input"
-              type="text"
-              inputMode="numeric"
-              maxLength={10}
-              value={pnr}
-              onChange={(e) => {
-                setPnr(e.target.value.replace(/\D/g, "").slice(0, 10));
-                if (validationMsg) setValidationMsg("");
-              }}
-              placeholder="e.g. 2528012827"
-              className="flex-1 rounded-2xl border-2 border-slate-200 bg-slate-50 px-4 py-3.5 font-mono text-base font-bold tracking-wider text-slate-900 placeholder:font-sans placeholder:text-sm placeholder:font-normal placeholder:tracking-normal placeholder:text-slate-400 focus:border-orange-500 focus:bg-white focus:outline-none"
-            />
+            <div className="relative flex-1">
+              <SearchIcon className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+              <input
+                id="hero-pnr-input"
+                type="text"
+                inputMode="numeric"
+                maxLength={10}
+                value={pnr}
+                onChange={(e) => {
+                  setPnr(e.target.value.replace(/\D/g, "").slice(0, 10));
+                  if (validationMsg) setValidationMsg("");
+                }}
+                placeholder="Enter 10-digit PNR number"
+                className="w-full rounded-2xl border-2 border-slate-200 bg-slate-50 py-3.5 pl-11 pr-4 font-mono text-base font-bold tracking-wider text-slate-900 placeholder:font-sans placeholder:text-sm placeholder:font-medium placeholder:tracking-normal placeholder:text-slate-400 focus:border-indigo-600 focus:bg-white focus:outline-none"
+              />
+            </div>
             <button
               type="submit"
-              className="cursor-pointer inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-orange-600 to-amber-500 px-6 py-3.5 text-sm font-extrabold text-white shadow-md shadow-orange-600/25 transition hover:from-orange-700 hover:to-amber-600"
+              className="inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-2xl bg-indigo-600 px-6 py-3.5 text-sm font-extrabold text-white shadow-md shadow-indigo-600/20 transition hover:bg-indigo-700"
             >
-              <span>Track Live PNR</span>
-              <span aria-hidden="true">→</span>
+              <span>Check PNR</span>
+              <ArrowRightIcon className="h-4 w-4" />
             </button>
           </form>
 
           {validationMsg && (
-            <p className="mt-2 text-xs font-semibold text-rose-600">
+            <p className="mt-2 text-xs font-bold text-rose-600">
               {validationMsg}
             </p>
           )}
 
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-2 rounded-2xl bg-slate-50 px-4 py-3 text-xs">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="font-semibold text-slate-500">Sample Live PNR:</span>
-              <Link
-                href="/rail/pnr-status?pnr=2528012827"
-                className="inline-flex items-center gap-1.5 rounded-full bg-orange-100 px-3 py-1 font-mono font-bold text-orange-800 transition hover:bg-orange-200"
-              >
-                2528012827 ↗
-              </Link>
+          <div className="mt-4 grid grid-cols-2 gap-2.5 rounded-2xl bg-slate-50 p-3.5 text-xs text-slate-700">
+            <div className="flex items-center gap-2 font-semibold">
+              <CheckCircleIcon className="h-4 w-4 text-emerald-600" />
+              <span>Coach &amp; Seat Decoder</span>
             </div>
-            <span className="text-[11px] font-medium text-slate-500">
-              Coach, Berth &amp; Charting Decoder Included
-            </span>
+            <div className="flex items-center gap-2 font-semibold">
+              <ClockIcon className="h-4 w-4 text-indigo-600" />
+              <span>Live Charting Updates</span>
+            </div>
           </div>
         </div>
-      ) : (
-        <div className="mt-5 space-y-3">
-          <p className="text-xs font-semibold text-slate-500">
-            Quick Indian Aviation Cabin &amp; Check-in Reference:
+      )}
+
+      {/* AIR TAB */}
+      {activeTab === "air" && (
+        <div className="mt-5 space-y-3.5">
+          <p className="text-xs font-extrabold uppercase tracking-wider text-slate-700">
+            Standard Flight Baggage &amp; Check-in Quick View
           </p>
-          {FLIGHT_QUICK_GUIDES.map((item) => (
-            <div
-              key={item.carrier}
-              className="rounded-2xl border border-slate-200 bg-slate-50/80 p-3.5"
-            >
-              <p className="text-xs font-bold text-slate-900">{item.carrier}</p>
-              <div className="mt-2 flex flex-wrap gap-2 text-[11px] font-semibold">
-                <span className="rounded-lg bg-sky-100 px-2.5 py-1 text-sky-800">
-                  🎒 {item.cabin}
+          <div className="space-y-2.5">
+            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3.5">
+              <p className="text-sm font-bold text-slate-900">
+                Domestic Economy Flights
+              </p>
+              <div className="mt-2 flex flex-wrap gap-2 text-xs font-semibold">
+                <span className="inline-flex items-center gap-1.5 rounded-lg bg-sky-100 px-2.5 py-1 text-sky-900">
+                  <LuggageIcon className="h-3.5 w-3.5" />
+                  <span>7 kg Cabin + 15 kg Check-in</span>
                 </span>
-                <span className="rounded-lg bg-indigo-100 px-2.5 py-1 text-indigo-800">
-                  🧳 {item.checkin}
-                </span>
-                <span className="rounded-lg bg-amber-100 px-2.5 py-1 text-amber-900">
-                  ⏱ {item.gateRule}
+                <span className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-100 px-2.5 py-1 text-indigo-900">
+                  <ClockIcon className="h-3.5 w-3.5" />
+                  <span>Report 2 hrs prior</span>
                 </span>
               </div>
             </div>
-          ))}
+
+            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3.5">
+              <p className="text-sm font-bold text-slate-900">
+                International Economy Flights
+              </p>
+              <div className="mt-2 flex flex-wrap gap-2 text-xs font-semibold">
+                <span className="inline-flex items-center gap-1.5 rounded-lg bg-teal-100 px-2.5 py-1 text-teal-900">
+                  <LuggageIcon className="h-3.5 w-3.5" />
+                  <span>7 kg Cabin + 23–30 kg Check-in</span>
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-100 px-2.5 py-1 text-indigo-900">
+                  <ClockIcon className="h-3.5 w-3.5" />
+                  <span>Report 3 hrs prior</span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <Link
+            href="/tools/air"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-indigo-600 px-5 py-3 text-sm font-extrabold text-white transition hover:bg-indigo-700"
+          >
+            <span>Open Interactive Air Toolkit</span>
+            <ArrowRightIcon className="h-4 w-4" />
+          </Link>
+        </div>
+      )}
+
+      {/* HOTEL TAB */}
+      {activeTab === "hotel" && (
+        <div className="mt-5 space-y-4">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-extrabold uppercase tracking-wider text-slate-700">
+              Quick Hotel Room &amp; GST Estimator
+            </span>
+            <span className="rounded-full bg-teal-100 px-2.5 py-0.5 text-xs font-bold text-teal-900">
+              {gstRate}% GST Slab
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label
+                htmlFor="hero-room-rate"
+                className="block text-xs font-semibold text-slate-600"
+              >
+                Tariff / Night (₹)
+              </label>
+              <input
+                id="hero-room-rate"
+                type="number"
+                min={0}
+                value={roomRate}
+                onChange={(e) => setRoomRate(e.target.value)}
+                className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 font-mono text-sm font-bold text-slate-900 focus:border-indigo-600 focus:bg-white focus:outline-none"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="hero-nights"
+                className="block text-xs font-semibold text-slate-600"
+              >
+                Nights
+              </label>
+              <input
+                id="hero-nights"
+                type="number"
+                min={1}
+                max={30}
+                value={nights}
+                onChange={(e) => setNights(e.target.value)}
+                className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 font-mono text-sm font-bold text-slate-900 focus:border-indigo-600 focus:bg-white focus:outline-none"
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between rounded-2xl bg-slate-900 px-4 py-3 text-white">
+            <div className="flex items-center gap-2 text-xs text-slate-300">
+              <CalculatorIcon className="h-4 w-4 text-sky-400" />
+              <span>Estimated Stay Total (incl. GST)</span>
+            </div>
+            <span className="font-mono text-lg font-extrabold text-white">
+              ₹{totalWithTax.toLocaleString("en-IN")}
+            </span>
+          </div>
+
+          <Link
+            href="/tools/hotel"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-indigo-600 px-5 py-3 text-sm font-extrabold text-white transition hover:bg-indigo-700"
+          >
+            <span>Open Full Hotel Toolkit</span>
+            <ArrowRightIcon className="h-4 w-4" />
+          </Link>
         </div>
       )}
     </div>
   );
 }
-
