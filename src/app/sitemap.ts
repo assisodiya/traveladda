@@ -11,6 +11,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1.0,
     },
     {
+      url: `${BASE_URL}/air/flight-status`,
+      changeFrequency: "always",
+      priority: 0.98,
+    },
+    {
       url: `${BASE_URL}/rail/live-status`,
       changeFrequency: "always",
       priority: 0.98,

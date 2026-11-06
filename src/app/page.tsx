@@ -27,9 +27,9 @@ import { RAIL_BLOG_POSTS } from "@/lib/blog-data";
 
 export const metadata: Metadata = {
   title:
-    "TravelAdda | Live Train Running Status, 10-Digit PNR, Air & Hotel Tools",
+    "TravelAdda | Live Flight Status, Live Train Running Status, PNR & Hotel Tools",
   description:
-    "Spot live Indian Railways train running status with blinking GPS radar, check 10-digit IRCTC PNR confirmation, coach positions, flight baggage allowances, and hotel GST tariffs on TravelAdda.",
+    "Track live domestic & international flight status with terminals and gates, spot live Indian Railways train running status with blinking GPS radar, check 10-digit IRCTC PNR confirmation, and calculate hotel GST tariffs on TravelAdda.",
   alternates: {
     canonical: "/",
   },
@@ -399,14 +399,15 @@ export default async function Home() {
           </article>
 
           {/* AIR CARD */}
-          <article className="flex flex-col justify-between rounded-3xl border border-line bg-card p-5 shadow-lg shadow-black/5 dark:shadow-black/25 sm:p-7">
+          <article className="flex flex-col justify-between rounded-3xl border-2 border-amber-500/35 bg-card p-5 shadow-lg shadow-black/5 dark:shadow-black/25 sm:p-7">
             <div>
               <div className="flex items-center justify-between gap-2">
                 <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-amber-500/18 text-amber-800 dark:text-amber-300 sm:h-12 sm:w-12">
                   <PlaneIcon className="h-6 w-6" />
                 </span>
-                <span className="rounded-full bg-amber-500/18 px-3 py-1 text-xs font-extrabold text-amber-900 dark:text-amber-300">
-                  AVIATION
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/15 px-3 py-1 text-[11px] font-extrabold text-emerald-800 dark:text-emerald-300">
+                  <span className="ta-led-blink h-2 w-2 rounded-full bg-emerald-500" />
+                  <span>LIVE RADAR</span>
                 </span>
               </div>
 
@@ -414,11 +415,23 @@ export default async function Home() {
                 Air Tools
               </h3>
               <p className="mt-1.5 text-xs leading-relaxed text-ink-soft sm:text-sm">
-                Compare cabin and check-in baggage allowances, compute airport
-                reporting buffers, and prepare for smooth boarding.
+                Track live domestic &amp; global flight status, terminals, gates
+                &amp; baggage belts, plus compare airline baggage allowances.
               </p>
 
               <ul className="mt-5 space-y-3 border-t border-line pt-4 text-sm sm:mt-6 sm:pt-5">
+                <li>
+                  <Link
+                    href="/air/flight-status"
+                    className="group flex items-center justify-between font-bold text-ink hover:text-orange-600 dark:hover:text-amber-300"
+                  >
+                    <span className="inline-flex items-center gap-2.5">
+                      <RadarLiveIcon className="h-4 w-4 text-orange-600 dark:text-amber-300" />
+                      <span>Live Flight Status Tracker</span>
+                    </span>
+                    <ArrowRightIcon className="h-4 w-4 text-ink-muted transition-transform group-hover:translate-x-0.5 group-hover:text-orange-600 dark:group-hover:text-amber-300" />
+                  </Link>
+                </li>
                 <li>
                   <Link
                     href="/tools/air#baggage"
@@ -458,14 +471,22 @@ export default async function Home() {
               </ul>
             </div>
 
-            <Link
-              href="/tools/air"
-              className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-line bg-subcard px-5 py-3.5 text-sm font-extrabold text-ink transition hover:border-orange-500 sm:mt-7"
-            >
-              <PlaneIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
-              <span>Explore Air Tools</span>
-              <ArrowRightIcon className="h-4 w-4" />
-            </Link>
+            <div className="mt-6 grid grid-cols-2 gap-2.5 sm:mt-7">
+              <Link
+                href="/air/flight-status"
+                className="ta-btn-primary inline-flex items-center justify-center gap-1.5 rounded-2xl px-3.5 py-3.5 text-xs font-extrabold sm:text-sm"
+              >
+                <span className="ta-led-blink h-2 w-2 rounded-full bg-white dark:bg-stone-900" />
+                <span>Live Flight</span>
+              </Link>
+              <Link
+                href="/tools/air"
+                className="inline-flex items-center justify-center gap-1.5 rounded-2xl border-2 border-line bg-subcard px-3.5 py-3.5 text-xs font-extrabold text-ink transition hover:border-orange-500 sm:text-sm"
+              >
+                <LuggageIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
+                <span>Baggage Tools</span>
+              </Link>
+            </div>
           </article>
 
           {/* HOTEL CARD */}

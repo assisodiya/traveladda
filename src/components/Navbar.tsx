@@ -49,32 +49,41 @@ const MENU_CATEGORIES: MenuCategory[] = [
   {
     key: "air",
     label: "Air",
-    tagline: "Flight planning & airport utilities",
+    tagline: "Live flight radar & airport utilities",
     mainIcon: <PlaneIcon className="h-4 w-4" />,
-    viewAllHref: "/tools/air",
-    viewAllLabel: "Open All Air Tools",
+    viewAllHref: "/air/flight-status",
+    viewAllLabel: "Open Live Flight Tracker",
     items: [
+      {
+        title: "Live Flight Status Tracker",
+        description:
+          "Track airline arrival, departure, terminal, gate, belt & aircraft live",
+        href: "/air/flight-status",
+        badge: "LIVE",
+        icon: <RadarLiveIcon className="h-5 w-5" />,
+        iconBg: "bg-orange-500/15 text-orange-700 dark:text-orange-300",
+      },
       {
         title: "Baggage Allowance Checker",
         description: "Cabin & check-in weight limits by airline and fare type",
         href: "/tools/air#baggage",
         badge: "TOOL",
         icon: <LuggageIcon className="h-5 w-5" />,
-        iconBg: "bg-orange-500/15 text-orange-700 dark:text-orange-300",
+        iconBg: "bg-amber-500/15 text-amber-800 dark:text-amber-300",
       },
       {
         title: "Airport Arrival & Layover Planner",
         description: "Calculate ideal terminal reporting & gate buffer times",
         href: "/tools/air#buffer",
         icon: <ClockIcon className="h-5 w-5" />,
-        iconBg: "bg-amber-500/15 text-amber-800 dark:text-amber-300",
+        iconBg: "bg-yellow-500/20 text-amber-900 dark:text-yellow-300",
       },
       {
         title: "Boarding & DigiYatra Checklist",
         description: "Essential cabin rules, ID docs & web check-in guide",
         href: "/tools/air#checklist",
         icon: <ShieldCheckIcon className="h-5 w-5" />,
-        iconBg: "bg-yellow-500/20 text-amber-900 dark:text-yellow-300",
+        iconBg: "bg-rose-500/15 text-rose-700 dark:text-rose-300",
       },
     ],
   },
@@ -179,7 +188,9 @@ function DesktopDropdownBar({ pathname }: { pathname: string }) {
     if (key === "rail") {
       return pathname.startsWith("/rail") || pathname.startsWith("/blog");
     }
-    if (key === "air") return pathname.startsWith("/tools/air");
+    if (key === "air") {
+      return pathname.startsWith("/air") || pathname.startsWith("/tools/air");
+    }
     if (key === "hotel") return pathname.startsWith("/tools/hotel");
     return false;
   };
@@ -322,9 +333,17 @@ export function Navbar() {
           <ActiveDesktopNav />
         </Suspense>
 
-        {/* Right Theme Toggle + Quick Rail Actions */}
+        {/* Right Theme Toggle + Quick Flight & Rail Actions */}
         <div className="hidden items-center gap-2.5 md:flex">
           <ThemeToggle />
+          <Link
+            href="/air/flight-status"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-line-strong bg-subcard px-3.5 py-2.5 text-xs font-extrabold text-ink transition hover:border-orange-500 lg:text-sm"
+          >
+            <span className="ta-led-blink h-2 w-2 rounded-full bg-emerald-500" />
+            <PlaneIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
+            <span>Flight Status</span>
+          </Link>
           <Link
             href="/rail/live-status"
             className="inline-flex items-center gap-1.5 rounded-xl border border-line-strong bg-subcard px-3.5 py-2.5 text-xs font-extrabold text-ink transition hover:border-orange-500 lg:text-sm"

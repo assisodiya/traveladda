@@ -96,6 +96,18 @@ export function Footer() {
             <ul className="mt-4 space-y-2.5 text-sm">
               <li>
                 <Link
+                  href="/air/flight-status"
+                  className="inline-flex items-center gap-2 font-semibold text-ink transition hover:text-orange-600 dark:hover:text-amber-300"
+                >
+                  <PlaneIcon className="h-3.5 w-3.5 text-orange-600 dark:text-amber-400" />
+                  <span>Live Flight Status Tracker</span>
+                  <span className="rounded bg-orange-500/18 px-1.5 py-0.5 text-[10px] font-bold text-orange-700 dark:text-amber-300">
+                    LIVE
+                  </span>
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/tools/air#baggage"
                   className="inline-flex items-center gap-2 text-ink-soft transition hover:text-orange-600 dark:hover:text-amber-300"
                 >
@@ -158,11 +170,18 @@ export function Footer() {
           <p>© 2026 TravelAdda. Built for seamless Air, Rail &amp; Hotel journeys.</p>
           <div className="flex flex-wrap items-center gap-5">
             <Link
-              href="/tools/air"
+              href="/air/flight-status"
               className="inline-flex items-center gap-1.5 text-ink-soft transition hover:text-orange-600 dark:hover:text-amber-300"
             >
               <PlaneIcon className="h-3.5 w-3.5" />
-              <span>Air</span>
+              <span>Flight Status</span>
+            </Link>
+            <Link
+              href="/tools/air"
+              className="inline-flex items-center gap-1.5 text-ink-soft transition hover:text-orange-600 dark:hover:text-amber-300"
+            >
+              <LuggageIcon className="h-3.5 w-3.5" />
+              <span>Air Tools</span>
             </Link>
             <Link
               href="/rail/pnr-status"

@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { AirToolsClient } from "@/components/AirToolsClient";
-import { PlaneIcon } from "@/components/Icons";
+import {
+  ArrowRightIcon,
+  LiveFlightBeaconIcon,
+  PlaneIcon,
+} from "@/components/Icons";
 
 export const metadata: Metadata = {
   title: "Air Travel Tools | Baggage Allowance & Airport Buffer Calculator",
@@ -53,7 +57,33 @@ export default async function AirToolsPage() {
         </div>
       </section>
 
-      <div className="mx-auto mt-10 max-w-5xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto mt-10 max-w-5xl space-y-8 px-4 sm:px-6 lg:px-8">
+        <div className="ta-live-cockpit flex flex-col justify-between gap-4 rounded-3xl p-5 shadow-xl sm:flex-row sm:items-center sm:p-6">
+          <div className="flex items-center gap-3.5">
+            <LiveFlightBeaconIcon size="md" active />
+            <div>
+              <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-300">
+                NEW · LIVE AVIATION TELEMETRY
+              </span>
+              <h2 className="mt-0.5 text-lg font-black text-white sm:text-xl">
+                Track Live Flight Status, Terminal, Gate &amp; Baggage Belt
+              </h2>
+              <p className="text-xs text-stone-300 sm:text-sm">
+                Search 500+ domestic &amp; global airlines with real-time takeoff,
+                airborne progress &amp; gate updates.
+              </p>
+            </div>
+          </div>
+
+          <Link
+            href="/air/flight-status"
+            className="ta-btn-primary inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl px-5 py-3 text-xs font-extrabold sm:text-sm"
+          >
+            <span>Open Flight Tracker</span>
+            <ArrowRightIcon className="h-4 w-4" />
+          </Link>
+        </div>
+
         <AirToolsClient />
       </div>
     </main>

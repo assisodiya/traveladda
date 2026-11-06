@@ -1107,6 +1107,86 @@ export function MoonIcon({ className = "h-5 w-5", ...props }: IconProps) {
   );
 }
 
+export function PhoneCallIcon({ className = "h-4 w-4", ...props }: IconProps) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width="16"
+      height="16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      className={`shrink-0 ${className}`}
+      {...props}
+    >
+      <path
+        d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"
+        fill="currentColor"
+        fillOpacity="0.1"
+      />
+    </svg>
+  );
+}
+
+export function LiveFlightBeaconIcon({
+  size = "md",
+  active = true,
+}: {
+  size?: "sm" | "md" | "lg";
+  active?: boolean;
+}) {
+  const dims =
+    size === "lg"
+      ? "h-12 w-12"
+      : size === "sm"
+        ? "h-7 w-7"
+        : "h-9 w-9";
+  const iconDims =
+    size === "lg"
+      ? "h-6 w-6"
+      : size === "sm"
+        ? "h-3.5 w-3.5"
+        : "h-4.5 w-4.5";
+
+  return (
+    <span className={`relative inline-flex ${dims} shrink-0 items-center justify-center`}>
+      {active && (
+        <>
+          <span
+            aria-hidden="true"
+            className="ta-radar-ring absolute inset-0 rounded-full bg-orange-500/45 dark:bg-amber-400/40"
+          />
+          <span
+            aria-hidden="true"
+            className="ta-radar-ring-delay absolute inset-0 rounded-full bg-emerald-400/35"
+          />
+        </>
+      )}
+      <span
+        style={{
+          backgroundImage: active
+            ? "linear-gradient(135deg, #ea580c 0%, #f59e0b 100%)"
+            : "linear-gradient(135deg, #57534e 0%, #78716c 100%)",
+        }}
+        className={`relative z-10 inline-flex h-full w-full items-center justify-center rounded-full text-white shadow-lg ring-2 ring-white dark:ring-stone-900 ${
+          active ? "ta-train-blink" : ""
+        }`}
+      >
+        <PlaneIcon className={iconDims} />
+        {active && (
+          <span
+            aria-hidden="true"
+            className="ta-led-blink absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border border-white bg-emerald-400"
+          />
+        )}
+      </span>
+    </span>
+  );
+}
+
 export function LiveTrainBeaconIcon({
   size = "md",
   active = true,

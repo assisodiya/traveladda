@@ -41,7 +41,6 @@ import {
   LiveTrainBeaconIcon,
   NavigationIcon,
   PrinterIcon,
-  RadarLiveIcon,
   RefreshIcon,
   RouteTrackIcon,
   SearchIcon,
@@ -555,11 +554,36 @@ export function LiveTrainTracker() {
   const [autoRefresh, setAutoRefresh] = useState(false);
 
   // Train Name / Number Autocomplete state
-  const [suggestions, setSuggestions] = useState<TrainSearchItem[]>([]);
+  const [remoteSuggestions, setRemoteSuggestions] = useState<{
+    query: string;
+    items: TrainSearchItem[];
+  } | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [searchingTrains, setSearchingTrains] = useState(false);
   const searchBoxRef = useRef<HTMLDivElement>(null);
   const liveTrainRowRef = useRef<HTMLDivElement>(null);
+
+  const suggestions = useMemo(() => {
+    const trimmed = searchQuery.trim();
+    if (trimmed.length < 2) {
+      return POPULAR_LIVE_TRAINS.slice(0, 6);
+    }
+    if (
+      remoteSuggestions &&
+      remoteSuggestions.query === trimmed &&
+      remoteSuggestions.items.length > 0
+    ) {
+      return remoteSuggestions.items;
+    }
+    const lower = trimmed.toLowerCase();
+    return POPULAR_LIVE_TRAINS.filter(
+      (t) =>
+        t.trainNumber.includes(lower) ||
+        t.trainName.toLowerCase().includes(lower) ||
+        t.sourceCode.toLowerCase().includes(lower) ||
+        t.destinationCode.toLowerCase().includes(lower)
+    ).slice(0, 6);
+  }, [searchQuery, remoteSuggestions]);
 
   // Interactive Filters for Coach Rake & Route Stops
   const [coachFilter, setCoachFilter] = useState("");
@@ -591,26 +615,7 @@ export function LiveTrainTracker() {
   // Fetch autocomplete train suggestions when user types name or partial number
   useEffect(() => {
     const trimmed = searchQuery.trim();
-    if (!dropdownOpen) return;
-
-    if (trimmed.length < 2) {
-      setSuggestions(POPULAR_LIVE_TRAINS.slice(0, 6));
-      setSearchingTrains(false);
-      return;
-    }
-
-    // Immediate local match first
-    const lower = trimmed.toLowerCase();
-    const localMatches = POPULAR_LIVE_TRAINS.filter(
-      (t) =>
-        t.trainNumber.includes(lower) ||
-        t.trainName.toLowerCase().includes(lower) ||
-        t.sourceCode.toLowerCase().includes(lower) ||
-        t.destinationCode.toLowerCase().includes(lower)
-    );
-    if (localMatches.length > 0) {
-      setSuggestions(localMatches.slice(0, 6));
-    }
+    if (!dropdownOpen || trimmed.length < 2) return;
 
     const controller = new AbortController();
     const timer = setTimeout(async () => {
@@ -623,13 +628,18 @@ export function LiveTrainTracker() {
         if (res.ok) {
           const json = (await res.json()) as OwnedTrainSearchApiResponse;
           if (Array.isArray(json.data) && json.data.length > 0) {
-            setSuggestions(json.data.slice(0, 7));
+            setRemoteSuggestions({
+              query: trimmed,
+              items: json.data.slice(0, 7),
+            });
           }
         }
       } catch {
         // Ignore aborted autocomplete lookups
       } finally {
-        setSearchingTrains(false);
+        if (!controller.signal.aborted) {
+          setSearchingTrains(false);
+        }
       }
     }, 220);
 
@@ -769,11 +779,13 @@ export function LiveTrainTracker() {
 
     if (qTrain.length >= 3 && lastCheckedKeyRef.current !== lookupKey) {
       lastCheckedKeyRef.current = lookupKey;
-      setSearchQuery(qTrain);
-      setIsAutoDate(!hasExplicit);
-      if (hasExplicit) setDateInput(qDate);
-      setLoading(true);
-      void performLookup(qTrain, qDate, !hasExplicit);
+      void Promise.resolve().then(() => {
+        setSearchQuery(qTrain);
+        setIsAutoDate(!hasExplicit);
+        if (hasExplicit) setDateInput(qDate);
+        setLoading(true);
+        return performLookup(qTrain, qDate, !hasExplicit);
+      });
     }
   }, [searchParams, performLookup, todayIst]);
 
