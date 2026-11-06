@@ -74,14 +74,14 @@ const PRIMARY_NAV_TABS: NavTab[] = [
 
 function NavLinksDesktop({ pathname }: { pathname: string }) {
   return (
-    <nav aria-label="Primary" className="hidden items-center gap-1 md:flex">
+    <nav aria-label="Primary" className="hidden items-center gap-0.5 lg:flex">
       {PRIMARY_NAV_TABS.map((tab) => {
         const isActive = pathname.startsWith(tab.matchPrefix);
         return (
           <Link
             key={tab.href}
             href={tab.href}
-            className={`relative inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-semibold transition ${
+            className={`relative inline-flex items-center gap-1.5 rounded-lg px-2.5 py-2 text-xs font-semibold transition xl:px-3 xl:text-sm ${
               isActive
                 ? "bg-blue-50 text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300"
                 : "text-ink-soft hover:bg-subcard hover:text-ink"
@@ -119,7 +119,7 @@ function ActiveDesktopNav() {
 
 function MobileQuickTabStrip({ pathname }: { pathname: string }) {
   return (
-    <div className="ta-no-scrollbar flex items-center gap-1 overflow-x-auto border-t border-line bg-card px-3 py-1.5 md:hidden">
+    <div className="ta-no-scrollbar flex items-center gap-1 overflow-x-auto border-t border-line bg-card px-3 py-1.5 lg:hidden">
       {PRIMARY_NAV_TABS.map((tab) => {
         const isActive = pathname.startsWith(tab.matchPrefix);
         return (
@@ -151,28 +151,28 @@ export function Navbar() {
 
   return (
     <header className="ta-navbar sticky top-0 z-50">
-      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-3 px-4 sm:h-16 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-6">
-          <Logo size="sm" />
+      <div className="mx-auto flex h-15 max-w-7xl items-center justify-between gap-3 px-4 sm:h-16 sm:px-6 lg:px-8">
+        <div className="flex items-center gap-4 xl:gap-6">
+          <Logo size="md" priority />
           <Suspense fallback={<NavLinksDesktop pathname="" />}>
             <ActiveDesktopNav />
           </Suspense>
         </div>
 
         {/* Right Utility Controls */}
-        <div className="hidden items-center gap-2.5 md:flex">
+        <div className="hidden items-center gap-2.5 lg:flex">
           <ThemeToggle />
           <Link
             href="/air/flight-status"
-            className="ta-btn-primary inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-bold lg:text-sm"
+            className="ta-btn-primary inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-bold xl:text-sm"
           >
             <PlaneIcon className="h-4 w-4" />
             <span>Track Flight</span>
           </Link>
         </div>
 
-        {/* Mobile Header Controls */}
-        <div className="flex items-center gap-2 md:hidden">
+        {/* Mobile / Tablet Header Controls */}
+        <div className="flex items-center gap-2 lg:hidden">
           <ThemeToggle />
           <button
             type="button"
@@ -190,14 +190,14 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* 1-Tap Horizontal Category Bar on Mobile (ixigo / ConfirmTkt style) */}
+      {/* 1-Tap Horizontal Category Bar on Mobile & Tablet */}
       <Suspense fallback={<MobileQuickTabStrip pathname="" />}>
         <ActiveMobileStrip />
       </Suspense>
 
       {/* Clean Mobile Menu Drawer */}
       {mobileOpen && (
-        <div className="border-t border-line bg-card px-4 py-4 shadow-lg md:hidden">
+        <div className="border-t border-line bg-card px-4 py-4 shadow-lg lg:hidden">
           <div className="grid gap-1.5">
             {PRIMARY_NAV_TABS.map((tab) => (
               <Link

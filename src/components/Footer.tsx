@@ -9,7 +9,7 @@ export function Footer() {
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {/* Brand Column */}
           <div className="space-y-3">
-            <Logo size="md" />
+            <Logo size="lg" />
             <p className="text-xs leading-relaxed text-ink-muted sm:text-sm">
               Fast, distraction-free Indian &amp; global travel tools. Check
               live flight status, terminals &amp; gates, spot Indian Railways

@@ -1,10 +1,15 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Footer } from "@/components/Footer";
 import { Navbar } from "@/components/Navbar";
 import "./globals.css";
 
+export const viewport: Viewport = {
+  themeColor: "#0a223d",
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://traveladda.in"),
+  applicationName: "TravelAdda",
   title: {
     default:
       "TravelAdda | Live Flight Status, Train Running Status, PNR & Travel Tools",
@@ -31,6 +36,21 @@ export const metadata: Metadata = {
     title: "TravelAdda | Live Flight Status, Train Status, PNR & Travel Tools",
     description:
       "Simple, fast live flight tracker, Indian Railways running status, 10-digit PNR confirmation, coach rake order, baggage & hotel GST tools.",
+    images: [
+      {
+        url: "/assets/TravelAdda-travel-logo.png",
+        width: 2056,
+        height: 765,
+        alt: "TravelAdda Logo",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "TravelAdda | Live Flight Status, Train Status, PNR & Travel Tools",
+    description:
+      "Simple, fast live flight tracker, Indian Railways running status, 10-digit PNR confirmation, coach rake order, baggage & hotel GST tools.",
+    images: ["/assets/TravelAdda-travel-logo.png"],
   },
   robots: {
     index: true,

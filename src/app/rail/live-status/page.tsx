@@ -158,6 +158,13 @@ export default async function LiveTrainStatusPage() {
         applicationCategory: "TravelApplication",
         operatingSystem: "All",
         browserRequirements: "Requires JavaScript",
+        image: "https://traveladda.in/assets/TravelAdda-travel-logo.png",
+        provider: {
+          "@type": "Organization",
+          name: "TravelAdda",
+          url: "https://traveladda.in",
+          logo: "https://traveladda.in/assets/TravelAdda-travel-logo.png",
+        },
         offers: {
           "@type": "Offer",
           price: "0",

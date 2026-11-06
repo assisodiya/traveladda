@@ -173,6 +173,13 @@ export default async function LiveFlightStatusPage() {
         url: "https://traveladda.in/air/flight-status",
         applicationCategory: "TravelApplication",
         operatingSystem: "All",
+        image: "https://traveladda.in/assets/TravelAdda-travel-logo.png",
+        provider: {
+          "@type": "Organization",
+          name: "TravelAdda",
+          url: "https://traveladda.in",
+          logo: "https://traveladda.in/assets/TravelAdda-travel-logo.png",
+        },
         offers: {
           "@type": "Offer",
           price: "0",

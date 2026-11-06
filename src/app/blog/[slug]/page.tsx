@@ -101,6 +101,12 @@ export default async function BlogArticlePage({
         "@type": "Organization",
         name: "TravelAdda",
         url: "https://traveladda.in",
+        logo: {
+          "@type": "ImageObject",
+          url: "https://traveladda.in/assets/TravelAdda-travel-logo.png",
+          width: 2056,
+          height: 765,
+        },
       },
       mainEntityOfPage: {
         "@type": "WebPage",
