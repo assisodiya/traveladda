@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import { AirlineLogo } from "@/components/AirlineLogo";
 import {
   ArrowRightIcon,
+  BookOpenIcon,
   CheckCircleIcon,
   ChevronDownIcon,
   ClockIcon,
@@ -22,6 +23,7 @@ import {
   TrainIcon,
 } from "@/components/Icons";
 import { LiveFlightTracker } from "@/components/LiveFlightTracker";
+import { FLIGHT_BLOG_POSTS } from "@/lib/blog-data";
 import { POPULAR_AIRLINES, POPULAR_LIVE_FLIGHTS } from "@/lib/flight-types";
 
 export const metadata: Metadata = {
@@ -597,6 +599,78 @@ export default async function LiveFlightStatusPage() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* FLIGHT STATUS & AVIATION EDITORIAL BLOG GUIDES (SEO TOPIC CLUSTER) */}
+      <section
+        id="flight-blog"
+        className="mx-auto mt-14 max-w-6xl px-4 sm:mt-20 sm:px-6 lg:px-8"
+      >
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <span className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-[0.18em] text-orange-700 dark:text-amber-300">
+              <BookOpenIcon className="h-4 w-4" />
+              <span>AVIATION &amp; FLIGHT TRACKING GUIDES</span>
+            </span>
+            <h2 className="mt-1.5 text-2xl font-black tracking-tight text-ink sm:text-3xl">
+              Expert Guides for Smarter Airport &amp; Flight Journeys
+            </h2>
+          </div>
+          <Link
+            href="/blog#flight-guides"
+            className="inline-flex items-center gap-1.5 text-xs font-extrabold text-orange-700 hover:underline dark:text-amber-300 sm:text-sm"
+          >
+            <span>Explore All Travel Guides</span>
+            <ArrowRightIcon className="h-4 w-4" />
+          </Link>
+        </div>
+
+        <div className="mt-7 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {FLIGHT_BLOG_POSTS.map((post) => (
+            <article
+              key={post.slug}
+              className="flex flex-col justify-between rounded-3xl border border-line bg-card p-5 shadow-xs transition hover:-translate-y-1 hover:border-orange-500/50 hover:shadow-md sm:p-6"
+            >
+              <div>
+                <div className="flex items-center justify-between gap-2 text-xs">
+                  <span className="rounded-full bg-orange-500/15 px-2.5 py-1 font-bold text-orange-800 dark:text-amber-300">
+                    {post.category}
+                  </span>
+                  <span className="inline-flex items-center gap-1 font-medium text-ink-muted">
+                    <ClockIcon className="h-3.5 w-3.5" />
+                    <span>{post.readTime}</span>
+                  </span>
+                </div>
+
+                <h3 className="mt-3.5 text-base font-extrabold leading-snug text-ink sm:text-lg">
+                  <Link
+                    href={`/blog/${post.slug}`}
+                    className="transition hover:text-orange-600 dark:hover:text-amber-300"
+                  >
+                    {post.title}
+                  </Link>
+                </h3>
+
+                <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-ink-soft">
+                  {post.excerpt}
+                </p>
+              </div>
+
+              <div className="mt-5 flex items-center justify-between border-t border-line pt-3.5 text-xs">
+                <span className="font-semibold text-ink-muted">
+                  {post.author.name}
+                </span>
+                <Link
+                  href={`/blog/${post.slug}`}
+                  className="inline-flex items-center gap-1 font-extrabold text-orange-600 hover:text-orange-800 dark:text-amber-300"
+                >
+                  <span>Read Guide</span>
+                  <ArrowRightIcon className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+            </article>
+          ))}
         </div>
       </section>
 

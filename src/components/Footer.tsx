@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { RAIL_BLOG_POSTS } from "@/lib/blog-data";
+import { FLIGHT_BLOG_POSTS, RAIL_BLOG_POSTS } from "@/lib/blog-data";
 import {
   BookOpenIcon,
   CalculatorIcon,
@@ -152,16 +152,26 @@ export function Footer() {
               <span>Travel Guides</span>
             </h3>
             <ul className="mt-4 space-y-2.5 text-sm">
-              {RAIL_BLOG_POSTS.map((post) => (
-                <li key={post.slug}>
-                  <Link
-                    href={`/blog/${post.slug}`}
-                    className="line-clamp-1 text-ink-soft transition hover:text-orange-600 dark:hover:text-amber-300"
-                  >
-                    {post.title}
-                  </Link>
-                </li>
-              ))}
+              {[...FLIGHT_BLOG_POSTS.slice(0, 3), ...RAIL_BLOG_POSTS.slice(0, 2)].map(
+                (post) => (
+                  <li key={post.slug}>
+                    <Link
+                      href={`/blog/${post.slug}`}
+                      className="line-clamp-1 text-ink-soft transition hover:text-orange-600 dark:hover:text-amber-300"
+                    >
+                      {post.title}
+                    </Link>
+                  </li>
+                )
+              )}
+              <li>
+                <Link
+                  href="/blog"
+                  className="inline-flex items-center gap-1 text-xs font-extrabold text-orange-700 hover:underline dark:text-amber-300"
+                >
+                  <span>View All Flight &amp; Rail Guides →</span>
+                </Link>
+              </li>
             </ul>
           </div>
         </div>

@@ -85,6 +85,14 @@ const MENU_CATEGORIES: MenuCategory[] = [
         icon: <ShieldCheckIcon className="h-5 w-5" />,
         iconBg: "bg-rose-500/15 text-rose-700 dark:text-rose-300",
       },
+      {
+        title: "Flight & Terminal Blog Guides",
+        description:
+          "How to track flights, DEL/BOM/BLR terminals, inbound delays & DGCA rules",
+        href: "/blog#flight-guides",
+        icon: <BookOpenIcon className="h-5 w-5" />,
+        iconBg: "bg-orange-500/15 text-orange-700 dark:text-orange-300",
+      },
     ],
   },
   {

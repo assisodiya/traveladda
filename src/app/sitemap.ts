@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { RAIL_BLOG_POSTS } from "@/lib/blog-data";
+import { ALL_BLOG_POSTS } from "@/lib/blog-data";
 
 const BASE_URL = "https://traveladda.in";
 
@@ -26,9 +26,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.95,
     },
     {
+      url: `${BASE_URL}/blog`,
+      changeFrequency: "weekly",
+      priority: 0.88,
+    },
+    {
       url: `${BASE_URL}/tools/air`,
       changeFrequency: "weekly",
-      priority: 0.8,
+      priority: 0.82,
     },
     {
       url: `${BASE_URL}/tools/hotel`,
@@ -37,12 +42,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  const blogRoutes: MetadataRoute.Sitemap = RAIL_BLOG_POSTS.map((post) => ({
+  const blogRoutes: MetadataRoute.Sitemap = ALL_BLOG_POSTS.map((post) => ({
     url: `${BASE_URL}/blog/${post.slug}`,
-    changeFrequency: "monthly",
-    priority: 0.75,
+    lastModified: post.publishedIso,
+    changeFrequency: post.domain === "air" ? "weekly" : "monthly",
+    priority: post.domain === "air" ? 0.85 : 0.78,
   }));
 
   return [...coreRoutes, ...blogRoutes];
 }
-

@@ -23,7 +23,7 @@ import {
   TrainIcon,
   UserCheckIcon,
 } from "@/components/Icons";
-import { RAIL_BLOG_POSTS } from "@/lib/blog-data";
+import { FLIGHT_BLOG_POSTS, RAIL_BLOG_POSTS } from "@/lib/blog-data";
 
 export const metadata: Metadata = {
   title:
@@ -655,58 +655,60 @@ export default async function Home() {
             </h2>
           </div>
           <Link
-            href="/rail/pnr-status#rail-blog"
+            href="/blog"
             className="inline-flex items-center gap-1.5 text-xs font-bold text-orange-600 hover:text-orange-800 dark:text-amber-300 dark:hover:text-amber-200 sm:text-sm"
           >
-            <span>View all rail guides</span>
+            <span>View all flight &amp; rail guides</span>
             <ArrowRightIcon className="h-4 w-4" />
           </Link>
         </div>
 
         <div className="mt-8 grid gap-4 sm:mt-10 sm:gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {RAIL_BLOG_POSTS.map((post) => (
-            <article
-              key={post.slug}
-              className="flex flex-col justify-between rounded-3xl border border-line bg-card p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-lg sm:p-6"
-            >
-              <div>
-                <div className="flex items-center justify-between gap-2 text-xs">
-                  <span className="rounded-full bg-orange-500/15 px-3 py-1 font-bold text-orange-800 dark:text-amber-300">
-                    {post.category}
-                  </span>
-                  <span className="inline-flex items-center gap-1 font-medium text-ink-muted">
-                    <ClockIcon className="h-3.5 w-3.5" />
-                    <span>{post.readTime}</span>
-                  </span>
+          {[...FLIGHT_BLOG_POSTS.slice(0, 2), ...RAIL_BLOG_POSTS.slice(0, 2)].map(
+            (post) => (
+              <article
+                key={post.slug}
+                className="flex flex-col justify-between rounded-3xl border border-line bg-card p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-lg sm:p-6"
+              >
+                <div>
+                  <div className="flex items-center justify-between gap-2 text-xs">
+                    <span className="rounded-full bg-orange-500/15 px-3 py-1 font-bold text-orange-800 dark:text-amber-300">
+                      {post.category}
+                    </span>
+                    <span className="inline-flex items-center gap-1 font-medium text-ink-muted">
+                      <ClockIcon className="h-3.5 w-3.5" />
+                      <span>{post.readTime}</span>
+                    </span>
+                  </div>
+                  <h3 className="mt-3.5 text-base font-extrabold leading-snug text-ink sm:mt-4 sm:text-lg">
+                    <Link
+                      href={`/blog/${post.slug}`}
+                      className="transition hover:text-orange-600 dark:hover:text-amber-300"
+                    >
+                      {post.title}
+                    </Link>
+                  </h3>
+                  <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-ink-soft">
+                    {post.excerpt}
+                  </p>
                 </div>
-                <h3 className="mt-3.5 text-base font-extrabold leading-snug text-ink sm:mt-4 sm:text-lg">
+
+                <div className="mt-5 flex items-center justify-between border-t border-line pt-3.5 text-xs sm:mt-6 sm:pt-4">
+                  <span className="inline-flex items-center gap-1.5 font-semibold text-ink-muted">
+                    <UserCheckIcon className="h-3.5 w-3.5 text-orange-600 dark:text-amber-400" />
+                    <span>{post.author.name}</span>
+                  </span>
                   <Link
                     href={`/blog/${post.slug}`}
-                    className="transition hover:text-orange-600 dark:hover:text-amber-300"
+                    className="inline-flex items-center gap-1 font-extrabold text-orange-600 hover:text-orange-800 dark:text-amber-300 dark:hover:text-amber-200"
                   >
-                    {post.title}
+                    <span>Read</span>
+                    <ArrowRightIcon className="h-3.5 w-3.5" />
                   </Link>
-                </h3>
-                <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-ink-soft">
-                  {post.excerpt}
-                </p>
-              </div>
-
-              <div className="mt-5 flex items-center justify-between border-t border-line pt-3.5 text-xs sm:mt-6 sm:pt-4">
-                <span className="inline-flex items-center gap-1.5 font-semibold text-ink-muted">
-                  <UserCheckIcon className="h-3.5 w-3.5 text-orange-600 dark:text-amber-400" />
-                  <span>{post.author.name}</span>
-                </span>
-                <Link
-                  href={`/blog/${post.slug}`}
-                  className="inline-flex items-center gap-1 font-extrabold text-orange-600 hover:text-orange-800 dark:text-amber-300 dark:hover:text-amber-200"
-                >
-                  <span>Read</span>
-                  <ArrowRightIcon className="h-3.5 w-3.5" />
-                </Link>
-              </div>
-            </article>
-          ))}
+                </div>
+              </article>
+            )
+          )}
         </div>
       </section>
 
