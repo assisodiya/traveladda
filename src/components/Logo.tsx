@@ -6,66 +6,54 @@ interface LogoProps {
 
 export function Logo({ size = "md" }: LogoProps) {
   const iconSizes = {
-    sm: "h-9 w-9",
-    md: "h-10 w-10",
-    lg: "h-11 w-11",
+    sm: "h-8 w-8",
+    md: "h-9 w-9",
+    lg: "h-10 w-10",
   };
 
   const textSizes = {
     sm: "text-lg",
-    md: "text-[22px]",
+    md: "text-xl",
     lg: "text-2xl",
   };
 
   return (
     <Link
       href="/"
-      className="group inline-flex items-center gap-2.5 focus-visible:rounded-xl"
+      className="group inline-flex items-center gap-2 focus-visible:rounded-lg"
       aria-label="TravelAdda Home"
     >
-      <span
-        style={{
-          backgroundImage:
-            "linear-gradient(135deg, #c2410c 0%, #ea580c 52%, #f59e0b 100%)",
-        }}
-        className={`relative inline-flex ${iconSizes[size]} shrink-0 items-center justify-center overflow-hidden rounded-xl shadow-sm ring-1 ring-black/10 transition-transform duration-200 group-hover:scale-105 dark:ring-white/15`}
-      >
+      <span className={`inline-flex ${iconSizes[size]} shrink-0 items-center justify-center rounded-lg bg-[#1956b4] text-white shadow-2xs`}>
         <svg
-          viewBox="0 0 64 64"
-          width="28"
-          height="28"
+          viewBox="0 0 32 32"
+          width="20"
+          height="20"
           fill="none"
-          className="h-7 w-7 shrink-0"
+          className="h-5 w-5 shrink-0"
           aria-hidden="true"
         >
           <path
-            d="M14 45C22 30 33 21 50 16"
+            d="M6 22C11 14 17 10 26 7"
             stroke="#FFFFFF"
-            strokeWidth="5"
+            strokeWidth="2.8"
             strokeLinecap="round"
           />
           <path
-            d="M38 14.5L51 15.5L46 27.5"
-            stroke="#FEF08A"
-            strokeWidth="4.5"
+            d="M19 6.5L26.5 7L23.5 13.5"
+            stroke="#FF8A3D"
+            strokeWidth="2.6"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
-          <path
-            d="M15 49.5H47"
-            stroke="#FDE047"
-            strokeWidth="3.6"
-            strokeLinecap="round"
-          />
-          <circle cx="15" cy="44.5" r="4.2" fill="#FEF08A" />
+          <circle cx="7" cy="22" r="2.5" fill="#FF8A3D" />
         </svg>
       </span>
 
       <span
-        className={`${textSizes[size]} font-extrabold leading-none tracking-tight text-ink`}
+        className={`${textSizes[size]} font-extrabold leading-none tracking-tight text-[#0a223d] dark:text-white`}
       >
-        Travel
-        <span className="text-orange-600 dark:text-amber-400">Adda</span>
+        travel
+        <span className="text-[#fc6203]">adda</span>
       </span>
     </Link>
   );

@@ -7,13 +7,15 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://traveladda.in"),
   title: {
     default:
-      "TravelAdda | Live Train Running Status, PNR Check, Air & Hotel Portal",
+      "TravelAdda | Live Flight Status, Train Running Status, PNR & Travel Tools",
     template: "%s | TravelAdda",
   },
   description:
-    "Track live Indian Railways train running status with blinking GPS station radar, check 10-digit IRCTC PNR status, flight baggage allowances, and hotel GST tariffs on TravelAdda.",
+    "Check live flight status, airport terminals & gates, track Indian Railways live train running status with coach position, verify 10-digit IRCTC PNR status, and calculate baggage & hotel GST on TravelAdda.",
   keywords: [
     "TravelAdda",
+    "live flight status",
+    "flight tracker",
     "live train running status",
     "spot your train",
     "PNR status check",
@@ -26,9 +28,9 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_IN",
     siteName: "TravelAdda",
-    title: "TravelAdda | Live Train Running Status, PNR & Smart Travel Tools",
+    title: "TravelAdda | Live Flight Status, Train Status, PNR & Travel Tools",
     description:
-      "Real-time Indian Railways train radar, 10-digit PNR confirmation, coach rake order, flight baggage & hotel GST utilities.",
+      "Simple, fast live flight tracker, Indian Railways running status, 10-digit PNR confirmation, coach rake order, baggage & hotel GST tools.",
   },
   robots: {
     index: true,
@@ -47,8 +49,7 @@ const THEME_INIT_SCRIPT = `
 (function() {
   try {
     var saved = localStorage.getItem('traveladda-theme');
-    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    var useDark = saved === 'dark' || (!saved && prefersDark);
+    var useDark = saved === 'dark';
     document.documentElement.classList.toggle('dark', useDark);
     document.documentElement.style.colorScheme = useDark ? 'dark' : 'light';
   } catch (e) {}

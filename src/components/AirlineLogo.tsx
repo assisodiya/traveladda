@@ -30,12 +30,12 @@ export function AirlineLogo({
 
   return (
     <span
-      className={`inline-flex shrink-0 items-center justify-center overflow-hidden border border-stone-200/90 bg-white shadow-2xs dark:border-stone-700/80 dark:bg-white ${dims.box} ${className}`}
+      className={`inline-flex shrink-0 items-center justify-center overflow-hidden border border-slate-200 bg-white shadow-2xs dark:border-slate-700 dark:bg-white ${dims.box} ${className}`}
       title={name ? `${name} (${cleanCode})` : cleanCode}
     >
       {hasError ? (
         <span
-          className={`font-mono font-black tracking-tight text-orange-700 ${dims.text}`}
+          className={`font-mono font-black tracking-tight text-[#1956b4] ${dims.text}`}
         >
           {cleanCode}
         </span>

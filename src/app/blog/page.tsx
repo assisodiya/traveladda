@@ -3,14 +3,9 @@ import { cacheLife } from "next/cache";
 import Link from "next/link";
 import {
   ArrowRightIcon,
-  BookOpenIcon,
-  CalendarIcon,
   ClockIcon,
-  LiveFlightBeaconIcon,
   PlaneIcon,
-  RadarLiveIcon,
   TrainIcon,
-  UserCheckIcon,
 } from "@/components/Icons";
 import {
   ALL_BLOG_POSTS,
@@ -72,7 +67,7 @@ export default async function BlogIndexPage() {
   };
 
   return (
-    <main className="pb-20">
+    <main className="pb-16 sm:pb-24">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -80,126 +75,107 @@ export default async function BlogIndexPage() {
         }}
       />
 
-      {/* Hero Header */}
-      <section className="ta-hero py-12 sm:py-16">
+      {/* Clean Compact Navy Header */}
+      <section className="ta-navy-hero pb-10 pt-5 sm:pb-12 sm:pt-7">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <nav
             aria-label="Breadcrumb"
-            className="flex items-center gap-2 text-xs font-semibold text-ink-soft"
+            className="flex items-center gap-1.5 text-xs text-slate-300"
           >
-            <Link
-              href="/"
-              className="transition hover:text-orange-600 dark:hover:text-amber-300"
-            >
+            <Link href="/" className="hover:text-white">
               Home
             </Link>
-            <span className="text-ink-muted">/</span>
-            <span className="font-bold text-orange-700 dark:text-amber-300">
-              Travel Blog
-            </span>
+            <span>/</span>
+            <span className="font-semibold text-white">Travel Guides</span>
           </nav>
 
-          <div className="mt-5 flex flex-col justify-between gap-5 lg:flex-row lg:items-end">
+          <div className="mt-4 flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
             <div className="max-w-3xl">
-              <div className="inline-flex items-center gap-2 rounded-full border border-orange-500/30 bg-orange-500/12 px-3.5 py-1 text-xs font-extrabold text-orange-700 dark:text-amber-300">
-                <BookOpenIcon className="h-3.5 w-3.5" />
-                <span>TRAVELADDA EDITORIAL JOURNAL</span>
-              </div>
-              <h1 className="mt-4 text-3xl font-black tracking-tight text-ink sm:text-5xl">
-                Aviation, Flight Status &amp; Rail Guides
+              <h1 className="text-2xl font-extrabold tracking-tight text-white sm:text-4xl">
+                Flight Status, Airport Terminal &amp; Rail Guides
               </h1>
-              <p className="mt-3 text-sm leading-relaxed text-ink-soft sm:text-base">
-                Practical playbooks for checking live flight telemetry,
-                navigating multi-terminal Indian airports, spotting inbound
-                delays early, and decoding Indian Railways PNR quotas.
+              <p className="mt-1.5 text-xs text-slate-300 sm:text-sm">
+                Clear, practical guides on tracking live flight status, finding
+                your airport terminal, predicting inbound delays, and decoding
+                Indian Railways PNR quotas.
               </p>
             </div>
 
-            <div className="flex flex-wrap gap-2.5">
+            <div className="flex flex-wrap gap-2">
               <Link
                 href="/air/flight-status"
-                className="ta-btn-primary inline-flex items-center gap-2 rounded-2xl px-4 py-3 text-xs font-extrabold sm:text-sm"
+                className="ta-btn-primary inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-bold"
               >
-                <PlaneIcon className="h-4 w-4" />
-                <span>Live Flight Status</span>
-                <ArrowRightIcon className="h-4 w-4" />
+                <PlaneIcon className="h-3.5 w-3.5" />
+                <span>Flight Status</span>
               </Link>
               <Link
                 href="/rail/live-status"
-                className="inline-flex items-center gap-2 rounded-2xl border border-line-strong bg-card px-4 py-3 text-xs font-extrabold text-ink transition hover:border-orange-500 sm:text-sm"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/10 px-4 py-2 text-xs font-bold text-white transition hover:bg-white/15"
               >
-                <RadarLiveIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
-                <span>Live Train Status</span>
+                <TrainIcon className="h-3.5 w-3.5" />
+                <span>Train Status</span>
               </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* FLIGHT STATUS & AVIATION GUIDES CLUSTER */}
+      {/* FLIGHT STATUS & AVIATION GUIDES */}
       <section
         id="flight-guides"
-        className="mx-auto mt-12 max-w-6xl px-4 sm:mt-16 sm:px-6 lg:px-8"
+        className="mx-auto mt-10 max-w-6xl px-4 sm:mt-12 sm:px-6 lg:px-8"
       >
-        <div className="flex flex-wrap items-end justify-between gap-3">
+        <div className="flex flex-wrap items-end justify-between gap-2">
           <div>
-            <span className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-[0.18em] text-orange-700 dark:text-amber-300">
-              <LiveFlightBeaconIcon size="sm" active />
-              <span>AVIATION &amp; LIVE FLIGHT STATUS GUIDES</span>
-            </span>
-            <h2 className="mt-2 text-2xl font-black tracking-tight text-ink sm:text-3xl">
-              Master Flight Tracking, Terminals &amp; Flyer Rights
+            <h2 className="text-lg font-extrabold text-ink sm:text-xl">
+              Flight Status &amp; Airport Guides
             </h2>
+            <p className="mt-0.5 text-xs text-ink-soft sm:text-sm">
+              Learn how to check live flight status, navigate multi-terminal
+              airports, and know your DGCA passenger rights.
+            </p>
           </div>
           <Link
             href="/air/flight-status"
-            className="inline-flex items-center gap-1.5 text-xs font-extrabold text-orange-700 hover:underline dark:text-amber-300 sm:text-sm"
+            className="inline-flex items-center gap-1 text-xs font-bold text-[#1956b4] hover:underline dark:text-blue-400"
           >
-            <span>Open Live Flight Tracker</span>
-            <ArrowRightIcon className="h-4 w-4" />
+            <span>Open Flight Tracker</span>
+            <ArrowRightIcon className="h-3.5 w-3.5" />
           </Link>
         </div>
 
-        <div className="mt-7 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {FLIGHT_BLOG_POSTS.map((post) => (
             <article
               key={post.slug}
-              className="flex flex-col justify-between rounded-3xl border border-line bg-card p-6 shadow-xs transition hover:-translate-y-1 hover:border-orange-500/50 hover:shadow-lg"
+              className="group flex flex-col justify-between rounded-xl border border-line bg-card p-5 transition hover:border-[#1956b4] hover:shadow-sm"
             >
               <div>
                 <div className="flex items-center justify-between gap-2 text-xs">
-                  <span className="inline-flex items-center gap-1 rounded-full bg-orange-500/15 px-3 py-1 font-bold text-orange-800 dark:text-amber-300">
-                    <PlaneIcon className="h-3 w-3" />
-                    <span>{post.category}</span>
+                  <span className="rounded bg-blue-50 px-2 py-0.5 font-bold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
+                    {post.category}
                   </span>
-                  <span className="inline-flex items-center gap-1 font-medium text-ink-muted">
-                    <ClockIcon className="h-3.5 w-3.5" />
+                  <span className="inline-flex items-center gap-1 text-ink-muted">
+                    <ClockIcon className="h-3 w-3" />
                     <span>{post.readTime}</span>
                   </span>
                 </div>
 
-                <h3 className="mt-4 text-lg font-extrabold leading-snug text-ink">
-                  <Link
-                    href={`/blog/${post.slug}`}
-                    className="transition hover:text-orange-600 dark:hover:text-amber-300"
-                  >
-                    {post.title}
-                  </Link>
+                <h3 className="mt-3 text-base font-bold leading-snug text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-400">
+                  <Link href={`/blog/${post.slug}`}>{post.title}</Link>
                 </h3>
 
-                <p className="mt-2.5 line-clamp-3 text-xs leading-relaxed text-ink-soft sm:text-sm">
+                <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-ink-soft">
                   {post.excerpt}
                 </p>
               </div>
 
-              <div className="mt-6 flex items-center justify-between border-t border-line pt-4 text-xs">
-                <span className="inline-flex items-center gap-1.5 font-semibold text-ink-muted">
-                  <CalendarIcon className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />
-                  <span>{post.publishedDate}</span>
-                </span>
+              <div className="mt-4 flex items-center justify-between border-t border-line pt-3 text-xs">
+                <span className="text-ink-muted">{post.publishedDate}</span>
                 <Link
                   href={`/blog/${post.slug}`}
-                  className="inline-flex items-center gap-1 font-extrabold text-orange-600 hover:text-orange-800 dark:text-amber-300"
+                  className="inline-flex items-center gap-1 font-bold text-[#1956b4] dark:text-blue-400"
                 >
                   <span>Read Guide</span>
                   <ArrowRightIcon className="h-3.5 w-3.5" />
@@ -210,67 +186,56 @@ export default async function BlogIndexPage() {
         </div>
       </section>
 
-      {/* INDIAN RAILWAYS & PNR GUIDES CLUSTER */}
+      {/* INDIAN RAILWAYS & PNR GUIDES */}
       <section
         id="rail-guides"
-        className="mx-auto mt-16 max-w-6xl px-4 sm:mt-20 sm:px-6 lg:px-8"
+        className="mx-auto mt-12 max-w-6xl px-4 sm:mt-16 sm:px-6 lg:px-8"
       >
-        <div className="flex flex-wrap items-end justify-between gap-3">
+        <div className="flex flex-wrap items-end justify-between gap-2">
           <div>
-            <span className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-[0.18em] text-orange-700 dark:text-amber-300">
-              <TrainIcon className="h-4 w-4" />
-              <span>INDIAN RAILWAYS &amp; PNR MASTERCLASS</span>
-            </span>
-            <h2 className="mt-1.5 text-2xl font-black tracking-tight text-ink sm:text-3xl">
-              Waitlist Quotas, Charting Rules &amp; Coach Layouts
+            <h2 className="text-lg font-extrabold text-ink sm:text-xl">
+              Indian Railways &amp; PNR Guides
             </h2>
+            <p className="mt-0.5 text-xs text-ink-soft sm:text-sm">
+              Waitlist confirmation priority, reservation chart windows, and
+              coach berth layouts explained simply.
+            </p>
           </div>
           <Link
             href="/rail/live-status"
-            className="inline-flex items-center gap-1.5 text-xs font-extrabold text-orange-700 hover:underline dark:text-amber-300 sm:text-sm"
+            className="inline-flex items-center gap-1 text-xs font-bold text-[#1956b4] hover:underline dark:text-blue-400"
           >
-            <span>Open Live Train Tracker</span>
-            <ArrowRightIcon className="h-4 w-4" />
+            <span>Open Train Tracker</span>
+            <ArrowRightIcon className="h-3.5 w-3.5" />
           </Link>
         </div>
 
-        <div className="mt-7 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {RAIL_BLOG_POSTS.map((post) => (
             <article
               key={post.slug}
-              className="flex flex-col justify-between rounded-3xl border border-line bg-card p-5 shadow-xs transition hover:-translate-y-1 hover:border-orange-500/50 hover:shadow-lg sm:p-6"
+              className="group flex flex-col justify-between rounded-xl border border-line bg-card p-4 transition hover:border-[#1956b4] hover:shadow-sm sm:p-5"
             >
               <div>
                 <div className="flex items-center justify-between gap-2 text-xs">
-                  <span className="rounded-full bg-amber-500/18 px-3 py-1 font-bold text-amber-900 dark:text-amber-300">
+                  <span className="rounded bg-emerald-50 px-2 py-0.5 font-bold text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
                     {post.category}
                   </span>
-                  <span className="inline-flex items-center gap-1 font-medium text-ink-muted">
-                    <ClockIcon className="h-3.5 w-3.5" />
-                    <span>{post.readTime}</span>
-                  </span>
+                  <span className="text-ink-muted">{post.readTime}</span>
                 </div>
-                <h3 className="mt-4 text-base font-extrabold leading-snug text-ink sm:text-lg">
-                  <Link
-                    href={`/blog/${post.slug}`}
-                    className="transition hover:text-orange-600 dark:hover:text-amber-300"
-                  >
-                    {post.title}
-                  </Link>
+                <h3 className="mt-3 text-sm font-bold leading-snug text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-400 sm:text-base">
+                  <Link href={`/blog/${post.slug}`}>{post.title}</Link>
                 </h3>
                 <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-ink-soft">
                   {post.excerpt}
                 </p>
               </div>
 
-              <div className="mt-5 flex items-center justify-between border-t border-line pt-3.5 text-xs">
-                <span className="inline-flex items-center gap-1.5 font-semibold text-ink-muted">
-                  <UserCheckIcon className="h-3.5 w-3.5 text-orange-600 dark:text-amber-400" />
-                  <span>{post.author.name}</span>
-                </span>
+              <div className="mt-4 flex items-center justify-between border-t border-line pt-3 text-xs">
+                <span className="text-ink-muted">{post.author.name}</span>
                 <Link
                   href={`/blog/${post.slug}`}
-                  className="inline-flex items-center gap-1 font-extrabold text-orange-600 dark:text-amber-300"
+                  className="inline-flex items-center gap-1 font-bold text-[#1956b4] dark:text-blue-400"
                 >
                   <span>Read</span>
                   <ArrowRightIcon className="h-3.5 w-3.5" />
@@ -283,4 +248,3 @@ export default async function BlogIndexPage() {
     </main>
   );
 }
-

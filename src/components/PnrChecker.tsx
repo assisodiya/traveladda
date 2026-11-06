@@ -16,22 +16,14 @@ import type {
 import {
   AlertCircleIcon,
   ArrowRightIcon,
-  BedIcon,
-  BuildingStationIcon,
-  CalendarIcon,
   CheckCircleIcon,
   ClockIcon,
-  CoachTrainIcon,
   CopyIcon,
   PrinterIcon,
-  RadarLiveIcon,
   RefreshIcon,
-  RupeeBadgeIcon,
   SearchIcon,
-  ShieldCheckIcon,
   TicketIcon,
   TrainIcon,
-  UserCheckIcon,
 } from "./Icons";
 
 interface RecentPnrItem {
@@ -254,121 +246,105 @@ export function PnrChecker({ compact = false }: { compact?: boolean }) {
 
   const overallBadgeStyles: Record<string, string> = {
     Confirmed:
-      "bg-amber-500/18 text-amber-900 border-amber-500/35 dark:text-amber-300",
-    RAC: "bg-orange-500/18 text-orange-800 border-orange-500/35 dark:text-orange-300",
+      "border-emerald-500/35 bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300",
+    RAC: "border-blue-500/35 bg-blue-50 text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300",
     Waitlisted:
-      "bg-rose-500/18 text-rose-800 border-rose-500/35 dark:text-rose-300",
+      "border-rose-500/35 bg-rose-50 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300",
     "Partially Confirmed":
-      "bg-yellow-500/20 text-amber-900 border-yellow-500/35 dark:text-yellow-300",
-    Cancelled: "bg-subcard text-ink-soft border-line-strong",
+      "border-amber-500/35 bg-amber-50 text-amber-800 dark:bg-amber-500/15 dark:text-amber-300",
+    Cancelled: "border-line-strong bg-subcard text-ink-soft",
   };
 
   const passengerPillStyles: Record<string, string> = {
-    CNF: "bg-amber-500/20 text-amber-900 ring-1 ring-amber-500/35 dark:text-amber-300",
-    RAC: "bg-orange-500/18 text-orange-800 ring-1 ring-orange-500/35 dark:text-orange-300",
-    WL: "bg-rose-500/18 text-rose-800 ring-1 ring-rose-500/35 dark:text-rose-300",
+    CNF: "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-500/30 dark:bg-emerald-500/15 dark:text-emerald-300",
+    RAC: "bg-blue-50 text-[#1956b4] ring-1 ring-blue-500/30 dark:bg-blue-500/15 dark:text-blue-300",
+    WL: "bg-rose-50 text-rose-700 ring-1 ring-rose-500/30 dark:bg-rose-500/15 dark:text-rose-300",
     CAN: "bg-subcard text-ink-soft ring-1 ring-line",
     OTHER:
-      "bg-yellow-500/20 text-amber-900 ring-1 ring-yellow-500/35 dark:text-yellow-300",
+      "bg-amber-50 text-amber-800 ring-1 ring-amber-500/30 dark:bg-amber-500/15 dark:text-amber-300",
   };
 
   return (
-    <div className="w-full">
-      {/* Search Card */}
-      <div className="rounded-3xl border border-line bg-card p-5 shadow-xl shadow-black/8 dark:shadow-black/35 sm:p-7">
-        <div className="flex flex-wrap items-center justify-between gap-3 pb-4">
-          <div className="flex items-center gap-3">
-            <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-orange-500/15 text-orange-700 dark:text-amber-300">
-              <TicketIcon className="h-5 w-5" />
-            </span>
-            <div>
-              <h2 className="text-base font-extrabold text-ink sm:text-lg">
-                Indian Railways Live PNR Status
-              </h2>
-              <p className="text-xs text-ink-muted">
-                Instant seat confirmation, coach &amp; berth numbers, and live
-                reservation chart updates
-              </p>
+    <div className="w-full space-y-5">
+      {/* Clean Segmented ConfirmTkt / ixigo PNR Search Box */}
+      <div className="rounded-2xl border border-line bg-card p-4 shadow-md sm:p-5">
+        <form onSubmit={handleSubmit}>
+          <div className="grid divide-y divide-line rounded-xl border border-line-strong bg-input sm:grid-cols-[1fr_auto] sm:divide-x sm:divide-y-0">
+            <div className="px-3.5 py-2.5">
+              <div className="flex items-center justify-between">
+                <label
+                  htmlFor="pnr-number-input"
+                  className="text-[11px] font-bold uppercase tracking-wider text-ink-muted"
+                >
+                  10-Digit IRCTC PNR Number
+                </label>
+                <span
+                  className={`font-mono text-[11px] font-bold ${
+                    digitCount === 10
+                      ? "text-emerald-600 dark:text-emerald-400"
+                      : "text-ink-muted"
+                  }`}
+                >
+                  {digitCount}/10 digits
+                </span>
+              </div>
+              <div className="mt-1 flex items-center gap-2.5">
+                <TicketIcon className="h-4 w-4 shrink-0 text-[#1956b4] dark:text-blue-400" />
+                <input
+                  id="pnr-number-input"
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={10}
+                  value={pnrInput}
+                  onChange={(e) => {
+                    const digitsOnly = e.target.value
+                      .replace(/\D/g, "")
+                      .slice(0, 10);
+                    setPnrInput(digitsOnly);
+                    if (errorMsg) setErrorMsg(null);
+                  }}
+                  placeholder="Enter 10-digit PNR number"
+                  className="w-full bg-transparent font-mono text-base font-bold tracking-wider text-ink placeholder:font-sans placeholder:text-sm placeholder:font-normal placeholder:tracking-normal placeholder:text-ink-muted focus:outline-none sm:text-lg"
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center p-2">
+              <button
+                type="submit"
+                disabled={loading}
+                className="ta-btn-primary inline-flex h-12 w-full shrink-0 cursor-pointer items-center justify-center gap-2 rounded-lg px-6 text-sm font-bold sm:w-auto disabled:cursor-not-allowed disabled:opacity-65"
+              >
+                {loading ? (
+                  <>
+                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/35 border-t-white" />
+                    <span>Checking...</span>
+                  </>
+                ) : (
+                  <>
+                    <SearchIcon className="h-4 w-4" />
+                    <span>Check PNR Status</span>
+                  </>
+                )}
+              </button>
             </div>
           </div>
-
-          <span className="inline-flex items-center gap-2 rounded-full border border-orange-500/30 bg-orange-500/12 px-3 py-1 text-xs font-bold text-orange-700 dark:text-amber-300">
-            <span className="h-2 w-2 animate-pulse rounded-full bg-orange-500 dark:bg-amber-400" />
-            <span>Live Railway Sync</span>
-          </span>
-        </div>
-
-        <form
-          onSubmit={handleSubmit}
-          className="mt-1 flex flex-col gap-3 sm:flex-row"
-        >
-          <div className="relative flex-1">
-            <label htmlFor="pnr-number-input" className="sr-only">
-              Enter 10-digit PNR Number
-            </label>
-            <SearchIcon className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-orange-600 dark:text-amber-400" />
-            <input
-              id="pnr-number-input"
-              type="text"
-              inputMode="numeric"
-              maxLength={10}
-              value={pnrInput}
-              onChange={(e) => {
-                const digitsOnly = e.target.value
-                  .replace(/\D/g, "")
-                  .slice(0, 10);
-                setPnrInput(digitsOnly);
-                if (errorMsg) setErrorMsg(null);
-              }}
-              placeholder="Enter 10-digit PNR number"
-              className="w-full rounded-2xl border-2 border-line bg-input py-4 pl-12 pr-20 font-mono text-lg font-bold tracking-wider text-ink placeholder:font-sans placeholder:text-sm placeholder:font-medium placeholder:tracking-normal placeholder:text-ink-muted transition focus:border-orange-500 focus:outline-none"
-            />
-            <span
-              className={`pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 rounded-lg px-2.5 py-1 font-mono text-xs font-bold ${
-                digitCount === 10
-                  ? "bg-amber-500/20 text-amber-800 dark:text-amber-300"
-                  : "bg-subcard text-ink-muted"
-              }`}
-            >
-              {digitCount}/10
-            </span>
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="ta-btn-primary inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-2xl px-7 py-4 text-base font-extrabold disabled:cursor-not-allowed disabled:opacity-65"
-          >
-            {loading ? (
-              <>
-                <span className="h-4 w-4 animate-spin rounded-full border-2 border-current/35 border-t-current" />
-                <span>Checking Live...</span>
-              </>
-            ) : (
-              <>
-                <span>Check PNR Status</span>
-                <ArrowRightIcon className="h-4 w-4" />
-              </>
-            )}
-          </button>
         </form>
 
-        {/* User's Own Recent Searches */}
+        {/* Recent Searches */}
         {recentList.length > 0 && (
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-3.5 text-xs">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="font-semibold text-ink-muted">
-                Recent Searches:
-              </span>
+          <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-line pt-3 text-xs">
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span className="font-semibold text-ink-muted">Recent:</span>
               {recentList.slice(0, 4).map((item) => (
                 <button
                   key={item.pnr}
                   type="button"
                   onClick={() => void checkPnrStatus(item.pnr, true)}
-                  className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-line bg-subcard px-3 py-1 font-mono font-bold text-ink transition hover:border-orange-500"
+                  className="inline-flex cursor-pointer items-center gap-1.5 rounded-md border border-line bg-subcard px-2.5 py-1 font-mono font-bold text-ink transition hover:border-[#1956b4]"
                 >
                   <span>{item.pnr}</span>
-                  <span className="font-sans text-[11px] font-medium text-ink-muted">
+                  <span className="font-sans text-[11px] font-normal text-ink-muted">
                     ({item.route})
                   </span>
                 </button>
@@ -378,9 +354,9 @@ export function PnrChecker({ compact = false }: { compact?: boolean }) {
             <button
               type="button"
               onClick={clearRecent}
-              className="cursor-pointer font-semibold text-ink-muted underline-offset-2 hover:text-ink hover:underline"
+              className="cursor-pointer font-medium text-ink-muted hover:text-ink hover:underline"
             >
-              Clear history
+              Clear
             </button>
           </div>
         )}
@@ -389,14 +365,12 @@ export function PnrChecker({ compact = false }: { compact?: boolean }) {
         {errorMsg && (
           <div
             role="alert"
-            className="mt-5 flex items-start gap-3 rounded-2xl border border-rose-500/30 bg-rose-500/12 p-4 text-sm"
+            className="mt-3.5 flex items-start gap-2.5 rounded-xl border border-rose-500/30 bg-rose-50 p-3.5 text-sm dark:bg-rose-500/10"
           >
-            <AlertCircleIcon className="mt-0.5 h-5 w-5 text-rose-600 dark:text-rose-400" />
+            <AlertCircleIcon className="mt-0.5 h-4 w-4 shrink-0 text-rose-600 dark:text-rose-400" />
             <div>
-              <p className="font-bold text-ink">
-                Unable to retrieve PNR status
-              </p>
-              <p className="mt-0.5 text-ink-soft">{errorMsg}</p>
+              <p className="font-bold text-ink">Unable to retrieve PNR status</p>
+              <p className="mt-0.5 text-xs text-ink-soft">{errorMsg}</p>
             </div>
           </div>
         )}
@@ -404,31 +378,25 @@ export function PnrChecker({ compact = false }: { compact?: boolean }) {
 
       {/* Loading Skeleton */}
       {loading && !pnrData && (
-        <div className="mt-6 animate-pulse overflow-hidden rounded-3xl border border-line bg-card shadow-lg">
-          <div className="h-32 bg-subcard p-6">
-            <div className="h-5 w-48 rounded bg-line" />
-            <div className="mt-4 h-7 w-80 rounded bg-line" />
-          </div>
-          <div className="space-y-4 p-6">
-            <div className="h-16 rounded-2xl bg-subcard" />
-            <div className="h-24 rounded-2xl bg-subcard" />
-          </div>
+        <div className="animate-pulse overflow-hidden rounded-2xl border border-line bg-card p-6 shadow-sm">
+          <div className="h-5 w-48 rounded bg-subcard" />
+          <div className="mt-4 h-20 rounded-xl bg-subcard" />
+          <div className="mt-4 h-28 rounded-xl bg-subcard" />
         </div>
       )}
 
-      {/* Boarding Pass Result Card */}
+      {/* Clean ConfirmTkt / ixigo PNR Ticket Card */}
       {pnrData && (
-        <div className="mt-6 overflow-hidden rounded-3xl border border-line bg-card shadow-2xl shadow-black/10 dark:shadow-black/45">
-          {/* Warm Sunset/Golden Ticket Header */}
-          <div className="ta-ticket-header px-6 py-6 sm:px-8 sm:py-7">
+        <div className="overflow-hidden rounded-2xl border border-line bg-card shadow-md">
+          {/* Header Strip */}
+          <div className="ta-ticket-header px-4 py-4 sm:px-6 sm:py-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <div className="flex flex-wrap items-center gap-2.5">
-                <span className="inline-flex items-center gap-1.5 rounded-lg border border-orange-500/35 bg-orange-500/15 px-3 py-1 font-mono text-xs font-extrabold tracking-wider text-orange-800 dark:text-amber-200">
-                  <TicketIcon className="h-3.5 w-3.5" />
-                  <span>PNR {pnrData.formattedPnr}</span>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="rounded bg-[#1956b4] px-2.5 py-1 font-mono text-xs font-bold text-white">
+                  PNR {pnrData.formattedPnr}
                 </span>
                 <span
-                  className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold ${
+                  className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-0.5 text-xs font-bold ${
                     overallBadgeStyles[pnrData.overallStatus] ??
                     overallBadgeStyles.Confirmed
                   }`}
@@ -437,10 +405,10 @@ export function PnrChecker({ compact = false }: { compact?: boolean }) {
                   <span>{pnrData.overallStatus}</span>
                 </span>
                 <span
-                  className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold ${
+                  className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs font-semibold ${
                     pnrData.charting.isPrepared
-                      ? "border-amber-500/35 bg-amber-500/18 text-amber-900 dark:text-amber-200"
-                      : "border-line-strong bg-card/75 text-ink-soft"
+                      ? "border-emerald-500/35 bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300"
+                      : "border-line bg-card text-ink-soft"
                   }`}
                 >
                   {pnrData.charting.isPrepared ? (
@@ -453,136 +421,95 @@ export function PnrChecker({ compact = false }: { compact?: boolean }) {
               </div>
 
               {pnrData.train.bookingFare !== null && (
-                <div className="inline-flex items-center gap-2 rounded-2xl border border-line bg-card/85 px-3.5 py-1.5">
-                  <RupeeBadgeIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
-                  <div className="text-right">
-                    <span className="block text-[10px] font-bold uppercase tracking-wider text-ink-muted">
-                      Ticket Fare
-                    </span>
-                    <p className="font-mono text-base font-extrabold text-orange-700 dark:text-amber-300">
-                      ₹{pnrData.train.bookingFare.toLocaleString("en-IN")}
-                    </p>
-                  </div>
+                <div className="text-right">
+                  <span className="text-[11px] font-semibold text-ink-muted">
+                    Ticket Fare:{" "}
+                  </span>
+                  <strong className="font-mono text-sm font-extrabold text-ink">
+                    ₹{pnrData.train.bookingFare.toLocaleString("en-IN")}
+                  </strong>
                 </div>
               )}
             </div>
 
-            {/* Train Title & Class + Direct Live Train Button */}
-            <div className="mt-5 flex flex-col justify-between gap-4 border-t border-line pt-5 md:flex-row md:items-center">
+            <div className="mt-4 flex flex-col justify-between gap-3 border-t border-line pt-4 md:flex-row md:items-center">
               <div>
-                <div className="flex flex-wrap items-center gap-2.5">
-                  <span
-                    style={{
-                      backgroundImage:
-                        "linear-gradient(135deg, #ea580c 0%, #f59e0b 100%)",
-                      color: "#ffffff",
-                    }}
-                    className="inline-flex items-center gap-1.5 rounded-xl px-3 py-1 font-mono text-sm font-black shadow-xs"
-                  >
-                    <TrainIcon className="h-4 w-4" />
-                    <span>#{pnrData.train.number}</span>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="rounded bg-card px-2 py-0.5 font-mono text-xs font-bold text-[#1956b4] ring-1 ring-line dark:text-blue-300">
+                    #{pnrData.train.number}
                   </span>
-                  <h3 className="text-xl font-extrabold tracking-tight text-ink sm:text-2xl">
+                  <h3 className="text-lg font-extrabold text-ink sm:text-xl">
                     {pnrData.train.name}
                   </h3>
                 </div>
-                <p className="mt-1.5 inline-flex items-center gap-1.5 text-xs text-ink-soft">
-                  <CalendarIcon className="h-3.5 w-3.5 text-orange-600 dark:text-amber-400" />
-                  <span>
-                    Departure:{" "}
-                    <strong className="font-bold text-ink">
-                      {pnrData.train.journeyDateRaw ||
-                        pnrData.train.journeyDate}
-                    </strong>
-                  </span>
+                <p className="mt-1 text-xs text-ink-soft">
+                  Journey Date:{" "}
+                  <strong className="text-ink">
+                    {pnrData.train.journeyDateRaw || pnrData.train.journeyDate}
+                  </strong>{" "}
+                  · Class:{" "}
+                  <strong className="text-ink">
+                    {pnrData.train.journeyClassName}
+                  </strong>
                 </p>
               </div>
 
-              <div className="flex flex-wrap items-center gap-2.5">
-                <div className="inline-flex items-center gap-2.5 rounded-2xl border border-line bg-card/85 px-4 py-2.5 shadow-2xs">
-                  <CoachTrainIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
-                  <div>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-orange-700 dark:text-amber-300">
-                      Journey Class
-                    </p>
-                    <p className="mt-0.5 text-sm font-bold text-ink">
-                      {pnrData.train.journeyClassName}
-                    </p>
-                  </div>
-                </div>
-
-                <Link
-                  href={liveTrainHref}
-                  className="ta-btn-primary inline-flex items-center gap-1.5 rounded-2xl px-4 py-3 text-xs font-extrabold"
-                >
-                  <RadarLiveIcon className="h-4 w-4" />
-                  <span>Spot Train #{pnrData.train.number} Live</span>
-                </Link>
-              </div>
+              <Link
+                href={liveTrainHref}
+                className="ta-btn-primary inline-flex shrink-0 items-center justify-center gap-1.5 rounded-lg px-4 py-2.5 text-xs font-bold"
+              >
+                <TrainIcon className="h-3.5 w-3.5" />
+                <span>Spot Train #{pnrData.train.number} Live</span>
+                <ArrowRightIcon className="h-3.5 w-3.5" />
+              </Link>
             </div>
           </div>
 
-          {/* Perforated Station Route Timeline */}
-          <div className="relative border-b border-dashed border-line bg-subcard px-6 py-6 sm:px-8">
-            <span
-              aria-hidden="true"
-              className="absolute -bottom-3.5 -left-3.5 h-7 w-7 rounded-full border border-line bg-canvas"
-            />
-            <span
-              aria-hidden="true"
-              className="absolute -bottom-3.5 -right-3.5 h-7 w-7 rounded-full border border-line bg-canvas"
-            />
-
-            <div className="grid items-center gap-6 md:grid-cols-[1fr_auto_1fr]">
+          {/* Clean Boarding → Destination Strip */}
+          <div className="border-b border-line bg-card px-4 py-4 sm:px-6">
+            <div className="grid items-center gap-4 md:grid-cols-[1fr_auto_1fr]">
               <div>
-                <p className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-ink-muted">
-                  <BuildingStationIcon className="h-3.5 w-3.5 text-orange-600 dark:text-amber-400" />
-                  <span>Boarding Station</span>
+                <p className="text-[11px] font-bold uppercase tracking-wider text-ink-muted">
+                  Boarding Station
                 </p>
-                <div className="mt-1 flex items-baseline gap-2.5">
-                  <span className="font-mono text-2xl font-black text-ink">
+                <div className="mt-0.5 flex items-baseline gap-2">
+                  <span className="font-mono text-xl font-black text-ink sm:text-2xl">
                     {pnrData.train.boardingPoint.code}
                   </span>
-                  <span className="text-base font-bold text-ink-soft">
+                  <span className="text-sm font-bold text-ink-soft">
                     {pnrData.train.boardingPoint.name}
                   </span>
                 </div>
                 {pnrData.train.source.code !==
                   pnrData.train.boardingPoint.code && (
-                  <p className="mt-1 text-xs text-ink-muted">
-                    Train Origin: {pnrData.train.source.name} (
+                  <p className="mt-0.5 text-xs text-ink-muted">
+                    Origin: {pnrData.train.source.name} (
                     {pnrData.train.source.code})
                   </p>
                 )}
               </div>
 
-              <div className="flex items-center justify-center gap-3">
-                <span className="h-2.5 w-2.5 rounded-full bg-orange-500 ring-4 ring-orange-500/20" />
-                <div className="flex items-center gap-1.5">
-                  <span className="h-0.5 w-10 bg-line-strong sm:w-16" />
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-card px-3 py-1 text-xs font-bold text-ink-soft shadow-2xs">
-                    <TrainIcon className="h-3.5 w-3.5 text-orange-600 dark:text-amber-400" />
-                    <span>Direct Rail</span>
-                  </span>
-                  <span className="h-0.5 w-10 bg-line-strong sm:w-16" />
-                </div>
-                <span className="h-2.5 w-2.5 rounded-full bg-amber-500 ring-4 ring-amber-500/20" />
+              <div className="flex items-center justify-center gap-2 text-ink-muted">
+                <span className="h-2 w-2 rounded-full bg-[#1956b4]" />
+                <span className="h-0.5 w-14 bg-line-strong sm:w-20" />
+                <TrainIcon className="h-4 w-4 text-[#1956b4] dark:text-blue-400" />
+                <span className="h-0.5 w-14 bg-line-strong sm:w-20" />
+                <span className="h-2 w-2 rounded-full bg-emerald-500" />
               </div>
 
               <div className="md:text-right">
-                <p className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-ink-muted md:justify-end">
-                  <BuildingStationIcon className="h-3.5 w-3.5 text-amber-600 dark:text-amber-300" />
-                  <span>Destination Station</span>
+                <p className="text-[11px] font-bold uppercase tracking-wider text-ink-muted">
+                  Destination Station
                 </p>
-                <div className="mt-1 flex items-baseline gap-2.5 md:justify-end">
-                  <span className="font-mono text-2xl font-black text-ink">
+                <div className="mt-0.5 flex items-baseline gap-2 md:justify-end">
+                  <span className="font-mono text-xl font-black text-ink sm:text-2xl">
                     {pnrData.train.destination.code}
                   </span>
-                  <span className="text-base font-bold text-ink-soft">
+                  <span className="text-sm font-bold text-ink-soft">
                     {pnrData.train.destination.name}
                   </span>
                 </div>
-                <p className="mt-1 text-xs text-ink-muted">
+                <p className="mt-0.5 text-xs text-ink-muted">
                   Reserved Upto: {pnrData.train.reservationUpto.name} (
                   {pnrData.train.reservationUpto.code})
                 </p>
@@ -590,94 +517,79 @@ export function PnrChecker({ compact = false }: { compact?: boolean }) {
             </div>
           </div>
 
-          {/* Passenger Status Breakdown */}
-          <div className="bg-card px-6 py-6 sm:px-8">
+          {/* Passenger Table */}
+          <div className="bg-card px-4 py-5 sm:px-6">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <h4 className="inline-flex items-center gap-2 text-sm font-extrabold uppercase tracking-wider text-ink">
-                <UserCheckIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
-                <span>
-                  Passenger Reservation Details ({pnrData.passengers.length})
-                </span>
+              <h4 className="text-sm font-extrabold text-ink">
+                Passenger Status ({pnrData.passengers.length})
               </h4>
-              <span className="inline-flex items-center gap-1.5 text-xs font-medium text-ink-muted">
-                <ClockIcon className="h-3.5 w-3.5" />
-                <span>
-                  Updated at{" "}
-                  {new Date(pnrData.generatedAt).toLocaleTimeString("en-IN", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </span>
+              <span className="text-xs text-ink-muted">
+                Checked{" "}
+                {new Date(pnrData.generatedAt).toLocaleTimeString("en-IN", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
               </span>
             </div>
 
-            <div className="mt-4 overflow-x-auto rounded-2xl border border-line">
-              <table className="w-full min-w-[580px] border-collapse text-left text-sm">
+            <div className="mt-3 overflow-x-auto rounded-xl border border-line">
+              <table className="w-full min-w-[540px] border-collapse text-left text-sm">
                 <thead>
                   <tr className="border-b border-line bg-subcard text-[11px] font-bold uppercase tracking-wider text-ink-muted">
-                    <th className="px-4 py-3.5">Passenger</th>
-                    <th className="px-4 py-3.5">Booking Status</th>
-                    <th className="px-4 py-3.5">Current Live Status</th>
-                    <th className="px-4 py-3.5">Coach &amp; Seat / Berth</th>
-                    <th className="px-4 py-3.5">Quota</th>
-                    <th className="px-4 py-3.5 text-right">Ticket State</th>
+                    <th className="px-4 py-3">Passenger</th>
+                    <th className="px-4 py-3">Booking Status</th>
+                    <th className="px-4 py-3">Current Status</th>
+                    <th className="px-4 py-3">Coach &amp; Berth</th>
+                    <th className="px-4 py-3">Quota</th>
+                    <th className="px-4 py-3 text-right">Status</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-line bg-card">
                   {pnrData.passengers.map((pax) => (
                     <tr
                       key={pax.serialNumber}
-                      className="transition hover:bg-subcard/60"
+                      className="transition hover:bg-subcard/50"
                     >
-                      <td className="px-4 py-4 font-bold text-ink">
-                        <span className="inline-flex items-center gap-2.5">
-                          <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-orange-500/18 text-xs font-extrabold text-orange-800 dark:text-amber-300">
-                            {pax.serialNumber}
-                          </span>
-                          <span>Passenger {pax.serialNumber}</span>
-                        </span>
+                      <td className="px-4 py-3.5 font-bold text-ink">
+                        Passenger {pax.serialNumber}
                       </td>
-                      <td className="px-4 py-4 font-mono text-xs font-semibold text-ink-soft">
+                      <td className="px-4 py-3.5 font-mono text-xs text-ink-soft">
                         {pax.booking.formatted}
                       </td>
-                      <td className="px-4 py-4 font-mono text-sm font-extrabold text-ink">
+                      <td className="px-4 py-3.5 font-mono text-sm font-bold text-ink">
                         {pax.current.formatted}
                       </td>
-                      <td className="px-4 py-4">
+                      <td className="px-4 py-3.5">
                         {pax.current.coachId || pax.current.berthNo ? (
                           <div className="flex flex-wrap items-center gap-1.5">
                             {pax.current.coachId && (
-                              <span className="inline-flex items-center gap-1 rounded-lg bg-orange-500/15 px-2.5 py-1 font-mono text-xs font-bold text-orange-800 ring-1 ring-orange-500/25 dark:text-orange-300">
-                                <CoachTrainIcon className="h-3 w-3" />
-                                <span>Coach {pax.current.coachId}</span>
+                              <span className="rounded bg-blue-50 px-2 py-0.5 font-mono text-xs font-bold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
+                                {pax.current.coachId}
                               </span>
                             )}
                             {pax.current.berthNo !== null && (
-                              <span className="inline-flex items-center gap-1 rounded-lg bg-amber-500/18 px-2.5 py-1 font-mono text-xs font-bold text-amber-900 ring-1 ring-amber-500/30 dark:text-amber-300">
-                                <BedIcon className="h-3 w-3" />
-                                <span>Seat #{pax.current.berthNo}</span>
+                              <span className="rounded bg-subcard px-2 py-0.5 font-mono text-xs font-bold text-ink">
+                                Berth #{pax.current.berthNo}
                               </span>
                             )}
                             {pax.berthName && (
-                              <span className="text-xs font-semibold text-ink-soft">
-                                · {pax.berthName}
+                              <span className="text-xs text-ink-soft">
+                                ({pax.berthName})
                               </span>
                             )}
                           </div>
                         ) : (
                           <span className="text-xs text-ink-muted">
-                            Assigned at charting
+                            Assigned at chart
                           </span>
                         )}
                       </td>
-                      <td className="px-4 py-4 text-xs font-semibold text-ink-soft">
-                        {pax.current.quotaName ||
-                          pax.current.quota ||
-                          "General"}
+                      <td className="px-4 py-3.5 text-xs text-ink-soft">
+                        {pax.current.quotaName || pax.current.quota || "GN"}
                       </td>
-                      <td className="px-4 py-4 text-right">
+                      <td className="px-4 py-3.5 text-right">
                         <span
-                          className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-extrabold ${
+                          className={`inline-flex items-center rounded-md px-2.5 py-0.5 text-xs font-bold ${
                             passengerPillStyles[pax.statusBadge] ??
                             passengerPillStyles.OTHER
                           }`}
@@ -699,43 +611,40 @@ export function PnrChecker({ compact = false }: { compact?: boolean }) {
               </table>
             </div>
 
-            {/* Clean Ticket Action Bar */}
-            <div className="no-print mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4">
-              <div className="flex flex-wrap items-center gap-2.5">
+            {/* Action Bar */}
+            <div className="no-print mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-line pt-3.5">
+              <div className="flex flex-wrap items-center gap-2">
                 <button
                   type="button"
                   onClick={() => void checkPnrStatus(pnrData.pnrNumber, false)}
                   disabled={loading}
-                  className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-line bg-subcard px-3.5 py-2 text-xs font-bold text-ink transition hover:border-orange-500"
+                  className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-line bg-subcard px-3 py-1.5 text-xs font-semibold text-ink hover:border-[#1956b4]"
                 >
-                  <RefreshIcon className="h-3.5 w-3.5 text-orange-600 dark:text-amber-400" />
-                  <span>Refresh Status</span>
+                  <RefreshIcon className="h-3.5 w-3.5 text-[#1956b4] dark:text-blue-400" />
+                  <span>Refresh</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => void handleCopySummary()}
-                  className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-line bg-subcard px-3.5 py-2 text-xs font-bold text-ink transition hover:border-orange-500"
+                  className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-line bg-subcard px-3 py-1.5 text-xs font-semibold text-ink hover:border-[#1956b4]"
                 >
-                  <CopyIcon className="h-3.5 w-3.5 text-orange-600 dark:text-amber-400" />
-                  <span>
-                    {copied ? "Copied Summary!" : "Copy Ticket Summary"}
-                  </span>
+                  <CopyIcon className="h-3.5 w-3.5 text-[#1956b4] dark:text-blue-400" />
+                  <span>{copied ? "Copied!" : "Copy Summary"}</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => window.print()}
-                  className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-line bg-subcard px-3.5 py-2 text-xs font-bold text-ink transition hover:border-orange-500"
+                  className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-line bg-subcard px-3 py-1.5 text-xs font-semibold text-ink hover:border-[#1956b4]"
                 >
-                  <PrinterIcon className="h-3.5 w-3.5 text-orange-600 dark:text-amber-400" />
-                  <span>Print / Save PDF</span>
+                  <PrinterIcon className="h-3.5 w-3.5 text-[#1956b4] dark:text-blue-400" />
+                  <span>Print</span>
                 </button>
               </div>
 
-              <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-ink-muted">
-                <ShieldCheckIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
-                <span>Verified Live Indian Railways PRS Status</span>
+              <span className="text-xs text-ink-muted">
+                Live Indian Railways PRS Status
               </span>
             </div>
           </div>

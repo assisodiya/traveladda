@@ -1157,22 +1157,17 @@ export function LiveFlightBeaconIcon({
         <>
           <span
             aria-hidden="true"
-            className="ta-radar-ring absolute inset-0 rounded-full bg-orange-500/45 dark:bg-amber-400/40"
+            className="ta-radar-ring absolute inset-0 rounded-full bg-blue-500/35"
           />
           <span
             aria-hidden="true"
-            className="ta-radar-ring-delay absolute inset-0 rounded-full bg-emerald-400/35"
+            className="ta-radar-ring-delay absolute inset-0 rounded-full bg-emerald-400/30"
           />
         </>
       )}
       <span
-        style={{
-          backgroundImage: active
-            ? "linear-gradient(135deg, #ea580c 0%, #f59e0b 100%)"
-            : "linear-gradient(135deg, #57534e 0%, #78716c 100%)",
-        }}
-        className={`relative z-10 inline-flex h-full w-full items-center justify-center rounded-full text-white shadow-lg ring-2 ring-white dark:ring-stone-900 ${
-          active ? "ta-train-blink" : ""
+        className={`relative z-10 inline-flex h-full w-full items-center justify-center rounded-full text-white shadow-sm ring-2 ring-white dark:ring-slate-900 ${
+          active ? "bg-[#1956b4]" : "bg-slate-500"
         }`}
       >
         <PlaneIcon className={iconDims} />
@@ -1213,29 +1208,24 @@ export function LiveTrainBeaconIcon({
         <>
           <span
             aria-hidden="true"
-            className="ta-radar-ring absolute inset-0 rounded-full bg-orange-500/45 dark:bg-amber-400/40"
+            className="ta-radar-ring absolute inset-0 rounded-full bg-emerald-500/35"
           />
           <span
             aria-hidden="true"
-            className="ta-radar-ring-delay absolute inset-0 rounded-full bg-emerald-400/35"
+            className="ta-radar-ring-delay absolute inset-0 rounded-full bg-blue-500/25"
           />
         </>
       )}
       <span
-        style={{
-          backgroundImage: active
-            ? "linear-gradient(135deg, #ea580c 0%, #f59e0b 100%)"
-            : "linear-gradient(135deg, #57534e 0%, #78716c 100%)",
-        }}
-        className={`relative z-10 inline-flex h-full w-full items-center justify-center rounded-full text-white shadow-lg ring-2 ring-white dark:ring-stone-900 ${
-          active ? "ta-train-blink" : ""
+        className={`relative z-10 inline-flex h-full w-full items-center justify-center rounded-full text-white shadow-sm ring-2 ring-white dark:ring-slate-900 ${
+          active ? "bg-[#0d9458]" : "bg-slate-500"
         }`}
       >
         <TrainIcon className={iconDims} />
         {active && (
           <span
             aria-hidden="true"
-            className="ta-led-blink absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border border-white bg-emerald-400"
+            className="ta-led-blink absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border border-white bg-emerald-300"
           />
         )}
       </span>

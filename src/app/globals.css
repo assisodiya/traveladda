@@ -4,36 +4,43 @@
 
 :root {
   color-scheme: light;
-  --ta-canvas: #faf7f2;
+  /* Crisp ixigo / Goibibo / MakeMyTrip cool-slate daylight palette */
+  --ta-canvas: #f2f5f9;
   --ta-band: #ffffff;
   --ta-card: #ffffff;
-  --ta-subcard: #f5efe6;
-  --ta-input: #fcf9f5;
-  --ta-nav: rgba(255, 252, 248, 0.94);
-  --ta-border: #eae0d3;
-  --ta-border-strong: #d8c8b4;
-  --ta-ink: #1c1917;
-  --ta-ink-soft: #44403c;
-  --ta-ink-muted: #78716c;
+  --ta-subcard: #f7f9fc;
+  --ta-input: #ffffff;
+  --ta-nav: #ffffff;
+  --ta-border: #e2e8f0;
+  --ta-border-strong: #cbd5e1;
+  --ta-ink: #0f172a;
+  --ta-ink-soft: #334155;
+  --ta-ink-muted: #64748b;
+  --ta-brand-blue: #1956b4;
+  --ta-brand-navy: #0a223d;
+  --ta-brand-orange: #fc6203;
 }
 
 html.dark {
   color-scheme: dark;
-  --ta-canvas: #141210;
-  --ta-band: #1a1714;
-  --ta-card: #221e1a;
-  --ta-subcard: #2c2621;
-  --ta-input: #181512;
-  --ta-nav: rgba(20, 18, 16, 0.94);
-  --ta-border: #383028;
-  --ta-border-strong: #4d4237;
-  --ta-ink: #faf7f2;
-  --ta-ink-soft: #d6cfc7;
-  --ta-ink-muted: #a39a90;
+  --ta-canvas: #0b1120;
+  --ta-band: #0f172a;
+  --ta-card: #151f32;
+  --ta-subcard: #1c2940;
+  --ta-input: #0f172a;
+  --ta-nav: #0f172a;
+  --ta-border: #25344d;
+  --ta-border-strong: #334155;
+  --ta-ink: #f8fafc;
+  --ta-ink-soft: #cbd5e1;
+  --ta-ink-muted: #94a3b8;
+  --ta-brand-blue: #3b82f6;
+  --ta-brand-navy: #09192e;
+  --ta-brand-orange: #ff6d1f;
 }
 
 @theme inline {
-  --font-sans: "Plus Jakarta Sans", "Inter", -apple-system, BlinkMacSystemFont,
+  --font-sans: "Inter", "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont,
     "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: "JetBrains Mono", "SF Mono", Menlo, Monaco, Consolas, monospace;
   --color-canvas: var(--ta-canvas);
@@ -60,157 +67,149 @@ body {
   background-color: var(--ta-canvas);
   color: var(--ta-ink);
   overflow-x: clip;
-  transition:
-    background-color 220ms ease,
-    color 180ms ease;
 }
 
-/* Smooth Navbar Glass */
+/* Crisp White OTA Top Navbar (ixigo / Goibibo style) */
 .ta-navbar {
   background-color: var(--ta-nav);
   border-bottom: 1px solid var(--ta-border);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 1px 6px rgba(15, 23, 42, 0.04);
 }
 
-/* Warm Sunrise / Sunset Ember Hero Atmosphere */
+/* Goibibo / MakeMyTrip Signature Deep Navy Search Header */
+.ta-navy-hero {
+  background-color: #0a223d;
+  background-image: linear-gradient(180deg, #081d36 0%, #0f3159 100%);
+  color: #ffffff;
+}
+
+html.dark .ta-navy-hero {
+  background-color: #071527;
+  background-image: linear-gradient(180deg, #061222 0%, #0c2342 100%);
+}
+
+/* Clean Subtle Page Header Band for Tool & Guide Pages */
 .ta-hero {
-  background-color: #fff7ed;
-  background-image:
-    radial-gradient(circle at 16% 18%, rgba(234, 88, 12, 0.13), transparent 46%),
-    radial-gradient(circle at 84% 16%, rgba(245, 158, 11, 0.15), transparent 46%),
-    linear-gradient(180deg, #fff7ed 0%, #fefce8 55%, #faf7f2 100%);
+  background-color: #ffffff;
+  background-image: linear-gradient(180deg, #ebf3ff 0%, #f5f8fc 65%, #f2f5f9 100%);
   border-bottom: 1px solid var(--ta-border);
 }
 
 html.dark .ta-hero {
-  background-color: #191512;
-  background-image:
-    radial-gradient(circle at 16% 18%, rgba(249, 115, 22, 0.16), transparent 48%),
-    radial-gradient(circle at 84% 16%, rgba(251, 191, 36, 0.12), transparent 46%),
-    linear-gradient(180deg, #211a14 0%, #191512 58%, #141210 100%);
+  background-color: #0f172a;
+  background-image: linear-gradient(180deg, #10203b 0%, #0f172a 75%, #0b1120 100%);
   border-bottom: 1px solid var(--ta-border);
 }
 
-/* Boarding Pass Header & Editorial Cover Surface */
+/* Clean Boarding / Ticket Header Surface */
 .ta-ticket-header {
-  background-color: #ffedd5;
-  background-image: linear-gradient(
-    135deg,
-    #ffedd5 0%,
-    #fef3c7 52%,
-    #fff7ed 100%
-  );
-  border-bottom: 1px solid #f3d5b5;
-  color: #1c1917;
+  background-color: #eef5ff;
+  border-bottom: 1px solid #d6e4f7;
+  color: #0f172a;
 }
 
 html.dark .ta-ticket-header {
-  background-color: #2b2017;
-  background-image: linear-gradient(
-    135deg,
-    #2d2016 0%,
-    #2f2417 52%,
-    #261d16 100%
-  );
-  border-bottom: 1px solid #4a3828;
-  color: #faf7f2;
+  background-color: #17263f;
+  border-bottom: 1px solid #283c5e;
+  color: #f8fafc;
 }
 
-/* Live Radar Cockpit Surface */
+/* Clean Navy Status Header Bar (Goibibo / ConfirmTkt style) */
 .ta-live-cockpit {
-  background-color: #1c1613;
-  background-image:
-    radial-gradient(circle at 12% 20%, rgba(249, 115, 22, 0.24), transparent 50%),
-    radial-gradient(circle at 88% 80%, rgba(16, 185, 129, 0.16), transparent 48%),
-    linear-gradient(135deg, #1f1712 0%, #181411 55%, #1c1917 100%);
-  color: #faf7f2;
+  background-color: #0a223d;
+  background-image: linear-gradient(135deg, #0a223d 0%, #123863 100%);
+  color: #ffffff;
 }
 
-/* Warm Bottom / Sidebar CTA Banner */
+html.dark .ta-live-cockpit {
+  background-color: #0d213b;
+  background-image: linear-gradient(135deg, #0d213b 0%, #163357 100%);
+}
+
+/* Clean Light Blue CTA Card */
 .ta-cta-banner {
-  background-color: #fff3e0;
-  background-image: linear-gradient(
-    135deg,
-    #ffedd5 0%,
-    #fef3c7 55%,
-    #fffbeb 100%
-  );
-  border: 1px solid #f2d2ad;
+  background-color: #eef5ff;
+  border: 1px solid #cfe0f7;
 }
 
 html.dark .ta-cta-banner {
-  background-color: #291f16;
-  background-image: linear-gradient(
-    135deg,
-    #2c2016 0%,
-    #2f2417 55%,
-    #251c15 100%
-  );
-  border: 1px solid #4d3a27;
+  background-color: #15253d;
+  border: 1px solid #263d61;
 }
 
-/* Primary Sunset Orange -> Golden Amber Action Button */
+/* ixigo / Goibibo Solid Vibrant Orange Search CTA Button */
 .ta-btn-primary {
-  background-color: #ea580c;
-  background-image: linear-gradient(135deg, #ea580c 0%, #f59e0b 100%);
-  color: #ffffff;
-  box-shadow: 0 10px 24px -8px rgba(234, 88, 12, 0.45);
+  background-color: #fc6203;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(252, 98, 3, 0.28);
   transition:
-    transform 160ms ease,
-    filter 160ms ease,
-    box-shadow 160ms ease;
+    background-color 140ms ease,
+    box-shadow 140ms ease,
+    transform 120ms ease;
 }
 
 .ta-btn-primary:hover {
-  filter: brightness(1.06);
-  box-shadow: 0 12px 28px -6px rgba(234, 88, 12, 0.52);
+  background-color: #e55600;
+  box-shadow: 0 4px 12px rgba(252, 98, 3, 0.35);
 }
 
-html.dark .ta-btn-primary {
-  background-color: #f97316;
-  background-image: linear-gradient(135deg, #f97316 0%, #fbbf24 100%);
-  color: #1c1308;
-  box-shadow: 0 10px 26px -8px rgba(249, 115, 22, 0.38);
+/* Clean Segmented OTA Input Box */
+.ta-search-box {
+  background-color: var(--ta-card);
+  border: 1px solid var(--ta-border-strong);
+  border-radius: 14px;
+  transition:
+    border-color 140ms ease,
+    box-shadow 140ms ease;
 }
 
-/* Live Train Blinking & Radar Animations */
+.ta-search-box:focus-within {
+  border-color: #1956b4;
+  box-shadow: 0 0 0 3px rgba(25, 86, 180, 0.12);
+}
+
+html.dark .ta-search-box:focus-within {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18);
+}
+
+/* Subtle Live Indicator Animations (ConfirmTkt / ixigo style) */
 @keyframes taRadarRipple {
   0% {
-    transform: scale(0.85);
-    opacity: 0.85;
+    transform: scale(0.9);
+    opacity: 0.7;
   }
-  75% {
-    transform: scale(2.05);
-    opacity: 0;
-  }
+
+  80%,
   100% {
-    transform: scale(2.15);
+    transform: scale(1.9);
     opacity: 0;
   }
 }
 
 @keyframes taTrainBlink {
+
   0%,
   100% {
     opacity: 1;
-    filter: drop-shadow(0 0 8px rgba(249, 115, 22, 0.85));
   }
+
   50% {
-    opacity: 0.38;
-    filter: drop-shadow(0 0 2px rgba(249, 115, 22, 0.25));
+    opacity: 0.65;
   }
 }
 
 @keyframes taEmeraldBlink {
+
   0%,
   100% {
     opacity: 1;
-    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.55);
   }
+
   50% {
-    opacity: 0.3;
-    box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+    opacity: 0.4;
+    box-shadow: 0 0 0 5px rgba(16, 185, 129, 0);
   }
 }
 
@@ -229,11 +228,11 @@ html.dark .ta-btn-primary {
 }
 
 .ta-train-blink {
-  animation: taTrainBlink 1.25s ease-in-out infinite;
+  animation: taTrainBlink 1.5s ease-in-out infinite;
 }
 
 .ta-led-blink {
-  animation: taEmeraldBlink 1.2s ease-in-out infinite;
+  animation: taEmeraldBlink 1.4s ease-in-out infinite;
 }
 
 .ta-track-flow {
@@ -250,7 +249,7 @@ html.dark .ta-btn-primary {
   display: none;
 }
 
-/* Prevent Chrome/Safari autofill from painting white/light-blue boxes in dark mode */
+/* Prevent autofill tint mismatch */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus {
@@ -260,11 +259,12 @@ input:-webkit-autofill:focus {
 }
 
 :focus-visible {
-  outline: 2.5px solid #f97316;
-  outline-offset: 3px;
+  outline: 2px solid #1956b4;
+  outline-offset: 2px;
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .ta-radar-ring,
   .ta-radar-ring-delay,
   .ta-train-blink,
@@ -275,14 +275,16 @@ input:-webkit-autofill:focus {
 }
 
 @media print {
+
   header,
   footer,
   .no-print {
     display: none !important;
   }
+
   html,
   body {
     background: #ffffff !important;
-    color: #1c1917 !important;
+    color: #0f172a !important;
   }
 }

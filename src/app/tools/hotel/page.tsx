@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { HotelToolsClient } from "@/components/HotelToolsClient";
-import { HotelIcon } from "@/components/Icons";
 
 export const metadata: Metadata = {
   title: "Hotel Travel Tools | Room Tariff GST Calculator & Stay Planner",
@@ -15,45 +14,33 @@ export default async function HotelToolsPage() {
   cacheLife("hours");
 
   return (
-    <main className="pb-20">
-      <section className="ta-hero py-16">
+    <main className="pb-16 sm:pb-24">
+      <section className="ta-navy-hero pb-10 pt-5 sm:pb-12 sm:pt-7">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <nav
             aria-label="Breadcrumb"
-            className="flex items-center gap-2 text-xs font-semibold text-ink-soft"
+            className="flex items-center gap-1.5 text-xs text-slate-300"
           >
-            <Link
-              href="/"
-              className="transition hover:text-orange-600 dark:hover:text-amber-300"
-            >
+            <Link href="/" className="hover:text-white">
               Home
             </Link>
-            <span className="text-ink-muted">/</span>
-            <span className="font-bold text-orange-700 dark:text-amber-300">
-              Hotel Tools
-            </span>
+            <span>/</span>
+            <span className="font-semibold text-white">Hotels &amp; GST Calculator</span>
           </nav>
 
-          <div className="mt-6 flex items-center gap-3">
-            <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-amber-500/30 bg-amber-500/18 text-amber-800 dark:text-amber-300">
-              <HotelIcon className="h-5 w-5" />
-            </span>
-            <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-orange-700 dark:text-amber-300">
-              STAY &amp; HOSPITALITY HUB
-            </span>
+          <div className="mt-4 max-w-3xl">
+            <h1 className="text-2xl font-extrabold tracking-tight text-white sm:text-4xl">
+              Hotel Room GST Calculator &amp; Stay Guide
+            </h1>
+            <p className="mt-1.5 text-xs text-slate-300 sm:text-sm">
+              Calculate room tariffs across 0%, 12%, and 18% GST brackets, plan
+              early train/flight check-ins, and verify Indian hotel ID rules.
+            </p>
           </div>
-
-          <h1 className="mt-4 text-3xl font-black tracking-tight text-ink sm:text-5xl">
-            Hotel Budget &amp; Transit Stay Tools
-          </h1>
-          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-ink-soft sm:text-base">
-            Calculate room tariffs with GST slabs, coordinate early train or
-            flight check-ins, and travel prepared.
-          </p>
         </div>
       </section>
 
-      <div className="mx-auto mt-10 max-w-5xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto mt-6 max-w-5xl px-4 sm:mt-8 sm:px-6 lg:px-8">
         <HotelToolsClient />
       </div>
     </main>

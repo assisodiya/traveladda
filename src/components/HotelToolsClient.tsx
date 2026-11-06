@@ -2,13 +2,9 @@
 
 import { useState } from "react";
 import {
-  BedIcon,
   CalculatorIcon,
   CheckCircleIcon,
   ClockIcon,
-  HotelIcon,
-  MapPinIcon,
-  RupeeBadgeIcon,
   ShieldCheckIcon,
 } from "./Icons";
 
@@ -27,35 +23,34 @@ export function HotelToolsClient() {
   const grandTotal = subtotal + gstAmount;
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-6">
       {/* Tool 1: Hotel Tariff & GST Calculator */}
       <section
         id="gst-calculator"
-        className="scroll-mt-24 rounded-3xl border border-line bg-card p-6 shadow-lg shadow-black/5 dark:shadow-black/25 sm:p-8"
+        className="scroll-mt-24 rounded-2xl border border-line bg-card p-5 shadow-sm sm:p-6"
       >
         <div className="flex items-center gap-3">
-          <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-orange-500/15 text-orange-700 dark:text-amber-300">
-            <CalculatorIcon className="h-5 w-5" />
+          <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
+            <CalculatorIcon className="h-4 w-4" />
           </span>
           <div>
-            <h2 className="text-xl font-extrabold text-ink">
+            <h2 className="text-base font-extrabold text-ink sm:text-lg">
               Indian Hotel Tariff &amp; GST Calculator
             </h2>
-            <p className="text-sm text-ink-soft">
+            <p className="text-xs text-ink-soft">
               Calculate exact room taxes across official 0%, 12%, and 18% GST
               tariff brackets.
             </p>
           </div>
         </div>
 
-        <div className="mt-6 grid gap-4 sm:grid-cols-3">
-          <div>
+        <div className="mt-4 grid divide-y divide-line rounded-xl border border-line-strong bg-input sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+          <div className="px-3.5 py-2.5">
             <label
               htmlFor="hotel-rate"
-              className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-ink-soft"
+              className="block text-[11px] font-bold uppercase tracking-wider text-ink-muted"
             >
-              <RupeeBadgeIcon className="h-3.5 w-3.5 text-orange-600 dark:text-amber-400" />
-              <span>Room Tariff / Night (₹)</span>
+              Room Tariff / Night (₹)
             </label>
             <input
               id="hotel-rate"
@@ -63,17 +58,16 @@ export function HotelToolsClient() {
               min={0}
               value={tariffPerNight}
               onChange={(e) => setTariffPerNight(e.target.value)}
-              className="mt-2 w-full rounded-2xl border-2 border-line bg-input px-4 py-3 font-mono text-base font-bold text-ink focus:border-orange-500 focus:outline-none"
+              className="mt-1 w-full bg-transparent font-mono text-base font-bold text-ink focus:outline-none"
             />
           </div>
 
-          <div>
+          <div className="px-3.5 py-2.5">
             <label
               htmlFor="hotel-nights"
-              className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-ink-soft"
+              className="block text-[11px] font-bold uppercase tracking-wider text-ink-muted"
             >
-              <BedIcon className="h-3.5 w-3.5 text-amber-600 dark:text-amber-300" />
-              <span>Number of Nights</span>
+              Number of Nights
             </label>
             <input
               id="hotel-nights"
@@ -82,17 +76,16 @@ export function HotelToolsClient() {
               max={60}
               value={numNights}
               onChange={(e) => setNumNights(e.target.value)}
-              className="mt-2 w-full rounded-2xl border-2 border-line bg-input px-4 py-3 font-mono text-base font-bold text-ink focus:border-orange-500 focus:outline-none"
+              className="mt-1 w-full bg-transparent font-mono text-base font-bold text-ink focus:outline-none"
             />
           </div>
 
-          <div>
+          <div className="px-3.5 py-2.5">
             <label
               htmlFor="hotel-rooms"
-              className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-ink-soft"
+              className="block text-[11px] font-bold uppercase tracking-wider text-ink-muted"
             >
-              <HotelIcon className="h-3.5 w-3.5 text-orange-600 dark:text-amber-400" />
-              <span>Number of Rooms</span>
+              Number of Rooms
             </label>
             <input
               id="hotel-rooms"
@@ -101,36 +94,33 @@ export function HotelToolsClient() {
               max={20}
               value={numRooms}
               onChange={(e) => setNumRooms(e.target.value)}
-              className="mt-2 w-full rounded-2xl border-2 border-line bg-input px-4 py-3 font-mono text-base font-bold text-ink focus:border-orange-500 focus:outline-none"
+              className="mt-1 w-full bg-transparent font-mono text-base font-bold text-ink focus:outline-none"
             />
           </div>
         </div>
 
-        <div className="ta-cta-banner mt-6 grid gap-4 rounded-2xl p-6 sm:grid-cols-3">
+        <div className="ta-cta-banner mt-4 grid gap-4 rounded-xl p-4 sm:grid-cols-3">
           <div>
-            <p className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-ink-muted">
-              <BedIcon className="h-3.5 w-3.5" />
-              <span>Base Stay Subtotal</span>
+            <p className="text-[11px] font-bold uppercase tracking-wider text-ink-muted">
+              Base Stay Subtotal
             </p>
-            <p className="mt-1 font-mono text-xl font-extrabold text-ink">
+            <p className="mt-0.5 font-mono text-lg font-extrabold text-ink">
               ₹{subtotal.toLocaleString("en-IN")}
             </p>
           </div>
           <div>
-            <p className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-800 dark:text-amber-300">
-              <CalculatorIcon className="h-3.5 w-3.5" />
-              <span>Applicable GST ({gstPercent}%)</span>
+            <p className="text-[11px] font-bold uppercase tracking-wider text-ink-muted">
+              Applicable GST ({gstPercent}%)
             </p>
-            <p className="mt-1 font-mono text-xl font-extrabold text-amber-800 dark:text-amber-300">
+            <p className="mt-0.5 font-mono text-lg font-extrabold text-[#1956b4] dark:text-blue-300">
               ₹{gstAmount.toLocaleString("en-IN")}
             </p>
           </div>
           <div>
-            <p className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-orange-700 dark:text-orange-300">
-              <RupeeBadgeIcon className="h-3.5 w-3.5" />
-              <span>Total Payable Estimate</span>
+            <p className="text-[11px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">
+              Total Payable Estimate
             </p>
-            <p className="mt-1 font-mono text-2xl font-black text-orange-700 dark:text-amber-300">
+            <p className="mt-0.5 font-mono text-xl font-black text-ink sm:text-2xl">
               ₹{grandTotal.toLocaleString("en-IN")}
             </p>
           </div>
@@ -140,61 +130,58 @@ export function HotelToolsClient() {
       {/* Tool 2: Transit & Check-in Planner */}
       <section
         id="transit-planner"
-        className="scroll-mt-24 rounded-3xl border border-line bg-card p-6 shadow-lg shadow-black/5 dark:shadow-black/25 sm:p-8"
+        className="scroll-mt-24 rounded-2xl border border-line bg-card p-5 shadow-sm sm:p-6"
       >
         <div className="flex items-center gap-3">
-          <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-amber-500/18 text-amber-800 dark:text-amber-300">
-            <ClockIcon className="h-5 w-5" />
+          <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
+            <ClockIcon className="h-4 w-4" />
           </span>
           <div>
-            <h2 className="text-xl font-extrabold text-ink">
-              Check-In &amp; Railway / Airport Transit Stay Guide
+            <h2 className="text-base font-extrabold text-ink sm:text-lg">
+              Check-In &amp; Transit Stay Guide
             </h2>
-            <p className="text-sm text-ink-soft">
+            <p className="text-xs text-ink-soft">
               Align overnight train arrivals and red-eye flights with standard
               hotel check-in windows.
             </p>
           </div>
         </div>
 
-        <div className="mt-6 grid gap-4 md:grid-cols-3">
-          <div className="rounded-2xl border border-line bg-subcard p-5">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-500/15 px-3 py-1 text-xs font-bold text-orange-800 dark:text-orange-300">
-              <HotelIcon className="h-3.5 w-3.5" />
-              <span>Standard Window</span>
+        <div className="mt-4 grid gap-3 md:grid-cols-3">
+          <div className="rounded-xl border border-line bg-subcard p-4">
+            <span className="rounded bg-blue-50 px-2 py-0.5 text-[11px] font-bold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
+              Standard Window
             </span>
-            <h3 className="mt-3 text-base font-extrabold text-ink">
+            <h3 className="mt-2.5 text-sm font-bold text-ink">
               2:00 PM Check-In / 11:00 AM Check-Out
             </h3>
-            <p className="mt-1.5 text-xs leading-relaxed text-ink-soft">
+            <p className="mt-1 text-xs leading-relaxed text-ink-soft">
               Most business and leisure hotels in India follow a 14:00 check-in
               and 11:00 or 12:00 check-out cycle.
             </p>
           </div>
 
-          <div className="rounded-2xl border border-line bg-subcard p-5">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/18 px-3 py-1 text-xs font-bold text-amber-900 dark:text-amber-300">
-              <ClockIcon className="h-3.5 w-3.5" />
-              <span>Early Morning Trains</span>
+          <div className="rounded-xl border border-line bg-subcard p-4">
+            <span className="rounded bg-emerald-50 px-2 py-0.5 text-[11px] font-bold text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
+              Early Morning Trains
             </span>
-            <h3 className="mt-3 text-base font-extrabold text-ink">
+            <h3 className="mt-2.5 text-sm font-bold text-ink">
               Arriving Between 5 AM – 9 AM?
             </h3>
-            <p className="mt-1.5 text-xs leading-relaxed text-ink-soft">
+            <p className="mt-1 text-xs leading-relaxed text-ink-soft">
               Request complimentary luggage cloakroom storage at reception or
               check IRCTC Retiring Rooms / hourly pods at major junctions.
             </p>
           </div>
 
-          <div className="rounded-2xl border border-line bg-subcard p-5">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-yellow-500/20 px-3 py-1 text-xs font-bold text-amber-900 dark:text-yellow-300">
-              <MapPinIcon className="h-3.5 w-3.5" />
-              <span>Location Tip</span>
+          <div className="rounded-xl border border-line bg-subcard p-4">
+            <span className="rounded bg-amber-50 px-2 py-0.5 text-[11px] font-bold text-amber-800 dark:bg-amber-500/15 dark:text-amber-300">
+              Location Tip
             </span>
-            <h3 className="mt-3 text-base font-extrabold text-ink">
+            <h3 className="mt-2.5 text-sm font-bold text-ink">
               Verify Exact Terminal / Station Exit
             </h3>
-            <p className="mt-1.5 text-xs leading-relaxed text-ink-soft">
+            <p className="mt-1 text-xs leading-relaxed text-ink-soft">
               Multi-terminal hubs (DEL T1/T3, CSMT/LTT, JP/GADJ) can sit 8–18 km
               apart; match your hotel pin to your exact boarding point.
             </p>
@@ -205,23 +192,23 @@ export function HotelToolsClient() {
       {/* Tool 3: Guest ID & Booking Checklist */}
       <section
         id="stay-checklist"
-        className="scroll-mt-24 rounded-3xl border border-line bg-card p-6 shadow-lg shadow-black/5 dark:shadow-black/25 sm:p-8"
+        className="scroll-mt-24 rounded-2xl border border-line bg-card p-5 shadow-sm sm:p-6"
       >
         <div className="flex items-center gap-3">
-          <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-yellow-500/20 text-amber-900 dark:text-yellow-300">
-            <ShieldCheckIcon className="h-5 w-5" />
+          <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
+            <ShieldCheckIcon className="h-4 w-4" />
           </span>
           <div>
-            <h2 className="text-xl font-extrabold text-ink">
-              Hotel Check-In Essentials in India
+            <h2 className="text-base font-extrabold text-ink sm:text-lg">
+              Hotel Check-In ID Rules in India
             </h2>
-            <p className="text-sm text-ink-soft">
-              Keep these guest identity and reservation rules handy at check-in.
+            <p className="text-xs text-ink-soft">
+              Guest identity and reservation rules required at hotel reception.
             </p>
           </div>
         </div>
 
-        <div className="mt-6 grid gap-3.5 sm:grid-cols-2">
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
           {[
             "Every adult guest must carry an original physical or DigiLocker Government ID (Aadhaar, Passport, Driving Licence, or Voter ID).",
             "Note that PAN Cards are generally NOT accepted as address/identity proof at hotel check-in desks.",
@@ -230,10 +217,10 @@ export function HotelToolsClient() {
           ].map((item) => (
             <div
               key={item}
-              className="flex items-start gap-3 rounded-2xl border border-line bg-subcard p-4"
+              className="flex items-start gap-2.5 rounded-xl border border-line bg-subcard p-3.5"
             >
-              <CheckCircleIcon className="mt-0.5 h-5 w-5 text-orange-600 dark:text-amber-400" />
-              <p className="text-sm font-medium leading-relaxed text-ink">
+              <CheckCircleIcon className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
+              <p className="text-xs leading-relaxed text-ink sm:text-sm">
                 {item}
               </p>
             </div>

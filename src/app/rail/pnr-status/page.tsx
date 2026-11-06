@@ -4,20 +4,11 @@ import Link from "next/link";
 import { Suspense } from "react";
 import {
   ArrowRightIcon,
-  BedIcon,
-  BookOpenIcon,
-  CalendarIcon,
   CheckCircleIcon,
   ChevronDownIcon,
   ClockIcon,
-  CoachTrainIcon,
-  HelpCircleIcon,
-  RadarLiveIcon,
   ShieldCheckIcon,
-  SparklesIcon,
-  TicketIcon,
   TrainIcon,
-  UserCheckIcon,
 } from "@/components/Icons";
 import { PnrChecker } from "@/components/PnrChecker";
 import { PNR_FAQ_ITEMS, RAIL_BLOG_POSTS } from "@/lib/blog-data";
@@ -34,60 +25,55 @@ const WAITLIST_PRIORITY_CARDS = [
     code: "CNF",
     title: "Confirmed Seat / Berth",
     chance: "100% Confirmed",
-    badge: "bg-amber-500/20 text-amber-900 dark:text-amber-300",
-    border: "border-amber-500/30",
+    badge:
+      "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300",
     desc: "Full seat or sleeping berth guaranteed. Coach & berth appear immediately or upon chart preparation.",
   },
   {
     code: "RAC",
     title: "Reservation Against Cancellation",
-    chance: "Board Guaranteed",
-    badge: "bg-orange-500/18 text-orange-800 dark:text-orange-300",
-    border: "border-orange-500/30",
-    desc: "Permitted to board! Shares a side-lower seat initially and upgrades to a full berth as cancellations/no-shows occur.",
+    chance: "Boarding Allowed",
+    badge:
+      "bg-blue-50 text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300",
+    desc: "Permitted to board. Shares a side-lower seat initially and upgrades to a full berth as cancellations occur.",
   },
   {
     code: "GNWL",
     title: "General Waiting List",
     chance: "High Priority",
-    badge: "bg-yellow-500/20 text-amber-900 dark:text-yellow-300",
-    border: "border-yellow-500/30",
+    badge:
+      "bg-amber-50 text-amber-800 dark:bg-amber-500/15 dark:text-amber-300",
     desc: "Origin-station general pool with the largest seat allocation and fastest confirmation movement.",
   },
   {
     code: "RLWL / PQWL",
     title: "Remote / Pooled Waitlist",
     chance: "Moderate Priority",
-    badge: "bg-orange-500/15 text-orange-800 dark:text-orange-300",
-    border: "border-orange-500/25",
+    badge:
+      "bg-amber-50 text-amber-800 dark:bg-amber-500/15 dark:text-amber-300",
     desc: "Quota reserved for intermediate boarding stations; clears when passengers on that route leg cancel.",
   },
   {
     code: "TQWL",
     title: "Tatkal Waiting List",
     chance: "Last-Minute Pool",
-    badge: "bg-rose-500/18 text-rose-800 dark:text-rose-300",
-    border: "border-rose-500/25",
+    badge:
+      "bg-rose-50 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300",
     desc: "Booked during the 10 AM / 11 AM Tatkal window; jumps directly to CNF if confirmed Tatkal seats cancel.",
   },
   {
     code: "NOSB / CAN",
     title: "Child No-Seat / Cancelled",
     chance: "Special Status",
-    badge: "bg-subcard text-ink",
-    border: "border-line",
+    badge: "bg-subcard text-ink-soft",
     desc: "NOSB applies to children aged 5–11 travelling without a separate berth; CAN denotes a cancelled passenger.",
   },
 ];
 
 function PnrCheckerFallback() {
   return (
-    <div className="rounded-3xl border border-line bg-card p-7 shadow-xl">
-      <div className="h-6 w-64 animate-pulse rounded-lg bg-subcard" />
-      <div className="mt-4 flex flex-col gap-3 sm:flex-row">
-        <div className="h-14 flex-1 animate-pulse rounded-2xl bg-subcard" />
-        <div className="h-14 w-48 animate-pulse rounded-2xl bg-subcard" />
-      </div>
+    <div className="rounded-2xl border border-line bg-card p-5 shadow-md">
+      <div className="h-14 animate-pulse rounded-xl bg-subcard" />
     </div>
   );
 }
@@ -97,80 +83,58 @@ export default async function PnrStatusPage() {
   cacheLife("hours");
 
   return (
-    <main className="pb-20">
-      {/* Warm Sunset / Golden Rail Hero Banner */}
-      <section className="ta-hero relative overflow-hidden pb-24 pt-12 sm:pb-28 sm:pt-16">
-        <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          {/* Breadcrumbs + Live Train Switcher */}
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <nav
-              aria-label="Breadcrumb"
-              className="flex flex-wrap items-center gap-2 text-xs font-semibold text-ink-soft"
-            >
-              <Link
-                href="/"
-                className="transition hover:text-orange-600 dark:hover:text-amber-300"
-              >
+    <main className="pb-16 sm:pb-24">
+      {/* Clean Compact Navy Banner */}
+      <section className="ta-navy-hero pb-12 pt-5 sm:pb-16 sm:pt-7">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-300">
+            <nav aria-label="Breadcrumb" className="flex items-center gap-1.5">
+              <Link href="/" className="hover:text-white">
                 Home
               </Link>
-              <span className="text-ink-muted">/</span>
-              <span>Rail</span>
-              <span className="text-ink-muted">/</span>
-              <span className="font-bold text-orange-700 dark:text-amber-300">
-                PNR Status
-              </span>
+              <span>/</span>
+              <span className="font-semibold text-white">PNR Status</span>
             </nav>
 
             <Link
               href="/rail/live-status"
-              className="inline-flex items-center gap-1.5 rounded-full border border-line-strong bg-card/85 px-3.5 py-1.5 text-xs font-bold text-ink transition hover:border-orange-500"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/10 px-3 py-1 font-semibold text-white transition hover:bg-white/15"
             >
-              <RadarLiveIcon className="h-3.5 w-3.5 text-orange-600 dark:text-amber-400" />
-              <span>Track Live Train by Train No.</span>
-              <ArrowRightIcon className="h-3.5 w-3.5 text-ink-muted" />
+              <TrainIcon className="h-3.5 w-3.5" />
+              <span>Spot Train Live</span>
             </Link>
           </div>
 
-          <div className="mt-6 max-w-3xl">
-            <span className="inline-flex items-center gap-2 rounded-full border border-orange-500/30 bg-orange-500/12 px-3.5 py-1 text-xs font-bold text-orange-700 dark:text-amber-300">
-              <TicketIcon className="h-3.5 w-3.5" />
-              <span>INDIAN RAILWAYS LIVE PRS TRACKER</span>
-            </span>
-            <h1 className="mt-4 text-3xl font-black tracking-tight text-ink sm:text-5xl">
-              Check Your 10-Digit{" "}
-              <span className="text-orange-600 dark:text-amber-400">
-                PNR Status
-              </span>{" "}
-              Instantly
+          <div className="mt-4 max-w-3xl">
+            <h1 className="text-2xl font-extrabold tracking-tight text-white sm:text-4xl">
+              IRCTC PNR Status — Check 10-Digit Confirmation
             </h1>
-            <p className="mt-4 text-sm leading-relaxed text-ink-soft sm:text-base">
-              Get real-time seat confirmation, coach &amp; berth positions,
-              reservation chart updates, and passenger quota details in seconds
-              — followed by practical Indian Railways travel guides below.
+            <p className="mt-1.5 text-xs text-slate-300 sm:text-sm">
+              Check real-time CNF, RAC, or Waitlist status, coach &amp; berth
+              numbers, and reservation chart updates across Indian Railways.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Overlapping Live PNR Checker Tool */}
-      <section className="relative z-10 mx-auto -mt-14 max-w-5xl px-4 sm:-mt-16 sm:px-6 lg:px-8">
+      {/* Overlapping PNR Checker */}
+      <section className="relative z-10 mx-auto -mt-8 max-w-5xl px-4 sm:-mt-10 sm:px-6 lg:px-8">
         <Suspense fallback={<PnrCheckerFallback />}>
           <PnrChecker />
         </Suspense>
 
-        {/* Traveller Highlights Strip */}
-        <div className="mt-5 grid gap-3 rounded-2xl border border-line bg-card px-5 py-4 text-xs font-semibold text-ink-soft shadow-xs sm:grid-cols-3">
-          <div className="flex items-center gap-2.5">
-            <ShieldCheckIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
-            <span>Instant Coach &amp; Berth Verification</span>
+        <div className="mt-4 grid gap-2.5 rounded-xl border border-line bg-card px-4 py-3 text-xs font-medium text-ink-soft sm:grid-cols-3">
+          <div className="flex items-center gap-2">
+            <ShieldCheckIcon className="h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
+            <span>Instant coach &amp; berth verification</span>
           </div>
-          <div className="flex items-center gap-2.5">
-            <ClockIcon className="h-4 w-4 text-amber-600 dark:text-yellow-300" />
-            <span>1st &amp; 2nd Reservation Chart Tracking</span>
+          <div className="flex items-center gap-2">
+            <ClockIcon className="h-4 w-4 shrink-0 text-[#1956b4] dark:text-blue-400" />
+            <span>1st &amp; 2nd reservation chart tracking</span>
           </div>
-          <div className="flex items-center gap-2.5">
-            <TrainIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
-            <span>Supports All 17 Indian Railway Zones</span>
+          <div className="flex items-center gap-2">
+            <TrainIcon className="h-4 w-4 shrink-0 text-[#0d9458] dark:text-emerald-400" />
+            <span>Supports all 17 Indian Railway zones</span>
           </div>
         </div>
       </section>
@@ -178,89 +142,78 @@ export default async function PnrStatusPage() {
       {/* Ticket Status & Berth Code Decoder */}
       <section
         id="decoder"
-        className="mx-auto mt-20 max-w-6xl scroll-mt-24 px-4 sm:px-6 lg:px-8"
+        className="mx-auto mt-12 max-w-5xl scroll-mt-24 px-4 sm:mt-16 sm:px-6 lg:px-8"
       >
-        <div className="max-w-2xl">
-          <p className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-[0.18em] text-orange-600 dark:text-amber-400">
-            <SparklesIcon className="h-3.5 w-3.5" />
-            <span>INSTANT TICKET DECODER</span>
-          </p>
-          <h2 className="mt-2 text-2xl font-extrabold tracking-tight text-ink sm:text-3xl">
-            What do CNF, RAC, GNWL &amp; berth codes mean?
+        <div>
+          <h2 className="text-lg font-extrabold text-ink sm:text-xl">
+            IRCTC Ticket Status &amp; Berth Codes Explained
           </h2>
-          <p className="mt-2 text-sm text-ink-soft">
-            Every abbreviation on your Indian Railways PNR slip explained
-            clearly before you head to the station.
+          <p className="mt-0.5 text-xs text-ink-soft sm:text-sm">
+            Understand CNF, RAC, GNWL, RLWL, TQWL, and coach abbreviations on
+            your ticket slip.
           </p>
         </div>
 
-        {/* Status Priority Grid */}
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {WAITLIST_PRIORITY_CARDS.map((card) => (
             <div
               key={card.code}
-              className={`rounded-2xl border bg-card p-5 shadow-xs ${card.border}`}
+              className="rounded-xl border border-line bg-card p-4"
             >
               <div className="flex items-center justify-between gap-2">
                 <span
-                  className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 font-mono text-xs font-extrabold ${card.badge}`}
+                  className={`rounded px-2 py-0.5 font-mono text-xs font-bold ${card.badge}`}
                 >
-                  <TicketIcon className="h-3.5 w-3.5" />
-                  <span>{card.code}</span>
+                  {card.code}
                 </span>
-                <span className="text-[11px] font-bold uppercase tracking-wider text-ink-muted">
+                <span className="text-[11px] font-semibold text-ink-muted">
                   {card.chance}
                 </span>
               </div>
-              <h3 className="mt-3 text-base font-extrabold text-ink">
-                {card.title}
-              </h3>
-              <p className="mt-1.5 text-xs leading-relaxed text-ink-soft">
+              <h3 className="mt-2.5 text-sm font-bold text-ink">{card.title}</h3>
+              <p className="mt-1 text-xs leading-relaxed text-ink-soft">
                 {card.desc}
               </p>
             </div>
           ))}
         </div>
 
-        {/* Berth & Class Quick Reference Pill Boards */}
-        <div className="mt-8 grid gap-6 md:grid-cols-2">
-          <div className="rounded-3xl border border-line bg-card p-6 shadow-xs">
-            <h3 className="inline-flex items-center gap-2 text-sm font-extrabold uppercase tracking-wider text-ink">
-              <BedIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
-              <span>Seat &amp; Berth Position Codes</span>
+        <div className="mt-4 grid gap-4 md:grid-cols-2">
+          <div className="rounded-xl border border-line bg-card p-4 sm:p-5">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-ink-muted">
+              Seat &amp; Berth Position Codes
             </h3>
-            <div className="mt-4 grid grid-cols-2 gap-2.5 text-xs">
+            <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
               {Object.entries(BERTH_CODE_MAP).map(([code, label]) => (
                 <div
                   key={code}
-                  className="flex items-center gap-2.5 rounded-xl bg-subcard px-3 py-2"
+                  className="flex items-center gap-2 rounded-lg bg-subcard px-2.5 py-1.5"
                 >
-                  <span className="rounded bg-orange-500/18 px-2 py-0.5 font-mono font-bold text-orange-800 dark:text-orange-300">
+                  <span className="rounded bg-blue-50 px-1.5 py-0.5 font-mono font-bold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
                     {code}
                   </span>
-                  <span className="font-semibold text-ink-soft">{label}</span>
+                  <span className="font-medium text-ink-soft">{label}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="rounded-3xl border border-line bg-card p-6 shadow-xs">
-            <h3 className="inline-flex items-center gap-2 text-sm font-extrabold uppercase tracking-wider text-ink">
-              <CoachTrainIcon className="h-4 w-4 text-amber-600 dark:text-amber-300" />
-              <span>Indian Railways Coach Classes</span>
+          <div className="rounded-xl border border-line bg-card p-4 sm:p-5">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-ink-muted">
+              Indian Railways Coach Classes
             </h3>
-            <div className="mt-4 grid grid-cols-2 gap-2.5 text-xs">
+            <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
               {Object.entries(RAILWAY_CLASS_MAP)
                 .slice(0, 10)
                 .map(([code, label]) => (
                   <div
                     key={code}
-                    className="flex items-center gap-2.5 rounded-xl bg-subcard px-3 py-2"
+                    className="flex items-center gap-2 rounded-lg bg-subcard px-2.5 py-1.5"
                   >
-                    <span className="rounded bg-amber-500/20 px-2 py-0.5 font-mono font-bold text-amber-900 dark:text-amber-300">
+                    <span className="rounded bg-emerald-50 px-1.5 py-0.5 font-mono font-bold text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
                       {code}
                     </span>
-                    <span className="truncate font-semibold text-ink-soft">
+                    <span className="truncate font-medium text-ink-soft">
                       {label.replace(` (${code})`, "")}
                     </span>
                   </div>
@@ -270,166 +223,88 @@ export default async function PnrStatusPage() {
         </div>
       </section>
 
-      {/* Rich Editorial Rail Travel Blog Section on PNR Page */}
+      {/* Clean Rail Guides Grid */}
       <section
         id="rail-blog"
-        className="mt-20 scroll-mt-20 border-y border-line bg-band py-20"
+        className="mx-auto mt-12 max-w-5xl scroll-mt-20 px-4 sm:mt-16 sm:px-6 lg:px-8"
       >
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div className="max-w-2xl">
-              <p className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-[0.18em] text-orange-600 dark:text-amber-400">
-                <BookOpenIcon className="h-3.5 w-3.5" />
-                <span>RAILWAY INSIGHTS &amp; TRAVEL BLOG</span>
-              </p>
-              <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-ink sm:text-4xl">
-                Essential Indian Rail Guides &amp; PNR Deep-Dives
-              </h2>
-              <p className="mt-2 text-sm text-ink-soft">
-                Everything seasoned Indian train travellers know about PNR
-                digits, charting windows, waitlist pools, and Double Decker /
-                Vande Bharat coaches.
-              </p>
-            </div>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-orange-500/30 bg-orange-500/12 px-4 py-1.5 text-xs font-extrabold text-orange-700 dark:text-amber-300">
-              <BookOpenIcon className="h-3.5 w-3.5" />
-              <span>{RAIL_BLOG_POSTS.length} Editorial Guides</span>
-            </span>
+        <div className="flex flex-wrap items-end justify-between gap-2">
+          <div>
+            <h2 className="text-lg font-extrabold text-ink sm:text-xl">
+              Indian Railways PNR &amp; Travel Guides
+            </h2>
+            <p className="mt-0.5 text-xs text-ink-soft sm:text-sm">
+              Practical articles on PNR digits, chart preparation timings, and
+              waitlist confirmation rules.
+            </p>
           </div>
+          <Link
+            href="/blog"
+            className="text-xs font-bold text-[#1956b4] hover:underline dark:text-blue-400"
+          >
+            All Guides →
+          </Link>
+        </div>
 
-          {/* Smooth Story Cards */}
-          <div className="mt-12 space-y-10">
-            {RAIL_BLOG_POSTS.map((post, index) => (
-              <article
-                key={post.slug}
-                className="overflow-hidden rounded-3xl border border-line bg-card shadow-sm transition hover:shadow-md"
-              >
-                <div className="grid lg:grid-cols-[1fr_1.45fr]">
-                  {/* Left Story Cover */}
-                  <div className="ta-ticket-header flex flex-col justify-between p-7 lg:border-b-0 lg:border-r lg:border-line sm:p-8">
-                    <div>
-                      <div className="flex flex-wrap items-center gap-2.5 text-xs font-bold">
-                        <span className="rounded-full border border-orange-500/35 bg-orange-500/15 px-3 py-1 text-orange-800 dark:text-amber-200">
-                          0{index + 1} · {post.category}
-                        </span>
-                        <span className="inline-flex items-center gap-1 text-ink-muted">
-                          <ClockIcon className="h-3.5 w-3.5" />
-                          <span>{post.readTime}</span>
-                        </span>
-                      </div>
-                      <h3 className="mt-5 text-2xl font-black leading-snug text-ink">
-                        <Link
-                          href={`/blog/${post.slug}`}
-                          className="transition hover:text-orange-600 dark:hover:text-amber-300"
-                        >
-                          {post.title}
-                        </Link>
-                      </h3>
-                      <p className="mt-3 text-sm leading-relaxed text-ink-soft">
-                        {post.excerpt}
-                      </p>
-                    </div>
-
-                    <div className="mt-8 flex items-center justify-between gap-2 border-t border-line pt-4 text-xs">
-                      <div className="inline-flex items-center gap-2">
-                        <UserCheckIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
-                        <div>
-                          <p className="font-bold text-ink">
-                            {post.author.name}
-                          </p>
-                          <p className="text-ink-muted">{post.author.role}</p>
-                        </div>
-                      </div>
-                      <span className="inline-flex items-center gap-1 text-ink-muted">
-                        <CalendarIcon className="h-3.5 w-3.5" />
-                        <span>{post.publishedDate}</span>
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Right Substantive In-Page Blog Content */}
-                  <div className="flex flex-col justify-between bg-card p-7 sm:p-8">
-                    <div>
-                      <p className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-widest text-orange-600 dark:text-amber-400">
-                        <SparklesIcon className="h-3.5 w-3.5" />
-                        <span>Key Takeaways</span>
-                      </p>
-                      <ul className="mt-3 space-y-2.5">
-                        {post.keyTakeaways.map((point) => (
-                          <li
-                            key={point}
-                            className="flex items-start gap-2.5 text-sm text-ink-soft"
-                          >
-                            <CheckCircleIcon className="mt-0.5 h-4 w-4 text-orange-600 dark:text-amber-400" />
-                            <span>{point}</span>
-                          </li>
-                        ))}
-                      </ul>
-
-                      {post.sections[0] && (
-                        <div className="mt-5 rounded-2xl border border-line bg-subcard p-4">
-                          <h4 className="text-sm font-extrabold text-ink">
-                            {post.sections[0].heading}
-                          </h4>
-                          <p className="mt-1.5 text-xs leading-relaxed text-ink-soft sm:text-sm">
-                            {post.sections[0].paragraphs[0]}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4">
-                      <span className="text-xs font-semibold text-ink-muted">
-                        {post.heroTagline}
-                      </span>
-                      <Link
-                        href={`/blog/${post.slug}`}
-                        className="ta-btn-primary inline-flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-xs font-extrabold"
-                      >
-                        <span>Read Complete Article</span>
-                        <ArrowRightIcon className="h-3.5 w-3.5" />
-                      </Link>
-                    </div>
-                  </div>
+        <div className="mt-4 grid gap-3.5 md:grid-cols-3">
+          {RAIL_BLOG_POSTS.map((post) => (
+            <Link
+              key={post.slug}
+              href={`/blog/${post.slug}`}
+              className="group flex flex-col justify-between rounded-xl border border-line bg-card p-4 transition hover:border-[#1956b4] hover:shadow-sm"
+            >
+              <div>
+                <div className="flex items-center justify-between gap-2 text-[11px] font-semibold text-ink-muted">
+                  <span className="rounded bg-blue-50 px-2 py-0.5 font-bold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
+                    {post.category}
+                  </span>
+                  <span>{post.readTime}</span>
                 </div>
-              </article>
-            ))}
-          </div>
+                <h3 className="mt-2.5 line-clamp-2 text-sm font-bold leading-snug text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-400">
+                  {post.title}
+                </h3>
+                <p className="mt-1.5 line-clamp-3 text-xs leading-relaxed text-ink-soft">
+                  {post.excerpt}
+                </p>
+                <ul className="mt-3 space-y-1.5 border-t border-line pt-2.5">
+                  {post.keyTakeaways.slice(0, 2).map((pt) => (
+                    <li
+                      key={pt}
+                      className="flex items-start gap-1.5 text-[11px] text-ink-soft"
+                    >
+                      <CheckCircleIcon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-600 dark:text-emerald-400" />
+                      <span className="line-clamp-2">{pt}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <span className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-[#1956b4] dark:text-blue-400">
+                <span>Read Guide</span>
+                <ArrowRightIcon className="h-3.5 w-3.5" />
+              </span>
+            </Link>
+          ))}
         </div>
       </section>
 
-      {/* PNR Status FAQ Section */}
+      {/* Clean Divider FAQ Accordion */}
       <section
         id="faq"
-        className="mx-auto mt-20 max-w-4xl scroll-mt-24 px-4 sm:px-6 lg:px-8"
+        className="mx-auto mt-12 max-w-4xl scroll-mt-24 px-4 sm:mt-16 sm:px-6 lg:px-8"
       >
-        <div className="text-center">
-          <p className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-[0.18em] text-orange-600 dark:text-amber-400">
-            <HelpCircleIcon className="h-4 w-4" />
-            <span>FREQUENTLY ASKED QUESTIONS</span>
-          </p>
-          <h2 className="mt-2 text-2xl font-extrabold tracking-tight text-ink sm:text-3xl">
-            Common Questions About Indian Railways PNR Status
-          </h2>
-        </div>
+        <h2 className="text-lg font-extrabold text-ink sm:text-xl">
+          Frequently Asked Questions — IRCTC PNR Status
+        </h2>
 
-        <div className="mt-10 space-y-3.5">
+        <div className="mt-4 divide-y divide-line overflow-hidden rounded-xl border border-line bg-card">
           {PNR_FAQ_ITEMS.map((faq, idx) => (
-            <details
-              key={faq.question}
-              open={idx === 0}
-              className="group rounded-2xl border border-line bg-card p-5 shadow-xs"
-            >
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-sm font-extrabold text-ink sm:text-base">
-                <span className="inline-flex items-center gap-2.5">
-                  <HelpCircleIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
-                  <span>{faq.question}</span>
-                </span>
-                <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-subcard text-ink-soft transition group-open:rotate-180 group-open:bg-orange-500/20 group-open:text-orange-700 dark:group-open:text-amber-300">
-                  <ChevronDownIcon className="h-4 w-4" />
-                </span>
+            <details key={faq.question} open={idx === 0} className="group p-4 sm:p-5">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-sm font-bold text-ink">
+                <span>{faq.question}</span>
+                <ChevronDownIcon className="h-4 w-4 shrink-0 text-ink-muted transition group-open:rotate-180" />
               </summary>
-              <p className="mt-3 border-t border-line pt-3 text-sm leading-relaxed text-ink-soft">
+              <p className="mt-2.5 text-xs leading-relaxed text-ink-soft sm:text-sm">
                 {faq.answer}
               </p>
             </details>

@@ -5,21 +5,10 @@ import { Suspense } from "react";
 import { AirlineLogo } from "@/components/AirlineLogo";
 import {
   ArrowRightIcon,
-  BookOpenIcon,
-  CheckCircleIcon,
   ChevronDownIcon,
   ClockIcon,
-  CompassIcon,
-  HelpCircleIcon,
-  LiveFlightBeaconIcon,
   LuggageIcon,
-  MapPinIcon,
-  NavigationIcon,
   PhoneCallIcon,
-  PlaneIcon,
-  RadarLiveIcon,
-  ShieldCheckIcon,
-  SparklesIcon,
   TrainIcon,
 } from "@/components/Icons";
 import { LiveFlightTracker } from "@/components/LiveFlightTracker";
@@ -67,67 +56,22 @@ export const metadata: Metadata = {
 
 const HOW_FLIGHT_TRACKING_WORKS = [
   {
-    step: "01",
-    title: "Search & Select Airline",
+    step: "1",
+    title: "Select Airline",
     detail:
-      "Type any airline name or IATA code (such as IndiGo 6E, Air India AI, Akasa Air QP, Emirates EK, or Qatar Airways QR) in the live airline search dropdown with official carrier logos.",
+      "Search any airline name or 2-letter IATA code (IndiGo 6E, Air India AI, Akasa QP, Emirates EK) in the dropdown.",
   },
   {
-    step: "02",
-    title: "Enter Flight Number & Date",
+    step: "2",
+    title: "Enter Flight No. & Date",
     detail:
-      "Enter the 1 to 4-digit flight number (e.g., 2045, 562, or 101) and pick your origin airport departure date—Yesterday, Today, or Tomorrow.",
+      "Type your 1 to 4-digit flight number (e.g. 2045 or 562) and select your origin airport departure date.",
   },
   {
-    step: "03",
-    title: "Track Terminal, Gate & Air Radar",
+    step: "3",
+    title: "View Terminal, Gate & Belt",
     detail:
-      "View live airborne progress, scheduled vs estimated times, departure & arrival terminals, boarding gates, baggage claim carousels, aircraft equipment, and inbound plane status.",
-  },
-];
-
-const FLIGHT_TELEMETRY_FEATURES = [
-  {
-    title: "Blinking In-Air Flight Radar",
-    description:
-      "Monitor whether your flight is Scheduled, Out-Gate, In Air, Delayed, or Arrived with an animated progress corridor and remaining flight time.",
-    icon: <NavigationIcon className="h-5 w-5" />,
-    badge: "LIVE CORRIDOR",
-  },
-  {
-    title: "Terminal & Boarding Gate Finder",
-    description:
-      "Know your exact departure and arrival terminal numbers (T1, T2, T3, T4) plus assigned boarding and arrival gates before reaching the airport.",
-    icon: <MapPinIcon className="h-5 w-5" />,
-    badge: "TERMINAL & GATE",
-  },
-  {
-    title: "Baggage Claim Carousel Info",
-    description:
-      "Skip arrival hall confusion—check assigned baggage claim belt numbers alongside touchdown and in-gate arrival timestamps.",
-    icon: <LuggageIcon className="h-5 w-5" />,
-    badge: "BAGGAGE BELT",
-  },
-  {
-    title: "Inbound Previous Aircraft Link",
-    description:
-      "Spot potential knock-on delays early by tracking the incoming previous flight operating your aircraft in a single tap.",
-    icon: <RadarLiveIcon className="h-5 w-5" />,
-    badge: "INBOUND PLANE",
-  },
-  {
-    title: "Out-Gate, Takeoff & Touchdown",
-    description:
-      "Compare scheduled timetable slots against real operational pushback (Out-Gate), runway takeoff (Off-Ground), landing (On-Ground), and In-Gate times.",
-    icon: <ClockIcon className="h-5 w-5" />,
-    badge: "OOOI TELEMETRY",
-  },
-  {
-    title: "Global Airline Directory & Icons",
-    description:
-      "Search hundreds of Indian and international airlines with locally cached airline logos, IATA/ICAO codes, and customer support helplines.",
-    icon: <CompassIcon className="h-5 w-5" />,
-    badge: "500+ CARRIERS",
+      "Check live departure & arrival times, terminal numbers, boarding gates, baggage belts, and inbound aircraft status.",
   },
 ];
 
@@ -135,22 +79,22 @@ const AVIATION_STATUS_GLOSSARY = [
   {
     term: "Scheduled vs Estimated Time",
     meaning:
-      "Scheduled Time is the published timetable slot in the airport's local timezone. Estimated Time updates dynamically based on ATC slot clearances, pushback, and airborne wind conditions.",
+      "Scheduled Time is the published timetable slot in local airport time. Estimated Time updates dynamically from ATC slots and airborne progress.",
   },
   {
-    term: "Out-Gate & Off-Ground (Departure)",
+    term: "Out-Gate & Off-Ground",
     meaning:
-      "Out-Gate marks when the aircraft releases parking brakes and pushes back from the boarding bridge. Off-Ground is the exact moment the wheels lift off the departure runway.",
+      "Out-Gate marks when cabin doors close and pushback starts. Off-Ground is the exact moment the aircraft takes off from the runway.",
   },
   {
-    term: "On-Ground & In-Gate (Arrival)",
+    term: "On-Ground & In-Gate",
     meaning:
-      "On-Ground records runway touchdown at the destination airport, while In-Gate marks when the aircraft parks at the arrival gate and doors open for disembarkation.",
+      "On-Ground records runway touchdown, while In-Gate marks when the aircraft parks at the arrival gate and doors open.",
   },
   {
-    term: "Track Inbound Aircraft (Previous Flight)",
+    term: "Inbound Previous Aircraft",
     meaning:
-      "Most departure delays happen because the incoming plane is running late on its prior leg. Tracking the inbound flight lets you anticipate gate delays before airlines announce them.",
+      "Tracking the incoming plane operating your flight helps you spot knock-on turnaround delays early.",
   },
 ];
 
@@ -159,58 +103,58 @@ const FLIGHT_STATUS_FAQS = [
     question:
       "How can I check live flight status by airline and flight number?",
     answer:
-      "Select your airline from the Airline Search box (for example IndiGo 6E, Air India AI, Air India Express IX, Akasa Air QP, or Emirates EK), enter your flight number (such as 2045 or 562), choose the departure date, and tap 'Track Flight'. TravelAdda immediately displays live flight status, departure and arrival terminals, boarding gates, baggage belt, and aircraft model.",
+      "Select your airline from the Airline dropdown (such as IndiGo 6E, Air India AI, Air India Express IX, Akasa Air QP, or Emirates EK), enter your flight number (such as 2045 or 562), pick the departure date, and click 'Search Flight' to see real-time status, terminals, gates, and baggage belts.",
   },
   {
     question:
       "Are flight departure and arrival times shown in local airport time?",
     answer:
-      "Yes. Following global aviation standards, departure times are displayed in the local timezone of the origin airport, and arrival times are displayed in the local timezone of the destination airport.",
+      "Yes. Departure times are shown in the origin airport's local timezone and arrival times are shown in the destination airport's local timezone.",
   },
   {
     question:
-      "Which departure date should I select for late-night or red-eye international flights?",
+      "Which departure date should I select for late-night or red-eye flights?",
     answer:
-      "Always select the calendar date on which the flight is scheduled to depart from its origin airport, as printed on your boarding pass or e-ticket. If your flight departed shortly before midnight, tap the 'Yesterday' quick pill.",
+      "Select the calendar date on which the flight is scheduled to depart from its origin airport, as printed on your ticket. For flights that departed just before midnight, select 'Yesterday'.",
   },
   {
     question: "How early are airport terminal and boarding gate numbers updated?",
     answer:
-      "Terminal assignments (such as Delhi T1/T2/T3 or Mumbai T1/T2) are published alongside the flight schedule. Specific boarding gates and arrival baggage belts are typically assigned by airport operations 60 to 120 minutes prior to departure or landing.",
+      "Terminal numbers (like Delhi T1/T2/T3 or Mumbai T1/T2) are available in advance with the schedule. Specific boarding gates and baggage claim belts are typically assigned 60 to 120 minutes before departure or landing.",
   },
   {
     question:
       "What is the difference between Landed (On-Ground) and Arrived (In-Gate)?",
     answer:
-      "On-Ground means the aircraft has touched down on the destination runway and is taxiing toward the terminal apron. In-Gate (Arrived) means the aircraft has parked at its assigned gate and passengers can disembark.",
+      "On-Ground means the aircraft has touched down on the runway and is taxiing. In-Gate (Arrived) means the aircraft has parked at its terminal gate.",
   },
   {
     question:
       "Can I track both Indian domestic airlines and international carriers?",
     answer:
-      "Yes! Our live airline search and flight status radar covers all major Indian carriers—IndiGo (6E), Air India (AI), Air India Express (IX), Akasa Air (QP), SpiceJet (SG), Alliance Air (9I), Star Air (S5)—as well as 500+ international airlines including Emirates (EK), Qatar Airways (QR), Etihad (EY), Singapore Airlines (SQ), British Airways (BA), and Lufthansa (LH).",
+      "Yes. Our airline search covers Indian carriers—IndiGo (6E), Air India (AI), Air India Express (IX), Akasa Air (QP), SpiceJet (SG), Alliance Air (9I), Star Air (S5)—plus 500+ international airlines including Emirates (EK), Qatar Airways (QR), Etihad (EY), Singapore Airlines (SQ), British Airways (BA), and Lufthansa (LH).",
   },
   {
     question: "How do I know if my flight might be delayed before boarding?",
     answer:
-      "Check both the 'Estimated' departure time and the 'Track Inbound Aircraft' button on the flight status card. If the incoming aircraft operating your flight is still airborne or delayed at its previous airport, you can spot potential turnaround delays early.",
+      "Check the 'Estimated' departure time and use the 'Track Inbound Plane' button when available to see if the incoming aircraft operating your sector is running on time.",
   },
   {
     question:
       "How early should I reach the airport after checking my live flight status?",
     answer:
-      "Even if a flight shows a minor estimated delay, airline check-in counters and bag-drop desks usually close strictly on scheduled time (45–60 minutes before domestic departure and 60–75 minutes before international departure). Report 2 hours prior for domestic flights and 3 hours prior for international flights.",
+      "Check-in counters and bag-drop desks close on original scheduled time (45–60 minutes before domestic flights and 60–75 minutes before international flights). Arrive 2 hours early for domestic and 3 hours early for international departures.",
   },
 ];
 
 function FlightTrackerSkeleton() {
   return (
-    <div className="rounded-3xl border border-line bg-card p-5 shadow-lg sm:p-6">
-      <div className="grid animate-pulse gap-3.5 lg:grid-cols-4">
-        <div className="h-14 rounded-2xl bg-subcard" />
-        <div className="h-14 rounded-2xl bg-subcard" />
-        <div className="h-14 rounded-2xl bg-subcard" />
-        <div className="h-14 rounded-2xl bg-orange-500/25" />
+    <div className="rounded-2xl border border-line bg-card p-5 shadow-sm">
+      <div className="grid animate-pulse gap-3 lg:grid-cols-4">
+        <div className="h-12 rounded-xl bg-subcard" />
+        <div className="h-12 rounded-xl bg-subcard" />
+        <div className="h-12 rounded-xl bg-subcard" />
+        <div className="h-12 rounded-xl bg-subcard" />
       </div>
     </div>
   );
@@ -287,7 +231,7 @@ export default async function LiveFlightStatusPage() {
   };
 
   return (
-    <main className="pb-20">
+    <main className="pb-16">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -295,144 +239,86 @@ export default async function LiveFlightStatusPage() {
         }}
       />
 
-      {/* HERO & LIVE FLIGHT RADAR SECTION */}
-      <section className="ta-hero relative overflow-hidden pt-6 pb-12 sm:pt-10 sm:pb-16">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          {/* Breadcrumb */}
+      {/* CLEAN GOIBIBO / IXIGO NAVY COMPACT HEADER */}
+      <section className="ta-navy-hero pt-5 pb-12 sm:pt-7 sm:pb-16">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <nav
             aria-label="Breadcrumb"
-            className="flex flex-wrap items-center gap-2 text-xs font-semibold text-ink-soft"
+            className="flex items-center gap-2 text-xs text-blue-200/80"
           >
-            <Link
-              href="/"
-              className="transition hover:text-orange-600 dark:hover:text-amber-300"
-            >
+            <Link href="/" className="hover:text-white">
               Home
             </Link>
-            <span className="text-ink-muted">/</span>
-            <Link
-              href="/tools/air"
-              className="transition hover:text-orange-600 dark:hover:text-amber-300"
-            >
-              Air Tools
-            </Link>
-            <span className="text-ink-muted">/</span>
-            <span className="font-extrabold text-orange-700 dark:text-amber-300">
-              Live Flight Status
-            </span>
+            <span>/</span>
+            <span className="font-semibold text-white">Live Flight Status</span>
           </nav>
 
-          {/* Header Copy */}
-          <div className="mt-5 flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
-            <div className="max-w-3xl">
-              <div className="inline-flex items-center gap-2 rounded-full border border-orange-500/30 bg-orange-500/12 px-3.5 py-1 text-xs font-extrabold text-orange-700 dark:text-amber-300">
-                <LiveFlightBeaconIcon size="sm" active />
-                <span>Real-Time Domestic &amp; Global Aviation Radar</span>
-              </div>
-
-              <h1 className="mt-4 text-3xl font-black leading-[1.14] tracking-tight text-ink sm:text-5xl">
-                Live Flight Status,{" "}
-                <span className="bg-gradient-to-r from-orange-600 via-amber-600 to-orange-500 bg-clip-text text-transparent dark:from-amber-300 dark:via-orange-300 dark:to-yellow-200">
-                  Terminal &amp; Gate Tracker
-                </span>
-              </h1>
-
-              <p className="mt-3 text-sm leading-relaxed text-ink-soft sm:text-base">
-                Search any domestic or international airline, enter your flight
-                number and departure date, and track real-time takeoff, airborne
-                progress, terminal &amp; boarding gates, baggage belts, and
-                aircraft type.
-              </p>
-            </div>
-
-            {/* Trust Telemetry Badges */}
-            <div className="flex flex-wrap items-center gap-2 text-xs font-bold">
-              <span className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-500/35 bg-emerald-500/12 px-3 py-1.5 text-emerald-800 dark:text-emerald-300">
-                <CheckCircleIcon className="h-3.5 w-3.5" />
-                <span>500+ Global Airlines</span>
-              </span>
-              <span className="inline-flex items-center gap-1.5 rounded-xl border border-orange-500/30 bg-orange-500/12 px-3 py-1.5 text-orange-800 dark:text-amber-300">
-                <SparklesIcon className="h-3.5 w-3.5" />
-                <span>Terminal · Gate · Belt</span>
-              </span>
-            </div>
-          </div>
-
-          {/* Interactive Client Flight Tracker */}
-          <div className="mt-7">
-            <Suspense fallback={<FlightTrackerSkeleton />}>
-              <LiveFlightTracker />
-            </Suspense>
-          </div>
+          <h1 className="mt-3 text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
+            Live Flight Status, Terminal &amp; Gate Tracker
+          </h1>
+          <p className="mt-1.5 max-w-2xl text-xs text-blue-100/85 sm:text-sm">
+            Search any domestic or international airline, enter your flight
+            number &amp; date, and check real-time arrival, departure, terminal,
+            gate, and baggage belt status.
+          </p>
         </div>
       </section>
 
-      {/* POPULAR LIVE FLIGHT ROUTES DIRECTORY (SEO INTERNAL LINKS) */}
+      {/* OVERLAPPING CLEAN SEARCH & RESULT CONTAINER */}
+      <section className="mx-auto -mt-8 max-w-5xl px-4 sm:-mt-10 sm:px-6 lg:px-8">
+        <Suspense fallback={<FlightTrackerSkeleton />}>
+          <LiveFlightTracker />
+        </Suspense>
+      </section>
+
+      {/* POPULAR LIVE FLIGHTS DIRECTORY */}
       <section
         id="popular-flights"
-        className="mx-auto mt-12 max-w-6xl px-4 sm:mt-16 sm:px-6 lg:px-8"
+        className="mx-auto mt-10 max-w-5xl px-4 sm:mt-12 sm:px-6 lg:px-8"
       >
-        <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+        <div className="flex items-center justify-between">
           <div>
-            <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-orange-700 dark:text-amber-300">
-              ONE-TAP FLIGHT TRACKING
-            </span>
-            <h2 className="mt-1.5 text-2xl font-black tracking-tight text-ink sm:text-3xl">
-              Popular Domestic &amp; International Flights Today
+            <h2 className="text-lg font-extrabold text-ink sm:text-xl">
+              Popular Domestic &amp; International Flights
             </h2>
+            <p className="text-xs text-ink-muted">
+              Click any route to check live flight running status today
+            </p>
           </div>
-          <p className="text-xs font-medium text-ink-muted sm:text-sm">
-            Tap any flight below to load live departure, arrival &amp; terminal
-            status
-          </p>
         </div>
 
-        <div className="mt-6 grid gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {POPULAR_LIVE_FLIGHTS.map((flight) => (
             <Link
               key={`${flight.airlineCode}-${flight.flightNumber}`}
               href={`/air/flight-status?airline=${flight.airlineCode}&flight=${flight.flightNumber}`}
-              className="group flex flex-col justify-between rounded-2xl border border-line bg-card p-4 shadow-xs transition hover:-translate-y-0.5 hover:border-orange-500/60 hover:shadow-md"
+              className="group flex flex-col justify-between rounded-xl border border-line bg-card p-3.5 shadow-2xs transition hover:border-[#1956b4] hover:shadow-sm"
             >
-              <div className="flex items-start justify-between gap-2.5">
+              <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2.5">
                   <AirlineLogo
                     code={flight.airlineCode}
                     name={flight.airlineName}
-                    size="md"
+                    size="sm"
                   />
                   <div>
-                    <span className="font-mono text-sm font-black text-orange-700 dark:text-amber-300">
+                    <p className="font-mono text-sm font-bold text-[#1956b4] dark:text-blue-300">
                       {flight.airlineCode} {flight.flightNumber}
-                    </span>
-                    <p className="text-xs font-bold text-ink">
+                    </p>
+                    <p className="text-xs font-medium text-ink-soft">
                       {flight.airlineName}
                     </p>
                   </div>
                 </div>
-
-                <span
-                  className={`rounded-full px-2 py-0.5 text-[10px] font-extrabold ${
-                    flight.category === "Domestic"
-                      ? "bg-emerald-500/15 text-emerald-800 dark:text-emerald-300"
-                      : "bg-amber-500/18 text-amber-900 dark:text-amber-300"
-                  }`}
-                >
-                  {flight.category}
-                </span>
+                <ArrowRightIcon className="h-3.5 w-3.5 text-ink-muted group-hover:text-[#1956b4]" />
               </div>
 
-              <div className="mt-4 flex items-center justify-between border-t border-line pt-3">
-                <div>
-                  <p className="font-mono text-xs font-extrabold text-ink">
-                    {flight.routeCodes}
-                  </p>
-                  <p className="text-[11px] text-ink-muted">
-                    {flight.routeCities}
-                  </p>
-                </div>
-                <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-subcard text-ink-soft transition group-hover:bg-orange-500 group-hover:text-white">
-                  <ArrowRightIcon className="h-3.5 w-3.5" />
+              <div className="mt-3 flex items-center justify-between border-t border-line pt-2.5 text-xs">
+                <span className="font-mono font-semibold text-ink">
+                  {flight.routeCodes}
+                </span>
+                <span className="truncate text-[11px] text-ink-muted">
+                  {flight.routeCities}
                 </span>
               </div>
             </Link>
@@ -440,58 +326,47 @@ export default async function LiveFlightStatusPage() {
         </div>
       </section>
 
-      {/* POPULAR AIRLINES DIRECTORY WITH DAILY LOCAL ICONS */}
+      {/* SUPPORTED AIRLINES & HELPLINES */}
       <section
         id="airlines-directory"
-        className="mx-auto mt-14 max-w-6xl px-4 sm:mt-20 sm:px-6 lg:px-8"
+        className="mx-auto mt-10 max-w-5xl px-4 sm:mt-12 sm:px-6 lg:px-8"
       >
-        <div className="rounded-3xl border border-line bg-card p-5 sm:p-8">
-          <div className="max-w-2xl">
-            <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-orange-700 dark:text-amber-300">
-              SUPPORTED CARRIERS &amp; HELPLINES
-            </span>
-            <h2 className="mt-1.5 text-2xl font-black tracking-tight text-ink sm:text-3xl">
-              Track Flights by Major Indian &amp; International Airlines
-            </h2>
-            <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-              Select an airline below to pre-fill its IATA carrier code in the
-              flight tracker, or check official airline helpline numbers.
-            </p>
-          </div>
+        <div className="rounded-2xl border border-line bg-card p-5 sm:p-6">
+          <h2 className="text-lg font-extrabold text-ink sm:text-xl">
+            Airlines &amp; Customer Care Helplines
+          </h2>
+          <p className="mt-1 text-xs text-ink-muted sm:text-sm">
+            Select an airline below to pre-fill its carrier code in the tracker.
+          </p>
 
-          <div className="mt-6 grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          <div className="mt-4 grid gap-2.5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {POPULAR_AIRLINES.map((airline) => {
               const phone = airline.phoneFree || airline.phoneOther;
               return (
                 <Link
                   key={airline.code}
                   href={`/air/flight-status?airline=${airline.code}`}
-                  className="group flex items-center justify-between gap-3 rounded-2xl border border-line bg-subcard/60 p-3.5 transition hover:border-orange-500/60 hover:bg-subcard"
+                  className="group flex items-center justify-between gap-2.5 rounded-xl border border-line bg-subcard/60 p-3 transition hover:border-[#1956b4] hover:bg-card"
                 >
-                  <div className="flex min-w-0 items-center gap-3">
+                  <div className="flex min-w-0 items-center gap-2.5">
                     <AirlineLogo
                       code={airline.code}
                       name={airline.name}
-                      size="md"
+                      size="sm"
                     />
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-extrabold text-ink group-hover:text-orange-700 dark:group-hover:text-amber-300">
+                      <p className="truncate text-sm font-bold text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-300">
                         {airline.name}
                       </p>
-                      {phone ? (
-                        <p className="mt-0.5 inline-flex items-center gap-1 truncate font-mono text-[11px] text-ink-muted">
+                      {phone && (
+                        <p className="inline-flex items-center gap-1 truncate font-mono text-[11px] text-ink-muted">
                           <PhoneCallIcon className="h-2.5 w-2.5" />
                           <span>{phone}</span>
-                        </p>
-                      ) : (
-                        <p className="mt-0.5 text-[11px] text-ink-muted">
-                          Live Status Ready
                         </p>
                       )}
                     </div>
                   </div>
-
-                  <span className="shrink-0 rounded-lg border border-orange-500/30 bg-orange-500/14 px-2 py-1 font-mono text-xs font-black text-orange-800 dark:text-amber-300">
+                  <span className="shrink-0 rounded bg-blue-50 px-1.5 py-0.5 font-mono text-xs font-bold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
                     {airline.code}
                   </span>
                 </Link>
@@ -501,99 +376,42 @@ export default async function LiveFlightStatusPage() {
         </div>
       </section>
 
-      {/* HOW IT WORKS: 3-STEP AVIATION GUIDE */}
-      <section className="mx-auto mt-14 max-w-6xl px-4 sm:mt-20 sm:px-6 lg:px-8">
-        <div className="text-center">
-          <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-orange-700 dark:text-amber-300">
-            FAST &amp; ACCURATE LOOKUP
-          </span>
-          <h2 className="mt-1.5 text-2xl font-black tracking-tight text-ink sm:text-3xl">
-            How to Check Live Flight Running Status in 3 Steps
-          </h2>
-        </div>
-
-        <div className="mt-8 grid gap-4 md:grid-cols-3">
+      {/* HOW IT WORKS + GLOSSARY IN CLEAN CARDS */}
+      <section className="mx-auto mt-10 max-w-5xl px-4 sm:mt-12 sm:px-6 lg:px-8">
+        <div className="grid gap-4 md:grid-cols-3">
           {HOW_FLIGHT_TRACKING_WORKS.map((item) => (
             <div
               key={item.step}
-              className="rounded-3xl border border-line bg-card p-6 shadow-xs"
+              className="rounded-xl border border-line bg-card p-5"
             >
-              <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-orange-500/15 font-mono text-sm font-black text-orange-700 dark:text-amber-300">
+              <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-blue-50 text-xs font-bold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
                 {item.step}
               </span>
-              <h3 className="mt-4 text-lg font-extrabold text-ink">
+              <h3 className="mt-3 text-base font-bold text-ink">
                 {item.title}
               </h3>
-              <p className="mt-2 text-sm leading-relaxed text-ink-soft">
+              <p className="mt-1.5 text-xs leading-relaxed text-ink-soft sm:text-sm">
                 {item.detail}
               </p>
             </div>
           ))}
         </div>
-      </section>
 
-      {/* 6 AVIATION TELEMETRY CAPABILITIES */}
-      <section className="mx-auto mt-14 max-w-6xl px-4 sm:mt-20 sm:px-6 lg:px-8">
-        <div className="max-w-2xl">
-          <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-orange-700 dark:text-amber-300">
-            AIRPORT &amp; AIRSPACE INTELLIGENCE
-          </span>
-          <h2 className="mt-1.5 text-2xl font-black tracking-tight text-ink sm:text-3xl">
-            Everything You Need Before Leaving for the Terminal
+        <div
+          id="flight-glossary"
+          className="mt-6 rounded-2xl border border-line bg-card p-5 sm:p-6"
+        >
+          <h2 className="text-lg font-extrabold text-ink sm:text-xl">
+            Flight Status Terms Explained
           </h2>
-        </div>
-
-        <div className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {FLIGHT_TELEMETRY_FEATURES.map((feat) => (
-            <div
-              key={feat.title}
-              className="rounded-3xl border border-line bg-card p-5 shadow-2xs sm:p-6"
-            >
-              <div className="flex items-center justify-between gap-2">
-                <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-orange-500/15 text-orange-700 dark:text-amber-300">
-                  {feat.icon}
-                </span>
-                <span className="rounded-full bg-subcard px-2.5 py-1 font-mono text-[10px] font-extrabold tracking-wider text-ink-muted">
-                  {feat.badge}
-                </span>
-              </div>
-              <h3 className="mt-4 text-base font-extrabold text-ink">
-                {feat.title}
-              </h3>
-              <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-                {feat.description}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* FLIGHT STATUS & GATE DECODER GLOSSARY */}
-      <section
-        id="flight-glossary"
-        className="mx-auto mt-14 max-w-6xl px-4 sm:mt-20 sm:px-6 lg:px-8"
-      >
-        <div className="rounded-3xl border border-line bg-card p-5 sm:p-8">
-          <div className="flex items-center gap-2.5 text-orange-700 dark:text-amber-300">
-            <ShieldCheckIcon className="h-5 w-5" />
-            <span className="text-xs font-extrabold uppercase tracking-[0.18em]">
-              AVIATION TERMINOLOGY DECODED
-            </span>
-          </div>
-          <h2 className="mt-2 text-2xl font-black tracking-tight text-ink sm:text-3xl">
-            Understanding Flight Status, Gate &amp; Runway Timestamps
-          </h2>
-
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
+          <div className="mt-4 grid gap-3 md:grid-cols-2">
             {AVIATION_STATUS_GLOSSARY.map((item) => (
               <div
                 key={item.term}
-                className="rounded-2xl border border-line bg-subcard/65 p-4 sm:p-5"
+                className="rounded-xl border border-line bg-subcard/60 p-4"
               >
-                <h3 className="text-sm font-extrabold text-ink sm:text-base">
-                  {item.term}
-                </h3>
-                <p className="mt-1.5 text-xs leading-relaxed text-ink-soft sm:text-sm">
+                <h3 className="text-sm font-bold text-ink">{item.term}</h3>
+                <p className="mt-1 text-xs leading-relaxed text-ink-soft">
                   {item.meaning}
                 </p>
               </div>
@@ -602,145 +420,113 @@ export default async function LiveFlightStatusPage() {
         </div>
       </section>
 
-      {/* FLIGHT STATUS & AVIATION EDITORIAL BLOG GUIDES (SEO TOPIC CLUSTER) */}
+      {/* FLIGHT STATUS SEO BLOG GUIDES */}
       <section
         id="flight-blog"
-        className="mx-auto mt-14 max-w-6xl px-4 sm:mt-20 sm:px-6 lg:px-8"
+        className="mx-auto mt-10 max-w-5xl px-4 sm:mt-12 sm:px-6 lg:px-8"
       >
-        <div className="flex flex-wrap items-end justify-between gap-3">
+        <div className="flex items-center justify-between">
           <div>
-            <span className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-[0.18em] text-orange-700 dark:text-amber-300">
-              <BookOpenIcon className="h-4 w-4" />
-              <span>AVIATION &amp; FLIGHT TRACKING GUIDES</span>
-            </span>
-            <h2 className="mt-1.5 text-2xl font-black tracking-tight text-ink sm:text-3xl">
-              Expert Guides for Smarter Airport &amp; Flight Journeys
+            <h2 className="text-lg font-extrabold text-ink sm:text-xl">
+              Flight Tracking &amp; Airport Terminal Guides
             </h2>
+            <p className="text-xs text-ink-muted">
+              Tips on terminal numbers, spotting delays early &amp; DGCA flyer
+              rights
+            </p>
           </div>
           <Link
             href="/blog#flight-guides"
-            className="inline-flex items-center gap-1.5 text-xs font-extrabold text-orange-700 hover:underline dark:text-amber-300 sm:text-sm"
+            className="text-xs font-bold text-[#1956b4] hover:underline dark:text-blue-300"
           >
-            <span>Explore All Travel Guides</span>
-            <ArrowRightIcon className="h-4 w-4" />
+            All guides →
           </Link>
         </div>
 
-        <div className="mt-7 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-4 grid gap-3.5 md:grid-cols-3">
           {FLIGHT_BLOG_POSTS.map((post) => (
-            <article
+            <Link
               key={post.slug}
-              className="flex flex-col justify-between rounded-3xl border border-line bg-card p-5 shadow-xs transition hover:-translate-y-1 hover:border-orange-500/50 hover:shadow-md sm:p-6"
+              href={`/blog/${post.slug}`}
+              className="group flex flex-col justify-between rounded-xl border border-line bg-card p-4 shadow-2xs transition hover:border-[#1956b4] hover:shadow-sm"
             >
               <div>
-                <div className="flex items-center justify-between gap-2 text-xs">
-                  <span className="rounded-full bg-orange-500/15 px-2.5 py-1 font-bold text-orange-800 dark:text-amber-300">
+                <div className="flex items-center justify-between text-[11px] text-ink-muted">
+                  <span className="font-semibold text-[#1956b4] dark:text-blue-300">
                     {post.category}
                   </span>
-                  <span className="inline-flex items-center gap-1 font-medium text-ink-muted">
-                    <ClockIcon className="h-3.5 w-3.5" />
-                    <span>{post.readTime}</span>
+                  <span className="inline-flex items-center gap-1">
+                    <ClockIcon className="h-3 w-3" />
+                    {post.readTime}
                   </span>
                 </div>
-
-                <h3 className="mt-3.5 text-base font-extrabold leading-snug text-ink sm:text-lg">
-                  <Link
-                    href={`/blog/${post.slug}`}
-                    className="transition hover:text-orange-600 dark:hover:text-amber-300"
-                  >
-                    {post.title}
-                  </Link>
+                <h3 className="mt-2 line-clamp-2 text-sm font-bold leading-snug text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-300">
+                  {post.title}
                 </h3>
-
-                <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-ink-soft">
+                <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-ink-muted">
                   {post.excerpt}
                 </p>
               </div>
-
-              <div className="mt-5 flex items-center justify-between border-t border-line pt-3.5 text-xs">
-                <span className="font-semibold text-ink-muted">
-                  {post.author.name}
-                </span>
-                <Link
-                  href={`/blog/${post.slug}`}
-                  className="inline-flex items-center gap-1 font-extrabold text-orange-600 hover:text-orange-800 dark:text-amber-300"
-                >
-                  <span>Read Guide</span>
-                  <ArrowRightIcon className="h-3.5 w-3.5" />
-                </Link>
-              </div>
-            </article>
+              <span className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-[#fc6203]">
+                <span>Read article</span>
+                <ArrowRightIcon className="h-3.5 w-3.5" />
+              </span>
+            </Link>
           ))}
         </div>
       </section>
 
-      {/* SEO FAQ ACCORDION */}
+      {/* CLEAN FAQ ACCORDION */}
       <section
         id="faq"
-        className="mx-auto mt-14 max-w-4xl px-4 sm:mt-20 sm:px-6 lg:px-8"
+        className="mx-auto mt-10 max-w-5xl px-4 sm:mt-12 sm:px-6 lg:px-8"
       >
-        <div className="text-center">
-          <div className="inline-flex items-center gap-2 text-orange-700 dark:text-amber-300">
-            <HelpCircleIcon className="h-5 w-5" />
-            <span className="text-xs font-extrabold uppercase tracking-[0.18em]">
-              FREQUENTLY ASKED QUESTIONS
-            </span>
-          </div>
-          <h2 className="mt-2 text-2xl font-black tracking-tight text-ink sm:text-3xl">
-            Live Flight Status, Terminals &amp; Delays — FAQs
+        <div className="rounded-2xl border border-line bg-card p-5 sm:p-6">
+          <h2 className="text-lg font-extrabold text-ink sm:text-xl">
+            Frequently Asked Questions
           </h2>
-        </div>
-
-        <div className="mt-7 space-y-3">
-          {FLIGHT_STATUS_FAQS.map((faq) => (
-            <details
-              key={faq.question}
-              className="group rounded-2xl border border-line bg-card p-4 transition open:border-orange-500/45 sm:p-5"
-            >
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-left text-sm font-extrabold text-ink sm:text-base">
-                <span>{faq.question}</span>
-                <ChevronDownIcon className="h-4 w-4 shrink-0 text-ink-muted transition-transform duration-200 group-open:rotate-180 group-open:text-orange-600" />
-              </summary>
-              <p className="mt-3 border-t border-line pt-3 text-xs leading-relaxed text-ink-soft sm:text-sm">
-                {faq.answer}
-              </p>
-            </details>
-          ))}
+          <div className="mt-4 divide-y divide-line">
+            {FLIGHT_STATUS_FAQS.map((faq) => (
+              <details key={faq.question} className="group py-3.5">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-sm font-bold text-ink">
+                  <span>{faq.question}</span>
+                  <ChevronDownIcon className="h-4 w-4 shrink-0 text-ink-muted transition-transform group-open:rotate-180 group-open:text-[#1956b4]" />
+                </summary>
+                <p className="mt-2 text-xs leading-relaxed text-ink-soft sm:text-sm">
+                  {faq.answer}
+                </p>
+              </details>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* BOTTOM CROSS-TOOL CTA BANNER */}
-      <section className="mx-auto mt-14 max-w-6xl px-4 sm:mt-20 sm:px-6 lg:px-8">
-        <div className="ta-cta-banner flex flex-col items-start justify-between gap-6 rounded-3xl p-6 sm:p-8 lg:flex-row lg:items-center">
-          <div className="max-w-xl">
-            <span className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-orange-800 dark:text-amber-300">
-              <PlaneIcon className="h-4 w-4" />
-              <span>Complete Air &amp; Rail Companion</span>
-            </span>
-            <h2 className="mt-2 text-xl font-black text-ink sm:text-2xl">
-              Check Cabin Baggage Rules or Connecting Train Status
+      {/* SIMPLE RELATED TOOLS FOOTER CARD */}
+      <section className="mx-auto mt-8 max-w-5xl px-4 sm:px-6 lg:px-8">
+        <div className="ta-cta-banner flex flex-col items-start justify-between gap-4 rounded-2xl p-5 sm:flex-row sm:items-center sm:p-6">
+          <div>
+            <h2 className="text-base font-bold text-ink sm:text-lg">
+              Need Baggage Limits or Connecting Train Status?
             </h2>
-            <p className="mt-1.5 text-sm text-ink-soft">
-              Verify airline-wise 7 kg cabin &amp; 15–30 kg check-in allowances,
-              calculate airport arrival buffers, or track connecting Indian
-              Railways trains live.
+            <p className="mt-0.5 text-xs text-ink-soft sm:text-sm">
+              Check 7 kg / 15 kg airline baggage rules or track connecting
+              Indian Railways trains live.
             </p>
           </div>
-
-          <div className="flex w-full flex-wrap gap-3 sm:w-auto">
+          <div className="flex flex-wrap gap-2.5">
             <Link
               href="/tools/air"
-              className="ta-btn-primary inline-flex flex-1 items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-extrabold sm:flex-initial"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-line-strong bg-card px-4 py-2.5 text-xs font-bold text-ink transition hover:border-[#1956b4]"
             >
-              <LuggageIcon className="h-4 w-4" />
-              <span>Baggage &amp; Buffer Tools</span>
+              <LuggageIcon className="h-4 w-4 text-[#1956b4]" />
+              <span>Baggage Rules</span>
             </Link>
             <Link
               href="/rail/live-status"
-              className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl border border-line-strong bg-card px-5 py-3 text-sm font-extrabold text-ink transition hover:border-orange-500 sm:flex-initial"
+              className="ta-btn-primary inline-flex items-center gap-1.5 rounded-lg px-4 py-2.5 text-xs font-bold"
             >
-              <TrainIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
-              <span>Live Train Radar</span>
+              <TrainIcon className="h-4 w-4" />
+              <span>Live Train Status</span>
             </Link>
           </div>
         </div>
@@ -748,4 +534,3 @@ export default async function LiveFlightStatusPage() {
     </main>
   );
 }
-

@@ -5,10 +5,7 @@ import {
   CheckCircleIcon,
   ClockIcon,
   LuggageIcon,
-  NavigationIcon,
-  PlaneIcon,
   ShieldCheckIcon,
-  SparklesIcon,
 } from "./Icons";
 
 const AIRLINES = [
@@ -64,11 +61,7 @@ export function AirToolsClient() {
     if (!Number.isFinite(h) || !Number.isFinite(m)) return "2.5 hours prior";
 
     const bufferMinutes =
-      flightType === "international"
-        ? 195
-        : hasCheckinBag
-          ? 135
-          : 100;
+      flightType === "international" ? 195 : hasCheckinBag ? 135 : 100;
 
     const depTotal = h * 60 + m;
     const arriveTotal = (depTotal - bufferMinutes + 1440) % 1440;
@@ -83,40 +76,39 @@ export function AirToolsClient() {
   };
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-6">
       {/* Tool 1: Baggage Allowance Checker */}
       <section
         id="baggage"
-        className="scroll-mt-24 rounded-3xl border border-line bg-card p-6 shadow-lg shadow-black/5 dark:shadow-black/25 sm:p-8"
+        className="scroll-mt-24 rounded-2xl border border-line bg-card p-5 shadow-sm sm:p-6"
       >
         <div className="flex items-center gap-3">
-          <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-orange-500/15 text-orange-700 dark:text-amber-300">
-            <LuggageIcon className="h-5 w-5" />
+          <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
+            <LuggageIcon className="h-4 w-4" />
           </span>
           <div>
-            <h2 className="text-xl font-extrabold text-ink">
+            <h2 className="text-base font-extrabold text-ink sm:text-lg">
               Airline Baggage Allowance Checker
             </h2>
-            <p className="text-sm text-ink-soft">
-              Select your carrier &amp; sector to inspect standard cabin and
-              check-in limits.
+            <p className="text-xs text-ink-soft">
+              Select your airline &amp; sector to check cabin and check-in
+              limits.
             </p>
           </div>
         </div>
 
-        <div className="mt-6">
+        <div className="mt-4 rounded-xl border border-line-strong bg-input px-3.5 py-2.5">
           <label
             htmlFor="airline-select"
-            className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-ink-soft"
+            className="block text-[11px] font-bold uppercase tracking-wider text-ink-muted"
           >
-            <PlaneIcon className="h-3.5 w-3.5 text-orange-600 dark:text-amber-400" />
-            <span>Choose Carrier &amp; Fare Sector</span>
+            Airline &amp; Fare Sector
           </label>
           <select
             id="airline-select"
             value={selectedAirlineId}
             onChange={(e) => setSelectedAirlineId(e.target.value)}
-            className="mt-2 w-full rounded-2xl border-2 border-line bg-input px-4 py-3.5 text-sm font-bold text-ink focus:border-orange-500 focus:outline-none"
+            className="mt-1 w-full bg-transparent text-sm font-bold text-ink focus:outline-none sm:text-base"
           >
             {AIRLINES.map((airline) => (
               <option key={airline.id} value={airline.id}>
@@ -126,40 +118,36 @@ export function AirToolsClient() {
           </select>
         </div>
 
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="rounded-2xl border border-orange-500/25 bg-subcard p-4">
-            <p className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-orange-700 dark:text-orange-300">
-              <LuggageIcon className="h-3.5 w-3.5" />
-              <span>Cabin Baggage</span>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="rounded-xl border border-line bg-subcard p-3.5">
+            <p className="text-[11px] font-bold uppercase tracking-wider text-ink-muted">
+              Cabin Baggage
             </p>
-            <p className="mt-1.5 text-sm font-extrabold text-ink">
+            <p className="mt-1 text-sm font-bold text-ink">
               {selectedAirline.cabin}
             </p>
           </div>
-          <div className="rounded-2xl border border-amber-500/30 bg-subcard p-4">
-            <p className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-800 dark:text-amber-300">
-              <LuggageIcon className="h-3.5 w-3.5" />
-              <span>Check-In Allowance</span>
+          <div className="rounded-xl border border-line bg-subcard p-3.5">
+            <p className="text-[11px] font-bold uppercase tracking-wider text-ink-muted">
+              Check-In Allowance
             </p>
-            <p className="mt-1.5 text-sm font-extrabold text-ink">
+            <p className="mt-1 text-sm font-bold text-ink">
               {selectedAirline.checkin}
             </p>
           </div>
-          <div className="rounded-2xl border border-yellow-500/30 bg-subcard p-4">
-            <p className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-800 dark:text-yellow-300">
-              <ClockIcon className="h-3.5 w-3.5" />
-              <span>Bag Drop Closes</span>
+          <div className="rounded-xl border border-line bg-subcard p-3.5">
+            <p className="text-[11px] font-bold uppercase tracking-wider text-ink-muted">
+              Bag Drop Closes
             </p>
-            <p className="mt-1.5 text-sm font-extrabold text-ink">
+            <p className="mt-1 text-sm font-bold text-ink">
               {selectedAirline.checkinClose}
             </p>
           </div>
-          <div className="rounded-2xl border border-rose-500/25 bg-subcard p-4">
-            <p className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-rose-700 dark:text-rose-300">
-              <NavigationIcon className="h-3.5 w-3.5" />
-              <span>Boarding Gate Closes</span>
+          <div className="rounded-xl border border-line bg-subcard p-3.5">
+            <p className="text-[11px] font-bold uppercase tracking-wider text-ink-muted">
+              Boarding Gate Closes
             </p>
-            <p className="mt-1.5 text-sm font-extrabold text-ink">
+            <p className="mt-1 text-sm font-bold text-rose-600 dark:text-rose-400">
               {selectedAirline.gateClose}
             </p>
           </div>
@@ -169,36 +157,36 @@ export function AirToolsClient() {
       {/* Tool 2: Airport Arrival Buffer Planner */}
       <section
         id="buffer"
-        className="scroll-mt-24 rounded-3xl border border-line bg-card p-6 shadow-lg shadow-black/5 dark:shadow-black/25 sm:p-8"
+        className="scroll-mt-24 rounded-2xl border border-line bg-card p-5 shadow-sm sm:p-6"
       >
         <div className="flex items-center gap-3">
-          <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-amber-500/18 text-amber-800 dark:text-amber-300">
-            <ClockIcon className="h-5 w-5" />
+          <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
+            <ClockIcon className="h-4 w-4" />
           </span>
           <div>
-            <h2 className="text-xl font-extrabold text-ink">
-              Airport Arrival &amp; Buffer Calculator
+            <h2 className="text-base font-extrabold text-ink sm:text-lg">
+              Airport Arrival Time Calculator
             </h2>
-            <p className="text-sm text-ink-soft">
-              Find the stress-free terminal arrival time for your scheduled
-              flight departure.
+            <p className="text-xs text-ink-soft">
+              Calculate the recommended terminal arrival time for your scheduled
+              departure.
             </p>
           </div>
         </div>
 
-        <div className="mt-6 grid gap-5 md:grid-cols-3">
-          <div>
-            <label className="block text-xs font-extrabold uppercase tracking-wider text-ink-soft">
-              Flight Type
-            </label>
-            <div className="mt-2 grid grid-cols-2 gap-2 rounded-2xl bg-subcard p-1.5">
+        <div className="mt-4 grid divide-y divide-line rounded-xl border border-line-strong bg-input md:grid-cols-3 md:divide-x md:divide-y-0">
+          <div className="px-3.5 py-2.5">
+            <span className="block text-[11px] font-bold uppercase tracking-wider text-ink-muted">
+              Sector Type
+            </span>
+            <div className="mt-1.5 grid grid-cols-2 gap-1 rounded-lg bg-subcard p-0.5">
               <button
                 type="button"
                 onClick={() => setFlightType("domestic")}
-                className={`cursor-pointer rounded-xl py-2 text-xs font-extrabold transition ${
+                className={`cursor-pointer rounded-md py-1.5 text-xs font-bold transition ${
                   flightType === "domestic"
-                    ? "ta-btn-primary"
-                    : "text-ink-soft hover:bg-card hover:text-ink"
+                    ? "bg-[#1956b4] text-white"
+                    : "text-ink-soft hover:text-ink"
                 }`}
               >
                 Domestic
@@ -206,10 +194,10 @@ export function AirToolsClient() {
               <button
                 type="button"
                 onClick={() => setFlightType("international")}
-                className={`cursor-pointer rounded-xl py-2 text-xs font-extrabold transition ${
+                className={`cursor-pointer rounded-md py-1.5 text-xs font-bold transition ${
                   flightType === "international"
-                    ? "ta-btn-primary"
-                    : "text-ink-soft hover:bg-card hover:text-ink"
+                    ? "bg-[#1956b4] text-white"
+                    : "text-ink-soft hover:text-ink"
                 }`}
               >
                 International
@@ -217,53 +205,49 @@ export function AirToolsClient() {
             </div>
           </div>
 
-          <div>
+          <div className="px-3.5 py-2.5">
             <label
               htmlFor="dep-time"
-              className="block text-xs font-extrabold uppercase tracking-wider text-ink-soft"
+              className="block text-[11px] font-bold uppercase tracking-wider text-ink-muted"
             >
-              Scheduled Takeoff Time
+              Scheduled Departure
             </label>
             <input
               id="dep-time"
               type="time"
               value={departureHour}
               onChange={(e) => setDepartureHour(e.target.value)}
-              className="mt-2 w-full rounded-2xl border-2 border-line bg-input px-4 py-2.5 font-mono text-sm font-bold text-ink focus:border-orange-500 focus:outline-none"
+              className="mt-1.5 w-full bg-transparent font-mono text-base font-bold text-ink focus:outline-none"
             />
           </div>
 
-          <div>
-            <label className="block text-xs font-extrabold uppercase tracking-wider text-ink-soft">
-              Luggage Mode
-            </label>
+          <div className="px-3.5 py-2.5">
+            <span className="block text-[11px] font-bold uppercase tracking-wider text-ink-muted">
+              Baggage Type
+            </span>
             <button
               type="button"
               onClick={() => setHasCheckinBag((v) => !v)}
-              className="mt-2 flex w-full cursor-pointer items-center justify-between rounded-2xl border-2 border-line bg-input px-4 py-2.5 text-sm font-bold text-ink transition hover:border-orange-500"
+              className="mt-1.5 flex w-full cursor-pointer items-center justify-between rounded-lg border border-line bg-subcard px-3 py-1.5 text-xs font-bold text-ink hover:border-[#1956b4]"
             >
-              <span className="inline-flex items-center gap-2">
-                <LuggageIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
-                <span>
-                  {hasCheckinBag ? "With Check-In Bag" : "Cabin Bag Only"}
-                </span>
+              <span>
+                {hasCheckinBag ? "With Check-In Bag" : "Cabin Bag Only"}
               </span>
-              <PlaneIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
+              <span className="text-[#1956b4] dark:text-blue-400">Switch</span>
             </button>
           </div>
         </div>
 
-        <div className="ta-cta-banner mt-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl p-5">
+        <div className="ta-cta-banner mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl p-4">
           <div>
-            <p className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-orange-800 dark:text-amber-300">
-              <SparklesIcon className="h-3.5 w-3.5" />
-              <span>Recommended Terminal Entry Time</span>
+            <p className="text-xs font-bold uppercase tracking-wider text-[#1956b4] dark:text-blue-300">
+              Recommended Terminal Entry Time
             </p>
-            <p className="mt-1 text-sm text-ink-soft">
+            <p className="mt-0.5 text-xs text-ink-soft">
               Includes security queue, bag drop &amp; boarding gate buffer
             </p>
           </div>
-          <p className="font-mono text-2xl font-black text-orange-700 dark:text-amber-300 sm:text-3xl">
+          <p className="font-mono text-2xl font-black text-[#1956b4] dark:text-blue-300">
             {computeArrivalRecommendation()}
           </p>
         </div>
@@ -272,24 +256,23 @@ export function AirToolsClient() {
       {/* Tool 3: Boarding & DigiYatra Checklist */}
       <section
         id="checklist"
-        className="scroll-mt-24 rounded-3xl border border-line bg-card p-6 shadow-lg shadow-black/5 dark:shadow-black/25 sm:p-8"
+        className="scroll-mt-24 rounded-2xl border border-line bg-card p-5 shadow-sm sm:p-6"
       >
         <div className="flex items-center gap-3">
-          <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-yellow-500/20 text-amber-900 dark:text-yellow-300">
-            <ShieldCheckIcon className="h-5 w-5" />
+          <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
+            <ShieldCheckIcon className="h-4 w-4" />
           </span>
           <div>
-            <h2 className="text-xl font-extrabold text-ink">
+            <h2 className="text-base font-extrabold text-ink sm:text-lg">
               Pre-Flight &amp; DigiYatra Boarding Checklist
             </h2>
-            <p className="text-sm text-ink-soft">
-              Avoid last-minute counter surprises with these essential aviation
-              checks.
+            <p className="text-xs text-ink-soft">
+              Essential checks before entering the airport terminal.
             </p>
           </div>
         </div>
 
-        <div className="mt-6 grid gap-4 sm:grid-cols-2">
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
           {[
             "Complete online Web Check-In 48h to 2h prior to departure to lock your seat.",
             "Keep power banks, lithium batteries & e-devices strictly inside Cabin Baggage.",
@@ -298,10 +281,10 @@ export function AirToolsClient() {
           ].map((tip) => (
             <div
               key={tip}
-              className="flex items-start gap-3 rounded-2xl border border-line bg-subcard p-4"
+              className="flex items-start gap-2.5 rounded-xl border border-line bg-subcard p-3.5"
             >
-              <CheckCircleIcon className="mt-0.5 h-5 w-5 text-orange-600 dark:text-amber-400" />
-              <p className="text-sm font-medium leading-relaxed text-ink">
+              <CheckCircleIcon className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
+              <p className="text-xs leading-relaxed text-ink sm:text-sm">
                 {tip}
               </p>
             </div>
