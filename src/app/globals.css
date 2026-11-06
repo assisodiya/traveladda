@@ -9,7 +9,7 @@
   --ta-card: #ffffff;
   --ta-subcard: #f5efe6;
   --ta-input: #fcf9f5;
-  --ta-nav: rgba(255, 252, 248, 0.92);
+  --ta-nav: rgba(255, 252, 248, 0.94);
   --ta-border: #eae0d3;
   --ta-border-strong: #d8c8b4;
   --ta-ink: #1c1917;
@@ -24,7 +24,7 @@ html.dark {
   --ta-card: #221e1a;
   --ta-subcard: #2c2621;
   --ta-input: #181512;
-  --ta-nav: rgba(20, 18, 16, 0.92);
+  --ta-nav: rgba(20, 18, 16, 0.94);
   --ta-border: #383028;
   --ta-border-strong: #4d4237;
   --ta-ink: #faf7f2;
@@ -52,12 +52,14 @@ html {
   scroll-behavior: smooth;
   background-color: var(--ta-canvas);
   color: var(--ta-ink);
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
   font-family: var(--font-sans);
   background-color: var(--ta-canvas);
   color: var(--ta-ink);
+  overflow-x: clip;
   transition:
     background-color 220ms ease,
     color 180ms ease;
@@ -75,8 +77,8 @@ body {
 .ta-hero {
   background-color: #fff7ed;
   background-image:
-    radial-gradient(circle at 16% 18%, rgba(234, 88, 12, 0.12), transparent 46%),
-    radial-gradient(circle at 84% 16%, rgba(245, 158, 11, 0.14), transparent 46%),
+    radial-gradient(circle at 16% 18%, rgba(234, 88, 12, 0.13), transparent 46%),
+    radial-gradient(circle at 84% 16%, rgba(245, 158, 11, 0.15), transparent 46%),
     linear-gradient(180deg, #fff7ed 0%, #fefce8 55%, #faf7f2 100%);
   border-bottom: 1px solid var(--ta-border);
 }
@@ -84,7 +86,7 @@ body {
 html.dark .ta-hero {
   background-color: #191512;
   background-image:
-    radial-gradient(circle at 16% 18%, rgba(249, 115, 22, 0.15), transparent 48%),
+    radial-gradient(circle at 16% 18%, rgba(249, 115, 22, 0.16), transparent 48%),
     radial-gradient(circle at 84% 16%, rgba(251, 191, 36, 0.12), transparent 46%),
     linear-gradient(180deg, #211a14 0%, #191512 58%, #141210 100%);
   border-bottom: 1px solid var(--ta-border);
@@ -112,6 +114,16 @@ html.dark .ta-ticket-header {
     #261d16 100%
   );
   border-bottom: 1px solid #4a3828;
+  color: #faf7f2;
+}
+
+/* Live Radar Cockpit Surface */
+.ta-live-cockpit {
+  background-color: #1c1613;
+  background-image:
+    radial-gradient(circle at 12% 20%, rgba(249, 115, 22, 0.24), transparent 50%),
+    radial-gradient(circle at 88% 80%, rgba(16, 185, 129, 0.16), transparent 48%),
+    linear-gradient(135deg, #1f1712 0%, #181411 55%, #1c1917 100%);
   color: #faf7f2;
 }
 
@@ -162,6 +174,82 @@ html.dark .ta-btn-primary {
   box-shadow: 0 10px 26px -8px rgba(249, 115, 22, 0.38);
 }
 
+/* Live Train Blinking & Radar Animations */
+@keyframes taRadarRipple {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.85;
+  }
+  75% {
+    transform: scale(2.05);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(2.15);
+    opacity: 0;
+  }
+}
+
+@keyframes taTrainBlink {
+  0%,
+  100% {
+    opacity: 1;
+    filter: drop-shadow(0 0 8px rgba(249, 115, 22, 0.85));
+  }
+  50% {
+    opacity: 0.38;
+    filter: drop-shadow(0 0 2px rgba(249, 115, 22, 0.25));
+  }
+}
+
+@keyframes taEmeraldBlink {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  }
+  50% {
+    opacity: 0.3;
+    box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+  }
+}
+
+@keyframes taTrackDash {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+
+.ta-radar-ring {
+  animation: taRadarRipple 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.ta-radar-ring-delay {
+  animation: taRadarRipple 2s cubic-bezier(0, 0, 0.2, 1) 0.9s infinite;
+}
+
+.ta-train-blink {
+  animation: taTrainBlink 1.25s ease-in-out infinite;
+}
+
+.ta-led-blink {
+  animation: taEmeraldBlink 1.2s ease-in-out infinite;
+}
+
+.ta-track-flow {
+  animation: taTrackDash 1.3s linear infinite;
+}
+
+/* Clean touch horizontal scrollbars */
+.ta-no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.ta-no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 /* Prevent Chrome/Safari autofill from painting white/light-blue boxes in dark mode */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
@@ -174,6 +262,16 @@ input:-webkit-autofill:focus {
 :focus-visible {
   outline: 2.5px solid #f97316;
   outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ta-radar-ring,
+  .ta-radar-ring-delay,
+  .ta-train-blink,
+  .ta-led-blink,
+  .ta-track-flow {
+    animation: none !important;
+  }
 }
 
 @media print {

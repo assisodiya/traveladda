@@ -1106,3 +1106,60 @@ export function MoonIcon({ className = "h-5 w-5", ...props }: IconProps) {
     </svg>
   );
 }
+
+export function LiveTrainBeaconIcon({
+  size = "md",
+  active = true,
+}: {
+  size?: "sm" | "md" | "lg";
+  active?: boolean;
+}) {
+  const dims =
+    size === "lg"
+      ? "h-12 w-12"
+      : size === "sm"
+        ? "h-7 w-7"
+        : "h-9 w-9";
+  const iconDims =
+    size === "lg"
+      ? "h-6 w-6"
+      : size === "sm"
+        ? "h-3.5 w-3.5"
+        : "h-4.5 w-4.5";
+
+  return (
+    <span className={`relative inline-flex ${dims} shrink-0 items-center justify-center`}>
+      {active && (
+        <>
+          <span
+            aria-hidden="true"
+            className="ta-radar-ring absolute inset-0 rounded-full bg-orange-500/45 dark:bg-amber-400/40"
+          />
+          <span
+            aria-hidden="true"
+            className="ta-radar-ring-delay absolute inset-0 rounded-full bg-emerald-400/35"
+          />
+        </>
+      )}
+      <span
+        style={{
+          backgroundImage: active
+            ? "linear-gradient(135deg, #ea580c 0%, #f59e0b 100%)"
+            : "linear-gradient(135deg, #57534e 0%, #78716c 100%)",
+        }}
+        className={`relative z-10 inline-flex h-full w-full items-center justify-center rounded-full text-white shadow-lg ring-2 ring-white dark:ring-stone-900 ${
+          active ? "ta-train-blink" : ""
+        }`}
+      >
+        <TrainIcon className={iconDims} />
+        {active && (
+          <span
+            aria-hidden="true"
+            className="ta-led-blink absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border border-white bg-emerald-400"
+          />
+        )}
+      </span>
+    </span>
+  );
+}
+

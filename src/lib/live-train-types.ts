@@ -22,11 +22,19 @@ export interface CoachUnit {
   label: string;
 }
 
+export type TrainTrackingState =
+  | "running"
+  | "halted"
+  | "not-started"
+  | "completed"
+  | "cancelled";
+
 export interface NormalizedNextHalt {
   stationCode: string;
   stationName: string;
   sequence: number;
   distanceKm: number;
+  distanceFromCurrentKm: number;
   scheduledArrival: string | null;
   expectedArrival: string | null;
   platform: string | null;
@@ -47,6 +55,60 @@ export interface NormalizedCurrentLocation {
   segmentProgress: number;
   speedKmh: number;
   delayMinutes: number;
+}
+
+export interface NormalizedLivePosition {
+  trackingState: TrainTrackingState;
+  isMoving: boolean;
+  isHaltedAtStation: boolean;
+  headline: string;
+  subheadline: string;
+  delayStatus: string;
+  lastStation: {
+    code: string;
+    name: string;
+    sequence: number;
+    distanceKm: number;
+    isHalt: boolean;
+  } | null;
+  nextStation: {
+    code: string;
+    name: string;
+    sequence: number;
+    distanceKm: number;
+    isHalt: boolean;
+  } | null;
+  previousHalt: {
+    code: string;
+    name: string;
+    sequence: number;
+    distanceKm: number;
+    departedAt: string | null;
+    platform: string | null;
+  } | null;
+  distanceCoveredKm: number;
+  distanceRemainingKm: number;
+  distanceToNextHaltKm: number | null;
+  haltSegmentProgress: number;
+  betweenHaltAfterSeq: number | null;
+  betweenAllAfterSeq: number | null;
+  estimatedSpeedKmh: number;
+  speedSource: "gps" | "section" | "average" | "stationary";
+}
+
+export interface NormalizedLiveSummary {
+  trainLabel: string;
+  routeLabel: string;
+  currentStatusText: string;
+  delayText: string;
+  progressPercent: number;
+  distanceCoveredKm: number;
+  distanceTotalKm: number;
+  distanceRemainingKm: number;
+  haltsCompleted: number;
+  haltsTotal: number;
+  haltsRemaining: number;
+  lastUpdatedIst: string;
 }
 
 export type RouteStopState = "departed" | "current" | "upcoming";
@@ -80,11 +142,16 @@ export interface NormalizedLiveTrainData {
   trainNumber: string;
   trainName: string;
   startDate: string;
+  autoDetectedStartDate: boolean;
+  lastUpdatedAt: string;
   status: string;
   statusLabel: string;
+  trackingState: TrainTrackingState;
   isLive: boolean;
   trackingMode: string;
   delayMinutes: number;
+  summary: NormalizedLiveSummary;
+  livePosition: NormalizedLivePosition;
   train: {
     number: string;
     name: string;
@@ -118,7 +185,7 @@ export interface NormalizedLiveTrainData {
 
 export interface OwnedLiveTrainApiResponse {
   success: boolean;
-  provider: "TravelAdda Owned Rail API v1";
+  provider: "TravelAdda Owned Rail API v2";
   endpoint: string;
   data?: NormalizedLiveTrainData;
   error?: {
@@ -135,6 +202,121 @@ export interface OwnedLiveTrainApiResponse {
     responseTimeMs: number;
   };
 }
+
+export interface TrainSearchItem {
+  trainNumber: string;
+  trainName: string;
+  sourceCode: string;
+  sourceName: string;
+  destinationCode: string;
+  destinationName: string;
+  type: string;
+  runDays: string[];
+  isDaily: boolean;
+}
+
+export interface OwnedTrainSearchApiResponse {
+  success: boolean;
+  provider: "TravelAdda Owned Rail API v2";
+  query: string;
+  count: number;
+  data: TrainSearchItem[];
+  meta: {
+    fetchedAt: string;
+    responseTimeMs: number;
+  };
+}
+
+export const POPULAR_LIVE_TRAINS: TrainSearchItem[] = [
+  {
+    trainNumber: "12002",
+    trainName: "New Delhi - Rani Kamlapati Shatabdi Express",
+    sourceCode: "NDLS",
+    sourceName: "New Delhi",
+    destinationCode: "RKMP",
+    destinationName: "Rani Kamlapati",
+    type: "Shatabdi",
+    runDays: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
+    isDaily: true,
+  },
+  {
+    trainNumber: "12951",
+    trainName: "Mumbai Central - New Delhi Tejas Rajdhani Express",
+    sourceCode: "MMCT",
+    sourceName: "Mumbai Central",
+    destinationCode: "NDLS",
+    destinationName: "New Delhi",
+    type: "Rajdhani",
+    runDays: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
+    isDaily: true,
+  },
+  {
+    trainNumber: "22436",
+    trainName: "New Delhi - Varanasi Vande Bharat Express",
+    sourceCode: "NDLS",
+    sourceName: "New Delhi",
+    destinationCode: "BSB",
+    destinationName: "Varanasi Jn",
+    type: "Vande Bharat",
+    runDays: ["mon", "tue", "wed", "fri", "sat", "sun"],
+    isDaily: false,
+  },
+  {
+    trainNumber: "12986",
+    trainName: "Delhi Sarai Rohilla - Jaipur AC Double Decker Express",
+    sourceCode: "DEE",
+    sourceName: "Delhi Sarai Rohilla",
+    destinationCode: "JP",
+    destinationName: "Jaipur Jn",
+    type: "Double Decker",
+    runDays: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
+    isDaily: true,
+  },
+  {
+    trainNumber: "12622",
+    trainName: "New Delhi - MGR Chennai Central Tamil Nadu Express",
+    sourceCode: "NDLS",
+    sourceName: "New Delhi",
+    destinationCode: "MAS",
+    destinationName: "MGR Chennai Central",
+    type: "Superfast",
+    runDays: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
+    isDaily: true,
+  },
+  {
+    trainNumber: "12301",
+    trainName: "Howrah - New Delhi Rajdhani Express",
+    sourceCode: "HWH",
+    sourceName: "Howrah Jn",
+    destinationCode: "NDLS",
+    destinationName: "New Delhi",
+    type: "Rajdhani",
+    runDays: ["mon", "tue", "wed", "thu", "fri", "sat"],
+    isDaily: false,
+  },
+  {
+    trainNumber: "12424",
+    trainName: "New Delhi - Dibrugarh Town Rajdhani Express",
+    sourceCode: "NDLS",
+    sourceName: "New Delhi",
+    destinationCode: "DBRG",
+    destinationName: "Dibrugarh",
+    type: "Rajdhani",
+    runDays: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
+    isDaily: true,
+  },
+  {
+    trainNumber: "12051",
+    trainName: "Mumbai CSMT - Madgaon Jan Shatabdi Express",
+    sourceCode: "CSMT",
+    sourceName: "Mumbai CSMT",
+    destinationCode: "MAO",
+    destinationName: "Madgaon Jn",
+    type: "Jan Shatabdi",
+    runDays: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
+    isDaily: true,
+  },
+];
 
 export const ALL_WEEK_DAYS = [
   { key: "mon", short: "M", label: "Mon" },
@@ -159,7 +341,9 @@ export function getTodayIstDateString(): string {
 export function shiftDateString(yyyyMmDd: string, offsetDays: number): string {
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(yyyyMmDd);
   const base = match
-    ? new Date(Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3])))
+    ? new Date(
+        Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3]))
+      )
     : new Date();
   base.setUTCDate(base.getUTCDate() + offsetDays);
   const y = base.getUTCFullYear();
@@ -183,8 +367,14 @@ export function formatReadableDate(yyyyMmDd: string): string {
   }).format(dt);
 }
 
-export function formatDurationMinutes(minutes: number | null | undefined): string {
-  if (typeof minutes !== "number" || !Number.isFinite(minutes) || minutes <= 0) {
+export function formatDurationMinutes(
+  minutes: number | null | undefined
+): string {
+  if (
+    typeof minutes !== "number" ||
+    !Number.isFinite(minutes) ||
+    minutes <= 0
+  ) {
     return "--";
   }
   const hrs = Math.floor(minutes / 60);
@@ -194,9 +384,26 @@ export function formatDurationMinutes(minutes: number | null | undefined): strin
   return `${hrs}h ${String(mins).padStart(2, "0")}m`;
 }
 
+export function formatDelayText(delayMinutes: number): string {
+  if (!Number.isFinite(delayMinutes) || delayMinutes === 0) {
+    return "Right On Time";
+  }
+  if (delayMinutes < 0) {
+    return `${Math.abs(Math.round(delayMinutes))} min Early`;
+  }
+  const rounded = Math.round(delayMinutes);
+  if (rounded >= 60) {
+    const hrs = Math.floor(rounded / 60);
+    const mins = rounded % 60;
+    return mins > 0
+      ? `Delayed by ${hrs}h ${mins}m`
+      : `Delayed by ${hrs}h`;
+  }
+  return `Delayed by ${rounded} min`;
+}
+
 export function formatIstTime(iso: string | null | undefined): string {
   if (!iso) return "--:--";
-  // Fast deterministic parse for ISO strings like 2026-11-11T17:25:00+05:30
   const timeMatch = /T(\d{2}):(\d{2})/.exec(iso);
   if (timeMatch && (iso.endsWith("+05:30") || !iso.endsWith("Z"))) {
     const h24 = Number(timeMatch[1]);
@@ -232,7 +439,9 @@ export function computeHaltMinutes(
 /**
  * Decodes Google-format encoded polyline (1e-5 precision) into [lat, lng] pairs.
  */
-export function decodePolyline(encoded: string | null | undefined): Array<[number, number]> {
+export function decodePolyline(
+  encoded: string | null | undefined
+): Array<[number, number]> {
   if (!encoded || typeof encoded !== "string") return [];
   const points: Array<[number, number]> = [];
   let index = 0;
@@ -270,7 +479,10 @@ export function decodePolyline(encoded: string | null | undefined): Array<[numbe
   return points;
 }
 
-export function classifyCoach(rawCode: string): { role: CoachRole; label: string } {
+export function classifyCoach(rawCode: string): {
+  role: CoachRole;
+  label: string;
+} {
   const code = rawCode.trim().toUpperCase();
   if (/^(ENG|LOCO|WDP|WAP|WAG)/.test(code)) {
     return { role: "locomotive", label: "Locomotive Engine" };
@@ -324,29 +536,48 @@ export function parseCoachPosition(raw: string | null | undefined): CoachUnit[] 
   });
 }
 
-export function formatTrainStatusLabel(status: string, isLive: boolean): string {
-  const clean = (status || "").toLowerCase().trim();
-  if (clean === "not-started" || clean === "scheduled") {
-    return "Not Started Yet";
+export function deriveTrackingState(
+  status: string,
+  locStatus?: string | null
+): TrainTrackingState {
+  const s = (status || "").toLowerCase().trim();
+  const loc = (locStatus || "").toLowerCase().trim();
+
+  if (s === "cancelled" || s === "diverted-cancelled") return "cancelled";
+  if (s === "completed" || s === "arrived" || s === "terminated") {
+    return "completed";
   }
-  if (clean === "running" || clean === "in-transit" || clean === "departed") {
-    return isLive ? "Running Live" : "In Transit";
+  if (s === "not-started" || s === "scheduled" || !s) {
+    return "not-started";
   }
-  if (clean === "at-station" || clean === "halted") {
-    return "Halted at Station";
+  if (
+    s === "at-station" ||
+    s === "halted" ||
+    loc === "at-station" ||
+    loc === "halted" ||
+    loc === "arrived"
+  ) {
+    return "halted";
   }
-  if (clean === "completed" || clean === "arrived" || clean === "terminated") {
-    return "Journey Completed";
-  }
-  if (clean === "cancelled") {
-    return "Train Cancelled";
-  }
-  if (isLive) return "Live Tracking Active";
-  return clean
-    ? clean
-        .split("-")
-        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-        .join(" ")
-    : "Scheduled";
+  return "running";
 }
 
+export function formatTrainStatusLabel(
+  status: string,
+  isActivelyTracked: boolean,
+  locStatus?: string | null
+): string {
+  const state = deriveTrackingState(status, locStatus);
+  switch (state) {
+    case "not-started":
+      return "Not Started Yet";
+    case "halted":
+      return "Halted at Station";
+    case "running":
+      return isActivelyTracked ? "Running Live" : "In Transit";
+    case "completed":
+      return "Journey Completed";
+    case "cancelled":
+      return "Train Cancelled";
+  }
+}

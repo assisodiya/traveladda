@@ -313,9 +313,9 @@ export function Navbar() {
 
   return (
     <header className="ta-navbar sticky top-0 z-50">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3.5 sm:px-6 lg:px-8">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-2.5 px-3.5 py-3 sm:gap-4 sm:px-6 sm:py-3.5 lg:px-8">
         {/* Main Brand Logo (Main Heading Only) */}
-        <Logo size="md" />
+        <Logo size="sm" />
 
         {/* Main Top Menu: Air, Rail, Hotel with Rich Tool Dropdowns */}
         <Suspense fallback={<DesktopDropdownBar pathname="" />}>
@@ -329,6 +329,7 @@ export function Navbar() {
             href="/rail/live-status"
             className="inline-flex items-center gap-1.5 rounded-xl border border-line-strong bg-subcard px-3.5 py-2.5 text-xs font-extrabold text-ink transition hover:border-orange-500 lg:text-sm"
           >
+            <span className="ta-led-blink h-2 w-2 rounded-full bg-emerald-500" />
             <RadarLiveIcon className="h-4 w-4 text-orange-600 dark:text-amber-400" />
             <span>Live Train</span>
           </Link>
@@ -341,8 +342,16 @@ export function Navbar() {
           </Link>
         </div>
 
-        {/* Mobile Actions */}
-        <div className="flex items-center gap-2 md:hidden">
+        {/* Mobile Actions: 1-Tap Live Train Pill + Theme + Menu */}
+        <div className="flex items-center gap-1.5 md:hidden">
+          <Link
+            href="/rail/live-status"
+            onClick={() => setMobileOpen(false)}
+            className="inline-flex items-center gap-1.5 rounded-xl border border-orange-500/35 bg-orange-500/12 px-2.5 py-2 text-xs font-extrabold text-orange-800 dark:text-amber-300"
+          >
+            <span className="ta-led-blink h-2 w-2 rounded-full bg-emerald-500" />
+            <span>Live Train</span>
+          </Link>
           <ThemeToggle />
           <button
             type="button"
@@ -362,7 +371,7 @@ export function Navbar() {
 
       {/* Mobile Dropdown Drawer */}
       {mobileOpen && (
-        <div className="border-t border-line bg-card px-4 py-4 shadow-xl md:hidden">
+        <div className="max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-line bg-card px-4 py-4 shadow-xl md:hidden">
           <div className="space-y-2">
             {MENU_CATEGORIES.map((cat) => {
               const expanded = mobileExpanded === cat.key;

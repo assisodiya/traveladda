@@ -19,8 +19,8 @@ import { Logo } from "./Logo";
 export function Footer() {
   return (
     <footer className="border-t border-line bg-band text-ink-soft">
-      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-16 lg:px-8">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-10">
           {/* Brand Column */}
           <div className="space-y-4">
             <Logo size="md" />

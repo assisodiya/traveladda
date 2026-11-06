@@ -8,18 +8,22 @@ export async function GET(
   await connection();
   const { trainNumber } = await params;
   const dateParam = request.nextUrl.searchParams.get("date");
+  const autoParam = request.nextUrl.searchParams.get("auto");
+  const autoDetectRunning =
+    autoParam === "1" || autoParam === "true" || !dateParam;
 
   const { httpStatus, body } = await fetchOwnedLiveTrainStatus(
     trainNumber,
-    dateParam
+    dateParam,
+    { autoDetectRunning }
   );
 
-  return Response.json(body, {
+  return new Response(JSON.stringify(body, null, 2), {
     status: httpStatus,
     headers: {
+      "Content-Type": "application/json; charset=utf-8",
       "Cache-Control": "no-store, must-revalidate",
-      "X-Powered-By": "TravelAdda-Rail-API",
+      "X-Powered-By": "TravelAdda-Rail-API-v2",
     },
   });
 }
-
