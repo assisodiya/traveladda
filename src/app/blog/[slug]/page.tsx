@@ -8,6 +8,7 @@ import {
   CheckCircleIcon,
   ChevronDownIcon,
   ClockIcon,
+  HotelIcon,
   LuggageIcon,
   PlaneIcon,
   TicketIcon,
@@ -15,9 +16,8 @@ import {
 } from "@/components/Icons";
 import {
   ALL_BLOG_POSTS,
-  FLIGHT_BLOG_POSTS,
+  FEATURED_SEO_BLOG_POSTS,
   getBlogPostBySlug,
-  RAIL_BLOG_POSTS,
 } from "@/lib/blog-data";
 
 export function generateStaticParams() {
@@ -54,6 +54,7 @@ export async function generateMetadata({
       type: "article",
       publishedTime: `${post.publishedIso}T06:00:00+05:30`,
       authors: [post.author.name],
+      tags: post.seoKeywords,
     },
     twitter: {
       card: "summary_large_image",
@@ -79,9 +80,34 @@ export default async function BlogArticlePage({
   }
 
   const isAirPost = post.domain === "air";
-  const sameDomainPosts = (
-    isAirPost ? FLIGHT_BLOG_POSTS : RAIL_BLOG_POSTS
-  ).filter((p) => p.slug !== post.slug);
+  const isHotelPost = post.domain === "hotel";
+  const sameDomainPosts = ALL_BLOG_POSTS.filter(
+    (p) => p.domain === post.domain && p.slug !== post.slug
+  ).slice(0, 5);
+  const featuredRelatedPosts = FEATURED_SEO_BLOG_POSTS.filter(
+    (p) => p.slug !== post.slug
+  ).slice(0, 4);
+
+  const estimatedWordCount = post.sections
+    .flatMap((s) => [
+      s.heading,
+      ...s.paragraphs,
+      ...(s.bullets?.map((b) => `${b.label} ${b.detail}`) ?? []),
+      s.callout ? `${s.callout.title} ${s.callout.text}` : "",
+    ])
+    .join(" ")
+    .split(/\s+/).length;
+
+  const domainBreadcrumbLabel = isAirPost
+    ? "Live Flight Status"
+    : isHotelPost
+      ? "Hotels & Stays"
+      : "Rail Tools";
+  const domainBreadcrumbHref = isAirPost
+    ? "/air/flight-status"
+    : isHotelPost
+      ? "/tools/hotel"
+      : "/rail/live-status";
 
   const jsonLdGraph: Record<string, unknown>[] = [
     {
@@ -91,6 +117,9 @@ export default async function BlogArticlePage({
       datePublished: `${post.publishedIso}T06:00:00+05:30`,
       dateModified: `${post.publishedIso}T06:00:00+05:30`,
       articleSection: post.category,
+      inLanguage: "en-IN",
+      isAccessibleForFree: true,
+      wordCount: estimatedWordCount,
       keywords: post.seoKeywords.join(", "),
       author: {
         "@type": "Person",
@@ -118,11 +147,17 @@ export default async function BlogArticlePage({
             name: "TravelAdda Live Flight Status Tracker",
             url: "https://traveladda.in/air/flight-status",
           }
-        : {
-            "@type": "WebApplication",
-            name: "TravelAdda Indian Railways Live & PNR Suite",
-            url: "https://traveladda.in/rail/live-status",
-          },
+        : isHotelPost
+          ? {
+              "@type": "WebApplication",
+              name: "TravelAdda Hotel Room GST Calculator & Stay Guide",
+              url: "https://traveladda.in/tools/hotel",
+            }
+          : {
+              "@type": "WebApplication",
+              name: "TravelAdda Indian Railways Live & PNR Suite",
+              url: "https://traveladda.in/rail/live-status",
+            },
     },
     {
       "@type": "BreadcrumbList",
@@ -142,10 +177,8 @@ export default async function BlogArticlePage({
         {
           "@type": "ListItem",
           position: 3,
-          name: isAirPost ? "Live Flight Status" : "Rail Tools",
-          item: isAirPost
-            ? "https://traveladda.in/air/flight-status"
-            : "https://traveladda.in/rail/live-status",
+          name: domainBreadcrumbLabel,
+          item: `https://traveladda.in${domainBreadcrumbHref}`,
         },
         {
           "@type": "ListItem",
@@ -200,11 +233,8 @@ export default async function BlogArticlePage({
               Guides
             </Link>
             <span>/</span>
-            <Link
-              href={isAirPost ? "/air/flight-status" : "/rail/pnr-status"}
-              className="hover:text-[#1956b4]"
-            >
-              {isAirPost ? "Flight Status" : "Rail"}
+            <Link href={domainBreadcrumbHref} className="hover:text-[#1956b4]">
+              {domainBreadcrumbLabel}
             </Link>
             <span>/</span>
             <span className="font-semibold text-ink">{post.category}</span>
@@ -215,11 +245,18 @@ export default async function BlogArticlePage({
               className={`rounded px-2.5 py-0.5 font-bold ${
                 isAirPost
                   ? "bg-blue-50 text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300"
-                  : "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300"
+                  : isHotelPost
+                    ? "bg-amber-50 text-amber-800 dark:bg-amber-500/15 dark:text-amber-300"
+                    : "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300"
               }`}
             >
               {post.category}
             </span>
+            {post.primaryKeyword && (
+              <span className="rounded bg-subcard px-2 py-0.5 font-mono text-[11px] font-semibold text-ink-soft">
+                #{post.primaryKeyword}
+              </span>
+            )}
             <span className="inline-flex items-center gap-1 text-ink-muted">
               <ClockIcon className="h-3.5 w-3.5" />
               <span>{post.readTime}</span>
@@ -247,11 +284,15 @@ export default async function BlogArticlePage({
             </div>
 
             <Link
-              href={isAirPost ? "/air/flight-status" : "/rail/live-status"}
+              href={domainBreadcrumbHref}
               className="ta-btn-primary inline-flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-xs font-bold"
             >
               <span>
-                {isAirPost ? "Check Flight Status" : "Spot Train Live"}
+                {isAirPost
+                  ? "Check Flight Status"
+                  : isHotelPost
+                    ? "Calculate Hotel GST"
+                    : "Spot Train Live"}
               </span>
               <ArrowRightIcon className="h-3.5 w-3.5" />
             </Link>
@@ -281,13 +322,55 @@ export default async function BlogArticlePage({
             </ul>
           </div>
 
+          {/* SEO Table of Contents */}
+          {post.sections.length > 1 && (
+            <nav
+              aria-label="Table of contents"
+              className="rounded-xl border border-line bg-subcard/40 p-4"
+            >
+              <p className="text-[11px] font-bold uppercase tracking-wider text-ink-muted">
+                In This Guide
+              </p>
+              <ol className="mt-2 grid gap-1.5 text-xs sm:grid-cols-2">
+                {post.sections.map((sec, idx) => (
+                  <li key={sec.heading}>
+                    <a
+                      href={`#section-${idx + 1}`}
+                      className="inline-flex items-start gap-1.5 font-semibold text-ink-soft hover:text-[#1956b4] dark:hover:text-blue-400"
+                    >
+                      <span className="font-mono text-[#1956b4] dark:text-blue-400">
+                        {idx + 1}.
+                      </span>
+                      <span className="line-clamp-1">{sec.heading}</span>
+                    </a>
+                  </li>
+                ))}
+                {post.faqs && post.faqs.length > 0 && (
+                  <li>
+                    <a
+                      href="#article-faqs"
+                      className="inline-flex items-start gap-1.5 font-semibold text-ink-soft hover:text-[#1956b4] dark:hover:text-blue-400"
+                    >
+                      <span className="font-mono text-[#1956b4] dark:text-blue-400">
+                        {post.sections.length + 1}.
+                      </span>
+                      <span>Frequently Asked Questions</span>
+                    </a>
+                  </li>
+                )}
+              </ol>
+            </nav>
+          )}
+
           {/* Contextual Quick Lookups */}
           {post.quickActionLinks && post.quickActionLinks.length > 0 && (
             <div className="rounded-xl border border-line bg-subcard/60 p-4">
               <p className="text-[11px] font-bold uppercase tracking-wider text-ink-muted">
                 {isAirPost
                   ? "Quick Live Flight Lookups"
-                  : "Quick Railway Lookups"}
+                  : isHotelPost
+                    ? "Quick Travel & Stay Tools"
+                    : "Quick Railway Lookups"}
               </p>
               <div className="mt-2.5 grid gap-2 sm:grid-cols-2">
                 {post.quickActionLinks.map((action) => (
@@ -299,8 +382,16 @@ export default async function BlogArticlePage({
                     <div className="flex min-w-0 items-center gap-2.5">
                       {action.airlineCode ? (
                         <AirlineLogo code={action.airlineCode} size="sm" />
-                      ) : (
+                      ) : action.href.includes("/hotel") ? (
+                        <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300">
+                          <HotelIcon className="h-4 w-4" />
+                        </span>
+                      ) : action.href.includes("/air") ? (
                         <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
+                          <PlaneIcon className="h-4 w-4" />
+                        </span>
+                      ) : (
+                        <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
                           <TrainIcon className="h-4 w-4" />
                         </span>
                       )}
@@ -321,8 +412,12 @@ export default async function BlogArticlePage({
           )}
 
           {/* Editorial Sections */}
-          {post.sections.map((section) => (
-            <section key={section.heading} className="space-y-3.5">
+          {post.sections.map((section, idx) => (
+            <section
+              id={`section-${idx + 1}`}
+              key={section.heading}
+              className="scroll-mt-24 space-y-3.5"
+            >
               <h2 className="text-lg font-extrabold tracking-tight text-ink sm:text-xl">
                 {section.heading}
               </h2>
@@ -369,7 +464,10 @@ export default async function BlogArticlePage({
 
           {/* Article FAQs */}
           {post.faqs && post.faqs.length > 0 && (
-            <section className="space-y-3 border-t border-line pt-6">
+            <section
+              id="article-faqs"
+              className="scroll-mt-24 space-y-3 border-t border-line pt-6"
+            >
               <h2 className="text-base font-extrabold text-ink sm:text-lg">
                 Frequently Asked Questions
               </h2>
@@ -389,25 +487,54 @@ export default async function BlogArticlePage({
             </section>
           )}
 
+          {/* SEO Topic Tags */}
+          {post.seoKeywords.length > 0 && (
+            <div className="border-t border-line pt-4">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-ink-muted">
+                Related Search Topics
+              </p>
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {post.seoKeywords.map((kw) => (
+                  <span
+                    key={kw}
+                    className="rounded-md border border-line bg-subcard px-2.5 py-1 text-xs text-ink-soft"
+                  >
+                    {kw}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Bottom In-Article CTA */}
           <div className="ta-live-cockpit flex flex-col justify-between gap-4 rounded-xl p-5 sm:flex-row sm:items-center">
             <div>
               <h3 className="text-base font-extrabold text-white">
                 {isAirPost
                   ? "Check Live Flight Status, Terminal & Boarding Gate"
-                  : "Spot Your Train's Live Station & Coach Position"}
+                  : isHotelPost
+                    ? "Calculate Hotel GST Slabs & Track Your Flight or Train"
+                    : "Spot Your Train's Live Station & Coach Position"}
               </h3>
               <p className="mt-0.5 text-xs text-slate-300">
                 {isAirPost
                   ? "Real-time departure, arrival, gate, and baggage carousel updates."
-                  : "Real-time station progress, platform numbers, and coach sequence."}
+                  : isHotelPost
+                    ? "Compare 0%, 12%, and 18% hotel GST slabs and track live PNR & flight arrivals."
+                    : "Real-time station progress, platform numbers, and coach sequence."}
               </p>
             </div>
             <Link
-              href={isAirPost ? "/air/flight-status" : "/rail/live-status"}
+              href={domainBreadcrumbHref}
               className="ta-btn-primary inline-flex shrink-0 items-center justify-center gap-1.5 rounded-lg px-4 py-2.5 text-xs font-bold"
             >
-              <span>{isAirPost ? "Track Flight" : "Spot Train"}</span>
+              <span>
+                {isAirPost
+                  ? "Track Flight"
+                  : isHotelPost
+                    ? "Open Hotel Tools"
+                    : "Spot Train"}
+              </span>
               <ArrowRightIcon className="h-3.5 w-3.5" />
             </Link>
           </div>
@@ -443,6 +570,39 @@ export default async function BlogArticlePage({
                   </Link>
                 </div>
               </div>
+            ) : isHotelPost ? (
+              <div className="rounded-2xl border border-line bg-card p-5 shadow-xs">
+                <h3 className="text-base font-extrabold text-ink">
+                  Plan Your Stay &amp; Transit
+                </h3>
+                <p className="mt-1 text-xs leading-relaxed text-ink-soft">
+                  Calculate 0%, 12% &amp; 18% hotel GST slabs, check 10-digit
+                  IRCTC PNR status, or track live flight arrivals.
+                </p>
+                <div className="mt-4 space-y-2">
+                  <Link
+                    href="/tools/hotel"
+                    className="ta-btn-primary inline-flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-xs font-bold"
+                  >
+                    <HotelIcon className="h-3.5 w-3.5" />
+                    <span>Hotel Room GST Calculator</span>
+                  </Link>
+                  <Link
+                    href="/rail/pnr-status"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-line bg-subcard px-4 py-2.5 text-xs font-bold text-ink hover:border-[#1956b4]"
+                  >
+                    <TicketIcon className="h-3.5 w-3.5 text-[#fc6203]" />
+                    <span>Check 10-Digit PNR Status</span>
+                  </Link>
+                  <Link
+                    href="/air/flight-status"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-line bg-subcard px-4 py-2.5 text-xs font-bold text-ink hover:border-[#1956b4]"
+                  >
+                    <PlaneIcon className="h-3.5 w-3.5 text-[#1956b4] dark:text-blue-400" />
+                    <span>Live Flight Status Tracker</span>
+                  </Link>
+                </div>
+              </div>
             ) : (
               <div className="rounded-2xl border border-line bg-card p-5 shadow-xs">
                 <h3 className="text-base font-extrabold text-ink">
@@ -474,7 +634,11 @@ export default async function BlogArticlePage({
             <div className="rounded-2xl border border-line bg-card p-5">
               <div className="flex items-center justify-between">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-ink-muted">
-                  {isAirPost ? "More Flight Guides" : "More Rail Guides"}
+                  {isAirPost
+                    ? "More Flight Guides"
+                    : isHotelPost
+                      ? "More Stay & Holiday Guides"
+                      : "More Rail Guides"}
                 </h3>
                 <Link
                   href="/blog"
@@ -491,6 +655,36 @@ export default async function BlogArticlePage({
                     className="block rounded-xl border border-line bg-subcard p-3 transition hover:border-[#1956b4]"
                   >
                     <span className="text-[10px] font-bold uppercase text-[#1956b4] dark:text-blue-400">
+                      {rel.category}
+                    </span>
+                    <p className="mt-0.5 text-xs font-bold leading-snug text-ink">
+                      {rel.title}
+                    </p>
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-line bg-card p-5">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-ink-muted">
+                  2026–27 Trending Reads
+                </h3>
+                <Link
+                  href="/blog#featured-2026-27-guides"
+                  className="text-xs font-bold text-[#fc6203] hover:underline"
+                >
+                  Top 10 →
+                </Link>
+              </div>
+              <div className="mt-3 space-y-2">
+                {featuredRelatedPosts.map((rel) => (
+                  <Link
+                    key={rel.slug}
+                    href={`/blog/${rel.slug}`}
+                    className="block rounded-xl border border-line bg-subcard p-3 transition hover:border-[#1956b4]"
+                  >
+                    <span className="text-[10px] font-bold uppercase text-[#fc6203]">
                       {rel.category}
                     </span>
                     <p className="mt-0.5 text-xs font-bold leading-snug text-ink">

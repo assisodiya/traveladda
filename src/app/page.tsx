@@ -12,7 +12,11 @@ import {
   TicketIcon,
   TrainIcon,
 } from "@/components/Icons";
-import { FLIGHT_BLOG_POSTS, RAIL_BLOG_POSTS } from "@/lib/blog-data";
+import {
+  FEATURED_SEO_BLOG_POSTS,
+  FLIGHT_BLOG_POSTS,
+  RAIL_BLOG_POSTS,
+} from "@/lib/blog-data";
 import { POPULAR_LIVE_FLIGHTS } from "@/lib/flight-types";
 import { POPULAR_LIVE_TRAINS } from "@/lib/live-train-types";
 
@@ -339,53 +343,51 @@ export default async function Home() {
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-lg font-extrabold text-ink sm:text-2xl">
-              Helpful Flight &amp; Train Guides
+              2026–27 Travel, Flight, Train &amp; Stay Guides
             </h2>
             <p className="text-xs text-ink-muted sm:text-sm">
-              Clear answers on airport terminals, flight delays, PNR quotas &amp;
-              charting
+              Winter destinations, cheap Christmas flights, Vande Bharat vs
+              Rajdhani, family hotels &amp; live travel trackers
             </p>
           </div>
           <Link
             href="/blog"
             className="text-xs font-bold text-[#1956b4] hover:underline dark:text-blue-300 sm:text-sm"
           >
-            View all →
+            View all {FEATURED_SEO_BLOG_POSTS.length + FLIGHT_BLOG_POSTS.length + RAIL_BLOG_POSTS.length} guides →
           </Link>
         </div>
 
-        <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {[...FLIGHT_BLOG_POSTS.slice(0, 2), ...RAIL_BLOG_POSTS.slice(0, 2)].map(
-            (post) => (
-              <Link
-                key={post.slug}
-                href={`/blog/${post.slug}`}
-                className="group flex flex-col justify-between rounded-xl border border-line bg-card p-4 shadow-2xs transition hover:border-[#1956b4] hover:shadow-sm sm:p-5"
-              >
-                <div>
-                  <div className="flex items-center justify-between text-[11px] text-ink-muted">
-                    <span className="font-semibold text-[#1956b4] dark:text-blue-300">
-                      {post.category}
-                    </span>
-                    <span className="inline-flex items-center gap-1">
-                      <ClockIcon className="h-3 w-3" />
-                      {post.readTime}
-                    </span>
-                  </div>
-                  <h3 className="mt-2.5 line-clamp-2 text-sm font-bold leading-snug text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-300 sm:text-base">
-                    {post.title}
-                  </h3>
-                  <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-ink-muted">
-                    {post.excerpt}
-                  </p>
+        <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {FEATURED_SEO_BLOG_POSTS.slice(0, 6).map((post) => (
+            <Link
+              key={post.slug}
+              href={`/blog/${post.slug}`}
+              className="group flex flex-col justify-between rounded-xl border border-line bg-card p-4 shadow-2xs transition hover:border-[#1956b4] hover:shadow-sm sm:p-5"
+            >
+              <div>
+                <div className="flex items-center justify-between text-[11px] text-ink-muted">
+                  <span className="font-semibold text-[#1956b4] dark:text-blue-300">
+                    {post.category}
+                  </span>
+                  <span className="inline-flex items-center gap-1">
+                    <ClockIcon className="h-3 w-3" />
+                    {post.readTime}
+                  </span>
                 </div>
-                <span className="mt-4 inline-flex items-center gap-1 text-xs font-bold text-[#fc6203]">
-                  <span>Read guide</span>
-                  <ArrowRightIcon className="h-3.5 w-3.5" />
-                </span>
-              </Link>
-            )
-          )}
+                <h3 className="mt-2.5 line-clamp-2 text-sm font-bold leading-snug text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-300 sm:text-base">
+                  {post.title}
+                </h3>
+                <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-ink-muted">
+                  {post.excerpt}
+                </p>
+              </div>
+              <span className="mt-4 inline-flex items-center gap-1 text-xs font-bold text-[#fc6203]">
+                <span>Read guide</span>
+                <ArrowRightIcon className="h-3.5 w-3.5" />
+              </span>
+            </Link>
+          ))}
         </div>
       </section>
     </main>
