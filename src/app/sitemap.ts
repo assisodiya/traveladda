@@ -26,6 +26,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.95,
     },
     {
+      url: `${BASE_URL}/rail/chart-time`,
+      changeFrequency: "daily",
+      priority: 0.94,
+    },
+    {
       url: `${BASE_URL}/blog`,
       changeFrequency: "weekly",
       priority: 0.88,

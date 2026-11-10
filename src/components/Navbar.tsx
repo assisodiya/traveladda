@@ -12,15 +12,12 @@ import {
   ChevronDownIcon,
   ClockIcon,
   CloseIcon,
-  CoachTrainIcon,
   CompassIcon,
-  HotelIcon,
   LuggageIcon,
   MenuIcon,
   PhoneCallIcon,
   PlaneIcon,
   ShieldCheckIcon,
-  SparklesIcon,
   TicketIcon,
   TrainIcon,
 } from "./Icons";
@@ -33,26 +30,14 @@ function renderToolItemIcon(iconKey: ToolMenuItem["iconKey"]) {
       return <PlaneIcon className="h-4 w-4" />;
     case "luggage":
       return <LuggageIcon className="h-4 w-4" />;
-    case "clock":
-      return <ClockIcon className="h-4 w-4" />;
-    case "phone":
-      return <PhoneCallIcon className="h-4 w-4" />;
-    case "BoardingCheck":
-      return <ShieldCheckIcon className="h-4 w-4" />;
     case "train":
       return <TrainIcon className="h-4 w-4" />;
     case "ticket":
       return <TicketIcon className="h-4 w-4" />;
-    case "coach":
-      return <CoachTrainIcon className="h-4 w-4" />;
-    case "decoder":
-      return <SparklesIcon className="h-4 w-4" />;
     case "calculator":
       return <CalculatorIcon className="h-4 w-4" />;
-    case "hotel":
-      return <HotelIcon className="h-4 w-4" />;
-    case "shield":
-      return <ShieldCheckIcon className="h-4 w-4" />;
+    case "clock":
+      return <ClockIcon className="h-4 w-4" />;
   }
 }
 
@@ -178,15 +163,19 @@ export function Navbar() {
                 )}
               </summary>
 
-              {/* Right-Aligned Category-Wise Mega Dropdown Panel */}
-              <div className="absolute top-full right-0 z-50 mt-2 w-[min(860px,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-line bg-card shadow-2xl ring-1 ring-black/10">
-                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line bg-subcard/80 px-5 py-3">
+              {/* Centered Under "Tools" Button Category-Wise Mega Dropdown Panel */}
+              <div className="absolute top-full left-1/2 z-50 mt-2.5 w-[min(700px,calc(100vw-2rem))] -translate-x-1/2 rounded-2xl border border-line bg-card shadow-2xl ring-1 ring-black/10">
+                <span
+                  aria-hidden="true"
+                  className="absolute -top-1.5 left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 border-t border-l border-line bg-subcard"
+                />
+                <div className="flex flex-wrap items-center justify-between gap-2 rounded-t-2xl border-b border-line bg-subcard/80 px-5 py-3">
                   <div className="flex items-center gap-2">
                     <span className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-[#1956b4] text-white">
                       <CompassIcon className="h-3.5 w-3.5" />
                     </span>
                     <p className="text-xs font-extrabold text-ink sm:text-sm">
-                      All Travel Tools by Category (Air, Rail &amp; Hotel)
+                      Active Travel Tools (Air, Rail &amp; Hotel)
                     </p>
                   </div>
                   <Link
@@ -194,36 +183,27 @@ export function Navbar() {
                     onClick={closeAllMenus}
                     className="inline-flex items-center gap-1 text-xs font-bold text-[#1956b4] hover:underline dark:text-blue-400"
                   >
-                    <span>Open Full Tools Directory</span>
+                    <span>All Tools</span>
                     <ArrowRightIcon className="h-3.5 w-3.5" />
                   </Link>
                 </div>
 
                 {/* 3 Category Columns */}
-                <div className="grid max-h-[75vh] gap-4 overflow-y-auto p-4 lg:grid-cols-3">
+                <div className="grid gap-3.5 p-4 lg:grid-cols-3">
                   {TOOL_CATEGORIES.map((category) => (
                     <div
                       key={category.id}
-                      className="rounded-xl border border-line bg-subcard/40 p-3.5"
+                      className="rounded-xl border border-line bg-subcard/40 p-3"
                     >
-                      <div className="mb-2.5 flex items-center justify-between border-b border-line pb-2">
-                        <div>
-                          <span
-                            className={`inline-block rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${category.accentBadgeClass}`}
-                          >
-                            {category.categoryTitle}
-                          </span>
-                          <p className="mt-0.5 text-[11px] text-ink-muted">
-                            {category.categorySubtitle}
-                          </p>
-                        </div>
-                        <Link
-                          href={category.hubHref}
-                          onClick={closeAllMenus}
-                          className="text-[11px] font-bold text-[#1956b4] hover:underline dark:text-blue-400"
+                      <div className="mb-2.5 border-b border-line pb-2">
+                        <span
+                          className={`inline-block rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${category.accentBadgeClass}`}
                         >
-                          Hub →
-                        </Link>
+                          {category.categoryTitle}
+                        </span>
+                        <p className="mt-0.5 text-[11px] text-ink-muted">
+                          {category.categorySubtitle}
+                        </p>
                       </div>
 
                       <div className="space-y-1.5">
@@ -262,7 +242,7 @@ export function Navbar() {
                 </div>
 
                 {/* Dropdown Footer */}
-                <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line bg-subcard/70 px-5 py-2.5 text-xs">
+                <div className="flex flex-wrap items-center justify-between gap-3 rounded-b-2xl border-t border-line bg-subcard/70 px-5 py-2.5 text-xs">
                   <div className="flex flex-wrap items-center gap-4 text-ink-muted">
                     <Link
                       href="/about"
@@ -436,19 +416,12 @@ export function Navbar() {
                   <div className="space-y-4">
                     {TOOL_CATEGORIES.map((category) => (
                       <div key={category.id} className="space-y-1.5">
-                        <div className="flex items-center justify-between px-1">
+                        <div className="px-1">
                           <span
                             className={`rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${category.accentBadgeClass}`}
                           >
                             {category.categoryTitle}
                           </span>
-                          <Link
-                            href={category.hubHref}
-                            onClick={closeAllMenus}
-                            className="text-[11px] font-bold text-[#1956b4] dark:text-blue-300"
-                          >
-                            Open Hub →
-                          </Link>
                         </div>
 
                         <div className="grid gap-1.5">

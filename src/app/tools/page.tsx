@@ -5,13 +5,8 @@ import {
   ArrowRightIcon,
   CalculatorIcon,
   ClockIcon,
-  CoachTrainIcon,
-  HotelIcon,
   LuggageIcon,
-  PhoneCallIcon,
   PlaneIcon,
-  ShieldCheckIcon,
-  SparklesIcon,
   TicketIcon,
   TrainIcon,
 } from "@/components/Icons";
@@ -19,9 +14,9 @@ import { TOOL_CATEGORIES, type ToolMenuItem } from "@/lib/tools-catalog";
 
 export const metadata: Metadata = {
   title:
-    "All Travel Tools | Flight Status, Live Train GPS, PNR Checker, Baggage & Hotel GST Calculator",
+    "Active Travel Tools | Live Flight Status, Live Train GPS, PNR Checker, Baggage & Hotel GST Calculator",
   description:
-    "Browse all free TravelAdda utilities by category: Air & Aviation Tools (Live Flight Status, Baggage Allowance, Airport Arrival Buffer), Indian Railways Tools (Spot Your Train, 10-Digit PNR Status, Coach Position), and Hotel Room GST Calculators.",
+    "Browse all active TravelAdda utilities by category: Air Tools (Live Flight Status, Baggage & Arrival Time Calculator), Rail Tools (Live Train Running Status, 10-Digit PNR Status), and Hotel Room GST Calculator.",
   keywords: [
     "travel tools india",
     "live flight status tool",
@@ -41,26 +36,14 @@ function renderToolIcon(iconKey: ToolMenuItem["iconKey"]) {
       return <PlaneIcon className="h-5 w-5" />;
     case "luggage":
       return <LuggageIcon className="h-5 w-5" />;
-    case "clock":
-      return <ClockIcon className="h-5 w-5" />;
-    case "phone":
-      return <PhoneCallIcon className="h-5 w-5" />;
-    case "BoardingCheck":
-      return <ShieldCheckIcon className="h-5 w-5" />;
     case "train":
       return <TrainIcon className="h-5 w-5" />;
     case "ticket":
       return <TicketIcon className="h-5 w-5" />;
-    case "coach":
-      return <CoachTrainIcon className="h-5 w-5" />;
-    case "decoder":
-      return <SparklesIcon className="h-5 w-5" />;
     case "calculator":
       return <CalculatorIcon className="h-5 w-5" />;
-    case "hotel":
-      return <HotelIcon className="h-5 w-5" />;
-    case "shield":
-      return <ShieldCheckIcon className="h-5 w-5" />;
+    case "clock":
+      return <ClockIcon className="h-5 w-5" />;
   }
 }
 

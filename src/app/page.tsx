@@ -57,10 +57,11 @@ const QUICK_SERVICES = [
       "bg-orange-50 text-[#fc6203] dark:bg-orange-500/15 dark:text-orange-300",
   },
   {
-    title: "Baggage & Hotel GST",
-    desc: "7 kg / 15 kg airline limits & room GST tax slabs",
-    href: "/tools/air",
-    icon: <LuggageIcon className="h-5 w-5" />,
+    title: "Train Chart Time",
+    desc: "1st & 2nd vacancy chart time + remote charting station",
+    href: "/rail/chart-time",
+    badge: "NEW",
+    icon: <ClockIcon className="h-5 w-5" />,
     iconClass:
       "bg-indigo-50 text-indigo-700 dark:bg-indigo-500/15 dark:text-indigo-300",
   },

@@ -20,7 +20,7 @@ export function Footer() {
           {/* Flight & Airport Tools */}
           <div>
             <h3 className="text-xs font-bold uppercase tracking-wider text-ink">
-              Air &amp; Aviation Tools
+              Air Tools
             </h3>
             <ul className="mt-3 space-y-2 text-xs sm:text-sm">
               <li>
@@ -33,34 +33,10 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/tools/air#baggage"
+                  href="/tools/air"
                   className="text-ink-muted transition hover:text-[#1956b4] dark:hover:text-blue-300"
                 >
-                  Cabin &amp; Check-In Baggage Rules
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/tools/air#buffer"
-                  className="text-ink-muted transition hover:text-[#1956b4] dark:hover:text-blue-300"
-                >
-                  Airport Arrival Time Calculator
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/air/flight-status#airlines-directory"
-                  className="text-ink-muted transition hover:text-[#1956b4] dark:hover:text-blue-300"
-                >
-                  Airline Directory &amp; Helplines
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/tools/air#checklist"
-                  className="text-ink-muted transition hover:text-[#1956b4] dark:hover:text-blue-300"
-                >
-                  DigiYatra &amp; Boarding Checklist
+                  Baggage &amp; Arrival Calculator
                 </Link>
               </li>
             </ul>
@@ -85,31 +61,23 @@ export function Footer() {
                   href="/rail/pnr-status"
                   className="font-medium text-ink-soft transition hover:text-[#1956b4] dark:hover:text-blue-300"
                 >
-                  10-Digit PNR Status Check
+                  10-Digit PNR Status Checker
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/rail/pnr-status#decoder"
+                  href="/rail/chart-time"
+                  className="font-medium text-ink-soft transition hover:text-[#1956b4] dark:hover:text-blue-300"
+                >
+                  Train Chart Preparation Time
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/tools/hotel"
                   className="text-ink-muted transition hover:text-[#1956b4] dark:hover:text-blue-300"
                 >
-                  Coach, Berth &amp; Quota Decoder
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/tools/hotel#gst-calculator"
-                  className="text-ink-muted transition hover:text-[#1956b4] dark:hover:text-blue-300"
-                >
-                  Hotel Room &amp; GST Calculator
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/tools"
-                  className="text-xs font-bold text-[#1956b4] hover:underline dark:text-blue-300"
-                >
-                  Explore All 12 Tools →
+                  Hotel Room GST Calculator
                 </Link>
               </li>
             </ul>
