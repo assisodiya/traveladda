@@ -7,6 +7,7 @@ import { TOOL_CATEGORIES, type ToolMenuItem } from "@/lib/tools-catalog";
 import {
   ArrowRightIcon,
   BookOpenIcon,
+  BuildingStationIcon,
   CalculatorIcon,
   ChevronDownIcon,
   ClockIcon,
@@ -25,58 +26,6 @@ import {
 } from "./Icons";
 import { Logo } from "./Logo";
 import { ThemeToggle } from "./ThemeToggle";
-
-interface NavTab {
-  label: string;
-  shortLabel: string;
-  href: string;
-  matchPrefix: string;
-  badge?: string;
-  icon: React.ReactNode;
-}
-
-const PRIMARY_NAV_TABS: NavTab[] = [
-  {
-    label: "Flight Status",
-    shortLabel: "Flights",
-    href: "/air/flight-status",
-    matchPrefix: "/air/flight-status",
-    badge: "LIVE",
-    icon: <PlaneIcon className="h-4 w-4" />,
-  },
-  {
-    label: "Train Status",
-    shortLabel: "Trains",
-    href: "/rail/live-status",
-    matchPrefix: "/rail/live-status",
-    badge: "LIVE",
-    icon: <TrainIcon className="h-4 w-4" />,
-  },
-  {
-    label: "PNR Status",
-    shortLabel: "PNR",
-    href: "/rail/pnr-status",
-    matchPrefix: "/rail/pnr-status",
-    icon: <TicketIcon className="h-4 w-4" />,
-  },
-];
-
-const SECONDARY_NAV_TABS: NavTab[] = [
-  {
-    label: "Guides",
-    shortLabel: "Guides",
-    href: "/blog",
-    matchPrefix: "/blog",
-    icon: <BookOpenIcon className="h-4 w-4" />,
-  },
-  {
-    label: "About Us",
-    shortLabel: "About",
-    href: "/about",
-    matchPrefix: "/about",
-    icon: <ShieldCheckIcon className="h-4 w-4" />,
-  },
-];
 
 function renderToolItemIcon(iconKey: ToolMenuItem["iconKey"]) {
   switch (iconKey) {
@@ -107,106 +56,303 @@ function renderToolItemIcon(iconKey: ToolMenuItem["iconKey"]) {
   }
 }
 
-function ToolsMegaDropdown({ pathname }: { pathname: string }) {
-  const [open, setOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+function PathnameSync({
+  onPathname,
+}: {
+  onPathname: React.Dispatch<React.SetStateAction<string>>;
+}) {
+  const pathname = usePathname() ?? "";
+  useEffect(() => {
+    onPathname(pathname);
+  }, [pathname, onPathname]);
+  return null;
+}
 
-  const isToolsActive = pathname.startsWith("/tools");
+export function Navbar() {
+  const [pathname, setPathname] = useState("");
+  const [toolsOpen, setToolsOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileToolsExpanded, setMobileToolsExpanded] = useState(true);
 
+  const headerRef = useRef<HTMLElement>(null);
+
+  const isToolsRoute =
+    pathname.startsWith("/tools") ||
+    pathname.startsWith("/air/") ||
+    pathname.startsWith("/rail/");
+
+  // Close menus when clicking outside the header or pressing Escape
   useEffect(() => {
     function handleOutsideClick(e: MouseEvent) {
       if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target as Node)
+        headerRef.current &&
+        !headerRef.current.contains(e.target as Node)
       ) {
-        setOpen(false);
+        setToolsOpen(false);
+        setMobileOpen(false);
       }
     }
-    function handleEscape(e: KeyboardEvent) {
+
+    function handleKeyDown(e: KeyboardEvent) {
       if (e.key === "Escape") {
-        setOpen(false);
+        setToolsOpen(false);
+        setMobileOpen(false);
       }
     }
-    document.addEventListener("mousedown", handleOutsideClick);
-    document.addEventListener("keydown", handleEscape);
+
+    document.addEventListener("click", handleOutsideClick);
+    document.addEventListener("keydown", handleKeyDown);
     return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
-      document.removeEventListener("keydown", handleEscape);
+      document.removeEventListener("click", handleOutsideClick);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
 
-  return (
-    <div
-      ref={dropdownRef}
-      className="relative"
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
-    >
-      <button
-        type="button"
-        onClick={() => setOpen((prev) => !prev)}
-        aria-expanded={open}
-        aria-haspopup="true"
-        className={`relative inline-flex cursor-pointer items-center gap-1.5 rounded-lg px-2.5 py-2 text-xs font-semibold transition xl:px-3 xl:text-sm ${
-          isToolsActive || open
-            ? "bg-blue-50 text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300"
-            : "text-ink-soft hover:bg-subcard hover:text-ink"
-        }`}
-      >
-        <CompassIcon
-          className={`h-4 w-4 ${
-            isToolsActive || open
-              ? "text-[#1956b4] dark:text-blue-300"
-              : "text-ink-muted"
-          }`}
-        />
-        <span>Tools</span>
-        <span className="rounded bg-[#fc6203]/15 px-1.5 py-0.5 text-[10px] font-bold leading-none text-[#fc6203]">
-          12
-        </span>
-        <ChevronDownIcon
-          className={`h-3.5 w-3.5 transition-transform duration-150 ${
-            open ? "rotate-180 text-[#1956b4] dark:text-blue-300" : ""
-          }`}
-        />
-        {isToolsActive && (
-          <span className="absolute right-2.5 bottom-0 left-2.5 h-0.5 rounded-full bg-[#fc6203]" />
-        )}
-      </button>
+  const closeAllMenus = () => {
+    setToolsOpen(false);
+    setMobileOpen(false);
+  };
 
-      {open && (
-        <div className="absolute top-full left-1/2 z-50 w-[860px] max-w-[92vw] -translate-x-1/2 pt-2">
-          <div className="overflow-hidden rounded-2xl border border-line bg-card shadow-2xl ring-1 ring-black/5">
-            {/* Mega Menu Header */}
-            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line bg-subcard/70 px-5 py-3">
+  return (
+    <header ref={headerRef} className="ta-navbar sticky top-0 z-50">
+      <Suspense fallback={null}>
+        <PathnameSync onPathname={setPathname} />
+      </Suspense>
+
+      <div className="mx-auto flex h-15 max-w-7xl items-center justify-between gap-2 px-3 sm:h-16 sm:px-6 lg:px-8">
+        <div className="flex min-w-0 items-center gap-4 xl:gap-7">
+          <div onClick={closeAllMenus}>
+            <Logo size="sm" priority />
+          </div>
+
+          {/* Desktop Main Menu Bar */}
+          <nav
+            aria-label="Primary"
+            className="hidden items-center gap-1 lg:flex"
+          >
+            {/* 1. Home */}
+            <Link
+              href="/"
+              onClick={closeAllMenus}
+              className={`relative inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold transition xl:px-3.5 xl:text-sm ${
+                pathname === "/"
+                  ? "bg-blue-50 text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300"
+                  : "text-ink-soft hover:bg-subcard hover:text-ink"
+              }`}
+            >
+              <BuildingStationIcon
+                className={`h-4 w-4 ${
+                  pathname === "/"
+                    ? "text-[#1956b4] dark:text-blue-300"
+                    : "text-ink-muted"
+                }`}
+              />
+              <span>Home</span>
+              {pathname === "/" && (
+                <span className="absolute right-3 bottom-0 left-3 h-0.5 rounded-full bg-[#fc6203]" />
+              )}
+            </Link>
+
+            {/* 2. Tools Dropdown Button */}
+            <button
+              type="button"
+              onClick={() => {
+                setMobileOpen(false);
+                setToolsOpen((prev) => !prev);
+              }}
+              aria-expanded={toolsOpen}
+              aria-haspopup="true"
+              className={`relative inline-flex cursor-pointer items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold transition select-none xl:px-3.5 xl:text-sm ${
+                toolsOpen || isToolsRoute
+                  ? "bg-blue-50 text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300"
+                  : "text-ink-soft hover:bg-subcard hover:text-ink"
+              }`}
+            >
+              <CompassIcon
+                className={`h-4 w-4 ${
+                  toolsOpen || isToolsRoute
+                    ? "text-[#1956b4] dark:text-blue-300"
+                    : "text-ink-muted"
+                }`}
+              />
+              <span>Tools</span>
+              <ChevronDownIcon
+                className={`h-3.5 w-3.5 transition-transform duration-150 ${
+                  toolsOpen ? "rotate-180 text-[#1956b4] dark:text-blue-300" : ""
+                }`}
+              />
+              {(toolsOpen || isToolsRoute) && (
+                <span className="absolute right-3 bottom-0 left-3 h-0.5 rounded-full bg-[#fc6203]" />
+              )}
+            </button>
+
+            {/* 3. Travel Guides */}
+            <Link
+              href="/blog"
+              onClick={closeAllMenus}
+              className={`relative inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold transition xl:px-3.5 xl:text-sm ${
+                pathname.startsWith("/blog")
+                  ? "bg-blue-50 text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300"
+                  : "text-ink-soft hover:bg-subcard hover:text-ink"
+              }`}
+            >
+              <BookOpenIcon
+                className={`h-4 w-4 ${
+                  pathname.startsWith("/blog")
+                    ? "text-[#1956b4] dark:text-blue-300"
+                    : "text-ink-muted"
+                }`}
+              />
+              <span>Travel Guides</span>
+              {pathname.startsWith("/blog") && (
+                <span className="absolute right-3 bottom-0 left-3 h-0.5 rounded-full bg-[#fc6203]" />
+              )}
+            </Link>
+
+            {/* 4. About Us */}
+            <Link
+              href="/about"
+              onClick={closeAllMenus}
+              className={`relative inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold transition xl:px-3.5 xl:text-sm ${
+                pathname.startsWith("/about")
+                  ? "bg-blue-50 text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300"
+                  : "text-ink-soft hover:bg-subcard hover:text-ink"
+              }`}
+            >
+              <ShieldCheckIcon
+                className={`h-4 w-4 ${
+                  pathname.startsWith("/about")
+                    ? "text-[#1956b4] dark:text-blue-300"
+                    : "text-ink-muted"
+                }`}
+              />
+              <span>About Us</span>
+              {pathname.startsWith("/about") && (
+                <span className="absolute right-3 bottom-0 left-3 h-0.5 rounded-full bg-[#fc6203]" />
+              )}
+            </Link>
+
+            {/* 5. Contact */}
+            <Link
+              href="/contact"
+              onClick={closeAllMenus}
+              className={`relative inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold transition xl:px-3.5 xl:text-sm ${
+                pathname.startsWith("/contact")
+                  ? "bg-blue-50 text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300"
+                  : "text-ink-soft hover:bg-subcard hover:text-ink"
+              }`}
+            >
+              <PhoneCallIcon
+                className={`h-4 w-4 ${
+                  pathname.startsWith("/contact")
+                    ? "text-[#1956b4] dark:text-blue-300"
+                    : "text-ink-muted"
+                }`}
+              />
+              <span>Contact</span>
+              {pathname.startsWith("/contact") && (
+                <span className="absolute right-3 bottom-0 left-3 h-0.5 rounded-full bg-[#fc6203]" />
+              )}
+            </Link>
+          </nav>
+        </div>
+
+        {/* Right Desktop Controls */}
+        <div className="hidden items-center gap-2.5 lg:flex">
+          <ThemeToggle />
+          <Link
+            href="/blog"
+            onClick={closeAllMenus}
+            className="ta-btn-primary inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-bold xl:text-sm"
+          >
+            <BookOpenIcon className="h-4 w-4" />
+            <span>Explore Guides</span>
+          </Link>
+        </div>
+
+        {/* Mobile / Tablet Controls */}
+        <div className="flex shrink-0 items-center gap-1.5 sm:gap-2 lg:hidden">
+          <button
+            type="button"
+            onClick={() => {
+              setMobileToolsExpanded(true);
+              setMobileOpen((prev) => !prev);
+            }}
+            aria-expanded={mobileOpen}
+            className={`inline-flex cursor-pointer items-center gap-1 rounded-lg border px-2.5 py-1.5 text-xs font-bold transition select-none ${
+              mobileOpen
+                ? "border-[#1956b4] bg-[#1956b4] text-white"
+                : "border-line bg-subcard text-[#1956b4] dark:text-blue-300"
+            }`}
+          >
+            <CompassIcon className="h-3.5 w-3.5" />
+            <span>Tools</span>
+            <ChevronDownIcon
+              className={`h-3.5 w-3.5 transition-transform duration-150 ${
+                mobileOpen ? "rotate-180" : ""
+              }`}
+            />
+          </button>
+
+          <ThemeToggle />
+
+          <button
+            type="button"
+            onClick={() => setMobileOpen((prev) => !prev)}
+            className="inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border border-line bg-subcard text-ink"
+            aria-expanded={mobileOpen}
+            aria-label="Toggle navigation menu"
+          >
+            {mobileOpen ? (
+              <CloseIcon className="h-5 w-5" />
+            ) : (
+              <MenuIcon className="h-5 w-5" />
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* DESKTOP CATEGORY-WISE TOOLS MEGA DROPDOWN PANEL */}
+      {toolsOpen && (
+        <div className="hidden border-t border-line bg-card shadow-2xl lg:block">
+          <div className="mx-auto max-w-7xl px-6 py-5 lg:px-8">
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line pb-3">
               <div className="flex items-center gap-2">
                 <span className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-[#1956b4] text-white">
                   <CompassIcon className="h-3.5 w-3.5" />
                 </span>
-                <div>
-                  <p className="text-xs font-extrabold text-ink">
-                    TravelAdda Utility Suite (Category-Wise Tools)
-                  </p>
-                </div>
+                <p className="text-sm font-extrabold text-ink">
+                  All Travel Tools by Category (Air, Rail &amp; Hotel)
+                </p>
               </div>
-              <Link
-                href="/tools"
-                onClick={() => setOpen(false)}
-                className="inline-flex items-center gap-1 text-xs font-bold text-[#1956b4] hover:underline dark:text-blue-400"
-              >
-                <span>View All 12 Travel Tools</span>
-                <ArrowRightIcon className="h-3.5 w-3.5" />
-              </Link>
+              <div className="flex items-center gap-4">
+                <Link
+                  href="/tools"
+                  onClick={closeAllMenus}
+                  className="inline-flex items-center gap-1 text-xs font-bold text-[#1956b4] hover:underline dark:text-blue-400"
+                >
+                  <span>Open Full Tools Directory</span>
+                  <ArrowRightIcon className="h-3.5 w-3.5" />
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => setToolsOpen(false)}
+                  className="inline-flex cursor-pointer items-center gap-1 rounded-md border border-line bg-subcard px-2 py-1 text-xs font-semibold text-ink-muted hover:text-ink"
+                >
+                  <CloseIcon className="h-3.5 w-3.5" />
+                  <span>Close</span>
+                </button>
+              </div>
             </div>
 
             {/* 3 Category Columns */}
-            <div className="grid divide-y divide-line p-4 lg:grid-cols-3 lg:divide-x lg:divide-y-0">
+            <div className="mt-4 grid gap-6 lg:grid-cols-3">
               {TOOL_CATEGORIES.map((category) => (
                 <div
                   key={category.id}
-                  className="px-3 py-2 first:pl-1 last:pr-1"
+                  className="rounded-2xl border border-line bg-subcard/40 p-4"
                 >
-                  <div className="mb-2.5 flex items-center justify-between px-2">
+                  <div className="mb-3 flex items-center justify-between border-b border-line pb-2.5">
                     <div>
                       <span
                         className={`inline-block rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${category.accentBadgeClass}`}
@@ -217,15 +363,22 @@ function ToolsMegaDropdown({ pathname }: { pathname: string }) {
                         {category.categorySubtitle}
                       </p>
                     </div>
+                    <Link
+                      href={category.hubHref}
+                      onClick={closeAllMenus}
+                      className="text-[11px] font-bold text-[#1956b4] hover:underline dark:text-blue-400"
+                    >
+                      Hub →
+                    </Link>
                   </div>
 
-                  <div className="space-y-1">
+                  <div className="space-y-1.5">
                     {category.items.map((item) => (
                       <Link
                         key={item.id}
                         href={item.href}
-                        onClick={() => setOpen(false)}
-                        className="group flex items-start gap-2.5 rounded-xl p-2 transition hover:bg-subcard"
+                        onClick={closeAllMenus}
+                        className="group flex items-start gap-2.5 rounded-xl border border-transparent bg-card p-2.5 shadow-2xs transition hover:border-[#1956b4]"
                       >
                         <span
                           className={`mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${category.accentBadgeClass}`}
@@ -255,32 +408,32 @@ function ToolsMegaDropdown({ pathname }: { pathname: string }) {
             </div>
 
             {/* Mega Menu Footer Strip */}
-            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line bg-subcard/60 px-5 py-2.5 text-xs">
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-3 text-xs">
               <div className="flex flex-wrap items-center gap-4 text-ink-muted">
                 <Link
                   href="/about"
-                  onClick={() => setOpen(false)}
+                  onClick={closeAllMenus}
                   className="font-semibold hover:text-[#1956b4] dark:hover:text-blue-300"
                 >
                   About Us
                 </Link>
                 <Link
                   href="/privacy-policy"
-                  onClick={() => setOpen(false)}
+                  onClick={closeAllMenus}
                   className="font-semibold hover:text-[#1956b4] dark:hover:text-blue-300"
                 >
                   Privacy Policy
                 </Link>
                 <Link
                   href="/terms"
-                  onClick={() => setOpen(false)}
+                  onClick={closeAllMenus}
                   className="font-semibold hover:text-[#1956b4] dark:hover:text-blue-300"
                 >
                   Terms &amp; Disclaimer
                 </Link>
                 <Link
                   href="/contact"
-                  onClick={() => setOpen(false)}
+                  onClick={closeAllMenus}
                   className="font-semibold hover:text-[#1956b4] dark:hover:text-blue-300"
                 >
                   Contact Support
@@ -288,277 +441,148 @@ function ToolsMegaDropdown({ pathname }: { pathname: string }) {
               </div>
               <Link
                 href="/blog"
-                onClick={() => setOpen(false)}
+                onClick={closeAllMenus}
                 className="font-bold text-[#fc6203] hover:underline"
               >
-                Explore 2026–27 Travel Guides →
+                Read 2026–27 Travel Guides →
               </Link>
             </div>
           </div>
         </div>
       )}
-    </div>
-  );
-}
 
-function NavLinksDesktop({ pathname }: { pathname: string }) {
-  return (
-    <nav aria-label="Primary" className="hidden items-center gap-0.5 lg:flex">
-      {PRIMARY_NAV_TABS.map((tab) => {
-        const isActive = pathname.startsWith(tab.matchPrefix);
-        return (
-          <Link
-            key={tab.href}
-            href={tab.href}
-            className={`relative inline-flex items-center gap-1.5 rounded-lg px-2.5 py-2 text-xs font-semibold transition xl:px-3 xl:text-sm ${
-              isActive
-                ? "bg-blue-50 text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300"
-                : "text-ink-soft hover:bg-subcard hover:text-ink"
-            }`}
-          >
-            <span
-              className={
-                isActive
-                  ? "text-[#1956b4] dark:text-blue-300"
-                  : "text-ink-muted"
-              }
-            >
-              {tab.icon}
-            </span>
-            <span>{tab.label}</span>
-            {tab.badge && (
-              <span className="rounded bg-emerald-500/15 px-1.5 py-0.5 text-[10px] font-bold leading-none text-emerald-700 dark:text-emerald-300">
-                {tab.badge}
-              </span>
-            )}
-            {isActive && (
-              <span className="absolute right-2.5 bottom-0 left-2.5 h-0.5 rounded-full bg-[#fc6203]" />
-            )}
-          </Link>
-        );
-      })}
-
-      {/* Category-Wise Tools Mega Dropdown */}
-      <ToolsMegaDropdown pathname={pathname} />
-
-      {SECONDARY_NAV_TABS.map((tab) => {
-        const isActive = pathname.startsWith(tab.matchPrefix);
-        return (
-          <Link
-            key={tab.href}
-            href={tab.href}
-            className={`relative inline-flex items-center gap-1.5 rounded-lg px-2.5 py-2 text-xs font-semibold transition xl:px-3 xl:text-sm ${
-              isActive
-                ? "bg-blue-50 text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300"
-                : "text-ink-soft hover:bg-subcard hover:text-ink"
-            }`}
-          >
-            <span
-              className={
-                isActive
-                  ? "text-[#1956b4] dark:text-blue-300"
-                  : "text-ink-muted"
-              }
-            >
-              {tab.icon}
-            </span>
-            <span>{tab.label}</span>
-            {isActive && (
-              <span className="absolute right-2.5 bottom-0 left-2.5 h-0.5 rounded-full bg-[#fc6203]" />
-            )}
-          </Link>
-        );
-      })}
-    </nav>
-  );
-}
-
-function ActiveDesktopNav() {
-  const pathname = usePathname() ?? "";
-  return <NavLinksDesktop pathname={pathname} />;
-}
-
-const MOBILE_STRIP_TABS: NavTab[] = [
-  ...PRIMARY_NAV_TABS,
-  {
-    label: "All Tools",
-    shortLabel: "Tools",
-    href: "/tools",
-    matchPrefix: "/tools",
-    icon: <CompassIcon className="h-4 w-4" />,
-  },
-  ...SECONDARY_NAV_TABS,
-];
-
-function MobileQuickTabStrip({ pathname }: { pathname: string }) {
-  return (
-    <div className="ta-no-scrollbar flex items-center gap-1 overflow-x-auto border-t border-line bg-card px-3 py-1.5 lg:hidden">
-      {MOBILE_STRIP_TABS.map((tab) => {
-        const isActive = pathname.startsWith(tab.matchPrefix);
-        return (
-          <Link
-            key={tab.href}
-            href={tab.href}
-            className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition ${
-              isActive
-                ? "bg-[#1956b4] text-white shadow-2xs"
-                : "bg-subcard text-ink-soft hover:text-ink"
-            }`}
-          >
-            {tab.icon}
-            <span>{tab.shortLabel}</span>
-          </Link>
-        );
-      })}
-    </div>
-  );
-}
-
-function ActiveMobileStrip() {
-  const pathname = usePathname() ?? "";
-  return <MobileQuickTabStrip pathname={pathname} />;
-}
-
-export function Navbar() {
-  const [mobileOpen, setMobileOpen] = useState(false);
-
-  return (
-    <header className="ta-navbar sticky top-0 z-50">
-      <div className="mx-auto flex h-15 max-w-7xl items-center justify-between gap-3 px-4 sm:h-16 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-4 xl:gap-6">
-          <Logo size="md" priority />
-          <Suspense fallback={<NavLinksDesktop pathname="" />}>
-            <ActiveDesktopNav />
-          </Suspense>
-        </div>
-
-        {/* Right Utility Controls */}
-        <div className="hidden items-center gap-2.5 lg:flex">
-          <ThemeToggle />
-          <Link
-            href="/tools"
-            className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-subcard px-3 py-2 text-xs font-bold text-ink transition hover:border-[#1956b4]"
-          >
-            <CompassIcon className="h-3.5 w-3.5 text-[#1956b4] dark:text-blue-300" />
-            <span>All Tools</span>
-          </Link>
-          <Link
-            href="/air/flight-status"
-            className="ta-btn-primary inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-bold xl:text-sm"
-          >
-            <PlaneIcon className="h-4 w-4" />
-            <span>Track Flight</span>
-          </Link>
-        </div>
-
-        {/* Mobile / Tablet Header Controls */}
-        <div className="flex items-center gap-2 lg:hidden">
-          <ThemeToggle />
-          <button
-            type="button"
-            onClick={() => setMobileOpen((prev) => !prev)}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-line bg-subcard text-ink"
-            aria-expanded={mobileOpen}
-            aria-label="Toggle navigation menu"
-          >
-            {mobileOpen ? (
-              <CloseIcon className="h-5 w-5" />
-            ) : (
-              <MenuIcon className="h-5 w-5" />
-            )}
-          </button>
-        </div>
-      </div>
-
-      {/* 1-Tap Horizontal Category Bar on Mobile & Tablet */}
-      <Suspense fallback={<MobileQuickTabStrip pathname="" />}>
-        <ActiveMobileStrip />
-      </Suspense>
-
-      {/* Clean Mobile Menu Drawer with Category-Wise Tools */}
+      {/* MOBILE / TABLET MENU DRAWER */}
       {mobileOpen && (
-        <div className="max-h-[82vh] overflow-y-auto border-t border-line bg-card px-4 py-4 shadow-xl lg:hidden">
-          <div className="space-y-5">
-            {TOOL_CATEGORIES.map((category) => (
-              <div key={category.id} className="space-y-2">
-                <div className="flex items-center justify-between px-1">
-                  <span
-                    className={`rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${category.accentBadgeClass}`}
-                  >
-                    {category.categoryTitle}
-                  </span>
-                  <Link
-                    href={category.hubHref}
-                    onClick={() => setMobileOpen(false)}
-                    className="text-[11px] font-bold text-[#1956b4] dark:text-blue-300"
-                  >
-                    Open Hub →
-                  </Link>
-                </div>
-
-                <div className="grid gap-1.5 sm:grid-cols-2">
-                  {category.items.map((item) => (
-                    <Link
-                      key={item.id}
-                      href={item.href}
-                      onClick={() => setMobileOpen(false)}
-                      className="flex items-center justify-between rounded-xl border border-line bg-subcard/60 px-3 py-2.5 text-xs font-semibold text-ink hover:border-[#1956b4]"
-                    >
-                      <span className="inline-flex items-center gap-2.5">
-                        <span
-                          className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${category.accentBadgeClass}`}
-                        >
-                          {renderToolItemIcon(item.iconKey)}
-                        </span>
-                        <span>{item.title}</span>
-                      </span>
-                      {item.badge && (
-                        <span className="rounded bg-emerald-500/15 px-1.5 py-0.5 text-[9px] font-bold text-emerald-700 dark:text-emerald-300">
-                          {item.badge}
-                        </span>
-                      )}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            ))}
-
-            {/* Guides & Legal Links in Mobile Menu */}
-            <div className="flex flex-wrap items-center justify-between gap-2 border-t border-line pt-3 text-xs font-semibold text-ink-soft">
+        <div className="max-h-[calc(100dvh-3.75rem)] overflow-y-auto border-t border-line bg-card px-4 py-4 shadow-2xl sm:max-h-[calc(100dvh-4rem)] lg:hidden">
+          <div className="mx-auto max-w-lg space-y-3">
+            {/* Primary Mobile Navigation Links */}
+            <div className="grid grid-cols-2 gap-2">
               <Link
-                href="/blog"
-                onClick={() => setMobileOpen(false)}
-                className="hover:text-[#1956b4]"
+                href="/"
+                onClick={closeAllMenus}
+                className="flex items-center gap-2 rounded-xl border border-line bg-subcard/70 px-3 py-2.5 text-xs font-bold text-ink hover:border-[#1956b4]"
               >
-                Travel Guides
+                <BuildingStationIcon className="h-4 w-4 text-[#1956b4] dark:text-blue-300" />
+                <span>Home</span>
               </Link>
               <Link
+                href="/blog"
+                onClick={closeAllMenus}
+                className="flex items-center gap-2 rounded-xl border border-line bg-subcard/70 px-3 py-2.5 text-xs font-bold text-ink hover:border-[#1956b4]"
+              >
+                <BookOpenIcon className="h-4 w-4 text-[#fc6203]" />
+                <span>Travel Guides</span>
+              </Link>
+            </div>
+
+            {/* Category-Wise Tools Accordion inside Mobile Menu */}
+            <div className="overflow-hidden rounded-2xl border border-line bg-subcard/40">
+              <button
+                type="button"
+                onClick={() => setMobileToolsExpanded((prev) => !prev)}
+                aria-expanded={mobileToolsExpanded}
+                className="flex w-full cursor-pointer items-center justify-between border-b border-line bg-subcard px-3.5 py-3 text-left"
+              >
+                <span className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-[#1956b4] dark:text-blue-300">
+                  <CompassIcon className="h-4 w-4" />
+                  <span>All Travel Tools (Category-Wise)</span>
+                </span>
+                <ChevronDownIcon
+                  className={`h-4 w-4 text-ink-muted transition-transform ${
+                    mobileToolsExpanded ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+
+              {mobileToolsExpanded && (
+                <div className="space-y-4 p-3">
+                  {TOOL_CATEGORIES.map((category) => (
+                    <div key={category.id} className="space-y-1.5">
+                      <div className="flex items-center justify-between px-1">
+                        <span
+                          className={`rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${category.accentBadgeClass}`}
+                        >
+                          {category.categoryTitle}
+                        </span>
+                        <Link
+                          href={category.hubHref}
+                          onClick={closeAllMenus}
+                          className="text-[11px] font-bold text-[#1956b4] dark:text-blue-300"
+                        >
+                          Open Hub →
+                        </Link>
+                      </div>
+
+                      <div className="grid gap-1.5">
+                        {category.items.map((item) => (
+                          <Link
+                            key={item.id}
+                            href={item.href}
+                            onClick={closeAllMenus}
+                            className="flex items-center justify-between rounded-xl border border-line bg-card px-3 py-2.5 text-xs font-semibold text-ink shadow-2xs transition hover:border-[#1956b4]"
+                          >
+                            <span className="flex min-w-0 items-center gap-2.5">
+                              <span
+                                className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${category.accentBadgeClass}`}
+                              >
+                                {renderToolItemIcon(item.iconKey)}
+                              </span>
+                              <span className="truncate">{item.title}</span>
+                            </span>
+                            {item.badge ? (
+                              <span className="ml-2 shrink-0 rounded bg-emerald-500/15 px-1.5 py-0.5 text-[9px] font-bold text-emerald-700 dark:text-emerald-300">
+                                {item.badge}
+                              </span>
+                            ) : (
+                              <ArrowRightIcon className="ml-2 h-3.5 w-3.5 shrink-0 text-ink-muted" />
+                            )}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+
+                  <Link
+                    href="/tools"
+                    onClick={closeAllMenus}
+                    className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-[#1956b4] py-2.5 text-xs font-bold text-white"
+                  >
+                    <span>Open Full Tools Directory</span>
+                    <ArrowRightIcon className="h-3.5 w-3.5" />
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            {/* Company & Legal Links */}
+            <div className="grid grid-cols-2 gap-2 border-t border-line pt-3 text-xs font-semibold">
+              <Link
                 href="/about"
-                onClick={() => setMobileOpen(false)}
-                className="hover:text-[#1956b4]"
+                onClick={closeAllMenus}
+                className="rounded-lg bg-subcard px-3 py-2 text-ink-soft hover:text-ink"
               >
                 About Us
               </Link>
               <Link
+                href="/contact"
+                onClick={closeAllMenus}
+                className="rounded-lg bg-subcard px-3 py-2 text-ink-soft hover:text-ink"
+              >
+                Contact Us
+              </Link>
+              <Link
                 href="/privacy-policy"
-                onClick={() => setMobileOpen(false)}
-                className="hover:text-[#1956b4]"
+                onClick={closeAllMenus}
+                className="rounded-lg bg-subcard px-3 py-2 text-ink-soft hover:text-ink"
               >
                 Privacy Policy
               </Link>
               <Link
                 href="/terms"
-                onClick={() => setMobileOpen(false)}
-                className="hover:text-[#1956b4]"
+                onClick={closeAllMenus}
+                className="rounded-lg bg-subcard px-3 py-2 text-ink-soft hover:text-ink"
               >
                 Terms &amp; Disclaimer
-              </Link>
-              <Link
-                href="/contact"
-                onClick={() => setMobileOpen(false)}
-                className="hover:text-[#1956b4]"
-              >
-                Contact Us
               </Link>
             </div>
           </div>
