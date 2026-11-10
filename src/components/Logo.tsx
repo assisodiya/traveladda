@@ -7,9 +7,9 @@ interface LogoProps {
 }
 
 const SIZE_CLASSES = {
-  sm: "h-9 w-auto sm:h-10",
-  md: "h-10 w-auto sm:h-12",
-  lg: "h-12 w-auto sm:h-14",
+  sm: "h-10 w-auto sm:h-12",
+  md: "h-11 w-auto sm:h-14",
+  lg: "h-12 w-auto sm:h-15 lg:h-16",
 } as const;
 
 export function Logo({ size = "md", priority = false }: LogoProps) {

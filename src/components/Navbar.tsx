@@ -129,10 +129,10 @@ export function Navbar() {
         <PathnameSync onPathname={setPathname} />
       </Suspense>
 
-      <div className="mx-auto flex h-15 max-w-7xl items-center justify-between gap-3 px-3 sm:h-16 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-3 sm:h-20 sm:px-6 lg:px-8">
         {/* Left: Brand Logo */}
         <div onClick={closeAllMenus} className="shrink-0">
-          <Logo size="sm" priority />
+          <Logo size="lg" priority />
         </div>
 
         {/* Right: Desktop Navigation Menu + Tools Dropdown + Theme Toggle */}
@@ -395,7 +395,7 @@ export function Navbar() {
             </summary>
 
             {/* Mobile Full-Width Dropdown Panel */}
-            <div className="fixed inset-x-0 top-15 z-50 max-h-[calc(100dvh-3.75rem)] overflow-y-auto border-t border-line bg-card px-4 py-4 shadow-2xl sm:top-16 sm:max-h-[calc(100dvh-4rem)]">
+            <div className="fixed inset-x-0 top-16 z-50 max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-line bg-card px-4 py-4 shadow-2xl sm:top-20 sm:max-h-[calc(100dvh-5rem)]">
               <div className="mx-auto max-w-lg space-y-4">
                 {/* Main Mobile Pages */}
                 <div className="grid grid-cols-2 gap-2">
