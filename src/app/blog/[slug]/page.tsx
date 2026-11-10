@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 import { AirlineLogo } from "@/components/AirlineLogo";
 import {
   ArrowRightIcon,
@@ -64,7 +65,24 @@ export async function generateMetadata({
   };
 }
 
-export default async function BlogArticlePage({
+function BlogArticleSkeleton() {
+  return (
+    <main className="pb-16 sm:pb-24">
+      <section className="ta-hero py-10 sm:py-14">
+        <div className="mx-auto max-w-4xl space-y-4 px-4 sm:px-6 lg:px-8">
+          <div className="h-4 w-48 animate-pulse rounded bg-subcard" />
+          <div className="h-10 w-3/4 animate-pulse rounded-lg bg-subcard" />
+          <div className="h-5 w-2/3 animate-pulse rounded bg-subcard" />
+        </div>
+      </section>
+      <div className="mx-auto mt-8 max-w-6xl px-4 sm:mt-10 sm:px-6 lg:px-8">
+        <div className="h-96 animate-pulse rounded-2xl border border-line bg-card p-8" />
+      </div>
+    </main>
+  );
+}
+
+async function BlogArticleContent({
   params,
 }: {
   params: Promise<{ slug: string }>;
@@ -698,5 +716,17 @@ export default async function BlogArticlePage({
         </aside>
       </div>
     </main>
+  );
+}
+
+export default function BlogArticlePage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  return (
+    <Suspense fallback={<BlogArticleSkeleton />}>
+      <BlogArticleContent params={params} />
+    </Suspense>
   );
 }
