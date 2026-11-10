@@ -1,34 +1,50 @@
 import Link from "next/link";
-import { FLIGHT_BLOG_POSTS, RAIL_BLOG_POSTS } from "@/lib/blog-data";
+import { FEATURED_SEO_BLOG_POSTS } from "@/lib/blog-data";
 import { Logo } from "./Logo";
 
 export function Footer() {
   return (
     <footer className="border-t border-line bg-band text-ink-soft">
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
           {/* Brand Column */}
-          <div className="space-y-3">
+          <div className="space-y-3 lg:col-span-1">
             <Logo size="lg" />
-            <p className="text-xs leading-relaxed text-ink-muted sm:text-sm">
+            <p className="text-xs leading-relaxed text-ink-muted">
               Fast, distraction-free Indian &amp; global travel tools. Check
               live flight status, terminals &amp; gates, spot Indian Railways
-              trains live, verify 10-digit PNR seats, and plan hotel budgets.
+              trains live, verify 10-digit PNR seats, and calculate hotel GST.
             </p>
           </div>
 
           {/* Flight & Airport Tools */}
           <div>
             <h3 className="text-xs font-bold uppercase tracking-wider text-ink">
-              Flights &amp; Airports
+              Air &amp; Aviation Tools
             </h3>
-            <ul className="mt-3 space-y-2 text-sm">
+            <ul className="mt-3 space-y-2 text-xs sm:text-sm">
               <li>
                 <Link
                   href="/air/flight-status"
                   className="font-medium text-ink-soft transition hover:text-[#1956b4] dark:hover:text-blue-300"
                 >
                   Live Flight Status Tracker
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/tools/air#baggage"
+                  className="text-ink-muted transition hover:text-[#1956b4] dark:hover:text-blue-300"
+                >
+                  Cabin &amp; Check-In Baggage Rules
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/tools/air#buffer"
+                  className="text-ink-muted transition hover:text-[#1956b4] dark:hover:text-blue-300"
+                >
+                  Airport Arrival Time Calculator
                 </Link>
               </li>
               <li>
@@ -41,18 +57,10 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/tools/air#baggage"
+                  href="/tools/air#checklist"
                   className="text-ink-muted transition hover:text-[#1956b4] dark:hover:text-blue-300"
                 >
-                  Cabin &amp; Check-in Baggage Rules
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/tools/air#buffer"
-                  className="text-ink-muted transition hover:text-[#1956b4] dark:hover:text-blue-300"
-                >
-                  Airport Arrival Time Planner
+                  DigiYatra &amp; Boarding Checklist
                 </Link>
               </li>
             </ul>
@@ -61,9 +69,9 @@ export function Footer() {
           {/* Trains & Hotels */}
           <div>
             <h3 className="text-xs font-bold uppercase tracking-wider text-ink">
-              Trains &amp; Stays
+              Rail &amp; Hotel Tools
             </h3>
-            <ul className="mt-3 space-y-2 text-sm">
+            <ul className="mt-3 space-y-2 text-xs sm:text-sm">
               <li>
                 <Link
                   href="/rail/live-status"
@@ -85,7 +93,7 @@ export function Footer() {
                   href="/rail/pnr-status#decoder"
                   className="text-ink-muted transition hover:text-[#1956b4] dark:hover:text-blue-300"
                 >
-                  Coach &amp; Berth Decoder
+                  Coach, Berth &amp; Quota Decoder
                 </Link>
               </li>
               <li>
@@ -96,19 +104,24 @@ export function Footer() {
                   Hotel Room &amp; GST Calculator
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/tools"
+                  className="text-xs font-bold text-[#1956b4] hover:underline dark:text-blue-300"
+                >
+                  Explore All 12 Tools →
+                </Link>
+              </li>
             </ul>
           </div>
 
           {/* Popular Travel Guides */}
           <div>
             <h3 className="text-xs font-bold uppercase tracking-wider text-ink">
-              Popular Guides
+              2026–27 Travel Guides
             </h3>
-            <ul className="mt-3 space-y-2 text-sm">
-              {[
-                ...FLIGHT_BLOG_POSTS.slice(0, 3),
-                ...RAIL_BLOG_POSTS.slice(0, 1),
-              ].map((post) => (
+            <ul className="mt-3 space-y-2 text-xs sm:text-sm">
+              {FEATURED_SEO_BLOG_POSTS.slice(0, 4).map((post) => (
                 <li key={post.slug}>
                   <Link
                     href={`/blog/${post.slug}`}
@@ -123,7 +136,56 @@ export function Footer() {
                   href="/blog"
                   className="text-xs font-bold text-[#1956b4] hover:underline dark:text-blue-300"
                 >
-                  View all guides →
+                  View all 19 guides →
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Company, Legal & Commercial Compliance */}
+          <div>
+            <h3 className="text-xs font-bold uppercase tracking-wider text-ink">
+              Company &amp; Legal
+            </h3>
+            <ul className="mt-3 space-y-2 text-xs sm:text-sm">
+              <li>
+                <Link
+                  href="/about"
+                  className="font-medium text-ink-soft transition hover:text-[#1956b4] dark:hover:text-blue-300"
+                >
+                  About TravelAdda
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/privacy-policy"
+                  className="font-medium text-ink-soft transition hover:text-[#1956b4] dark:hover:text-blue-300"
+                >
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/terms"
+                  className="text-ink-muted transition hover:text-[#1956b4] dark:hover:text-blue-300"
+                >
+                  Terms &amp; Disclaimer
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/contact"
+                  className="text-ink-muted transition hover:text-[#1956b4] dark:hover:text-blue-300"
+                >
+                  Contact &amp; Support
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/sitemap.xml"
+                  className="text-ink-muted transition hover:text-[#1956b4] dark:hover:text-blue-300"
+                >
+                  XML Sitemap
                 </Link>
               </li>
             </ul>
@@ -131,19 +193,25 @@ export function Footer() {
         </div>
 
         <div className="mt-8 flex flex-col items-center justify-between gap-3 border-t border-line pt-6 text-xs text-ink-muted sm:flex-row">
-          <p>© 2026 TravelAdda. Simple, accurate Flight, Train &amp; Hotel tools.</p>
+          <p>
+            © 2026 TravelAdda (traveladda.in). Independent Flight, Train, PNR
+            &amp; Hotel Utility Portal.
+          </p>
           <div className="flex flex-wrap items-center gap-4">
-            <Link href="/air/flight-status" className="hover:text-ink">
-              Flight Status
+            <Link href="/tools" className="hover:text-ink">
+              All Tools
             </Link>
-            <Link href="/rail/live-status" className="hover:text-ink">
-              Train Status
+            <Link href="/about" className="hover:text-ink">
+              About Us
             </Link>
-            <Link href="/rail/pnr-status" className="hover:text-ink">
-              PNR Status
+            <Link href="/privacy-policy" className="hover:text-ink">
+              Privacy Policy
             </Link>
-            <Link href="/blog" className="hover:text-ink">
-              Blog
+            <Link href="/terms" className="hover:text-ink">
+              Terms
+            </Link>
+            <Link href="/contact" className="hover:text-ink">
+              Contact
             </Link>
           </div>
         </div>

@@ -31,6 +31,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.88,
     },
     {
+      url: `${BASE_URL}/tools`,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
       url: `${BASE_URL}/tools/air`,
       changeFrequency: "weekly",
       priority: 0.82,
@@ -39,6 +44,26 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${BASE_URL}/tools/hotel`,
       changeFrequency: "weekly",
       priority: 0.8,
+    },
+    {
+      url: `${BASE_URL}/about`,
+      changeFrequency: "monthly",
+      priority: 0.72,
+    },
+    {
+      url: `${BASE_URL}/privacy-policy`,
+      changeFrequency: "monthly",
+      priority: 0.68,
+    },
+    {
+      url: `${BASE_URL}/terms`,
+      changeFrequency: "monthly",
+      priority: 0.65,
+    },
+    {
+      url: `${BASE_URL}/contact`,
+      changeFrequency: "monthly",
+      priority: 0.7,
     },
   ];
 
