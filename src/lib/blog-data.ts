@@ -807,6 +807,16 @@ export const RAIL_BLOG_POSTS: BlogPost[] = [
     ],
     quickActionLinks: [
       {
+        label: "Open Train Chart Preparation Time Finder",
+        sublabel: "Check station-wise 1st & 2nd chart time + remote station",
+        href: "/rail/chart-time",
+      },
+      {
+        label: "Check 12952 Tejas Rajdhani Chart Times",
+        sublabel: "Live NDLS to MMCT station-by-station chart schedule",
+        href: "/rail/chart-time?train=12952",
+      },
+      {
         label: "Verify Chart Preparation Status",
         sublabel: "Enter 10-digit PNR to check coach & berth",
         href: "/rail/pnr-status",
@@ -928,6 +938,163 @@ export const RAIL_BLOG_POSTS: BlogPost[] = [
 ];
 
 export const FEATURED_SEO_BLOG_POSTS: BlogPost[] = [
+  // 0. Train Chart Preparation Time & Remote Charting Station Finder Guide
+  {
+    slug: "train-chart-preparation-time-remote-charting-station-indian-railways",
+    domain: "rail",
+    title:
+      "Train Chart Preparation Time & Remote Charting Station Guide (1st & 2nd IRCTC Chart Rules)",
+    excerpt:
+      "Find out the exact 1st reservation chart and 2nd vacancy chart preparation time for any Indian Railways train. Learn how Remote Charting Stations (chartRemoteStation) work, why intermediate station charts lock hours early, and how to grab last-minute Current Booking seats.",
+    category: "Charting Rules",
+    readTime: "8 min read",
+    publishedDate: "November 2026",
+    publishedIso: "2026-11-10",
+    author: {
+      name: "Aarav Deshmukh",
+      role: "Lead Rail Infrastructure & Rolling Stock Analyst",
+    },
+    accentColor: "from-blue-700 via-indigo-700 to-emerald-600",
+    heroTagline: "Station-by-Station IRCTC Chart Time & Remote Hub Guide",
+    primaryKeyword: "train chart preparation time",
+    seoKeywords: [
+      "train chart preparation time",
+      "irctc chart preparation time by train number",
+      "remote charting station indian railways",
+      "first chart and second vacancy chart time",
+      "12952 mmct tejas raj chart preparation time",
+      "when is railway reservation chart prepared",
+      "charting station finder online",
+      "rlwl pqwl gnwl chart preparation time",
+    ],
+    keyTakeaways: [
+      "Every Indian Railways train prepares two charts per charting zone: a 1st Reservation Chart (typically 4–8 hours before departure, or the previous evening for morning trains) and a 2nd Vacancy Chart (15–30 minutes before departure).",
+      "Your boarding station's chart is not always prepared at your boarding station—downstream halts are grouped under an upstream Primary Charting Hub (`chartRemoteStation`).",
+      "For example, on Train 12952 (New Delhi to Mumbai Central Tejas Rajdhani), Borivali (BVI) and Mumbai Central (MMCT) have their charts prepared remotely at Surat (ST) at 7:29 PM (1st chart) and 5:03 AM (2nd chart).",
+      "Use TravelAdda's Train Chart Preparation Time Finder (/rail/chart-time) to check the exact 1st chart time, 2nd chart time, and remote charting station for every stop on your train.",
+    ],
+    quickActionLinks: [
+      {
+        label: "Open Train Chart Preparation Time Tool",
+        sublabel: "Check 1st chart, 2nd chart & charting station by train no.",
+        href: "/rail/chart-time",
+      },
+      {
+        label: "12952 MMCT Tejas Raj Chart Schedule",
+        sublabel: "See NDLS, KOTA, RTM, BRC & ST charting stations live",
+        href: "/rail/chart-time?train=12952",
+      },
+      {
+        label: "Check 10-Digit IRCTC PNR Status",
+        sublabel: "Verify CNF, RAC, or WL seat after chart preparation",
+        href: "/rail/pnr-status",
+      },
+      {
+        label: "Spot Your Train Live GPS Status",
+        sublabel: "Track live delay, platform & coach order from engine",
+        href: "/rail/live-status",
+      },
+    ],
+    sections: [
+      {
+        heading:
+          "Why Knowing Your Exact Train Chart Preparation Time Matters for Waitlisted & RAC Passengers",
+        paragraphs: [
+          "If you are holding a Waitlisted (GNWL, RLWL, PQWL, TQWL) or RAC ticket on Indian Railways, the single most important clock is not your train's departure time—it is your boarding station's Train Chart Preparation Time. The moment CRIS (Centre for Railway Information Systems) runs the 1st reservation chart for your boarding station's charting zone, unused quota berths (VIP/HO, Ladies, Senior Citizen, Foreign Tourist, Defence) are released to clear RAC and Waitlisted passengers.",
+          "Until recently, passengers assumed every station prepares its chart exactly 4 hours before the train reaches that platform. In reality, Indian Railways divides a train's entire route into specific Charting Zones controlled by upstream Primary Charting Hubs (`chartRemoteStation`). Using TravelAdda's Train Chart Preparation Time Finder (/rail/chart-time), you can look up the exact minute both the 1st and 2nd charts are generated for every halt on your route.",
+        ],
+      },
+      {
+        heading:
+          "How 1st Reservation Chart vs. 2nd (Vacancy) Chart Preparation Works",
+        paragraphs: [
+          "Indian Railways executes a two-phase charting cycle at every charting station along a train's journey:",
+        ],
+        bullets: [
+          {
+            label: "1. First Reservation Chart (Primary Chart — 4 to 8 Hours Prior)",
+            detail:
+              "For afternoon and evening departures, the 1st chart is typically prepared 4 to 8 hours before departure (for example, 8:55 AM for the 4:55 PM 12952 New Delhi–Mumbai Tejas Rajdhani). For morning trains departing between 5:00 AM and 12:00 Noon, the 1st chart is usually prepared the previous evening between 8:00 PM and 9:30 PM so passengers know their confirmation status before going to sleep.",
+          },
+          {
+            label: "2. Current Booking Window (Between 1st Chart & 2nd Chart)",
+            detail:
+              "Immediately after the 1st chart is generated, any vacant berths left in AC or Sleeper coaches open on IRCTC under 'Current Availability' (CURR_AVBL). You can book these confirmed seats up to 30 minutes before departure.",
+          },
+          {
+            label: "3. Second Reservation Chart (Final Vacancy Chart — 15 to 30 Minutes Prior)",
+            detail:
+              "Locked 15 to 30 minutes before the train departs the charting station (for example, 4:40 PM for the 4:55 PM 12952 Tejas Rajdhani at New Delhi). It incorporates last-minute cancellations and Current Booking tickets and syncs directly to the onboard TTE's handheld terminal (HHT).",
+          },
+        ],
+        callout: {
+          title: "What If My E-Ticket Stays Waitlisted After the 2nd Chart?",
+          text: "If all passengers on an IRCTC online e-ticket remain Waitlisted (WL) after the final chart is prepared for your boarding station's charting hub, the ticket is automatically cancelled by IRCTC and the refund is credited back to your bank account within 3–5 business days.",
+        },
+      },
+      {
+        heading:
+          "What Is a Remote Charting Station (chartRemoteStation)? Real Example: 12952 Tejas Rajdhani",
+        paragraphs: [
+          "One of the most misunderstood rules on Indian Railways is Remote Location Charting. Not every railway halt has an independent charting trigger for every train. Instead, Indian Railways assigns each station on a route a `chartRemoteStation`—the upstream Primary Charting Hub that prepares and locks its reservation chart.",
+          "Look at the official station-by-station charting schedule for Train 12952 (New Delhi NDLS to Mumbai Central MMCT Tejas Rajdhani) on TravelAdda's Chart Time Tool:",
+        ],
+        bullets: [
+          {
+            label: "New Delhi (NDLS — Dep 16:55, Day 1) → Charting Hub: NDLS",
+            detail:
+              "Primary Origin Hub. 1st Chart is prepared at 8:55 AM (Day 1) and 2nd Vacancy Chart at 4:40 PM (Day 1)—15 minutes before departure.",
+          },
+          {
+            label: "Kota Jn (KOTA — Dep 21:40, Day 1) → Charting Hub: KOTA",
+            detail:
+              "Primary Intermediate Hub. 1st Chart is prepared at 11:24 AM (Day 1) and 2nd Vacancy Chart at 9:25 PM (Day 1).",
+          },
+          {
+            label: "Nagda Jn (NAD — Dep 23:59, Day 1) & Ratlam Jn (RTM — Dep 00:33, Day 2)",
+            detail:
+              "Each acts as its own charting hub: Nagda's 1st chart locks at 1:36 PM (2nd chart 11:35 PM), while Ratlam's 1st chart locks at 2:31 PM on Day 1 and its 2nd chart at 12:15 AM on Day 2 (+1 Day offset).",
+          },
+          {
+            label: "Vadodara Jn (BRC — Dep 03:50, Day 2) → Charting Hub: BRC",
+            detail:
+              "1st Chart is prepared on Day 1 at 5:48 PM (17:48), and the 2nd Vacancy Chart on Day 2 at 3:35 AM.",
+          },
+          {
+            label: "Surat (ST), Borivali (BVI) & Mumbai Central (MMCT) → Remote Charting Hub: ST (Surat)",
+            detail:
+              "Surat (Dep 05:18 AM, Day 2) is the final charting hub on the route, with its 1st Chart at 7:29 PM (Day 1) and 2nd Chart at 5:03 AM (Day 2). Both Borivali (BVI) and Mumbai Central (MMCT) have `chartRemoteStation: ST`—meaning their charts are prepared remotely at Surat at 7:29 PM the previous evening!",
+          },
+        ],
+      },
+      {
+        heading:
+          "How to Check Your Train's Chart Preparation Time & Charting Station on TravelAdda",
+        paragraphs: [
+          "You can verify the exact charting schedule for any Rajdhani, Vande Bharat, Shatabdi, Duronto, or Mail/Express train in under 5 seconds:",
+          "1. Open the TravelAdda Train Chart Preparation Time Finder (/rail/chart-time) from the Tools menu.\n2. Enter your 4 or 5-digit train number (such as 12952, 12951, 22436, or 12002) and tap 'Check Chart Time'.\n3. Select your Boarding Station pill at the top of the results to see a dedicated Spotlight Card with your station's 1st Chart Time, 2nd Vacancy Chart Time, Day Offset badge, and whether your chart is prepared at that station itself or remotely at an upstream hub.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "How many hours before departure is the 1st train chart prepared?",
+        answer:
+          "For most afternoon and evening trains, the 1st reservation chart is prepared 4 to 8 hours before departure from the origin or remote charting station. For morning trains departing before 12:00 PM, the 1st chart is typically prepared the previous evening between 8:00 PM and 9:30 PM.",
+      },
+      {
+        question: "What does Remote Charting Station (chartRemoteStation) mean?",
+        answer:
+          "A Remote Charting Station is the upstream railway hub where the reservation chart for your boarding station is generated. If your station is not a primary charting hub, its chart locks earlier when the upstream hub prepares its chart.",
+      },
+      {
+        question: "Can my waitlisted ticket confirm between the 1st Chart and 2nd Chart?",
+        answer:
+          "Yes! If confirmed passengers cancel their tickets after the 1st chart is prepared, those freed berths are allocated to remaining RAC or Waitlisted passengers when the 2nd (Vacancy) Chart is prepared 15 to 30 minutes before departure.",
+      },
+    ],
+  },
+
   // 1. Best Places to Travel in India During Winter 2026–27
   {
     slug: "best-places-to-travel-in-india-during-winter-2026-27",

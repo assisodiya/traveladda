@@ -632,10 +632,17 @@ async function BlogArticleContent({
                 </p>
                 <div className="mt-4 space-y-2">
                   <Link
-                    href="/rail/pnr-status"
+                    href="/rail/chart-time"
                     className="ta-btn-primary inline-flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-xs font-bold"
                   >
-                    <TicketIcon className="h-3.5 w-3.5" />
+                    <ClockIcon className="h-3.5 w-3.5" />
+                    <span>Check Train Chart Time</span>
+                  </Link>
+                  <Link
+                    href="/rail/pnr-status"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-line bg-subcard px-4 py-2.5 text-xs font-bold text-ink hover:border-[#1956b4]"
+                  >
+                    <TicketIcon className="h-3.5 w-3.5 text-[#fc6203]" />
                     <span>Check PNR Status</span>
                   </Link>
                   <Link

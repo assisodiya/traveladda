@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import {
   ArrowRightIcon,
+  BookOpenIcon,
   BuildingStationIcon,
   CheckCircleIcon,
   ChevronDownIcon,
@@ -13,13 +14,17 @@ import {
   TrainIcon,
 } from "@/components/Icons";
 import { TrainChartTimeChecker } from "@/components/TrainChartTimeChecker";
+import {
+  FEATURED_SEO_BLOG_POSTS,
+  RAIL_BLOG_POSTS,
+} from "@/lib/blog-data";
 import { POPULAR_CHART_TRAINS } from "@/lib/chart-time-types";
 
 export const metadata: Metadata = {
   title:
     "Train Chart Preparation Time & Charting Station Finder | 1st & 2nd IRCTC Chart Time",
   description:
-    "Check exact 1st reservation chart and 2nd vacancy chart preparation time for any Indian Railways train. Find your boarding station's remote charting station (chartRemoteStation) and station-by-station charting schedule.",
+    "Check exact 1st reservation chart and 2nd vacancy chart preparation time for any Indian Railways train by train number. Find your boarding station's remote charting station (chartRemoteStation) and station-by-station charting schedule on TravelAdda.",
   keywords: [
     "train chart preparation time",
     "irctc chart preparation time",
@@ -29,6 +34,8 @@ export const metadata: Metadata = {
     "12952 mmct tejas raj chart time",
     "vacancy chart preparation time",
     "when is train chart prepared",
+    "irctc 1st chart and 2nd chart time",
+    "railway chart preparation time calculator",
   ],
   alternates: {
     canonical: "/rail/chart-time",
@@ -43,7 +50,34 @@ export const metadata: Metadata = {
     locale: "en_IN",
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Train Chart Preparation Time & Charting Station Finder | TravelAdda",
+    description:
+      "Check exact 1st reservation chart time, 2nd vacancy chart time & remote charting station (chartRemoteStation) for any Indian Railways train.",
+  },
 };
+
+const HOW_IT_WORKS_STEPS = [
+  {
+    step: "1",
+    title: "Enter 4 or 5-Digit Train Number",
+    detail:
+      "Type any Indian Railways train number (such as 12952 MMCT Tejas Rajdhani, 12951, 22436 Vande Bharat, or 12002 Shatabdi) in the search bar.",
+  },
+  {
+    step: "2",
+    title: "Select Your Boarding Station",
+    detail:
+      "Tap your boarding station pill to spotlight its exact 1st Reservation Chart Time, 2nd (Vacancy) Chart Time, and Day Offset.",
+  },
+  {
+    step: "3",
+    title: "Verify Your Remote Charting Hub",
+    detail:
+      "See whether your station prepares its own chart (Primary Hub) or has its chart locked earlier at an upstream Remote Charting Station (chartRemoteStation).",
+  },
+];
 
 const CHART_TERMINOLOGY = [
   {
@@ -93,6 +127,12 @@ const CHART_TIME_FAQS = [
     answer:
       "Chart times are always referenced relative to the train's Origin Start Date. 'Same Day (Day 1)' means the chart is prepared on the same calendar day the train departs its origin station, whereas 'Next Day (+1 Day)' means the chart is prepared on the following calendar day for overnight Day-2 stations.",
   },
+  {
+    question:
+      "Can I book confirmed Current Availability tickets between the 1st and 2nd chart?",
+    answer:
+      "Yes! Immediately after the 1st reservation chart is prepared for a charting station, any leftover vacant berths open under IRCTC Current Booking (CURR_AVBL) until the 2nd (vacancy) chart is locked 15–30 minutes before departure.",
+  },
 ];
 
 function ChartTimeFallback() {
@@ -107,6 +147,16 @@ export default async function TrainChartTimePage() {
   "use cache";
   cacheLife("hours");
 
+  const featuredChartBlog = FEATURED_SEO_BLOG_POSTS.find(
+    (p) =>
+      p.slug ===
+      "train-chart-preparation-time-remote-charting-station-indian-railways"
+  );
+  const relatedRailGuides = [
+    ...(featuredChartBlog ? [featuredChartBlog] : []),
+    ...RAIL_BLOG_POSTS,
+  ].slice(0, 3);
+
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
@@ -117,6 +167,13 @@ export default async function TrainChartTimePage() {
         applicationCategory: "TravelApplication",
         operatingSystem: "All",
         browserRequirements: "Requires JavaScript",
+        image: "https://traveladda.in/assets/TravelAdda-travel-logo.png",
+        provider: {
+          "@type": "Organization",
+          name: "TravelAdda",
+          url: "https://traveladda.in",
+          logo: "https://traveladda.in/assets/TravelAdda-travel-logo.png",
+        },
         offers: {
           "@type": "Offer",
           price: "0",
@@ -147,6 +204,16 @@ export default async function TrainChartTimePage() {
             item: "https://traveladda.in/rail/chart-time",
           },
         ],
+      },
+      {
+        "@type": "HowTo",
+        name: "How to Check Indian Railways Train Chart Preparation Time & Remote Charting Station",
+        step: HOW_IT_WORKS_STEPS.map((s, idx) => ({
+          "@type": "HowToStep",
+          position: idx + 1,
+          name: s.title,
+          text: s.detail,
+        })),
       },
       {
         "@type": "FAQPage",
@@ -289,6 +356,29 @@ export default async function TrainChartTimePage() {
         </div>
       </section>
 
+      {/* 3-Step How It Works */}
+      <section className="mx-auto mt-12 max-w-6xl px-4 sm:mt-16 sm:px-6 lg:px-8">
+        <h2 className="text-lg font-extrabold text-ink sm:text-xl">
+          How to Check Train Chart Preparation Time &amp; Charting Station Online
+        </h2>
+        <div className="mt-4 grid gap-3.5 md:grid-cols-3">
+          {HOW_IT_WORKS_STEPS.map((item) => (
+            <div
+              key={item.step}
+              className="rounded-xl border border-line bg-card p-4 sm:p-5"
+            >
+              <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-blue-50 font-mono text-xs font-bold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
+                {item.step}
+              </span>
+              <h3 className="mt-2.5 text-sm font-bold text-ink">{item.title}</h3>
+              <p className="mt-1 text-xs leading-relaxed text-ink-soft">
+                {item.detail}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Charting Terminology Explained */}
       <section className="mx-auto mt-12 max-w-6xl px-4 sm:mt-16 sm:px-6 lg:px-8">
         <h2 className="text-lg font-extrabold text-ink sm:text-xl">
@@ -308,6 +398,60 @@ export default async function TrainChartTimePage() {
                 {item.meaning}
               </p>
             </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Charting & Rail Blog Guides Section */}
+      <section className="mx-auto mt-12 max-w-6xl px-4 sm:mt-16 sm:px-6 lg:px-8">
+        <div className="flex flex-wrap items-end justify-between gap-2">
+          <div>
+            <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#1956b4] dark:text-blue-400">
+              <BookOpenIcon className="h-3.5 w-3.5" />
+              <span>Expert Railway Guides</span>
+            </span>
+            <h2 className="mt-1 text-lg font-extrabold text-ink sm:text-xl">
+              IRCTC Chart Preparation Rules, Remote Hubs &amp; PNR Guides
+            </h2>
+            <p className="mt-0.5 text-xs text-ink-soft sm:text-sm">
+              Deep-dive articles explaining 1st &amp; 2nd reservation charts,
+              remote charting hubs, and waitlist confirmation priority.
+            </p>
+          </div>
+          <Link
+            href="/blog"
+            className="text-xs font-bold text-[#1956b4] hover:underline dark:text-blue-400"
+          >
+            View All Guides →
+          </Link>
+        </div>
+
+        <div className="mt-4 grid gap-4 md:grid-cols-3">
+          {relatedRailGuides.map((post) => (
+            <Link
+              key={post.slug}
+              href={`/blog/${post.slug}`}
+              className="group flex flex-col justify-between rounded-xl border border-line bg-card p-4 shadow-2xs transition hover:border-[#1956b4] hover:shadow-sm sm:p-5"
+            >
+              <div>
+                <div className="flex items-center justify-between gap-2 text-[11px] font-semibold text-ink-muted">
+                  <span className="rounded bg-emerald-50 px-2 py-0.5 font-bold text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
+                    {post.category}
+                  </span>
+                  <span>{post.readTime}</span>
+                </div>
+                <h3 className="mt-2.5 line-clamp-2 text-sm font-bold leading-snug text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-400 sm:text-base">
+                  {post.title}
+                </h3>
+                <p className="mt-1.5 line-clamp-3 text-xs leading-relaxed text-ink-soft">
+                  {post.excerpt}
+                </p>
+              </div>
+              <span className="mt-4 inline-flex items-center gap-1 text-xs font-bold text-[#fc6203]">
+                <span>Read Charting Guide</span>
+                <ArrowRightIcon className="h-3.5 w-3.5" />
+              </span>
+            </Link>
           ))}
         </div>
       </section>
@@ -339,7 +483,39 @@ export default async function TrainChartTimePage() {
           ))}
         </div>
       </section>
+
+      {/* Bottom Cross-Link CTA */}
+      <section className="mx-auto mt-12 max-w-6xl px-4 sm:mt-16 sm:px-6 lg:px-8">
+        <div className="ta-cta-banner rounded-2xl p-5 sm:p-7">
+          <div className="flex flex-col items-start justify-between gap-4 lg:flex-row lg:items-center">
+            <div>
+              <h2 className="text-lg font-extrabold text-ink sm:text-xl">
+                Has Your Station&apos;s Chart Been Prepared? Check Your 10-Digit PNR Now
+              </h2>
+              <p className="mt-1 text-xs text-ink-soft sm:text-sm">
+                Verify your final CNF coach &amp; berth number or spot your
+                train&apos;s live GPS running status.
+              </p>
+            </div>
+            <div className="flex w-full flex-wrap gap-2.5 sm:w-auto">
+              <Link
+                href="/rail/pnr-status"
+                className="ta-btn-primary inline-flex flex-1 items-center justify-center gap-2 rounded-lg px-5 py-3 text-xs font-bold sm:flex-initial sm:text-sm"
+              >
+                <TicketIcon className="h-4 w-4" />
+                <span>Check 10-Digit PNR</span>
+              </Link>
+              <Link
+                href="/rail/live-status"
+                className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border border-line bg-card px-5 py-3 text-xs font-bold text-ink transition hover:border-[#1956b4] sm:flex-initial sm:text-sm"
+              >
+                <TrainIcon className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                <span>Spot Train Live</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
   );
 }
-
