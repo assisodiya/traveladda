@@ -73,6 +73,40 @@ const THEME_INIT_SCRIPT = `
     document.documentElement.classList.toggle('dark', useDark);
     document.documentElement.style.colorScheme = useDark ? 'dark' : 'light';
   } catch (e) {}
+
+  window.__taToggleTheme = function() {
+    var now = Date.now();
+    if (window.__taLastThemeToggle && now - window.__taLastThemeToggle < 150) return;
+    window.__taLastThemeToggle = now;
+    var nextDark = !document.documentElement.classList.contains('dark');
+    document.documentElement.classList.toggle('dark', nextDark);
+    document.documentElement.style.colorScheme = nextDark ? 'dark' : 'light';
+    try {
+      localStorage.setItem('traveladda-theme', nextDark ? 'dark' : 'light');
+    } catch (err) {}
+  };
+
+  document.addEventListener('click', function(e) {
+    var target = e.target;
+    if (!target || typeof target.closest !== 'function') return;
+
+    var themeBtn = target.closest('[data-theme-toggle]');
+    if (themeBtn) {
+      window.__taToggleTheme();
+      return;
+    }
+
+    var openDetails = document.querySelectorAll('header details[open]');
+    if (!openDetails.length) return;
+
+    var clickedLink = target.closest('header details[open] a[href]');
+    for (var i = 0; i < openDetails.length; i++) {
+      var d = openDetails[i];
+      if (clickedLink || !d.contains(target)) {
+        d.removeAttribute('open');
+      }
+    }
+  });
 })();
 `;
 
