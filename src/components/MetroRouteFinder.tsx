@@ -828,401 +828,630 @@ export function MetroRouteFinder({
           </div>
 
           {/* Visual Corridor Progress Strip + Step-by-Step Journey Card */}
-          <div className="rounded-2xl border border-line bg-card p-3.5 shadow-sm sm:p-6">
-            <div className="flex flex-col justify-between gap-3 border-b border-line pb-3.5 sm:flex-row sm:items-center">
-              <div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="rounded-md bg-[#1956b4] px-2.5 py-0.5 text-[11px] font-bold text-white">
-                    {activeRoute.label}
-                  </span>
-                  <h3 className="text-base font-extrabold text-ink sm:text-lg">
-                    {activeRoute.fromStation.name} →{" "}
-                    {activeRoute.toStation.name}
-                  </h3>
-                </div>
-                <p className="mt-1 text-xs text-ink-muted">
-                  {activeRoute.fare.fareNote}
-                </p>
-              </div>
-
-              <Link
-                href={buildMetroRoutePath(
-                  activeRoute.toStation.slug,
-                  activeRoute.fromStation.slug,
-                )}
-                className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-line bg-subcard px-3 py-2 text-xs font-bold text-[#1956b4] transition hover:border-[#1956b4] dark:text-blue-300"
-              >
-                <SwapIcon className="h-3.5 w-3.5" />
-                <span>
-                  Reverse Route ({activeRoute.toStation.name} →{" "}
-                  {activeRoute.fromStation.name})
-                </span>
-              </Link>
-            </div>
-
-            {/* Proportional Color Line Progress Bar */}
-            <div className="my-3.5 rounded-xl border border-line bg-subcard/60 p-3">
-              <div className="mb-2 flex flex-wrap items-center justify-between gap-1 text-xs font-bold text-ink">
-                <span>Metro Corridor Breakdown</span>
-                <span className="text-[11px] text-ink-muted">
-                  Frequency: Every {activeRoute.peakFrequencyMin}
-                </span>
-              </div>
-              <div className="flex h-3 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800">
-                {activeRoute.segments.map((seg) => {
-                  const weight = Math.max(10, seg.durationMin);
-                  return (
-                    <div
-                      key={`bar-${seg.segmentIndex}`}
-                      style={{
-                        flexGrow: weight,
-                        backgroundColor: seg.line?.color || "#64748B",
-                      }}
-                      className="h-full border-r border-white/40 last:border-r-0"
-                    />
-                  );
-                })}
-              </div>
-              <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
-                {activeRoute.segments.map((seg, idx) => (
-                  <div
-                    key={`chip-${seg.segmentIndex}`}
-                    className="flex items-center gap-1 text-xs"
-                  >
-                    {idx > 0 && (
-                      <ArrowRightIcon className="h-3 w-3 text-ink-muted" />
-                    )}
-                    {seg.line ? (
-                      <span
-                        style={{
-                          backgroundColor: seg.line.color,
-                          color: seg.line.textColor,
-                        }}
-                        className="inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[10px] font-extrabold shadow-2xs sm:text-[11px]"
-                      >
-                        <span>{seg.line.badge}</span>
-                        <span className="opacity-85">
-                          ({seg.stopsCount} stops)
-                        </span>
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 rounded-md border border-amber-500/40 bg-amber-500/15 px-2 py-0.5 text-[10px] font-bold text-amber-800 sm:text-[11px] dark:text-amber-300">
-                        🚶 Walkway ({seg.durationMin}m)
-                      </span>
-                    )}
+          <div className="overflow-hidden rounded-2xl border border-line bg-card shadow-sm">
+            {/* Top Journey Banner Header */}
+            <div className="border-b border-line bg-gradient-to-r from-[#0b192c] via-[#132a4a] to-[#1956b4] p-4 text-white sm:p-5">
+              <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-[#fc6203] px-2.5 py-0.5 text-[11px] font-extrabold uppercase tracking-wider text-white shadow-2xs">
+                      <TrainIcon className="h-3 w-3" />
+                      <span>{activeRoute.label}</span>
+                    </span>
+                    <span className="rounded-full bg-white/15 px-2.5 py-0.5 text-[11px] font-bold text-blue-100">
+                      {activeRoute.totalStops} Stops •{" "}
+                      {activeRoute.totalDurationMin} mins • ₹
+                      {activeRoute.fare.tokenFareInr}
+                    </span>
                   </div>
-                ))}
+                  <h3 className="mt-2 flex flex-wrap items-center gap-2 text-lg font-black tracking-tight text-white sm:text-xl">
+                    <span>{activeRoute.fromStation.name}</span>
+                    <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-white/15 text-xs text-amber-300">
+                      →
+                    </span>
+                    <span>{activeRoute.toStation.name}</span>
+                  </h3>
+                  <p className="mt-1 text-[11px] text-blue-100/85 sm:text-xs">
+                    {activeRoute.fare.fareNote}
+                  </p>
+                </div>
+
+                <Link
+                  href={buildMetroRoutePath(
+                    activeRoute.toStation.slug,
+                    activeRoute.fromStation.slug,
+                  )}
+                  className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-xl border border-white/25 bg-white/10 px-3.5 py-2.5 text-xs font-extrabold text-white backdrop-blur-xs transition hover:bg-white/20"
+                >
+                  <SwapIcon className="h-3.5 w-3.5 text-amber-300" />
+                  <span>
+                    Reverse ({activeRoute.toStation.name} →{" "}
+                    {activeRoute.fromStation.name})
+                  </span>
+                </Link>
               </div>
             </div>
 
-            {/* Step-by-Step Segments & Interchanges */}
-            <div className="mt-4 space-y-3.5 sm:space-y-4">
-              {activeRoute.segments.map((seg, segIdx) => {
-                const isExpanded =
-                  expandedSegments[seg.segmentIndex] ??
-                  seg.intermediateStops.length <= 14;
-                const lineColor = seg.line?.color || "#64748B";
-                const lineTextColor = seg.line?.textColor || "#FFFFFF";
-                const intermediateOnly = seg.intermediateStops.slice(1, -1);
+            <div className="p-3.5 sm:p-6">
+              {/* Visual Metro Corridor Node Strip */}
+              <div className="mb-5 rounded-2xl border border-line bg-subcard/70 p-3.5 sm:p-4">
+                <div className="mb-2.5 flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-ink">
+                    <SparklesIcon className="h-3.5 w-3.5 text-[#1956b4]" />
+                    <span>Metro Corridor Breakdown</span>
+                  </div>
+                  <span className="rounded-full border border-line bg-card px-2.5 py-0.5 text-[11px] font-bold text-ink-soft">
+                    Train Frequency: Every {activeRoute.peakFrequencyMin}
+                  </span>
+                </div>
 
-                const nextSeg = activeRoute.segments[segIdx + 1];
-                const matchingInterchange =
-                  nextSeg && nextSeg.type === "metro" && seg.type === "metro"
-                    ? activeRoute.interchanges.find(
-                        (ic) =>
-                          !ic.isWalkway &&
-                          ic.station.id === seg.toStation.id &&
-                          ic.fromLine.id === seg.line?.id,
-                      )
-                    : null;
+                {/* Proportional Segmented Track Bar with Endpoint Nodes */}
+                <div className="relative my-3 flex h-3.5 w-full overflow-hidden rounded-full bg-slate-200 p-0.5 shadow-inner dark:bg-slate-800">
+                  {activeRoute.segments.map((seg) => {
+                    const weight = Math.max(10, seg.durationMin);
+                    return (
+                      <div
+                        key={`bar-${seg.segmentIndex}`}
+                        style={{
+                          flexGrow: weight,
+                          backgroundColor: seg.line?.color || "#64748B",
+                        }}
+                        className="h-full border-r-2 border-white first:rounded-l-full last:rounded-r-full last:border-r-0 dark:border-slate-900"
+                      />
+                    );
+                  })}
+                </div>
 
-                if (seg.type === "walkway") {
+                {/* Visual Flow Pills: Origin -> Line -> Interchange -> Destination */}
+                <div className="mt-3 flex flex-wrap items-center gap-1.5 sm:gap-2">
+                  <span className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-[11px] font-extrabold text-emerald-800 dark:text-emerald-300">
+                    <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                    <span>{activeRoute.fromStation.name}</span>
+                  </span>
+
+                  {activeRoute.segments.map((seg, idx) => (
+                    <div
+                      key={`chip-${seg.segmentIndex}`}
+                      className="flex flex-wrap items-center gap-1.5 sm:gap-2"
+                    >
+                      <ArrowRightIcon className="h-3.5 w-3.5 text-ink-muted" />
+                      {seg.line ? (
+                        <span
+                          style={{
+                            backgroundColor: seg.line.color,
+                            color: seg.line.textColor,
+                          }}
+                          className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[11px] font-extrabold shadow-2xs"
+                        >
+                          <TrainIcon className="h-3 w-3" />
+                          <span>{seg.line.badge}</span>
+                          <span className="rounded bg-black/15 px-1.5 py-0.2 text-[10px] font-bold">
+                            {seg.stopsCount} stops • {seg.durationMin}m
+                          </span>
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 rounded-lg border border-amber-500/40 bg-amber-500/15 px-2.5 py-1 text-[11px] font-bold text-amber-800 dark:text-amber-300">
+                          🚶 Walkway ({seg.durationMin}m)
+                        </span>
+                      )}
+
+                      {idx < activeRoute.segments.length - 1 && (
+                        <>
+                          <ArrowRightIcon className="h-3.5 w-3.5 text-ink-muted" />
+                          <span className="inline-flex items-center gap-1 rounded-lg border border-amber-500/40 bg-amber-500/10 px-2 py-1 text-[11px] font-extrabold text-amber-900 dark:text-amber-300">
+                            <span>⇄ {seg.toStation.name}</span>
+                          </span>
+                        </>
+                      )}
+                    </div>
+                  ))}
+
+                  <ArrowRightIcon className="h-3.5 w-3.5 text-ink-muted" />
+                  <span className="inline-flex items-center gap-1.5 rounded-lg border border-[#1956b4]/30 bg-[#1956b4]/10 px-2.5 py-1 text-[11px] font-extrabold text-[#1956b4] dark:text-blue-300">
+                    <span className="h-2 w-2 rounded-full bg-[#1956b4]" />
+                    <span>{activeRoute.toStation.name}</span>
+                  </span>
+                </div>
+              </div>
+
+              {/* Step-by-Step Segments & Interchanges */}
+              <div className="space-y-4 sm:space-y-5">
+                {activeRoute.segments.map((seg, segIdx) => {
+                  const isExpanded =
+                    expandedSegments[seg.segmentIndex] ??
+                    seg.intermediateStops.length <= 14;
+                  const lineColor = seg.line?.color || "#64748B";
+                  const lineTextColor = seg.line?.textColor || "#FFFFFF";
+                  const intermediateOnly = seg.intermediateStops.slice(1, -1);
+
+                  const nextSeg = activeRoute.segments[segIdx + 1];
+                  const matchingInterchange =
+                    nextSeg && nextSeg.type === "metro" && seg.type === "metro"
+                      ? activeRoute.interchanges.find(
+                          (ic) =>
+                            !ic.isWalkway &&
+                            ic.station.id === seg.toStation.id &&
+                            ic.fromLine.id === seg.line?.id,
+                        )
+                      : null;
+
+                  if (seg.type === "walkway") {
+                    return (
+                      <div
+                        key={`seg-${seg.segmentIndex}`}
+                        className="rounded-2xl border-2 border-dashed border-amber-500/50 bg-amber-50/80 p-4 dark:bg-amber-950/25"
+                      >
+                        <div className="flex items-start gap-3">
+                          <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-500 text-sm font-black text-white shadow-xs">
+                            🚶
+                          </span>
+                          <div className="min-w-0 flex-1">
+                            <div className="flex flex-wrap items-center justify-between gap-2">
+                              <p className="text-xs font-extrabold uppercase tracking-wider text-amber-900 dark:text-amber-300">
+                                Footbridge / Skywalk Transfer
+                              </p>
+                              <span className="rounded-full bg-amber-500/20 px-2.5 py-0.5 text-[11px] font-extrabold text-amber-900 dark:text-amber-200">
+                                {seg.durationMin} mins •{" "}
+                                {Math.round(seg.distanceKm * 1000)}m walk
+                              </span>
+                            </div>
+                            <p className="mt-1 text-xs font-bold text-ink sm:text-sm">
+                              Walk from{" "}
+                              <span className="font-extrabold underline">
+                                {seg.fromStation.name}
+                              </span>{" "}
+                              to{" "}
+                              <span className="font-extrabold underline">
+                                {seg.toStation.name}
+                              </span>
+                            </p>
+                            {seg.walkwayNote && (
+                              <p className="mt-0.5 text-[11px] text-ink-muted">
+                                {seg.walkwayNote}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  }
+
+                  const startStep = seg.intermediateStops[0];
+                  const endStep =
+                    seg.intermediateStops[seg.intermediateStops.length - 1];
+
                   return (
                     <div
                       key={`seg-${seg.segmentIndex}`}
-                      className="rounded-xl border-2 border-dashed border-amber-500/50 bg-amber-50/70 p-3.5 dark:bg-amber-950/20"
+                      className="space-y-4"
                     >
-                      <div className="flex items-start gap-2.5">
-                        <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-500 text-sm font-black text-white">
-                          ⇄
-                        </span>
-                        <div className="min-w-0">
-                          <p className="text-xs font-extrabold uppercase tracking-wider text-amber-800 dark:text-amber-300">
-                            Walkway Transfer • {seg.durationMin} mins (
-                            {Math.round(seg.distanceKm * 1000)}m)
-                          </p>
-                          <p className="text-xs font-bold text-ink sm:text-sm">
-                            Walk from{" "}
-                            <span className="underline">
-                              {seg.fromStation.name}
-                            </span>{" "}
-                            to{" "}
-                            <span className="underline">
-                              {seg.toStation.name}
-                            </span>
-                          </p>
-                          {seg.walkwayNote && (
-                            <p className="mt-0.5 text-[11px] text-ink-muted">
-                              {seg.walkwayNote}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                }
-
-                return (
-                  <div key={`seg-${seg.segmentIndex}`} className="space-y-3.5">
-                    <div className="overflow-hidden rounded-2xl border border-line bg-subcard/30">
-                      {/* Segment Header */}
-                      <div
-                        style={{ borderLeft: `6px solid ${lineColor}` }}
-                        className="flex flex-col justify-between gap-2 border-b border-line bg-subcard/80 px-3.5 py-2.5 sm:flex-row sm:items-center sm:px-4 sm:py-3"
-                      >
-                        <div className="flex flex-wrap items-center gap-2">
-                          <span
-                            style={{
-                              backgroundColor: lineColor,
-                              color: lineTextColor,
-                            }}
-                            className="rounded-lg px-2.5 py-1 text-xs font-extrabold shadow-xs"
-                          >
-                            {seg.line?.badge || "Metro Line"}
-                          </span>
-                          <div>
-                            <p className="text-xs font-extrabold text-ink sm:text-sm">
-                              Towards {seg.towardsTerminal}
-                            </p>
-                            <p className="text-[11px] font-semibold text-ink-muted">
-                              {seg.platformHint}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center gap-2 text-xs font-bold text-ink-soft">
-                          <span className="rounded-md bg-card px-2 py-0.5">
-                            {seg.stopsCount} Stops
-                          </span>
-                          <span className="rounded-md bg-card px-2 py-0.5">
-                            {seg.durationMin} mins
-                          </span>
-                          <span className="rounded-md bg-card px-2 py-0.5">
-                            {seg.distanceKm} km
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Segment Timeline Body */}
-                      <div className="p-3.5 sm:p-4">
-                        <div className="relative pl-5 sm:pl-6">
-                          {/* Vertical Colored Line */}
-                          <span
-                            style={{ backgroundColor: lineColor }}
-                            className="absolute top-2 bottom-2 left-1.5 w-1 rounded-full sm:left-2"
-                          />
-
-                          {/* Boarding Station */}
-                          <div className="relative flex flex-col justify-between gap-1 pb-3 sm:flex-row sm:items-center">
-                            <span
-                              style={{
-                                borderColor: lineColor,
-                              }}
-                              className="absolute top-1 -left-[19px] h-3.5 w-3.5 rounded-full border-4 bg-white sm:-left-[22px] sm:h-4 sm:w-4 dark:bg-slate-900"
-                            />
-                            <div>
-                              <div className="flex flex-wrap items-center gap-1.5">
-                                <span className="rounded bg-emerald-500/15 px-1.5 py-0.5 text-[10px] font-extrabold uppercase text-emerald-700 dark:text-emerald-300">
-                                  {segIdx === 0 ? "Board Origin" : "Board Here"}
-                                </span>
-                                <Link
-                                  href={buildMetroStationPath(
-                                    seg.fromStation.slug,
-                                  )}
-                                  className="text-sm font-extrabold text-ink hover:text-[#1956b4] hover:underline sm:text-base"
-                                >
-                                  {seg.fromStation.name}
-                                </Link>
-                              </div>
-                              <p className="mt-0.5 text-[11px] text-ink-muted sm:text-xs">
-                                {seg.platformHint} • First:{" "}
-                                {seg.fromStation.firstTrain}
-                              </p>
-                            </div>
-                            <div className="font-mono text-xs font-bold text-ink-soft sm:text-right">
-                              {
-                                seg.intermediateStops[0]
-                                  ?.cumulativeDurationMin
-                              }{" "}
-                              min •{" "}
-                              {
-                                seg.intermediateStops[0]
-                                  ?.cumulativeDistanceKm
-                              }{" "}
-                              km
-                            </div>
-                          </div>
-
-                          {/* Intermediate Stops Toggle + List */}
-                          {intermediateOnly.length > 0 && (
-                            <div className="my-1.5">
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  toggleSegmentStops(seg.segmentIndex)
-                                }
-                                className="mb-2 inline-flex items-center gap-1.5 rounded-lg border border-line bg-card px-2.5 py-1 text-[11px] font-bold text-[#1956b4] transition hover:border-[#1956b4] sm:text-xs dark:text-blue-300"
-                              >
-                                <span>
-                                  {isExpanded ? "Hide" : "Show"}{" "}
-                                  {intermediateOnly.length} intermediate stop
-                                  {intermediateOnly.length > 1 ? "s" : ""}
-                                </span>
-                                <span>{isExpanded ? "▲" : "▼"}</span>
-                              </button>
-
-                              {isExpanded && (
-                                <div className="space-y-2 border-l border-dashed border-line/70 py-1 pl-2.5 sm:pl-3">
-                                  {intermediateOnly.map((stop, stIdx) => (
-                                    <div
-                                      key={`${seg.segmentIndex}-${stop.stopId}`}
-                                      className="relative flex items-center justify-between gap-2 text-xs"
-                                    >
-                                      <span
-                                        style={{ backgroundColor: lineColor }}
-                                        className="absolute top-1.5 -left-[25px] h-2.5 w-2.5 rounded-full ring-2 ring-white sm:-left-[31px] dark:ring-slate-900"
-                                      />
-                                      <div className="flex min-w-0 flex-wrap items-center gap-1.5">
-                                        <span className="font-mono text-[10px] font-bold text-ink-muted">
-                                          {stIdx + 1}.
-                                        </span>
-                                        <Link
-                                          href={buildMetroStationPath(
-                                            stop.slug,
-                                          )}
-                                          className="truncate font-semibold text-ink hover:text-[#1956b4] hover:underline"
-                                        >
-                                          {stop.name}
-                                        </Link>
-                                        {stop.isInterchange && (
-                                          <span className="rounded bg-subcard px-1.5 py-0.5 text-[9px] font-bold text-ink-muted">
-                                            Interchange
-                                          </span>
-                                        )}
-                                      </div>
-                                      <span className="shrink-0 font-mono text-[11px] text-ink-muted">
-                                        {stop.cumulativeDurationMin}m (
-                                        {stop.cumulativeDistanceKm} km)
-                                      </span>
-                                    </div>
-                                  ))}
-                                </div>
-                              )}
-                            </div>
-                          )}
-
-                          {/* Alighting Station */}
-                          <div className="relative flex flex-col justify-between gap-1 pt-2.5 sm:flex-row sm:items-center">
+                      <div className="overflow-hidden rounded-2xl border border-line bg-card shadow-xs">
+                        {/* Segment Header Banner */}
+                        <div
+                          style={{
+                            borderLeft: `6px solid ${lineColor}`,
+                          }}
+                          className="flex flex-col justify-between gap-3 border-b border-line bg-subcard/90 px-3.5 py-3 sm:flex-row sm:items-center sm:px-5 sm:py-3.5"
+                        >
+                          <div className="flex items-start gap-2.5 sm:items-center">
                             <span
                               style={{
                                 backgroundColor: lineColor,
+                                color: lineTextColor,
                               }}
-                              className="absolute top-3.5 -left-[19px] h-3.5 w-3.5 rounded-full border-2 border-white shadow-xs sm:-left-[22px] sm:h-4 sm:w-4 dark:border-slate-900"
+                              className="inline-flex shrink-0 items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-black shadow-xs"
+                            >
+                              <TrainIcon className="h-3.5 w-3.5" />
+                              <span>{seg.line?.badge || "Metro Line"}</span>
+                            </span>
+                            <div className="min-w-0">
+                              <p className="text-xs font-extrabold text-ink sm:text-sm">
+                                Towards {seg.towardsTerminal}
+                              </p>
+                              <p className="mt-0.5 text-[11px] font-semibold text-ink-muted">
+                                {seg.platformHint}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="flex flex-wrap items-center gap-1.5 text-xs font-extrabold text-ink">
+                            <span className="inline-flex items-center gap-1 rounded-lg border border-line bg-card px-2.5 py-1 shadow-2xs">
+                              <span className="text-[#1956b4] dark:text-blue-300">
+                                {seg.stopsCount}
+                              </span>
+                              <span className="text-ink-muted">Stops</span>
+                            </span>
+                            <span className="inline-flex items-center gap-1 rounded-lg border border-line bg-card px-2.5 py-1 shadow-2xs">
+                              <span className="text-emerald-700 dark:text-emerald-300">
+                                {seg.durationMin}
+                              </span>
+                              <span className="text-ink-muted">mins</span>
+                            </span>
+                            <span className="inline-flex items-center gap-1 rounded-lg border border-line bg-card px-2.5 py-1 shadow-2xs">
+                              <span>{seg.distanceKm}</span>
+                              <span className="text-ink-muted">km</span>
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Single Unified Metro Track Spine & Station Nodes */}
+                        <div className="p-3 sm:p-5">
+                          <div className="relative">
+                            {/* ONE Continuous Colored Metro Track Spine */}
+                            <span
+                              style={{ backgroundColor: lineColor }}
+                              className="
+                                absolute top-5 bottom-5 left-[15px] w-1.5 -translate-x-1/2 rounded-full opacity-90 sm:left-[19px]
+                              "
                             />
-                            <div>
-                              <div className="flex flex-wrap items-center gap-1.5">
-                                <span
-                                  className={`rounded px-1.5 py-0.5 text-[10px] font-extrabold uppercase ${
+
+                            <div className="space-y-2.5">
+                              {/* 1. BOARDING STATION CARD */}
+                              <div className="relative flex items-stretch gap-3 sm:gap-4">
+                                {/* Track Node */}
+                                <div className="relative z-10 flex w-8 shrink-0 flex-col items-center justify-center sm:w-10">
+                                  <span
+                                    style={{
+                                      borderColor: lineColor,
+                                    }}
+                                    className="flex h-5 w-5 items-center justify-center rounded-full border-4 bg-white shadow-sm sm:h-6 sm:w-6 dark:bg-slate-900"
+                                  >
+                                    <span
+                                      style={{ backgroundColor: lineColor }}
+                                      className="h-2 w-2 rounded-full"
+                                    />
+                                  </span>
+                                </div>
+
+                                {/* Boarding Card Body */}
+                                <div className="flex flex-1 flex-col justify-between gap-2 rounded-xl border border-emerald-500/35 bg-emerald-500/[0.06] p-3 sm:flex-row sm:items-center sm:p-3.5 dark:bg-emerald-500/10">
+                                  <div className="min-w-0">
+                                    <div className="flex flex-wrap items-center gap-1.5">
+                                      <span className="rounded-md bg-emerald-600 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-white">
+                                        {segIdx === 0
+                                          ? "Board Origin"
+                                          : "Board Train"}
+                                      </span>
+                                      <span className="rounded-md border border-emerald-500/30 bg-card px-2 py-0.5 text-[10px] font-bold text-emerald-800 dark:text-emerald-300">
+                                        {seg.platformHint.split("•")[0]}
+                                      </span>
+                                      <span className="text-[11px] font-semibold text-ink-muted">
+                                        First: {seg.fromStation.firstTrain}
+                                      </span>
+                                    </div>
+
+                                    <div className="mt-1.5 flex flex-wrap items-center gap-2">
+                                      <Link
+                                        href={buildMetroStationPath(
+                                          seg.fromStation.slug,
+                                        )}
+                                        className="text-base font-black text-ink hover:text-[#1956b4] hover:underline sm:text-lg"
+                                      >
+                                        {seg.fromStation.name}
+                                      </Link>
+                                      {/* Other Connecting Lines at Boarding Station */}
+                                      {seg.fromStation.routeIds
+                                        .filter((rid) => rid !== seg.line?.id)
+                                        .map((rid) => {
+                                          const l = linesMap.get(rid);
+                                          if (!l) return null;
+                                          return (
+                                            <span
+                                              key={`from-line-${rid}`}
+                                              style={{
+                                                backgroundColor: l.color,
+                                                color: l.textColor,
+                                              }}
+                                              className="rounded px-1.5 py-0.5 text-[9px] font-extrabold uppercase"
+                                            >
+                                              {l.badge}
+                                            </span>
+                                          );
+                                        })}
+                                    </div>
+                                  </div>
+
+                                  <div className="flex shrink-0 items-center gap-1.5 sm:flex-col sm:items-end sm:gap-1">
+                                    <span className="rounded-lg border border-line bg-card px-2.5 py-1 font-mono text-xs font-extrabold text-ink shadow-2xs">
+                                      {startStep?.cumulativeDurationMin ?? 0}{" "}
+                                      min
+                                    </span>
+                                    <span className="font-mono text-[11px] font-bold text-ink-muted">
+                                      {startStep?.cumulativeDistanceKm ?? 0} km
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* 2. INTERMEDIATE STOPS TOGGLE & CARDS */}
+                              {intermediateOnly.length > 0 && (
+                                <>
+                                  {/* Toggle Pill Aligned on Track */}
+                                  <div className="relative flex items-center gap-3 sm:gap-4">
+                                    <div className="relative z-10 flex w-8 shrink-0 justify-center sm:w-10">
+                                      <span
+                                        style={{
+                                          backgroundColor: lineColor,
+                                          color: lineTextColor,
+                                        }}
+                                        className="flex h-5 w-5 items-center justify-center rounded-full text-[9px] font-black shadow-2xs ring-2 ring-white dark:ring-slate-900"
+                                      >
+                                        {intermediateOnly.length}
+                                      </span>
+                                    </div>
+                                    <button
+                                      type="button"
+                                      onClick={() =>
+                                        toggleSegmentStops(seg.segmentIndex)
+                                      }
+                                      className="inline-flex items-center gap-2 rounded-full border border-line bg-subcard px-3.5 py-1.5 text-xs font-extrabold text-[#1956b4] shadow-2xs transition hover:border-[#1956b4] hover:bg-card dark:text-blue-300"
+                                    >
+                                      <span>
+                                        {isExpanded ? "Hide" : "View"}{" "}
+                                        {intermediateOnly.length} intermediate
+                                        station
+                                        {intermediateOnly.length > 1
+                                          ? "s"
+                                          : ""}
+                                      </span>
+                                      <span className="text-[10px]">
+                                        {isExpanded ? "▲" : "▼"}
+                                      </span>
+                                    </button>
+                                  </div>
+
+                                  {/* Expanded Intermediate Station Rows (Single Rail, Structured Cards) */}
+                                  {isExpanded && (
+                                    <div className="space-y-2">
+                                      {intermediateOnly.map((stop, stIdx) => {
+                                        const otherLines = (
+                                          stop.routeIds || []
+                                        )
+                                          .filter(
+                                            (rid) => rid !== seg.line?.id,
+                                          )
+                                          .map((rid) => linesMap.get(rid))
+                                          .filter(
+                                            (l): l is MetroLine => Boolean(l),
+                                          );
+
+                                        return (
+                                          <div
+                                            key={`${seg.segmentIndex}-${stop.stopId}`}
+                                            className="group relative flex items-center gap-3 sm:gap-4"
+                                          >
+                                            {/* Centered Station Dot on the Single Track Spine */}
+                                            <div className="relative z-10 flex w-8 shrink-0 justify-center sm:w-10">
+                                              {stop.isInterchange ? (
+                                                <span
+                                                  style={{
+                                                    borderColor: lineColor,
+                                                  }}
+                                                  className="flex h-4 w-4 items-center justify-center rounded-full border-[3px] bg-amber-400 shadow-2xs ring-2 ring-white sm:h-4.5 sm:w-4.5 dark:ring-slate-900"
+                                                  title="Interchange Station"
+                                                />
+                                              ) : (
+                                                <span
+                                                  style={{
+                                                    borderColor: lineColor,
+                                                  }}
+                                                  className="h-3 w-3 rounded-full border-[3px] bg-white shadow-2xs transition group-hover:scale-125 sm:h-3.5 sm:w-3.5 dark:bg-slate-900"
+                                                />
+                                              )}
+                                            </div>
+
+                                            {/* Structured Intermediate Station Row Card */}
+                                            <div
+                                              className={`flex flex-1 items-center justify-between gap-2 rounded-xl border px-3 py-2 transition sm:px-3.5 sm:py-2.5 ${
+                                                stop.isInterchange
+                                                  ? "border-amber-500/35 bg-amber-500/[0.04] dark:bg-amber-500/[0.08]"
+                                                  : "border-line/80 bg-subcard/45 hover:border-[#1956b4]/40 hover:bg-card"
+                                              }`}
+                                            >
+                                              <div className="flex min-w-0 flex-wrap items-center gap-1.5 sm:gap-2">
+                                                <span className="inline-flex h-5 min-w-[22px] shrink-0 items-center justify-center rounded-md bg-card px-1.5 font-mono text-[10px] font-extrabold text-ink-muted shadow-2xs">
+                                                  {stIdx + 1}
+                                                </span>
+                                                <Link
+                                                  href={buildMetroStationPath(
+                                                    stop.slug,
+                                                  )}
+                                                  className="truncate text-xs font-bold text-ink hover:text-[#1956b4] hover:underline sm:text-sm"
+                                                >
+                                                  {stop.name}
+                                                </Link>
+                                                {stop.isInterchange && (
+                                                  <span className="inline-flex items-center gap-1 rounded-md border border-amber-500/30 bg-amber-500/15 px-1.5 py-0.5 text-[9px] font-extrabold uppercase text-amber-800 dark:text-amber-300">
+                                                    ⇄ Interchange
+                                                  </span>
+                                                )}
+                                                {otherLines.map((ol) => (
+                                                  <span
+                                                    key={`${stop.stopId}-${ol.id}`}
+                                                    style={{
+                                                      backgroundColor: ol.color,
+                                                      color: ol.textColor,
+                                                    }}
+                                                    className="rounded px-1.5 py-0.5 text-[9px] font-extrabold"
+                                                  >
+                                                    {ol.badge}
+                                                  </span>
+                                                ))}
+                                              </div>
+
+                                              {/* Right-Aligned Time & Distance Pills */}
+                                              <div className="flex shrink-0 items-center gap-1 sm:gap-1.5">
+                                                <span className="rounded-md border border-line/70 bg-card px-1.5 py-0.5 font-mono text-[10px] font-extrabold text-ink shadow-2xs sm:px-2 sm:text-[11px]">
+                                                  {stop.cumulativeDurationMin}m
+                                                </span>
+                                                <span className="rounded-md bg-subcard px-1.5 py-0.5 font-mono text-[10px] font-semibold text-ink-muted">
+                                                  {stop.cumulativeDistanceKm} km
+                                                </span>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        );
+                                      })}
+                                    </div>
+                                  )}
+                                </>
+                              )}
+
+                              {/* 3. ALIGHTING / DESTINATION STATION CARD */}
+                              <div className="relative flex items-stretch gap-3 sm:gap-4">
+                                {/* Track Node */}
+                                <div className="relative z-10 flex w-8 shrink-0 flex-col items-center justify-center sm:w-10">
+                                  <span
+                                    style={{
+                                      backgroundColor: lineColor,
+                                      color: lineTextColor,
+                                    }}
+                                    className="flex h-5 w-5 items-center justify-center rounded-full border-2 border-white text-[10px] font-black shadow-sm ring-2 ring-slate-900/10 sm:h-6 sm:w-6 dark:border-slate-900"
+                                  >
+                                    ✓
+                                  </span>
+                                </div>
+
+                                {/* Alighting Card Body */}
+                                <div
+                                  className={`flex flex-1 flex-col justify-between gap-2 rounded-xl border p-3 sm:flex-row sm:items-center sm:p-3.5 ${
                                     segIdx === activeRoute.segments.length - 1
-                                      ? "bg-[#1956b4]/15 text-[#1956b4] dark:text-blue-300"
-                                      : "bg-amber-500/15 text-amber-800 dark:text-amber-300"
+                                      ? "border-[#1956b4]/40 bg-blue-500/[0.06] dark:bg-blue-500/10"
+                                      : "border-amber-500/45 bg-amber-500/[0.07] dark:bg-amber-500/10"
                                   }`}
                                 >
-                                  {segIdx === activeRoute.segments.length - 1
-                                    ? "Destination"
-                                    : "Interchange Stop"}
-                                </span>
-                                <Link
-                                  href={buildMetroStationPath(
-                                    seg.toStation.slug,
-                                  )}
-                                  className="text-sm font-extrabold text-ink hover:text-[#1956b4] hover:underline sm:text-base"
-                                >
-                                  {seg.toStation.name}
-                                </Link>
-                              </div>
-                            </div>
-                            <div className="font-mono text-xs font-bold text-ink sm:text-right">
-                              {
-                                seg.intermediateStops[
-                                  seg.intermediateStops.length - 1
-                                ]?.cumulativeDurationMin
-                              }{" "}
-                              min •{" "}
-                              {
-                                seg.intermediateStops[
-                                  seg.intermediateStops.length - 1
-                                ]?.cumulativeDistanceKm
-                              }{" "}
-                              km
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                                  <div className="min-w-0">
+                                    <div className="flex flex-wrap items-center gap-1.5">
+                                      <span
+                                        className={`rounded-md px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-white ${
+                                          segIdx ===
+                                          activeRoute.segments.length - 1
+                                            ? "bg-[#1956b4]"
+                                            : "bg-amber-600"
+                                        }`}
+                                      >
+                                        {segIdx ===
+                                        activeRoute.segments.length - 1
+                                          ? "Destination"
+                                          : "Interchange Stop"}
+                                      </span>
+                                      <span className="text-[11px] font-semibold text-ink-muted">
+                                        {segIdx ===
+                                        activeRoute.segments.length - 1
+                                          ? "Arrive at destination station"
+                                          : "Alight here to switch metro line"}
+                                      </span>
+                                    </div>
 
-                    {/* In-Station Interchange Banner */}
-                    {matchingInterchange && (
-                      <div className="rounded-xl border-2 border-dashed border-amber-500/50 bg-amber-50/70 p-3.5 dark:bg-amber-950/20">
-                        <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                          <div className="flex items-start gap-2.5 sm:items-center">
-                            <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-500 text-xs font-black text-white">
-                              ⇄
-                            </span>
-                            <div>
-                              <p className="text-xs font-extrabold uppercase tracking-wider text-amber-900 dark:text-amber-300">
-                                Change Train at{" "}
-                                {matchingInterchange.station.name} • ~
-                                {matchingInterchange.transferDurationMin} mins
-                                transfer
-                              </p>
-                              <div className="mt-1 flex flex-wrap items-center gap-1.5 text-xs font-bold text-ink">
-                                <span>Switch from</span>
-                                <span
-                                  style={{
-                                    backgroundColor:
-                                      matchingInterchange.fromLine.color,
-                                    color:
-                                      matchingInterchange.fromLine.textColor,
-                                  }}
-                                  className="rounded px-2 py-0.5 text-[10px] font-extrabold"
-                                >
-                                  {matchingInterchange.fromLine.badge}
-                                </span>
-                                <span>to</span>
-                                <span
-                                  style={{
-                                    backgroundColor:
-                                      matchingInterchange.toLine.color,
-                                    color: matchingInterchange.toLine.textColor,
-                                  }}
-                                  className="rounded px-2 py-0.5 text-[10px] font-extrabold"
-                                >
-                                  {matchingInterchange.toLine.badge}
-                                </span>
+                                    <div className="mt-1.5 flex flex-wrap items-center gap-2">
+                                      <Link
+                                        href={buildMetroStationPath(
+                                          seg.toStation.slug,
+                                        )}
+                                        className="text-base font-black text-ink hover:text-[#1956b4] hover:underline sm:text-lg"
+                                      >
+                                        {seg.toStation.name}
+                                      </Link>
+                                      {seg.toStation.routeIds
+                                        .filter((rid) => rid !== seg.line?.id)
+                                        .map((rid) => {
+                                          const l = linesMap.get(rid);
+                                          if (!l) return null;
+                                          return (
+                                            <span
+                                              key={`to-line-${rid}`}
+                                              style={{
+                                                backgroundColor: l.color,
+                                                color: l.textColor,
+                                              }}
+                                              className="rounded px-1.5 py-0.5 text-[9px] font-extrabold uppercase"
+                                            >
+                                              {l.badge}
+                                            </span>
+                                          );
+                                        })}
+                                    </div>
+                                  </div>
+
+                                  <div className="flex shrink-0 items-center gap-1.5 sm:flex-col sm:items-end sm:gap-1">
+                                    <span className="rounded-lg border border-line bg-card px-2.5 py-1 font-mono text-xs font-extrabold text-ink shadow-2xs">
+                                      {endStep?.cumulativeDurationMin ??
+                                        seg.durationMin}{" "}
+                                      min
+                                    </span>
+                                    <span className="font-mono text-[11px] font-bold text-ink-muted">
+                                      {endStep?.cumulativeDistanceKm ??
+                                        seg.distanceKm}{" "}
+                                      km
+                                    </span>
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           </div>
-                          <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 sm:text-xs dark:text-emerald-300">
-                            <CheckCircleIcon className="h-3.5 w-3.5" />
-                            <span>Follow colored floor footprints</span>
-                          </span>
                         </div>
                       </div>
-                    )}
-                  </div>
-                );
-              })}
+
+                      {/* High-Visibility In-Station Interchange Banner */}
+                      {matchingInterchange && (
+                        <div className="rounded-2xl border-2 border-dashed border-amber-500/60 bg-gradient-to-r from-amber-50/90 via-orange-50/60 to-amber-50/90 p-3.5 shadow-2xs sm:p-4 dark:from-amber-950/30 dark:via-orange-950/20 dark:to-amber-950/30">
+                          <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
+                            <div className="flex items-start gap-3 sm:items-center">
+                              <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500 text-base font-black text-white shadow-xs">
+                                ⇄
+                              </span>
+                              <div>
+                                <div className="flex flex-wrap items-center gap-1.5">
+                                  <span className="rounded bg-amber-500/20 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-amber-900 dark:text-amber-200">
+                                    Line Transfer (~
+                                    {matchingInterchange.transferDurationMin}{" "}
+                                    mins)
+                                  </span>
+                                  <span className="text-xs font-extrabold text-ink sm:text-sm">
+                                    Change train at{" "}
+                                    {matchingInterchange.station.name}
+                                  </span>
+                                </div>
+                                <div className="mt-1.5 flex flex-wrap items-center gap-1.5 text-xs font-bold text-ink">
+                                  <span className="text-ink-muted">From</span>
+                                  <span
+                                    style={{
+                                      backgroundColor:
+                                        matchingInterchange.fromLine.color,
+                                      color:
+                                        matchingInterchange.fromLine.textColor,
+                                    }}
+                                    className="rounded-md px-2 py-0.5 text-[10px] font-extrabold shadow-2xs"
+                                  >
+                                    {matchingInterchange.fromLine.badge}
+                                  </span>
+                                  <ArrowRightIcon className="h-3.5 w-3.5 text-ink-muted" />
+                                  <span className="text-ink-muted">Board</span>
+                                  <span
+                                    style={{
+                                      backgroundColor:
+                                        matchingInterchange.toLine.color,
+                                      color:
+                                        matchingInterchange.toLine.textColor,
+                                    }}
+                                    className="rounded-md px-2 py-0.5 text-[10px] font-extrabold shadow-2xs"
+                                  >
+                                    {matchingInterchange.toLine.badge}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                            <span className="inline-flex items-center gap-1.5 self-start rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-[11px] font-extrabold text-emerald-800 sm:self-center dark:text-emerald-300">
+                              <CheckCircleIcon className="h-3.5 w-3.5" />
+                              <span>Follow colored floor footprints</span>
+                            </span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
