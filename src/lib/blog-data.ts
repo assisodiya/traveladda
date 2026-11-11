@@ -1438,12 +1438,12 @@ export const FEATURED_SEO_BLOG_POSTS: BlogPost[] = [
       {
         label: "Spot 12951 Mumbai Rajdhani Live",
         sublabel: "Track MMCT → NDLS flagship Rajdhani",
-        href: "/rail/live-status?train=12951",
+        href: "/rail/live-status/12951",
       },
       {
         label: "Spot 22436 Vande Bharat Express",
         sublabel: "Track NDLS → BSB high-speed rake",
-        href: "/rail/live-status?train=22436",
+        href: "/rail/live-status/22436",
       },
       {
         label: "Check 10-Digit IRCTC PNR Status",
@@ -1453,7 +1453,7 @@ export const FEATURED_SEO_BLOG_POSTS: BlogPost[] = [
       {
         label: "Spot 12301 Howrah Rajdhani Live",
         sublabel: "Track HWH → NDLS live station status",
-        href: "/rail/live-status?train=12301",
+        href: "/rail/live-status/12301",
       },
     ],
     sections: [
@@ -2098,7 +2098,7 @@ export const FEATURED_SEO_BLOG_POSTS: BlogPost[] = [
       {
         label: "Spot 12986 Jaipur Double Decker",
         sublabel: "Track DEE → JP 4.5 hr weekend train",
-        href: "/rail/live-status?train=12986",
+        href: "/rail/live-status/12986",
       },
       {
         label: "Hotel Room GST Calculator",
@@ -2393,7 +2393,7 @@ export const FEATURED_SEO_BLOG_POSTS: BlogPost[] = [
       {
         label: "Spot 20901 Vande Bharat Live",
         sublabel: "Wide-window semi-high-speed rail view",
-        href: "/rail/live-status?train=20901",
+        href: "/rail/live-status/20901",
       },
     ],
     sections: [

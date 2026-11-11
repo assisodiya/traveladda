@@ -1,8 +1,10 @@
+import { cacheLife } from "next/cache";
 import {
   ALL_WEEK_DAYS,
   computeHaltMinutes,
   decodePolyline,
   deriveTrackingState,
+  findCatalogTrain,
   formatDelayText,
   formatDurationMinutes,
   formatIstTime,
@@ -148,7 +150,8 @@ interface RawUpstreamFetchResult {
 
 async function fetchUpstreamTrainForDate(
   cleanTrain: string,
-  targetDate: string
+  targetDate: string,
+  options?: { allowCache?: boolean }
 ): Promise<RawUpstreamFetchResult> {
   const upstreamUrl = new URL(
     `${UPSTREAM_TRAINS_BASE_URL}/${encodeURIComponent(cleanTrain)}/live`
@@ -164,7 +167,7 @@ async function fetchUpstreamTrainForDate(
       Accept: "application/json",
       "User-Agent": "TravelAdda-Portal/2.0 (+https://traveladda.in)",
     },
-    cache: "no-store",
+    ...(options?.allowCache ? {} : { cache: "no-store" as const }),
     signal: AbortSignal.timeout(14000),
   });
 
@@ -1013,4 +1016,223 @@ export async function searchOwnedTrains(
       responseTimeMs: Date.now() - startedAt,
     },
   };
+}
+
+function buildFallbackSeoTrainData(
+  cleanTrain: string,
+  todayIst: string
+): NormalizedLiveTrainData {
+  const catalog = findCatalogTrain(cleanTrain);
+  const trainName = catalog?.trainName ?? `Indian Railways Express #${cleanTrain}`;
+  const source: TrainEndpointStation = {
+    code: catalog?.sourceCode ?? "NDLS",
+    name: catalog?.sourceName ?? "Origin Station",
+    lat: null,
+    lng: null,
+  };
+  const destination: TrainEndpointStation = {
+    code: catalog?.destinationCode ?? "MMCT",
+    name: catalog?.destinationName ?? "Destination Station",
+    lat: null,
+    lng: null,
+  };
+  const runDays = catalog?.runDays ?? [
+    "mon",
+    "tue",
+    "wed",
+    "thu",
+    "fri",
+    "sat",
+    "sun",
+  ];
+  const isDaily = catalog?.isDaily ?? true;
+  const type = catalog?.type ?? "Express";
+  const nowIso = new Date().toISOString();
+
+  return {
+    trainNumber: cleanTrain,
+    trainName,
+    startDate: todayIst,
+    autoDetectedStartDate: false,
+    lastUpdatedAt: nowIso,
+    status: "scheduled",
+    statusLabel: "Scheduled",
+    trackingState: "not-started",
+    isLive: false,
+    trackingMode: "scheduled",
+    delayMinutes: 0,
+    summary: {
+      trainLabel: `#${cleanTrain} ${trainName}`,
+      routeLabel: `${source.name} (${source.code}) → ${destination.name} (${destination.code})`,
+      currentStatusText: `Scheduled from ${source.name} (${source.code})`,
+      delayText: "Right On Time",
+      progressPercent: 0,
+      distanceCoveredKm: 0,
+      distanceTotalKm: 0,
+      distanceRemainingKm: 0,
+      haltsCompleted: 0,
+      haltsTotal: 2,
+      haltsRemaining: 2,
+      lastUpdatedIst: formatIstTime(nowIso),
+    },
+    livePosition: {
+      trackingState: "not-started",
+      isMoving: false,
+      isHaltedAtStation: false,
+      headline: `Scheduled from ${source.name} (${source.code})`,
+      subheadline: `${source.name} (${source.code}) to ${destination.name} (${destination.code})`,
+      delayStatus: "Right On Time",
+      lastStation: null,
+      nextStation: null,
+      previousHalt: null,
+      distanceCoveredKm: 0,
+      distanceRemainingKm: 0,
+      distanceToNextHaltKm: null,
+      haltSegmentProgress: 0,
+      betweenHaltAfterSeq: null,
+      betweenAllAfterSeq: null,
+      estimatedSpeedKmh: 0,
+      speedSource: "stationary",
+    },
+    train: {
+      number: cleanTrain,
+      name: trainName,
+      type,
+      category: type,
+      source,
+      destination,
+      runDays,
+      isDaily,
+      distanceKm: 0,
+      durationMinutes: 0,
+      durationFormatted: "--",
+      avgSpeedKmph: null,
+      maxSpeedKmph: null,
+      totalHalts: 2,
+      totalRouteStations: 2,
+      returnTrain: null,
+      coachPositionRaw: null,
+      coaches: [],
+    },
+    nextHalt: null,
+    currentLocation: null,
+    geometry: {
+      encodedPolyline: null,
+      coordinates: [],
+    },
+    progressPercent: 0,
+    route: [
+      {
+        sequence: 1,
+        stationCode: source.code,
+        stationName: source.name,
+        isHalt: true,
+        rawStatus: "upcoming",
+        stopState: "upcoming",
+        coachPosition: null,
+        lat: null,
+        lng: null,
+        scheduledArrival: null,
+        actualArrival: null,
+        arrivalDay: 1,
+        delayArrival: 0,
+        scheduledDeparture: null,
+        actualDeparture: null,
+        departureDay: 1,
+        delayDeparture: 0,
+        haltMinutes: null,
+        platform: null,
+        distanceKm: 0,
+        speedToNextStationKmph: null,
+        provenance: null,
+      },
+      {
+        sequence: 2,
+        stationCode: destination.code,
+        stationName: destination.name,
+        isHalt: true,
+        rawStatus: "upcoming",
+        stopState: "upcoming",
+        coachPosition: null,
+        lat: null,
+        lng: null,
+        scheduledArrival: null,
+        actualArrival: null,
+        arrivalDay: 1,
+        delayArrival: 0,
+        scheduledDeparture: null,
+        actualDeparture: null,
+        departureDay: 1,
+        delayDeparture: 0,
+        haltMinutes: null,
+        platform: null,
+        distanceKm: 0,
+        speedToNextStationKmph: null,
+        provenance: null,
+      },
+    ],
+    exceptions: [],
+  };
+}
+
+export async function fetchSeoTrainPageData(
+  rawTrainInput: string
+): Promise<NormalizedLiveTrainData | null> {
+  "use cache";
+  cacheLife("hours");
+
+  const cleanTrain = (rawTrainInput || "").replace(/\D/g, "");
+  if (!/^\d{3,5}$/.test(cleanTrain)) {
+    return null;
+  }
+
+  const todayIst = getTodayIstDateString();
+  const candidateDates = [
+    todayIst,
+    shiftDateString(todayIst, -1),
+    shiftDateString(todayIst, 1),
+    shiftDateString(todayIst, 2),
+  ];
+
+  let firstValidResult: NormalizedLiveTrainData | null = null;
+
+  for (let i = 0; i < candidateDates.length; i++) {
+    const dateStr = candidateDates[i];
+    try {
+      const res = await fetchUpstreamTrainForDate(cleanTrain, dateStr, {
+        allowCache: true,
+      });
+      if (res.ok && res.upstreamJson?.data) {
+        const rawData = res.upstreamJson.data as Record<string, unknown>;
+        const normalized = normalizeUpstreamTrainPayload(
+          rawData,
+          cleanTrain,
+          dateStr,
+          i > 0
+        );
+        if (
+          normalized.trackingState === "running" ||
+          normalized.trackingState === "halted"
+        ) {
+          return normalized;
+        }
+        if (!firstValidResult) {
+          firstValidResult = normalized;
+        }
+        // If today's schedule has not started yet, check yesterday (index 1) in case an overnight run is currently live;
+        // otherwise return the first valid schedule immediately.
+        if (i >= 1 && firstValidResult) {
+          return firstValidResult;
+        }
+      }
+    } catch {
+      // Continue to next candidate date
+    }
+  }
+
+  if (firstValidResult) {
+    return firstValidResult;
+  }
+
+  return buildFallbackSeoTrainData(cleanTrain, todayIst);
 }

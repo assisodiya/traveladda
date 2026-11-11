@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { ALL_BLOG_POSTS } from "@/lib/blog-data";
+import { POPULAR_LIVE_TRAINS } from "@/lib/live-train-types";
 
 const BASE_URL = "https://traveladda.in";
 
@@ -72,6 +73,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
+  const trainStatusRoutes: MetadataRoute.Sitemap = POPULAR_LIVE_TRAINS.map(
+    (train) => ({
+      url: `${BASE_URL}/rail/live-status/${train.trainNumber}`,
+      changeFrequency: "daily",
+      priority: 0.92,
+    })
+  );
+
   const blogRoutes: MetadataRoute.Sitemap = ALL_BLOG_POSTS.map((post) => ({
     url: `${BASE_URL}/blog/${post.slug}`,
     lastModified: post.publishedIso,
@@ -79,5 +88,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: post.primaryKeyword ? 0.88 : post.domain === "air" ? 0.85 : 0.8,
   }));
 
-  return [...coreRoutes, ...blogRoutes];
+  return [...coreRoutes, ...trainStatusRoutes, ...blogRoutes];
 }

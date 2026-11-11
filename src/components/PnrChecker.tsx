@@ -237,9 +237,9 @@ export function PnrChecker({ compact = false }: { compact?: boolean }) {
   const pnrData = apiResponse?.success ? apiResponse.data : undefined;
 
   const liveTrainHref = pnrData?.train.number
-    ? `/rail/live-status?train=${encodeURIComponent(pnrData.train.number)}${
+    ? `/rail/live-status/${encodeURIComponent(pnrData.train.number)}${
         /^\d{4}-\d{2}-\d{2}$/.test(pnrData.train.journeyDate)
-          ? `&date=${encodeURIComponent(pnrData.train.journeyDate)}`
+          ? `?date=${encodeURIComponent(pnrData.train.journeyDate)}`
           : ""
       }`
     : "/rail/live-status";

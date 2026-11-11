@@ -253,7 +253,7 @@ export default async function Home() {
               {POPULAR_LIVE_TRAINS.slice(0, 5).map((t) => (
                 <Link
                   key={t.trainNumber}
-                  href={`/rail/live-status?train=${t.trainNumber}`}
+                  href={`/rail/live-status/${t.trainNumber}`}
                   className="group flex items-center justify-between gap-3 py-3 transition hover:bg-subcard/60"
                 >
                   <div className="min-w-0">

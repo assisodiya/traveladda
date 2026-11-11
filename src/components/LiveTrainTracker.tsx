@@ -479,7 +479,15 @@ function noopSubscribe() {
   return () => {};
 }
 
-export function LiveTrainTracker() {
+export interface LiveTrainTrackerProps {
+  initialTrainNumber?: string;
+  initialData?: NormalizedLiveTrainData | null;
+}
+
+export function LiveTrainTracker({
+  initialTrainNumber,
+  initialData = null,
+}: LiveTrainTrackerProps = {}) {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -497,7 +505,11 @@ export function LiveTrainTracker() {
     [todayIst]
   );
 
-  const initialQueryTrain = (searchParams.get("train") ?? "")
+  const initialQueryTrain = (
+    initialTrainNumber ||
+    searchParams.get("train") ||
+    ""
+  )
     .replace(/\D/g, "")
     .slice(0, 5);
   const rawQueryDate = searchParams.get("date") ?? "";
@@ -505,13 +517,37 @@ export function LiveTrainTracker() {
     ? rawQueryDate
     : "";
 
-  const [searchQuery, setSearchQuery] = useState(initialQueryTrain);
-  const [dateInput, setDateInput] = useState(initialQueryDate);
+  const [searchQuery, setSearchQuery] = useState(
+    initialData?.trainNumber || initialQueryTrain
+  );
+  const [dateInput, setDateInput] = useState(
+    initialQueryDate || initialData?.startDate || ""
+  );
   const [isAutoDate, setIsAutoDate] = useState(!initialQueryDate);
-  const [loading, setLoading] = useState(initialQueryTrain.length >= 3);
+  const [loading, setLoading] = useState(
+    initialQueryTrain.length >= 3 && !initialData
+  );
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [apiResponse, setApiResponse] =
-    useState<OwnedLiveTrainApiResponse | null>(null);
+    useState<OwnedLiveTrainApiResponse | null>(() =>
+      initialData
+        ? {
+            success: true,
+            provider: "TravelAdda Owned Rail API v2",
+            endpoint: `/api/trains/${initialData.trainNumber}/live?date=${initialData.startDate}`,
+            data: initialData,
+            meta: {
+              timestamp: initialData.lastUpdatedAt,
+              traceId: "ssr-initial",
+              source: "ssr-cache",
+              executionTime: 0,
+              poweredBy: "TravelAdda Live Train Gateway v2",
+              fetchedAt: initialData.lastUpdatedAt,
+              responseTimeMs: 0,
+            },
+          }
+        : null
+    );
   const [copied, setCopied] = useState(false);
   const [autoRefresh, setAutoRefresh] = useState(false);
 
@@ -690,9 +726,9 @@ export function LiveTrainTracker() {
           if (syncUrl) {
             const url =
               !useAutoDate && cleanDate
-                ? `/rail/live-status?train=${first.trainNumber}&date=${cleanDate}`
-                : `/rail/live-status?train=${first.trainNumber}`;
-            router.replace(url, { scroll: false });
+                ? `/rail/live-status/${first.trainNumber}?date=${cleanDate}`
+                : `/rail/live-status/${first.trainNumber}`;
+            router.push(url, { scroll: false });
           }
           await performLookup(first.trainNumber, cleanDate, useAutoDate);
           return;
@@ -718,18 +754,26 @@ export function LiveTrainTracker() {
 
       if (syncUrl) {
         const url = useAutoDate
-          ? `/rail/live-status?train=${digits}`
-          : `/rail/live-status?train=${digits}&date=${cleanDate}`;
-        router.replace(url, { scroll: false });
+          ? `/rail/live-status/${digits}`
+          : `/rail/live-status/${digits}?date=${cleanDate}`;
+        if (initialTrainNumber === digits) {
+          router.replace(url, { scroll: false });
+        } else {
+          router.push(url, { scroll: false });
+        }
       }
 
       await performLookup(digits, cleanDate, useAutoDate);
     },
-    [performLookup, router, suggestions, todayIst]
+    [initialTrainNumber, performLookup, router, suggestions, todayIst]
   );
 
   useEffect(() => {
-    const qTrain = (searchParams.get("train") ?? "")
+    const qTrain = (
+      initialTrainNumber ||
+      searchParams.get("train") ||
+      ""
+    )
       .replace(/\D/g, "")
       .slice(0, 5);
     const rawDate = searchParams.get("date") ?? "";
@@ -739,15 +783,21 @@ export function LiveTrainTracker() {
 
     if (qTrain.length >= 3 && lastCheckedKeyRef.current !== lookupKey) {
       lastCheckedKeyRef.current = lookupKey;
+      const hasSsrMatch =
+        Boolean(initialData) &&
+        initialData?.trainNumber === qTrain &&
+        !hasExplicit;
       void Promise.resolve().then(() => {
         setSearchQuery(qTrain);
         setIsAutoDate(!hasExplicit);
         if (hasExplicit) setDateInput(qDate);
-        setLoading(true);
+        if (!hasSsrMatch) {
+          setLoading(true);
+        }
         return performLookup(qTrain, qDate, !hasExplicit);
       });
     }
-  }, [searchParams, performLookup, todayIst]);
+  }, [initialData, initialTrainNumber, searchParams, performLookup, todayIst]);
 
   const trainData = apiResponse?.success ? apiResponse.data : undefined;
 

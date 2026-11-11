@@ -229,13 +229,13 @@ export interface OwnedTrainSearchApiResponse {
 
 export const POPULAR_LIVE_TRAINS: TrainSearchItem[] = [
   {
-    trainNumber: "12002",
-    trainName: "New Delhi - Rani Kamlapati Shatabdi Express",
+    trainNumber: "12952",
+    trainName: "New Delhi - Mumbai Central Tejas Rajdhani Express",
     sourceCode: "NDLS",
     sourceName: "New Delhi",
-    destinationCode: "RKMP",
-    destinationName: "Rani Kamlapati",
-    type: "Shatabdi",
+    destinationCode: "MMCT",
+    destinationName: "Mumbai Central",
+    type: "Rajdhani",
     runDays: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
     isDaily: true,
   },
@@ -251,12 +251,45 @@ export const POPULAR_LIVE_TRAINS: TrainSearchItem[] = [
     isDaily: true,
   },
   {
+    trainNumber: "12002",
+    trainName: "New Delhi - Rani Kamlapati Shatabdi Express",
+    sourceCode: "NDLS",
+    sourceName: "New Delhi",
+    destinationCode: "RKMP",
+    destinationName: "Rani Kamlapati",
+    type: "Shatabdi",
+    runDays: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
+    isDaily: true,
+  },
+  {
+    trainNumber: "12001",
+    trainName: "Rani Kamlapati - New Delhi Shatabdi Express",
+    sourceCode: "RKMP",
+    sourceName: "Rani Kamlapati",
+    destinationCode: "NDLS",
+    destinationName: "New Delhi",
+    type: "Shatabdi",
+    runDays: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
+    isDaily: true,
+  },
+  {
     trainNumber: "22436",
     trainName: "New Delhi - Varanasi Vande Bharat Express",
     sourceCode: "NDLS",
     sourceName: "New Delhi",
     destinationCode: "BSB",
     destinationName: "Varanasi Jn",
+    type: "Vande Bharat",
+    runDays: ["mon", "tue", "wed", "fri", "sat", "sun"],
+    isDaily: false,
+  },
+  {
+    trainNumber: "22435",
+    trainName: "Varanasi - New Delhi Vande Bharat Express",
+    sourceCode: "BSB",
+    sourceName: "Varanasi Jn",
+    destinationCode: "NDLS",
+    destinationName: "New Delhi",
     type: "Vande Bharat",
     runDays: ["mon", "tue", "wed", "fri", "sat", "sun"],
     isDaily: false,
@@ -273,12 +306,34 @@ export const POPULAR_LIVE_TRAINS: TrainSearchItem[] = [
     isDaily: true,
   },
   {
+    trainNumber: "12985",
+    trainName: "Jaipur - Delhi Sarai Rohilla AC Double Decker Express",
+    sourceCode: "JP",
+    sourceName: "Jaipur Jn",
+    destinationCode: "DEE",
+    destinationName: "Delhi Sarai Rohilla",
+    type: "Double Decker",
+    runDays: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
+    isDaily: true,
+  },
+  {
     trainNumber: "12622",
     trainName: "New Delhi - MGR Chennai Central Tamil Nadu Express",
     sourceCode: "NDLS",
     sourceName: "New Delhi",
     destinationCode: "MAS",
     destinationName: "MGR Chennai Central",
+    type: "Superfast",
+    runDays: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
+    isDaily: true,
+  },
+  {
+    trainNumber: "12621",
+    trainName: "MGR Chennai Central - New Delhi Tamil Nadu Express",
+    sourceCode: "MAS",
+    sourceName: "MGR Chennai Central",
+    destinationCode: "NDLS",
+    destinationName: "New Delhi",
     type: "Superfast",
     runDays: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
     isDaily: true,
@@ -295,12 +350,34 @@ export const POPULAR_LIVE_TRAINS: TrainSearchItem[] = [
     isDaily: false,
   },
   {
+    trainNumber: "12302",
+    trainName: "New Delhi - Howrah Rajdhani Express",
+    sourceCode: "NDLS",
+    sourceName: "New Delhi",
+    destinationCode: "HWH",
+    destinationName: "Howrah Jn",
+    type: "Rajdhani",
+    runDays: ["mon", "tue", "wed", "thu", "fri", "sun"],
+    isDaily: false,
+  },
+  {
     trainNumber: "12424",
     trainName: "New Delhi - Dibrugarh Town Rajdhani Express",
     sourceCode: "NDLS",
     sourceName: "New Delhi",
     destinationCode: "DBRG",
     destinationName: "Dibrugarh",
+    type: "Rajdhani",
+    runDays: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
+    isDaily: true,
+  },
+  {
+    trainNumber: "12423",
+    trainName: "Dibrugarh Town - New Delhi Rajdhani Express",
+    sourceCode: "DBRG",
+    sourceName: "Dibrugarh",
+    destinationCode: "NDLS",
+    destinationName: "New Delhi",
     type: "Rajdhani",
     runDays: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
     isDaily: true,
@@ -316,7 +393,201 @@ export const POPULAR_LIVE_TRAINS: TrainSearchItem[] = [
     runDays: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
     isDaily: true,
   },
+  {
+    trainNumber: "12052",
+    trainName: "Madgaon - Mumbai CSMT Jan Shatabdi Express",
+    sourceCode: "MAO",
+    sourceName: "Madgaon Jn",
+    destinationCode: "CSMT",
+    destinationName: "Mumbai CSMT",
+    type: "Jan Shatabdi",
+    runDays: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
+    isDaily: true,
+  },
+  {
+    trainNumber: "20901",
+    trainName: "Mumbai Central - Gandhinagar Capital Vande Bharat Express",
+    sourceCode: "MMCT",
+    sourceName: "Mumbai Central",
+    destinationCode: "GNC",
+    destinationName: "Gandhinagar Capital",
+    type: "Vande Bharat",
+    runDays: ["mon", "tue", "thu", "fri", "sat", "sun"],
+    isDaily: false,
+  },
+  {
+    trainNumber: "20902",
+    trainName: "Gandhinagar Capital - Mumbai Central Vande Bharat Express",
+    sourceCode: "GNC",
+    sourceName: "Gandhinagar Capital",
+    destinationCode: "MMCT",
+    destinationName: "Mumbai Central",
+    type: "Vande Bharat",
+    runDays: ["mon", "tue", "thu", "fri", "sat", "sun"],
+    isDaily: false,
+  },
+  {
+    trainNumber: "22439",
+    trainName: "New Delhi - Shri Mata Vaishno Devi Katra Vande Bharat Express",
+    sourceCode: "NDLS",
+    sourceName: "New Delhi",
+    destinationCode: "SVDK",
+    destinationName: "SMVD Katra",
+    type: "Vande Bharat",
+    runDays: ["mon", "tue", "thu", "fri", "sat", "sun"],
+    isDaily: false,
+  },
+  {
+    trainNumber: "12627",
+    trainName: "KSR Bengaluru - New Delhi Karnataka Express",
+    sourceCode: "SBC",
+    sourceName: "KSR Bengaluru",
+    destinationCode: "NDLS",
+    destinationName: "New Delhi",
+    type: "Superfast",
+    runDays: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
+    isDaily: true,
+  },
+  {
+    trainNumber: "12628",
+    trainName: "New Delhi - KSR Bengaluru Karnataka Express",
+    sourceCode: "NDLS",
+    sourceName: "New Delhi",
+    destinationCode: "SBC",
+    destinationName: "KSR Bengaluru",
+    type: "Superfast",
+    runDays: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
+    isDaily: true,
+  },
+  {
+    trainNumber: "12802",
+    trainName: "Anand Vihar Terminal - Puri Purushottam Express",
+    sourceCode: "ANVT",
+    sourceName: "Anand Vihar Trm",
+    destinationCode: "PURI",
+    destinationName: "Puri",
+    type: "Superfast",
+    runDays: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
+    isDaily: true,
+  },
+  {
+    trainNumber: "12801",
+    trainName: "Puri - Anand Vihar Terminal Purushottam Express",
+    sourceCode: "PURI",
+    sourceName: "Puri",
+    destinationCode: "ANVT",
+    destinationName: "Anand Vihar Trm",
+    type: "Superfast",
+    runDays: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
+    isDaily: true,
+  },
+  {
+    trainNumber: "12138",
+    trainName: "Firozpur Cantt - Mumbai CSMT Punjab Mail",
+    sourceCode: "FZR",
+    sourceName: "Firozpur Cantt",
+    destinationCode: "CSMT",
+    destinationName: "Mumbai CSMT",
+    type: "Superfast",
+    runDays: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
+    isDaily: true,
+  },
+  {
+    trainNumber: "12137",
+    trainName: "Mumbai CSMT - Firozpur Cantt Punjab Mail",
+    sourceCode: "CSMT",
+    sourceName: "Mumbai CSMT",
+    destinationCode: "FZR",
+    destinationName: "Firozpur Cantt",
+    type: "Superfast",
+    runDays: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
+    isDaily: true,
+  },
+  {
+    trainNumber: "12904",
+    trainName: "Amritsar - Mumbai Central Golden Temple Mail",
+    sourceCode: "ASR",
+    sourceName: "Amritsar Jn",
+    destinationCode: "MMCT",
+    destinationName: "Mumbai Central",
+    type: "Superfast",
+    runDays: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
+    isDaily: true,
+  },
+  {
+    trainNumber: "12903",
+    trainName: "Mumbai Central - Amritsar Golden Temple Mail",
+    sourceCode: "MMCT",
+    sourceName: "Mumbai Central",
+    destinationCode: "ASR",
+    destinationName: "Amritsar Jn",
+    type: "Superfast",
+    runDays: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
+    isDaily: true,
+  },
+  {
+    trainNumber: "12724",
+    trainName: "New Delhi - Hyderabad Deccan Telangana Express",
+    sourceCode: "NDLS",
+    sourceName: "New Delhi",
+    destinationCode: "HYB",
+    destinationName: "Hyderabad Deccan",
+    type: "Superfast",
+    runDays: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
+    isDaily: true,
+  },
+  {
+    trainNumber: "12723",
+    trainName: "Hyderabad Deccan - New Delhi Telangana Express",
+    sourceCode: "HYB",
+    sourceName: "Hyderabad Deccan",
+    destinationCode: "NDLS",
+    destinationName: "New Delhi",
+    type: "Superfast",
+    runDays: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
+    isDaily: true,
+  },
+  {
+    trainNumber: "12394",
+    trainName: "New Delhi - Rajendra Nagar Patna Sampoorna Kranti Express",
+    sourceCode: "NDLS",
+    sourceName: "New Delhi",
+    destinationCode: "RJPB",
+    destinationName: "Rajendra Nagar T",
+    type: "Superfast",
+    runDays: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
+    isDaily: true,
+  },
+  {
+    trainNumber: "12393",
+    trainName: "Rajendra Nagar Patna - New Delhi Sampoorna Kranti Express",
+    sourceCode: "RJPB",
+    sourceName: "Rajendra Nagar T",
+    destinationCode: "NDLS",
+    destinationName: "New Delhi",
+    type: "Superfast",
+    runDays: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
+    isDaily: true,
+  },
+  {
+    trainNumber: "12839",
+    trainName: "Howrah - MGR Chennai Central Mail",
+    sourceCode: "HWH",
+    sourceName: "Howrah Jn",
+    destinationCode: "MAS",
+    destinationName: "MGR Chennai Central",
+    type: "Superfast",
+    runDays: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
+    isDaily: true,
+  },
 ];
+
+export function findCatalogTrain(
+  trainNumber: string
+): TrainSearchItem | undefined {
+  const clean = trainNumber.replace(/\D/g, "");
+  return POPULAR_LIVE_TRAINS.find((t) => t.trainNumber === clean);
+}
 
 export const ALL_WEEK_DAYS = [
   { key: "mon", short: "M", label: "Mon" },
@@ -560,6 +831,55 @@ export function deriveTrackingState(
     return "halted";
   }
   return "running";
+}
+
+export function format24HourTime(iso: string | null | undefined): string {
+  if (!iso) return "--";
+  const timeMatch = /T(\d{2}):(\d{2})/.exec(iso);
+  if (timeMatch && (iso.endsWith("+05:30") || !iso.endsWith("Z"))) {
+    return `${timeMatch[1]}:${timeMatch[2]}`;
+  }
+  const parsed = new Date(iso);
+  if (Number.isNaN(parsed.getTime())) return "--";
+  return new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Asia/Kolkata",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).format(parsed);
+}
+
+export function deriveTrainClasses(
+  coaches: CoachUnit[],
+  trainType?: string
+): string[] {
+  const classes = new Set<string>();
+  for (const c of coaches) {
+    const code = c.code.toUpperCase();
+    if (/^(H\d+|HA\d+|1A)$/.test(code)) classes.add("First AC (1A)");
+    if (/^(A\d+|HA\d+|AB\d+|2A)$/.test(code)) classes.add("Second AC (2A)");
+    if (/^(B\d+|AB\d+|BE\d+|3A)$/.test(code)) classes.add("Third AC (3A)");
+    if (/^(M\d+|3E)$/.test(code)) classes.add("AC 3-Tier Economy (3E)");
+    if (/^(E\d+|EC|EV\d*|EA\d*)$/.test(code)) classes.add("Executive Chair Car (EC)");
+    if (/^(C\d+|CC)$/.test(code)) classes.add("AC Chair Car (CC)");
+    if (/^(S\d+|SL|SE\d+)$/.test(code)) classes.add("Sleeper (SL)");
+    if (/^(D\d+|2S)$/.test(code)) classes.add("Second Sitting (2S)");
+    if (/^(GEN|GS|UR)$/.test(code)) classes.add("General Unreserved (GN)");
+  }
+  if (classes.size > 0) {
+    return Array.from(classes);
+  }
+  const t = (trainType || "").toLowerCase();
+  if (t.includes("rajdhani")) {
+    return ["First AC (1A)", "Second AC (2A)", "Third AC (3A)"];
+  }
+  if (t.includes("vande bharat") || t.includes("shatabdi")) {
+    return ["Executive Chair Car (EC)", "AC Chair Car (CC)"];
+  }
+  if (t.includes("double decker")) {
+    return ["Executive Chair Car (EC)", "AC Chair Car (CC)"];
+  }
+  return ["First AC (1A)", "Second AC (2A)", "Third AC (3A)", "Sleeper (SL)", "General (GN)"];
 }
 
 export function formatTrainStatusLabel(

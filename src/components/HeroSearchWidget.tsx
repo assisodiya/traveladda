@@ -206,8 +206,8 @@ export function HeroSearchWidget() {
         ? explicitDate
         : "";
     const targetUrl = cleanDate
-      ? `/rail/live-status?train=${digits}&date=${cleanDate}`
-      : `/rail/live-status?train=${digits}`;
+      ? `/rail/live-status/${digits}?date=${cleanDate}`
+      : `/rail/live-status/${digits}`;
     router.push(targetUrl);
   };
 
