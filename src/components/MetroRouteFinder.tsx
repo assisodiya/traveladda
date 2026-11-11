@@ -30,6 +30,7 @@ import {
 interface MetroRouteFinderProps {
   stations: MetroStation[];
   lines: MetroLine[];
+  mode?: "search-only" | "details";
   initialFromSlug?: string;
   initialToSlug?: string;
   initialPreference?: MetroRoutePreference;
@@ -41,6 +42,7 @@ const LANDMARK_KEYWORDS: Record<string, string> = {
   "new-delhi": "ndls new delhi railway station paharganj ajmeri gate",
   "kashmere-gate": "isbt kashmere gate old delhi bus stand",
   "huda-city-centre": "millennium city centre gurugram gurgaon sec 29",
+  "mg-road": "mg road gurugram gurgaon malls iffco",
   "igi-airport": "airport t3 terminal 3 international flight",
   "terminal-1-igi-airport": "airport t1 domestic terminal 1d",
   "delhi-aerocity": "aerocity mahipalpur t2",
@@ -60,8 +62,9 @@ const LANDMARK_KEYWORDS: Record<string, string> = {
 export function MetroRouteFinder({
   stations,
   lines,
-  initialFromSlug = "rajiv-chowk",
-  initialToSlug = "huda-city-centre",
+  mode = "details",
+  initialFromSlug = "mg-road",
+  initialToSlug = "anand-vihar",
   initialPreference = "fastest",
   initialResult = null,
 }: MetroRouteFinderProps) {
@@ -85,30 +88,27 @@ export function MetroRouteFinder({
     useState<MetroRoutePreference>(initialPreference);
 
   const [fromQuery, setFromQuery] = useState<string>(
-    () => stationsBySlug.get(initialFromSlug)?.name || "Rajiv Chowk",
+    () => stationsBySlug.get(initialFromSlug)?.name || "MG Road",
   );
   const [toQuery, setToQuery] = useState<string>(
-    () => stationsBySlug.get(initialToSlug)?.name || "Huda City Centre",
+    () => stationsBySlug.get(initialToSlug)?.name || "Anand Vihar",
   );
 
   const [fromOpen, setFromOpen] = useState(false);
   const [toOpen, setToOpen] = useState(false);
 
-  const [planResult, setPlanResult] = useState<MetroRoutePlanResult | null>(
-    initialResult,
-  );
   const [activeOptionIndex, setActiveOptionIndex] = useState<number>(0);
   const [expandedSegments, setExpandedSegments] = useState<
     Record<number, boolean>
   >({});
-  const [loading, setLoading] = useState<boolean>(false);
+  const [navigating, setNavigating] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   const fromBoxRef = useRef<HTMLDivElement>(null);
   const toBoxRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    function handleOutside(e: MouseEvent) {
+    function handleOutside(e: MouseEvent | TouchEvent) {
       const target = e.target as Node;
       if (fromBoxRef.current && !fromBoxRef.current.contains(target)) {
         setFromOpen(false);
@@ -118,13 +118,23 @@ export function MetroRouteFinder({
       }
     }
     document.addEventListener("mousedown", handleOutside);
-    return () => document.removeEventListener("mousedown", handleOutside);
+    document.addEventListener("touchstart", handleOutside, { passive: true });
+    return () => {
+      document.removeEventListener("mousedown", handleOutside);
+      document.removeEventListener("touchstart", handleOutside);
+    };
   }, []);
 
   const filterStations = (q: string, excludeSlug?: string) => {
     const clean = q.trim().toLowerCase();
-    if (!clean) {
+    const currentStationName =
+      stationsBySlug.get(fromSlug)?.name.toLowerCase() === clean ||
+      stationsBySlug.get(toSlug)?.name.toLowerCase() === clean;
+
+    if (!clean || currentStationName) {
       const topSlugs = [
+        "mg-road",
+        "anand-vihar",
         "rajiv-chowk",
         "new-delhi",
         "kashmere-gate",
@@ -133,18 +143,23 @@ export function MetroRouteFinder({
         "noida-electronic-city",
         "hauz-khas",
         "botanical-garden",
-        "anand-vihar",
         "lajpat-nagar",
         "dwarka-sector-21",
         "cyber-city-rapid-metro",
         "pari-chowk",
         "vaishali",
       ];
-      return topSlugs
+      const topList = topSlugs
         .map((sl) => stationsBySlug.get(sl))
         .filter(
           (s): s is MetroStation => Boolean(s) && s!.slug !== excludeSlug,
         );
+      const rest = stations
+        .filter(
+          (s) => s.slug !== excludeSlug && !topSlugs.includes(s.slug),
+        )
+        .slice(0, 20);
+      return [...topList, ...rest];
     }
 
     const scored: { st: MetroStation; score: number }[] = [];
@@ -165,26 +180,27 @@ export function MetroRouteFinder({
         scored.push({ st, score });
       }
     }
-    scored.sort((a, b) => b.score - a.score || a.st.name.localeCompare(b.st.name));
-    return scored.slice(0, 18).map((x) => x.st);
+    scored.sort(
+      (a, b) => b.score - a.score || a.st.name.localeCompare(b.st.name),
+    );
+    return scored.slice(0, 20).map((x) => x.st);
   };
 
   const filteredFrom = useMemo(
-    () => filterStations(fromQuery),
+    () => filterStations(fromQuery, toSlug),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [fromQuery, stations],
+    [fromQuery, toSlug, stations],
   );
   const filteredTo = useMemo(
-    () => filterStations(toQuery),
+    () => filterStations(toQuery, fromSlug),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [toQuery, stations],
+    [toQuery, fromSlug, stations],
   );
 
-  async function executeRouteSearch(
+  function navigateToRouteDetails(
     nextFromSlug: string,
     nextToSlug: string,
-    nextPref: MetroRoutePreference,
-    navigateUrl = true,
+    nextPref: MetroRoutePreference = preference,
   ) {
     if (!nextFromSlug || !nextToSlug) {
       setError("Please select both Origin and Destination metro stations.");
@@ -192,37 +208,40 @@ export function MetroRouteFinder({
     }
     if (nextFromSlug === nextToSlug) {
       setError(
-        "Origin and Destination stations cannot be the same. Please select two different stations.",
+        "Origin and Destination stations cannot be the same. Please choose two different stations.",
       );
       return;
     }
 
     setError(null);
-    setLoading(true);
-    try {
-      const res = await fetch(
-        `/api/metro/route?from=${encodeURIComponent(nextFromSlug)}&to=${encodeURIComponent(nextToSlug)}&preference=${encodeURIComponent(nextPref)}`,
-      );
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.error || "Unable to find a metro route.");
-      } else {
-        setPlanResult(data as MetroRoutePlanResult);
-        setActiveOptionIndex(0);
-        setExpandedSegments({});
-        if (navigateUrl) {
-          const targetPath = buildMetroRoutePath(nextFromSlug, nextToSlug);
-          const urlWithPref =
-            nextPref !== "fastest"
-              ? `${targetPath}?mode=${nextPref}`
-              : targetPath;
-          router.push(urlWithPref, { scroll: false });
-        }
-      }
-    } catch {
-      setError("Failed to fetch metro route. Please try again.");
-    } finally {
-      setLoading(false);
+    setNavigating(true);
+    const targetPath = buildMetroRoutePath(nextFromSlug, nextToSlug);
+    const urlWithPref =
+      nextPref !== "fastest" ? `${targetPath}?mode=${nextPref}` : targetPath;
+    router.push(urlWithPref);
+  }
+
+  function handleSelectFromStation(st: MetroStation) {
+    setFromSlug(st.slug);
+    setFromQuery(st.name);
+    setFromOpen(false);
+    setError(null);
+
+    if (mode === "details" && toSlug && st.slug !== toSlug) {
+      navigateToRouteDetails(st.slug, toSlug, preference);
+    } else if (mode === "search-only" && !toSlug) {
+      setToOpen(true);
+    }
+  }
+
+  function handleSelectToStation(st: MetroStation) {
+    setToSlug(st.slug);
+    setToQuery(st.name);
+    setToOpen(false);
+    setError(null);
+
+    if (mode === "details" && fromSlug && fromSlug !== st.slug) {
+      navigateToRouteDetails(fromSlug, st.slug, preference);
     }
   }
 
@@ -238,31 +257,35 @@ export function MetroRouteFinder({
     setFromQuery(prevToName);
     setToQuery(prevFromName);
 
-    if (prevFromSlug && prevToSlug && prevFromSlug !== prevToSlug) {
-      void executeRouteSearch(prevToSlug, prevFromSlug, preference, true);
+    if (
+      mode === "details" &&
+      prevFromSlug &&
+      prevToSlug &&
+      prevFromSlug !== prevToSlug
+    ) {
+      navigateToRouteDetails(prevToSlug, prevFromSlug, preference);
     }
   }
 
   function handlePreferenceChange(nextPref: MetroRoutePreference) {
     setPreference(nextPref);
-    if (planResult) {
-      const matchIdx = planResult.alternatives.findIndex(
+    if (initialResult) {
+      const matchIdx = initialResult.alternatives.findIndex(
         (o) => o.preference === nextPref,
       );
       if (matchIdx !== -1) {
         setActiveOptionIndex(matchIdx);
-        return;
       }
     }
-    void executeRouteSearch(fromSlug, toSlug, nextPref, false);
   }
 
   const activeRoute: MetroRouteOption | null = useMemo(() => {
-    if (!planResult) return null;
+    if (!initialResult) return null;
     return (
-      planResult.alternatives[activeOptionIndex] || planResult.recommended
+      initialResult.alternatives[activeOptionIndex] ||
+      initialResult.recommended
     );
-  }, [planResult, activeOptionIndex]);
+  }, [initialResult, activeOptionIndex]);
 
   const toggleSegmentStops = (segmentIndex: number) => {
     setExpandedSegments((prev) => ({
@@ -272,35 +295,38 @@ export function MetroRouteFinder({
   };
 
   return (
-    <div className="space-y-6">
-      {/* Main Search Card */}
-      <div className="rounded-2xl border border-line bg-card p-4 shadow-md sm:p-6">
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-line pb-3">
-          <div className="flex items-center gap-2">
-            <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-[#1956b4] text-white">
-              <TrainIcon className="h-4 w-4" />
+    <div className="space-y-5 sm:space-y-6">
+      {/* Main Mobile-First Search Card */}
+      <div className="rounded-2xl border border-line bg-card p-3.5 shadow-lg sm:p-6">
+        {/* Card Header + Route Choice Pills */}
+        <div className="mb-3.5 flex flex-col gap-2.5 border-b border-line pb-3 sm:mb-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2.5">
+            <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#1956b4] text-white shadow-xs">
+              <TrainIcon className="h-4.5 w-4.5" />
             </span>
-            <div>
-              <h2 className="text-sm font-extrabold text-ink sm:text-base">
-                Delhi NCR Metro Route, Fare &amp; Timing Planner
+            <div className="min-w-0">
+              <h2 className="truncate text-sm font-extrabold text-ink sm:text-base">
+                {mode === "search-only"
+                  ? "Search Delhi NCR Metro Route & Fare"
+                  : "Modify Metro Stations or Route Preference"}
               </h2>
-              <p className="text-[11px] text-ink-muted sm:text-xs">
-                Covers all 12 DMRC, Airport Express, Noida Aqua &amp; Gurgaon
-                Rapid Metro lines (262 Stations)
+              <p className="truncate text-[11px] text-ink-muted sm:text-xs">
+                12 Lines • 262 Stations • DMRC, Airport Express, Noida Aqua
+                &amp; Rapid Metro
               </p>
             </div>
           </div>
 
-          {/* Route Choice / Preference Toggle */}
+          {/* Route Choice / Preference Toggle (Scrollable on tiny screens) */}
           <div
             role="group"
             aria-label="Route preference"
-            className="inline-flex rounded-xl border border-line bg-subcard p-1"
+            className="grid grid-cols-3 gap-1 rounded-xl border border-line bg-subcard p-1 sm:inline-flex"
           >
             {(
               [
-                { id: "fastest", label: "Fastest Route" },
-                { id: "min-interchange", label: "Min Interchange" },
+                { id: "fastest", label: "Fastest" },
+                { id: "min-interchange", label: "Min Change" },
                 { id: "min-stops", label: "Min Stops" },
               ] as const
             ).map((tab) => {
@@ -310,7 +336,7 @@ export function MetroRouteFinder({
                   key={tab.id}
                   type="button"
                   onClick={() => handlePreferenceChange(tab.id)}
-                  className={`rounded-lg px-2.5 py-1.5 text-[11px] font-bold transition sm:px-3 sm:text-xs ${
+                  className={`rounded-lg px-2 py-1.5 text-center text-[11px] font-extrabold transition sm:px-3 sm:text-xs ${
                     isSelected
                       ? "bg-[#1956b4] text-white shadow-xs"
                       : "text-ink-soft hover:text-ink"
@@ -323,283 +349,302 @@ export function MetroRouteFinder({
           </div>
         </div>
 
-        {/* Origin / Swap / Destination Inputs */}
+        {/* Origin / Swap / Destination Form — Mobile App Style Stacked Card + Desktop Row */}
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            void executeRouteSearch(fromSlug, toSlug, preference, true);
+            navigateToRouteDetails(fromSlug, toSlug, preference);
           }}
-          className="grid gap-3 lg:grid-cols-[1fr_auto_1fr_auto] lg:items-end"
         >
-          {/* Origin Station Input */}
-          <div ref={fromBoxRef} className="relative">
-            <label
-              htmlFor="metro-origin-input"
-              className="mb-1.5 block text-[11px] font-extrabold uppercase tracking-wider text-ink-muted"
-            >
-              From (Origin Station)
-            </label>
-            <div className="relative">
-              <MapPinIcon className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-[#1956b4]" />
-              <input
-                id="metro-origin-input"
-                type="text"
-                value={fromQuery}
-                onFocus={() => setFromOpen(true)}
-                onChange={(e) => {
-                  setFromQuery(e.target.value);
-                  setFromOpen(true);
-                }}
-                placeholder="Search origin station (e.g. Rajiv Chowk, New Delhi)"
-                className="ta-input w-full rounded-xl py-3 pr-8 pl-10 text-sm font-bold text-ink"
-                autoComplete="off"
-              />
-              {fromQuery && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setFromQuery("");
+          <div className="relative grid gap-2.5 lg:grid-cols-[1fr_auto_1fr_auto] lg:items-end lg:gap-3">
+            {/* Origin Station Input */}
+            <div ref={fromBoxRef} className="relative">
+              <label
+                htmlFor="metro-origin-input"
+                className="mb-1 block text-[10px] font-extrabold uppercase tracking-wider text-ink-muted sm:text-[11px]"
+              >
+                From (Origin Metro Station)
+              </label>
+              <div className="relative">
+                <span className="pointer-events-none absolute top-1/2 left-3 inline-flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
+                  <MapPinIcon className="h-3.5 w-3.5" />
+                </span>
+                <input
+                  id="metro-origin-input"
+                  type="text"
+                  value={fromQuery}
+                  onFocus={() => {
+                    setFromOpen(true);
+                    setToOpen(false);
+                  }}
+                  onChange={(e) => {
+                    setFromQuery(e.target.value);
                     setFromOpen(true);
                   }}
-                  aria-label="Clear origin station"
-                  className="absolute top-1/2 right-2.5 -translate-y-1/2 rounded-md px-1.5 py-0.5 text-xs font-bold text-ink-muted hover:bg-subcard hover:text-ink"
-                >
-                  ✕
-                </button>
+                  placeholder="Enter Origin Station (e.g. MG Road)"
+                  className="ta-input h-12 w-full rounded-xl pr-16 pl-10 text-sm font-extrabold text-ink sm:pr-9"
+                  autoComplete="off"
+                />
+                {fromQuery && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFromQuery("");
+                      setFromOpen(true);
+                    }}
+                    aria-label="Clear origin station"
+                    className="absolute top-1/2 right-11 -translate-y-1/2 rounded-md px-2 py-1 text-xs font-bold text-ink-muted hover:bg-subcard hover:text-ink lg:right-2.5"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
+
+              {/* Origin Station Dropdown */}
+              {fromOpen && (
+                <div className="absolute top-full right-0 left-0 z-50 mt-1.5 max-h-72 overflow-y-auto rounded-2xl border border-line bg-card p-1.5 shadow-2xl ring-1 ring-black/10">
+                  <div className="sticky top-0 z-10 flex items-center justify-between bg-card/95 px-2.5 py-1.5 text-[10px] font-extrabold uppercase tracking-wider text-ink-muted backdrop-blur-xs">
+                    <span>
+                      {fromQuery.trim()
+                        ? `Matching Stations`
+                        : "Popular Origin Stations"}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setFromOpen(false)}
+                      className="rounded px-1.5 py-0.5 text-[10px] font-bold text-[#1956b4] lg:hidden"
+                    >
+                      Close
+                    </button>
+                  </div>
+                  {filteredFrom.length === 0 ? (
+                    <p className="px-3 py-4 text-center text-xs text-ink-muted">
+                      No station found matching &ldquo;{fromQuery}&rdquo;
+                    </p>
+                  ) : (
+                    filteredFrom.map((st) => (
+                      <button
+                        key={st.id}
+                        type="button"
+                        onClick={() => handleSelectFromStation(st)}
+                        className={`flex min-h-[44px] w-full items-center justify-between gap-2 rounded-xl px-3 py-2 text-left text-xs transition hover:bg-subcard active:bg-blue-50 ${
+                          st.slug === fromSlug
+                            ? "bg-blue-50/90 font-extrabold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300"
+                            : "font-bold text-ink"
+                        }`}
+                      >
+                        <div className="min-w-0">
+                          <span className="block truncate text-xs sm:text-sm">
+                            {st.name}
+                          </span>
+                          {st.isInterchange && (
+                            <span className="text-[10px] font-semibold text-ink-muted">
+                              ⇄ Interchange Station
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex shrink-0 flex-wrap items-center gap-1">
+                          {st.routeIds.map((rid) => {
+                            const ln = linesMap.get(rid);
+                            if (!ln) return null;
+                            return (
+                              <span
+                                key={rid}
+                                style={{
+                                  backgroundColor: ln.color,
+                                  color: ln.textColor,
+                                }}
+                                className="rounded px-1.5 py-0.5 text-[9px] font-extrabold uppercase shadow-2xs"
+                              >
+                                {ln.shortCode}
+                              </span>
+                            );
+                          })}
+                        </div>
+                      </button>
+                    ))
+                  )}
+                </div>
               )}
             </div>
 
-            {fromOpen && (
-              <div className="absolute top-full right-0 left-0 z-40 mt-1.5 max-h-72 overflow-y-auto rounded-xl border border-line bg-card p-1.5 shadow-2xl">
-                <div className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-ink-muted">
-                  {fromQuery.trim()
-                    ? `Matching Stations (${filteredFrom.length})`
-                    : "Popular Delhi NCR Metro Stations"}
-                </div>
-                {filteredFrom.length === 0 ? (
-                  <p className="px-3 py-3 text-xs text-ink-muted">
-                    No station found matching &ldquo;{fromQuery}&rdquo;
-                  </p>
-                ) : (
-                  filteredFrom.map((st) => (
-                    <button
-                      key={st.id}
-                      type="button"
-                      onClick={() => {
-                        setFromSlug(st.slug);
-                        setFromQuery(st.name);
-                        setFromOpen(false);
-                      }}
-                      className={`flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-left text-xs transition hover:bg-subcard ${
-                        st.slug === fromSlug
-                          ? "bg-blue-50/80 font-extrabold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300"
-                          : "font-semibold text-ink"
-                      }`}
-                    >
-                      <div className="min-w-0">
-                        <span className="block truncate">{st.name}</span>
-                        {st.isInterchange && (
-                          <span className="text-[10px] font-semibold text-ink-muted">
-                            Interchange Hub
-                          </span>
-                        )}
-                      </div>
-                      <div className="flex shrink-0 flex-wrap items-center gap-1">
-                        {st.routeIds.map((rid) => {
-                          const ln = linesMap.get(rid);
-                          if (!ln) return null;
-                          return (
-                            <span
-                              key={rid}
-                              style={{
-                                backgroundColor: ln.color,
-                                color: ln.textColor,
-                              }}
-                              className="rounded px-1.5 py-0.5 text-[9px] font-extrabold uppercase shadow-2xs"
-                            >
-                              {ln.shortCode}
-                            </span>
-                          );
-                        })}
-                      </div>
-                    </button>
-                  ))
-                )}
-              </div>
-            )}
-          </div>
+            {/* Swap Button — Floating on right edge on Mobile, Centered on Desktop */}
+            <div className="absolute top-[52px] right-2 z-20 lg:static lg:flex lg:justify-center lg:pb-0.5">
+              <button
+                type="button"
+                onClick={handleSwapStations}
+                title="Swap Origin & Destination Stations"
+                aria-label="Swap Origin and Destination Stations"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full border-2 border-line bg-card text-[#1956b4] shadow-md transition hover:border-[#1956b4] hover:bg-blue-50 active:scale-95 lg:h-11 lg:w-11 lg:rounded-xl lg:border lg:bg-subcard lg:shadow-none dark:text-blue-300 dark:hover:bg-blue-950/40"
+              >
+                <SwapIcon className="h-4 w-4" />
+              </button>
+            </div>
 
-          {/* Swap Button */}
-          <div className="flex justify-center lg:pb-0.5">
-            <button
-              type="button"
-              onClick={handleSwapStations}
-              title="Swap Origin & Destination Stations"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-line bg-subcard text-[#1956b4] transition hover:border-[#1956b4] hover:bg-blue-50 dark:text-blue-300 dark:hover:bg-blue-950/40"
-            >
-              <SwapIcon className="h-4 w-4" />
-            </button>
-          </div>
-
-          {/* Destination Station Input */}
-          <div ref={toBoxRef} className="relative">
-            <label
-              htmlFor="metro-dest-input"
-              className="mb-1.5 block text-[11px] font-extrabold uppercase tracking-wider text-ink-muted"
-            >
-              To (Destination Station)
-            </label>
-            <div className="relative">
-              <CompassIcon className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-[#fc6203]" />
-              <input
-                id="metro-dest-input"
-                type="text"
-                value={toQuery}
-                onFocus={() => setToOpen(true)}
-                onChange={(e) => {
-                  setToQuery(e.target.value);
-                  setToOpen(true);
-                }}
-                placeholder="Search destination (e.g. Huda City Centre, IGI Airport)"
-                className="ta-input w-full rounded-xl py-3 pr-8 pl-10 text-sm font-bold text-ink"
-                autoComplete="off"
-              />
-              {toQuery && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setToQuery("");
+            {/* Destination Station Input */}
+            <div ref={toBoxRef} className="relative">
+              <label
+                htmlFor="metro-dest-input"
+                className="mb-1 block text-[10px] font-extrabold uppercase tracking-wider text-ink-muted sm:text-[11px]"
+              >
+                To (Destination Metro Station)
+              </label>
+              <div className="relative">
+                <span className="pointer-events-none absolute top-1/2 left-3 inline-flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full bg-orange-500/15 text-[#fc6203]">
+                  <CompassIcon className="h-3.5 w-3.5" />
+                </span>
+                <input
+                  id="metro-dest-input"
+                  type="text"
+                  value={toQuery}
+                  onFocus={() => {
+                    setToOpen(true);
+                    setFromOpen(false);
+                  }}
+                  onChange={(e) => {
+                    setToQuery(e.target.value);
                     setToOpen(true);
                   }}
-                  aria-label="Clear destination station"
-                  className="absolute top-1/2 right-2.5 -translate-y-1/2 rounded-md px-1.5 py-0.5 text-xs font-bold text-ink-muted hover:bg-subcard hover:text-ink"
-                >
-                  ✕
-                </button>
+                  placeholder="Enter Destination (e.g. Anand Vihar)"
+                  className="ta-input h-12 w-full rounded-xl pr-16 pl-10 text-sm font-extrabold text-ink sm:pr-9"
+                  autoComplete="off"
+                />
+                {toQuery && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setToQuery("");
+                      setToOpen(true);
+                    }}
+                    aria-label="Clear destination station"
+                    className="absolute top-1/2 right-11 -translate-y-1/2 rounded-md px-2 py-1 text-xs font-bold text-ink-muted hover:bg-subcard hover:text-ink lg:right-2.5"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
+
+              {/* Destination Station Dropdown */}
+              {toOpen && (
+                <div className="absolute top-full right-0 left-0 z-50 mt-1.5 max-h-72 overflow-y-auto rounded-2xl border border-line bg-card p-1.5 shadow-2xl ring-1 ring-black/10">
+                  <div className="sticky top-0 z-10 flex items-center justify-between bg-card/95 px-2.5 py-1.5 text-[10px] font-extrabold uppercase tracking-wider text-ink-muted backdrop-blur-xs">
+                    <span>
+                      {toQuery.trim()
+                        ? `Matching Stations`
+                        : "Popular Destination Stations"}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setToOpen(false)}
+                      className="rounded px-1.5 py-0.5 text-[10px] font-bold text-[#1956b4] lg:hidden"
+                    >
+                      Close
+                    </button>
+                  </div>
+                  {filteredTo.length === 0 ? (
+                    <p className="px-3 py-4 text-center text-xs text-ink-muted">
+                      No station found matching &ldquo;{toQuery}&rdquo;
+                    </p>
+                  ) : (
+                    filteredTo.map((st) => (
+                      <button
+                        key={st.id}
+                        type="button"
+                        onClick={() => handleSelectToStation(st)}
+                        className={`flex min-h-[44px] w-full items-center justify-between gap-2 rounded-xl px-3 py-2 text-left text-xs transition hover:bg-subcard active:bg-blue-50 ${
+                          st.slug === toSlug
+                            ? "bg-blue-50/90 font-extrabold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300"
+                            : "font-bold text-ink"
+                        }`}
+                      >
+                        <div className="min-w-0">
+                          <span className="block truncate text-xs sm:text-sm">
+                            {st.name}
+                          </span>
+                          {st.isInterchange && (
+                            <span className="text-[10px] font-semibold text-ink-muted">
+                              ⇄ Interchange Station
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex shrink-0 flex-wrap items-center gap-1">
+                          {st.routeIds.map((rid) => {
+                            const ln = linesMap.get(rid);
+                            if (!ln) return null;
+                            return (
+                              <span
+                                key={rid}
+                                style={{
+                                  backgroundColor: ln.color,
+                                  color: ln.textColor,
+                                }}
+                                className="rounded px-1.5 py-0.5 text-[9px] font-extrabold uppercase shadow-2xs"
+                              >
+                                {ln.shortCode}
+                              </span>
+                            );
+                          })}
+                        </div>
+                      </button>
+                    ))
+                  )}
+                </div>
               )}
             </div>
 
-            {toOpen && (
-              <div className="absolute top-full right-0 left-0 z-40 mt-1.5 max-h-72 overflow-y-auto rounded-xl border border-line bg-card p-1.5 shadow-2xl">
-                <div className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-ink-muted">
-                  {toQuery.trim()
-                    ? `Matching Stations (${filteredTo.length})`
-                    : "Popular Destination Stations"}
-                </div>
-                {filteredTo.length === 0 ? (
-                  <p className="px-3 py-3 text-xs text-ink-muted">
-                    No station found matching &ldquo;{toQuery}&rdquo;
-                  </p>
-                ) : (
-                  filteredTo.map((st) => (
-                    <button
-                      key={st.id}
-                      type="button"
-                      onClick={() => {
-                        setToSlug(st.slug);
-                        setToQuery(st.name);
-                        setToOpen(false);
-                      }}
-                      className={`flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-left text-xs transition hover:bg-subcard ${
-                        st.slug === toSlug
-                          ? "bg-blue-50/80 font-extrabold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300"
-                          : "font-semibold text-ink"
-                      }`}
-                    >
-                      <div className="min-w-0">
-                        <span className="block truncate">{st.name}</span>
-                        {st.isInterchange && (
-                          <span className="text-[10px] font-semibold text-ink-muted">
-                            Interchange Hub
-                          </span>
-                        )}
-                      </div>
-                      <div className="flex shrink-0 flex-wrap items-center gap-1">
-                        {st.routeIds.map((rid) => {
-                          const ln = linesMap.get(rid);
-                          if (!ln) return null;
-                          return (
-                            <span
-                              key={rid}
-                              style={{
-                                backgroundColor: ln.color,
-                                color: ln.textColor,
-                              }}
-                              className="rounded px-1.5 py-0.5 text-[9px] font-extrabold uppercase shadow-2xs"
-                            >
-                              {ln.shortCode}
-                            </span>
-                          );
-                        })}
-                      </div>
-                    </button>
-                  ))
-                )}
-              </div>
-            )}
+            {/* Search Submit Button */}
+            <button
+              type="submit"
+              disabled={navigating}
+              className="ta-btn-orange inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl px-6 text-sm font-extrabold text-white shadow-sm transition active:scale-[0.99] disabled:opacity-60 lg:w-auto"
+            >
+              {navigating ? (
+                <>
+                  <RefreshIcon className="h-4 w-4 animate-spin" />
+                  <span>Loading Route...</span>
+                </>
+              ) : (
+                <>
+                  <SearchIcon className="h-4 w-4" />
+                  <span>
+                    {mode === "search-only"
+                      ? "Find Metro Route & Fare"
+                      : "Check Route"}
+                  </span>
+                </>
+              )}
+            </button>
           </div>
-
-          {/* Search Submit Button */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="ta-btn-orange inline-flex h-[46px] items-center justify-center gap-2 rounded-xl px-6 text-sm font-extrabold text-white shadow-sm transition disabled:opacity-60"
-          >
-            {loading ? (
-              <>
-                <RefreshIcon className="h-4 w-4 animate-spin" />
-                <span>Finding Route...</span>
-              </>
-            ) : (
-              <>
-                <SearchIcon className="h-4 w-4" />
-                <span>Show Metro Route</span>
-              </>
-            )}
-          </button>
         </form>
 
-        {/* Popular Route Quick Chips */}
-        <div className="mt-4 flex flex-wrap items-center gap-1.5 border-t border-line pt-3">
-          <span className="mr-1 text-[11px] font-bold text-ink-muted">
-            Popular Routes:
-          </span>
-          {POPULAR_METRO_ROUTES.slice(0, 6).map((item) => {
-            const isCurrent =
-              fromSlug === item.fromSlug && toSlug === item.toSlug;
-            return (
-              <Link
-                key={`${item.fromSlug}-${item.toSlug}`}
-                href={buildMetroRoutePath(item.fromSlug, item.toSlug)}
-                onClick={(e) => {
-                  e.preventDefault();
-                  setFromSlug(item.fromSlug);
-                  setToSlug(item.toSlug);
-                  setFromQuery(
-                    stationsBySlug.get(item.fromSlug)?.name || item.fromName,
-                  );
-                  setToQuery(
-                    stationsBySlug.get(item.toSlug)?.name || item.toName,
-                  );
-                  void executeRouteSearch(
-                    item.fromSlug,
-                    item.toSlug,
-                    preference,
-                    true,
-                  );
-                }}
-                className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-bold transition ${
-                  isCurrent
-                    ? "border-[#1956b4] bg-[#1956b4] text-white"
-                    : "border-line bg-subcard text-ink-soft hover:border-[#1956b4] hover:text-[#1956b4]"
-                }`}
-              >
-                <span>{item.fromName}</span>
-                <span>→</span>
-                <span>{item.toName}</span>
-              </Link>
-            );
-          })}
+        {/* Popular Route Quick Chips (Horizontal swipe on mobile, wrap on desktop) */}
+        <div className="mt-3.5 border-t border-line pt-3">
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0">
+            <span className="shrink-0 text-[11px] font-extrabold text-ink-muted">
+              Quick Routes:
+            </span>
+            {POPULAR_METRO_ROUTES.slice(0, 6).map((item) => {
+              const isCurrent =
+                mode === "details" &&
+                fromSlug === item.fromSlug &&
+                toSlug === item.toSlug;
+              return (
+                <Link
+                  key={`${item.fromSlug}-${item.toSlug}`}
+                  href={buildMetroRoutePath(item.fromSlug, item.toSlug)}
+                  className={`inline-flex shrink-0 items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-bold transition ${
+                    isCurrent
+                      ? "border-[#1956b4] bg-[#1956b4] text-white"
+                      : "border-line bg-subcard text-ink-soft hover:border-[#1956b4] hover:text-[#1956b4]"
+                  }`}
+                >
+                  <span>{item.fromName.replace(/ \(.*\)/, "")}</span>
+                  <span>→</span>
+                  <span>{item.toName.replace(/ \(.*\)/, "")}</span>
+                </Link>
+              );
+            })}
+          </div>
         </div>
 
         {error && (
@@ -609,23 +654,22 @@ export function MetroRouteFinder({
         )}
       </div>
 
-      {/* Active Route Result Dashboard */}
-      {activeRoute && planResult && (
-        <div className="space-y-5">
+      {/* Active Route Result Dashboard (Rendered on Details Pages) */}
+      {mode === "details" && activeRoute && initialResult && (
+        <div className="space-y-4 sm:space-y-5">
           {/* Multiple Route Options Comparison Bar (if fastest vs min-interchange differ) */}
-          {planResult.alternatives.length > 1 && (
-            <div className="rounded-2xl border border-line bg-card p-4 shadow-xs">
-              <div className="mb-2.5 flex items-center justify-between">
+          {initialResult.alternatives.length > 1 && (
+            <div className="rounded-2xl border border-line bg-card p-3.5 shadow-xs sm:p-4">
+              <div className="mb-2.5 flex items-center justify-between gap-2">
                 <p className="text-xs font-extrabold uppercase tracking-wider text-ink-muted">
-                  Choose Your Preferred Metro Route ({planResult.alternatives.length}{" "}
-                  Options Available)
+                  Compare Route Options ({initialResult.alternatives.length})
                 </p>
                 <span className="text-[11px] font-semibold text-ink-muted">
-                  Click any route option to switch view
+                  Tap to switch route
                 </span>
               </div>
-              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {planResult.alternatives.map((opt, idx) => {
+              <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
+                {initialResult.alternatives.map((opt, idx) => {
                   const selected = idx === activeOptionIndex;
                   return (
                     <button
@@ -635,7 +679,7 @@ export function MetroRouteFinder({
                         setActiveOptionIndex(idx);
                         setPreference(opt.preference);
                       }}
-                      className={`flex flex-col justify-between rounded-xl border p-3.5 text-left transition ${
+                      className={`flex flex-col justify-between rounded-xl border p-3 text-left transition ${
                         selected
                           ? "border-[#1956b4] bg-blue-50/70 ring-2 ring-[#1956b4]/20 dark:bg-blue-950/30"
                           : "border-line bg-subcard/50 hover:border-[#1956b4]"
@@ -656,7 +700,7 @@ export function MetroRouteFinder({
                             {opt.badgeText}
                           </span>
                         </div>
-                        <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                        <div className="mt-2 flex flex-wrap items-center gap-1">
                           {opt.segments
                             .filter((s) => s.line)
                             .map((s, sIdx) => (
@@ -673,12 +717,12 @@ export function MetroRouteFinder({
                             ))}
                         </div>
                       </div>
-                      <div className="mt-3 flex items-center justify-between border-t border-line pt-2 text-xs font-bold text-ink">
+                      <div className="mt-2.5 flex items-center justify-between border-t border-line pt-2 text-xs font-bold text-ink">
                         <span>{opt.totalDurationMin} mins</span>
                         <span>•</span>
                         <span>
                           {opt.interchangeCount === 0
-                            ? "Direct (0 Change)"
+                            ? "Direct"
                             : `${opt.interchangeCount} Change${opt.interchangeCount > 1 ? "s" : ""}`}
                         </span>
                         <span>•</span>
@@ -695,97 +739,97 @@ export function MetroRouteFinder({
             </div>
           )}
 
-          {/* Top 4 Summary Metric Cards */}
-          <div className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
+          {/* Top 4 Summary Metric Cards — 2x2 Grid on Mobile, 4 Columns on Desktop */}
+          <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5 lg:grid-cols-4">
             {/* 1. Travel Time */}
-            <div className="rounded-2xl border border-line bg-card p-4 shadow-xs">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-ink-muted">
-                  Estimated Travel Time
+            <div className="rounded-2xl border border-line bg-card p-3.5 shadow-xs sm:p-4">
+              <div className="flex items-center justify-between gap-1">
+                <span className="text-[10px] font-extrabold uppercase tracking-wider text-ink-muted sm:text-[11px]">
+                  Travel Time
                 </span>
-                <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-[#1956b4] dark:bg-blue-950/50 dark:text-blue-300">
-                  <ClockIcon className="h-4 w-4" />
+                <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-blue-50 text-[#1956b4] sm:h-8 sm:w-8 dark:bg-blue-950/50 dark:text-blue-300">
+                  <ClockIcon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 </span>
               </div>
-              <p className="mt-1.5 font-mono text-2xl font-black text-ink sm:text-3xl">
+              <p className="mt-1 font-mono text-xl font-black text-ink sm:mt-1.5 sm:text-3xl">
                 {activeRoute.totalDurationMin} mins
               </p>
-              <p className="mt-1 text-xs text-ink-muted">
-                {activeRoute.inTrainDurationMin}m in train
+              <p className="mt-0.5 text-[11px] leading-tight text-ink-muted sm:text-xs">
+                {activeRoute.inTrainDurationMin}m train
                 {activeRoute.interchangeDurationMin > 0
-                  ? ` + ${activeRoute.interchangeDurationMin}m interchange`
-                  : " • Non-stop corridor"}
+                  ? ` + ${activeRoute.interchangeDurationMin}m transfer`
+                  : " • Non-stop"}
               </p>
             </div>
 
             {/* 2. DMRC Token & Smart Card Fare */}
-            <div className="rounded-2xl border border-line bg-card p-4 shadow-xs">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-ink-muted">
-                  Token / QR &amp; Card Fare
+            <div className="rounded-2xl border border-line bg-card p-3.5 shadow-xs sm:p-4">
+              <div className="flex items-center justify-between gap-1">
+                <span className="text-[10px] font-extrabold uppercase tracking-wider text-ink-muted sm:text-[11px]">
+                  Metro Fare
                 </span>
-                <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300">
-                  <TicketIcon className="h-4 w-4" />
+                <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-50 text-emerald-700 sm:h-8 sm:w-8 dark:bg-emerald-950/50 dark:text-emerald-300">
+                  <TicketIcon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 </span>
               </div>
-              <div className="mt-1.5 flex items-baseline gap-2.5">
-                <p className="font-mono text-2xl font-black text-emerald-700 sm:text-3xl dark:text-emerald-300">
+              <div className="mt-1 flex flex-wrap items-baseline gap-1.5 sm:mt-1.5 sm:gap-2">
+                <p className="font-mono text-xl font-black text-emerald-700 sm:text-3xl dark:text-emerald-300">
                   ₹{activeRoute.fare.tokenFareInr}
                 </p>
-                <span className="rounded-md bg-emerald-500/15 px-2 py-0.5 text-xs font-extrabold text-emerald-700 dark:text-emerald-300">
-                  Card: ₹{activeRoute.fare.smartCardPeakInr}
+                <span className="rounded bg-emerald-500/15 px-1.5 py-0.5 text-[10px] font-extrabold text-emerald-700 sm:text-xs dark:text-emerald-300">
+                  Card ₹{activeRoute.fare.smartCardPeakInr}
                 </span>
               </div>
-              <p className="mt-1 text-xs text-ink-muted">
-                Off-Peak Card: ₹{activeRoute.fare.smartCardOffPeakInr} • Sun/Holiday: ₹
+              <p className="mt-0.5 text-[11px] leading-tight text-ink-muted sm:text-xs">
+                Off-Peak: ₹{activeRoute.fare.smartCardOffPeakInr} • Sun: ₹
                 {activeRoute.fare.sundayHolidayInr}
               </p>
             </div>
 
             {/* 3. Total Stations & Distance */}
-            <div className="rounded-2xl border border-line bg-card p-4 shadow-xs">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-ink-muted">
-                  Stations &amp; Distance
+            <div className="rounded-2xl border border-line bg-card p-3.5 shadow-xs sm:p-4">
+              <div className="flex items-center justify-between gap-1">
+                <span className="text-[10px] font-extrabold uppercase tracking-wider text-ink-muted sm:text-[11px]">
+                  Stops &amp; Dist
                 </span>
-                <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-amber-50 text-amber-700 dark:bg-amber-950/50 dark:text-amber-300">
-                  <MapPinIcon className="h-4 w-4" />
+                <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-amber-50 text-amber-700 sm:h-8 sm:w-8 dark:bg-amber-950/50 dark:text-amber-300">
+                  <MapPinIcon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 </span>
               </div>
-              <p className="mt-1.5 font-mono text-2xl font-black text-ink sm:text-3xl">
+              <p className="mt-1 font-mono text-xl font-black text-ink sm:mt-1.5 sm:text-3xl">
                 {activeRoute.totalStops} Stops
               </p>
-              <p className="mt-1 text-xs text-ink-muted">
-                {activeRoute.totalDistanceKm} km track distance •{" "}
+              <p className="mt-0.5 text-[11px] leading-tight text-ink-muted sm:text-xs">
+                {activeRoute.totalDistanceKm} km •{" "}
                 {activeRoute.fare.distanceSlabLabel}
               </p>
             </div>
 
             {/* 4. Interchanges & First/Last Train */}
-            <div className="rounded-2xl border border-line bg-card p-4 shadow-xs">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-ink-muted">
-                  Line Interchanges
+            <div className="rounded-2xl border border-line bg-card p-3.5 shadow-xs sm:p-4">
+              <div className="flex items-center justify-between gap-1">
+                <span className="text-[10px] font-extrabold uppercase tracking-wider text-ink-muted sm:text-[11px]">
+                  Interchange
                 </span>
-                <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-purple-50 text-purple-700 dark:bg-purple-950/50 dark:text-purple-300">
-                  <SparklesIcon className="h-4 w-4" />
+                <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-purple-50 text-purple-700 sm:h-8 sm:w-8 dark:bg-purple-950/50 dark:text-purple-300">
+                  <SparklesIcon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 </span>
               </div>
-              <p className="mt-1.5 text-xl font-black text-ink sm:text-2xl">
+              <p className="mt-1 text-lg font-black text-ink sm:mt-1.5 sm:text-2xl">
                 {activeRoute.interchangeCount === 0
-                  ? "Direct Train"
-                  : `${activeRoute.interchangeCount} Interchange${activeRoute.interchangeCount > 1 ? "s" : ""}`}
+                  ? "Direct (0)"
+                  : `${activeRoute.interchangeCount} Change${activeRoute.interchangeCount > 1 ? "s" : ""}`}
               </p>
-              <p className="mt-1 text-xs text-ink-muted">
-                First: {activeRoute.firstTrainFromOrigin} • Last:{" "}
+              <p className="mt-0.5 text-[11px] leading-tight text-ink-muted sm:text-xs">
+                {activeRoute.firstTrainFromOrigin} –{" "}
                 {activeRoute.lastTrainFromOrigin}
               </p>
             </div>
           </div>
 
           {/* Visual Corridor Progress Strip + Step-by-Step Journey Card */}
-          <div className="rounded-2xl border border-line bg-card p-4 shadow-sm sm:p-6">
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line pb-4">
+          <div className="rounded-2xl border border-line bg-card p-3.5 shadow-sm sm:p-6">
+            <div className="flex flex-col justify-between gap-3 border-b border-line pb-3.5 sm:flex-row sm:items-center">
               <div>
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="rounded-md bg-[#1956b4] px-2.5 py-0.5 text-[11px] font-bold text-white">
@@ -793,7 +837,7 @@ export function MetroRouteFinder({
                   </span>
                   <h3 className="text-base font-extrabold text-ink sm:text-lg">
                     {activeRoute.fromStation.name} →{" "}
-                    {activeRoute.toStation.name} Metro Route
+                    {activeRoute.toStation.name}
                   </h3>
                 </div>
                 <p className="mt-1 text-xs text-ink-muted">
@@ -806,11 +850,7 @@ export function MetroRouteFinder({
                   activeRoute.toStation.slug,
                   activeRoute.fromStation.slug,
                 )}
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleSwapStations();
-                }}
-                className="inline-flex items-center gap-1.5 rounded-xl border border-line bg-subcard px-3 py-1.5 text-xs font-bold text-[#1956b4] transition hover:border-[#1956b4] dark:text-blue-300"
+                className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-line bg-subcard px-3 py-2 text-xs font-bold text-[#1956b4] transition hover:border-[#1956b4] dark:text-blue-300"
               >
                 <SwapIcon className="h-3.5 w-3.5" />
                 <span>
@@ -821,14 +861,14 @@ export function MetroRouteFinder({
             </div>
 
             {/* Proportional Color Line Progress Bar */}
-            <div className="my-4 rounded-xl border border-line bg-subcard/60 p-3">
-              <div className="mb-2 flex flex-wrap items-center justify-between gap-2 text-xs font-bold text-ink">
-                <span>Journey Line Sequence</span>
-                <span className="text-ink-muted">
-                  Peak Train Frequency: Every {activeRoute.peakFrequencyMin}
+            <div className="my-3.5 rounded-xl border border-line bg-subcard/60 p-3">
+              <div className="mb-2 flex flex-wrap items-center justify-between gap-1 text-xs font-bold text-ink">
+                <span>Metro Corridor Breakdown</span>
+                <span className="text-[11px] text-ink-muted">
+                  Frequency: Every {activeRoute.peakFrequencyMin}
                 </span>
               </div>
-              <div className="flex h-3.5 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800">
+              <div className="flex h-3 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800">
                 {activeRoute.segments.map((seg) => {
                   const weight = Math.max(10, seg.durationMin);
                   return (
@@ -838,24 +878,19 @@ export function MetroRouteFinder({
                         flexGrow: weight,
                         backgroundColor: seg.line?.color || "#64748B",
                       }}
-                      title={
-                        seg.line
-                          ? `${seg.line.badge}: ${seg.fromStation.name} → ${seg.toStation.name} (${seg.stopsCount} stops, ${seg.durationMin} mins)`
-                          : `Walkway Transfer (${seg.durationMin} mins)`
-                      }
                       className="h-full border-r border-white/40 last:border-r-0"
                     />
                   );
                 })}
               </div>
-              <div className="mt-2.5 flex flex-wrap items-center gap-2">
+              <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
                 {activeRoute.segments.map((seg, idx) => (
                   <div
                     key={`chip-${seg.segmentIndex}`}
-                    className="flex items-center gap-1.5 text-xs"
+                    className="flex items-center gap-1 text-xs"
                   >
                     {idx > 0 && (
-                      <ArrowRightIcon className="h-3.5 w-3.5 text-ink-muted" />
+                      <ArrowRightIcon className="h-3 w-3 text-ink-muted" />
                     )}
                     {seg.line ? (
                       <span
@@ -863,7 +898,7 @@ export function MetroRouteFinder({
                           backgroundColor: seg.line.color,
                           color: seg.line.textColor,
                         }}
-                        className="inline-flex items-center gap-1 rounded-md px-2.5 py-0.5 text-[11px] font-extrabold shadow-2xs"
+                        className="inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[10px] font-extrabold shadow-2xs sm:text-[11px]"
                       >
                         <span>{seg.line.badge}</span>
                         <span className="opacity-85">
@@ -871,8 +906,8 @@ export function MetroRouteFinder({
                         </span>
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 rounded-md border border-amber-500/40 bg-amber-500/15 px-2.5 py-0.5 text-[11px] font-bold text-amber-800 dark:text-amber-300">
-                        🚶 Footbridge Walkway ({seg.durationMin}m)
+                      <span className="inline-flex items-center gap-1 rounded-md border border-amber-500/40 bg-amber-500/15 px-2 py-0.5 text-[10px] font-bold text-amber-800 sm:text-[11px] dark:text-amber-300">
+                        🚶 Walkway ({seg.durationMin}m)
                       </span>
                     )}
                   </div>
@@ -881,7 +916,7 @@ export function MetroRouteFinder({
             </div>
 
             {/* Step-by-Step Segments & Interchanges */}
-            <div className="mt-5 space-y-4">
+            <div className="mt-4 space-y-3.5 sm:space-y-4">
               {activeRoute.segments.map((seg, segIdx) => {
                 const isExpanded =
                   expandedSegments[seg.segmentIndex] ??
@@ -890,7 +925,6 @@ export function MetroRouteFinder({
                 const lineTextColor = seg.line?.textColor || "#FFFFFF";
                 const intermediateOnly = seg.intermediateStops.slice(1, -1);
 
-                // Find if there is a non-walkway interchange right after this segment
                 const nextSeg = activeRoute.segments[segIdx + 1];
                 const matchingInterchange =
                   nextSeg && nextSeg.type === "metro" && seg.type === "metro"
@@ -906,34 +940,32 @@ export function MetroRouteFinder({
                   return (
                     <div
                       key={`seg-${seg.segmentIndex}`}
-                      className="rounded-xl border-2 border-dashed border-amber-500/50 bg-amber-50/70 p-4 dark:bg-amber-950/20"
+                      className="rounded-xl border-2 border-dashed border-amber-500/50 bg-amber-50/70 p-3.5 dark:bg-amber-950/20"
                     >
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        <div className="flex items-center gap-2.5">
-                          <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-amber-500 text-sm font-black text-white">
-                            ⇄
-                          </span>
-                          <div>
-                            <p className="text-xs font-extrabold uppercase tracking-wider text-amber-800 dark:text-amber-300">
-                              Interchange Walkway Transfer • {seg.durationMin}{" "}
-                              mins ({Math.round(seg.distanceKm * 1000)}m)
+                      <div className="flex items-start gap-2.5">
+                        <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-500 text-sm font-black text-white">
+                          ⇄
+                        </span>
+                        <div className="min-w-0">
+                          <p className="text-xs font-extrabold uppercase tracking-wider text-amber-800 dark:text-amber-300">
+                            Walkway Transfer • {seg.durationMin} mins (
+                            {Math.round(seg.distanceKm * 1000)}m)
+                          </p>
+                          <p className="text-xs font-bold text-ink sm:text-sm">
+                            Walk from{" "}
+                            <span className="underline">
+                              {seg.fromStation.name}
+                            </span>{" "}
+                            to{" "}
+                            <span className="underline">
+                              {seg.toStation.name}
+                            </span>
+                          </p>
+                          {seg.walkwayNote && (
+                            <p className="mt-0.5 text-[11px] text-ink-muted">
+                              {seg.walkwayNote}
                             </p>
-                            <p className="text-sm font-bold text-ink">
-                              Walk from{" "}
-                              <span className="underline">
-                                {seg.fromStation.name}
-                              </span>{" "}
-                              to{" "}
-                              <span className="underline">
-                                {seg.toStation.name}
-                              </span>
-                            </p>
-                            {seg.walkwayNote && (
-                              <p className="mt-0.5 text-xs text-ink-muted">
-                                {seg.walkwayNote}
-                              </p>
-                            )}
-                          </div>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -941,14 +973,14 @@ export function MetroRouteFinder({
                 }
 
                 return (
-                  <div key={`seg-${seg.segmentIndex}`} className="space-y-4">
+                  <div key={`seg-${seg.segmentIndex}`} className="space-y-3.5">
                     <div className="overflow-hidden rounded-2xl border border-line bg-subcard/30">
                       {/* Segment Header */}
                       <div
                         style={{ borderLeft: `6px solid ${lineColor}` }}
-                        className="flex flex-wrap items-center justify-between gap-3 border-b border-line bg-subcard/80 px-4 py-3"
+                        className="flex flex-col justify-between gap-2 border-b border-line bg-subcard/80 px-3.5 py-2.5 sm:flex-row sm:items-center sm:px-4 sm:py-3"
                       >
-                        <div className="flex flex-wrap items-center gap-2.5">
+                        <div className="flex flex-wrap items-center gap-2">
                           <span
                             style={{
                               backgroundColor: lineColor,
@@ -968,34 +1000,38 @@ export function MetroRouteFinder({
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-3 text-xs font-bold text-ink-soft">
-                          <span>{seg.stopsCount} Stops</span>
-                          <span>•</span>
-                          <span>{seg.durationMin} mins</span>
-                          <span>•</span>
-                          <span>{seg.distanceKm} km</span>
+                        <div className="flex items-center gap-2 text-xs font-bold text-ink-soft">
+                          <span className="rounded-md bg-card px-2 py-0.5">
+                            {seg.stopsCount} Stops
+                          </span>
+                          <span className="rounded-md bg-card px-2 py-0.5">
+                            {seg.durationMin} mins
+                          </span>
+                          <span className="rounded-md bg-card px-2 py-0.5">
+                            {seg.distanceKm} km
+                          </span>
                         </div>
                       </div>
 
                       {/* Segment Timeline Body */}
-                      <div className="p-4">
-                        <div className="relative pl-6">
+                      <div className="p-3.5 sm:p-4">
+                        <div className="relative pl-5 sm:pl-6">
                           {/* Vertical Colored Line */}
                           <span
                             style={{ backgroundColor: lineColor }}
-                            className="absolute top-2 bottom-2 left-2 w-1 rounded-full"
+                            className="absolute top-2 bottom-2 left-1.5 w-1 rounded-full sm:left-2"
                           />
 
                           {/* Boarding Station */}
-                          <div className="relative flex flex-wrap items-center justify-between gap-2 pb-3">
+                          <div className="relative flex flex-col justify-between gap-1 pb-3 sm:flex-row sm:items-center">
                             <span
                               style={{
                                 borderColor: lineColor,
                               }}
-                              className="absolute top-1 -left-[22px] h-4 w-4 rounded-full border-4 bg-white dark:bg-slate-900"
+                              className="absolute top-1 -left-[19px] h-3.5 w-3.5 rounded-full border-4 bg-white sm:-left-[22px] sm:h-4 sm:w-4 dark:bg-slate-900"
                             />
                             <div>
-                              <div className="flex flex-wrap items-center gap-2">
+                              <div className="flex flex-wrap items-center gap-1.5">
                                 <span className="rounded bg-emerald-500/15 px-1.5 py-0.5 text-[10px] font-extrabold uppercase text-emerald-700 dark:text-emerald-300">
                                   {segIdx === 0 ? "Board Origin" : "Board Here"}
                                 </span>
@@ -1008,13 +1044,12 @@ export function MetroRouteFinder({
                                   {seg.fromStation.name}
                                 </Link>
                               </div>
-                              <p className="mt-0.5 text-xs text-ink-muted">
-                                {seg.platformHint} • First Train:{" "}
-                                {seg.fromStation.firstTrain} | Last:{" "}
-                                {seg.fromStation.lastTrain}
+                              <p className="mt-0.5 text-[11px] text-ink-muted sm:text-xs">
+                                {seg.platformHint} • First:{" "}
+                                {seg.fromStation.firstTrain}
                               </p>
                             </div>
-                            <div className="text-right font-mono text-xs font-bold text-ink-soft">
+                            <div className="font-mono text-xs font-bold text-ink-soft sm:text-right">
                               {
                                 seg.intermediateStops[0]
                                   ?.cumulativeDurationMin
@@ -1030,24 +1065,24 @@ export function MetroRouteFinder({
 
                           {/* Intermediate Stops Toggle + List */}
                           {intermediateOnly.length > 0 && (
-                            <div className="my-2">
+                            <div className="my-1.5">
                               <button
                                 type="button"
                                 onClick={() =>
                                   toggleSegmentStops(seg.segmentIndex)
                                 }
-                                className="mb-2 inline-flex items-center gap-1.5 rounded-lg border border-line bg-card px-3 py-1 text-xs font-bold text-[#1956b4] transition hover:border-[#1956b4] dark:text-blue-300"
+                                className="mb-2 inline-flex items-center gap-1.5 rounded-lg border border-line bg-card px-2.5 py-1 text-[11px] font-bold text-[#1956b4] transition hover:border-[#1956b4] sm:text-xs dark:text-blue-300"
                               >
                                 <span>
                                   {isExpanded ? "Hide" : "Show"}{" "}
-                                  {intermediateOnly.length} intermediate station
+                                  {intermediateOnly.length} intermediate stop
                                   {intermediateOnly.length > 1 ? "s" : ""}
                                 </span>
                                 <span>{isExpanded ? "▲" : "▼"}</span>
                               </button>
 
                               {isExpanded && (
-                                <div className="space-y-2 border-l border-dashed border-line/70 py-1 pl-3">
+                                <div className="space-y-2 border-l border-dashed border-line/70 py-1 pl-2.5 sm:pl-3">
                                   {intermediateOnly.map((stop, stIdx) => (
                                     <div
                                       key={`${seg.segmentIndex}-${stop.stopId}`}
@@ -1055,9 +1090,9 @@ export function MetroRouteFinder({
                                     >
                                       <span
                                         style={{ backgroundColor: lineColor }}
-                                        className="absolute top-1.5 -left-[31px] h-2.5 w-2.5 rounded-full ring-2 ring-white dark:ring-slate-900"
+                                        className="absolute top-1.5 -left-[25px] h-2.5 w-2.5 rounded-full ring-2 ring-white sm:-left-[31px] dark:ring-slate-900"
                                       />
-                                      <div className="flex flex-wrap items-center gap-1.5">
+                                      <div className="flex min-w-0 flex-wrap items-center gap-1.5">
                                         <span className="font-mono text-[10px] font-bold text-ink-muted">
                                           {stIdx + 1}.
                                         </span>
@@ -1065,7 +1100,7 @@ export function MetroRouteFinder({
                                           href={buildMetroStationPath(
                                             stop.slug,
                                           )}
-                                          className="font-semibold text-ink hover:text-[#1956b4] hover:underline"
+                                          className="truncate font-semibold text-ink hover:text-[#1956b4] hover:underline"
                                         >
                                           {stop.name}
                                         </Link>
@@ -1087,15 +1122,15 @@ export function MetroRouteFinder({
                           )}
 
                           {/* Alighting Station */}
-                          <div className="relative flex flex-wrap items-center justify-between gap-2 pt-3">
+                          <div className="relative flex flex-col justify-between gap-1 pt-2.5 sm:flex-row sm:items-center">
                             <span
                               style={{
                                 backgroundColor: lineColor,
                               }}
-                              className="absolute top-4 -left-[22px] h-4 w-4 rounded-full border-2 border-white shadow-xs dark:border-slate-900"
+                              className="absolute top-3.5 -left-[19px] h-3.5 w-3.5 rounded-full border-2 border-white shadow-xs sm:-left-[22px] sm:h-4 sm:w-4 dark:border-slate-900"
                             />
                             <div>
-                              <div className="flex flex-wrap items-center gap-2">
+                              <div className="flex flex-wrap items-center gap-1.5">
                                 <span
                                   className={`rounded px-1.5 py-0.5 text-[10px] font-extrabold uppercase ${
                                     segIdx === activeRoute.segments.length - 1
@@ -1104,8 +1139,8 @@ export function MetroRouteFinder({
                                   }`}
                                 >
                                   {segIdx === activeRoute.segments.length - 1
-                                    ? "Arrive Destination"
-                                    : "Alight for Interchange"}
+                                    ? "Destination"
+                                    : "Interchange Stop"}
                                 </span>
                                 <Link
                                   href={buildMetroStationPath(
@@ -1117,7 +1152,7 @@ export function MetroRouteFinder({
                                 </Link>
                               </div>
                             </div>
-                            <div className="text-right font-mono text-xs font-bold text-ink">
+                            <div className="font-mono text-xs font-bold text-ink sm:text-right">
                               {
                                 seg.intermediateStops[
                                   seg.intermediateStops.length - 1
@@ -1139,8 +1174,8 @@ export function MetroRouteFinder({
                     {/* In-Station Interchange Banner */}
                     {matchingInterchange && (
                       <div className="rounded-xl border-2 border-dashed border-amber-500/50 bg-amber-50/70 p-3.5 dark:bg-amber-950/20">
-                        <div className="flex flex-wrap items-center justify-between gap-2">
-                          <div className="flex items-center gap-2.5">
+                        <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                          <div className="flex items-start gap-2.5 sm:items-center">
                             <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-500 text-xs font-black text-white">
                               ⇄
                             </span>
@@ -1178,8 +1213,8 @@ export function MetroRouteFinder({
                               </div>
                             </div>
                           </div>
-                          <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 dark:text-emerald-300">
-                            <CheckCircleIcon className="h-4 w-4" />
+                          <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 sm:text-xs dark:text-emerald-300">
+                            <CheckCircleIcon className="h-3.5 w-3.5" />
                             <span>Follow colored floor footprints</span>
                           </span>
                         </div>

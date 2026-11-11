@@ -123,7 +123,7 @@ export default async function MetroDynamicSeoPage({
   const linesMap = new Map(network.routes.map((r) => [r.id, r]));
   const stopsById = new Map(network.stops.map((s) => [s.id, s]));
 
-  // CASE 1: Origin-to-Destination Route Page (/delhi-metro/route/mg-road-to-anand-vihar)
+  // CASE 1: Origin-to-Destination Route Details Page (/delhi-metro/route/mg-road-to-anand-vihar)
   const parsedPair = parseMetroRouteSlug(routeSlug);
   if (parsedPair) {
     const plan = await fetchCachedMetroRoutePlan(
@@ -235,7 +235,7 @@ export default async function MetroDynamicSeoPage({
     ].filter((s) => s !== fromSt.slug && s !== toSt.slug);
 
     return (
-      <div className="min-h-screen bg-canvas pb-16">
+      <main className="min-h-screen bg-canvas pb-16 sm:pb-24">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(tripJsonLd) }}
@@ -249,12 +249,12 @@ export default async function MetroDynamicSeoPage({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
         />
 
-        {/* Hero Header */}
-        <section className="ta-hero-banner border-b border-line py-7 text-white sm:py-9">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* Deep Navy Hero Header */}
+        <section className="ta-navy-hero pt-5 pb-12 sm:pt-7 sm:pb-16">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
             <nav
               aria-label="Breadcrumb"
-              className="mb-3 flex flex-wrap items-center gap-1.5 text-xs text-blue-100/90"
+              className="mb-3 flex flex-wrap items-center gap-1.5 text-xs text-slate-300"
             >
               <Link href="/" className="hover:text-white hover:underline">
                 Home
@@ -267,31 +267,30 @@ export default async function MetroDynamicSeoPage({
                 Delhi NCR Metro
               </Link>
               <span>/</span>
-              <span className="font-bold text-white">
-                {fromSt.name} to {toSt.name} Metro Route
+              <span className="font-semibold text-white">
+                {fromSt.name} to {toSt.name} Metro
               </span>
             </nav>
 
             <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
               <div>
-                <div className="mb-2 flex flex-wrap items-center gap-2">
-                  <span className="rounded-full bg-white/15 px-3 py-0.5 text-xs font-bold text-white">
-                    Delhi NCR Metro Route &amp; Fare Guide
+                <div className="mb-2 flex flex-wrap items-center gap-1.5 sm:gap-2">
+                  <span className="rounded-full bg-white/15 px-2.5 py-0.5 text-[11px] font-bold text-white sm:text-xs">
+                    Delhi NCR Metro Route
                   </span>
-                  <span className="rounded-full bg-emerald-500/25 px-3 py-0.5 text-xs font-extrabold text-emerald-200">
+                  <span className="rounded-full bg-emerald-500/25 px-2.5 py-0.5 text-[11px] font-extrabold text-emerald-200 sm:text-xs">
                     Token: ₹{rec.fare.tokenFareInr} • Card: ₹
                     {rec.fare.smartCardPeakInr}
                   </span>
-                  <span className="rounded-full bg-amber-500/25 px-3 py-0.5 text-xs font-extrabold text-amber-200">
+                  <span className="rounded-full bg-amber-500/25 px-2.5 py-0.5 text-[11px] font-extrabold text-amber-200 sm:text-xs">
                     {rec.totalDurationMin} Mins • {rec.totalStops} Stops
                   </span>
                 </div>
 
-                <h1 className="text-2xl font-black tracking-tight sm:text-3xl lg:text-4xl">
-                  {fromSt.name} to {toSt.name} Metro Route, Fare, Timings &amp;
-                  Interchange
+                <h1 className="text-xl font-black tracking-tight text-white sm:text-3xl lg:text-4xl">
+                  {fromSt.name} to {toSt.name} Metro Route, Fare &amp; Timings
                 </h1>
-                <p className="mt-2 max-w-3xl text-xs leading-relaxed text-blue-100 sm:text-sm">
+                <p className="mt-1.5 max-w-3xl text-xs leading-relaxed text-slate-200 sm:mt-2 sm:text-sm">
                   The Delhi NCR Metro journey from{" "}
                   <strong className="text-white">{fromSt.name}</strong> to{" "}
                   <strong className="text-white">{toSt.name}</strong> covers{" "}
@@ -321,7 +320,7 @@ export default async function MetroDynamicSeoPage({
               <div className="flex flex-wrap items-center gap-2">
                 <Link
                   href={buildMetroRoutePath(toSt.slug, fromSt.slug)}
-                  className="inline-flex items-center gap-1.5 rounded-xl border border-white/25 bg-white/10 px-3.5 py-2 text-xs font-bold text-white transition hover:bg-white/20"
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-white/25 bg-white/10 px-3 py-2 text-xs font-bold text-white transition hover:bg-white/20"
                 >
                   <SwapIcon className="h-3.5 w-3.5" />
                   <span>
@@ -333,16 +332,18 @@ export default async function MetroDynamicSeoPage({
           </div>
         </section>
 
-        <div className="mx-auto max-w-7xl space-y-8 px-4 pt-6 sm:px-6 lg:px-8">
-          {/* Pre-Hydrated Interactive Metro Route Finder */}
+        <div className="relative z-20 mx-auto -mt-8 max-w-6xl space-y-6 px-3.5 sm:-mt-10 sm:space-y-8 sm:px-6 lg:px-8">
+          {/* Pre-Hydrated Interactive Metro Route Finder (Changing stations updates URL to new route!) */}
           <Suspense
             fallback={
               <div className="h-64 animate-pulse rounded-2xl border border-line bg-card p-6" />
             }
           >
             <MetroRouteFinder
+              key={plan.routeSlug}
               stations={network.stops}
               lines={network.routes}
+              mode="details"
               initialFromSlug={fromSt.slug}
               initialToSlug={toSt.slug}
               initialPreference="fastest"
@@ -351,8 +352,8 @@ export default async function MetroDynamicSeoPage({
           </Suspense>
 
           {/* SSR About Origin to Destination Metro Summary Box & Table */}
-          <section className="rounded-2xl border border-line bg-card p-5 shadow-xs sm:p-6">
-            <h2 className="text-lg font-extrabold text-ink sm:text-xl">
+          <section className="rounded-2xl border border-line bg-card p-4 shadow-xs sm:p-6">
+            <h2 className="text-base font-extrabold text-ink sm:text-xl">
               About {fromSt.name} to {toSt.name} Metro Route — Quick Summary
             </h2>
             <p className="mt-1.5 text-xs leading-relaxed text-ink-soft sm:text-sm">
@@ -367,8 +368,8 @@ export default async function MetroDynamicSeoPage({
                 : `The route requires ${rec.interchangeCount} line change${rec.interchangeCount > 1 ? "s" : ""} at ${rec.interchanges.map((i) => i.station.name).join(", ")}.`}
             </p>
 
-            <div className="mt-4 overflow-x-auto">
-              <table className="w-full min-w-[620px] border-collapse rounded-xl border border-line text-left text-xs sm:text-sm">
+            <div className="-mx-4 mt-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+              <table className="w-full min-w-[600px] border-collapse rounded-xl border border-line text-left text-xs sm:text-sm">
                 <thead>
                   <tr className="border-b border-line bg-subcard text-[11px] font-extrabold uppercase tracking-wider text-ink-muted">
                     <th className="px-3.5 py-2.5">Origin</th>
@@ -422,29 +423,31 @@ export default async function MetroDynamicSeoPage({
           </section>
 
           {/* SSR Full Station-by-Station Route Timetable */}
-          <section className="rounded-2xl border border-line bg-card p-5 shadow-xs sm:p-6">
+          <section className="rounded-2xl border border-line bg-card p-4 shadow-xs sm:p-6">
             <div className="mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-line pb-3">
               <div>
                 <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#1956b4] dark:text-blue-300">
                   Complete Station Sequence ({rec.allStops.length} Stations)
                 </span>
-                <h2 className="text-lg font-extrabold text-ink sm:text-xl">
+                <h2 className="text-base font-extrabold text-ink sm:text-xl">
                   {fromSt.name} to {toSt.name} Metro Station-by-Station Timings
                   &amp; Distance Table
                 </h2>
               </div>
             </div>
 
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[600px] border-collapse text-left text-xs sm:text-sm">
+            <div className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+              <table className="w-full min-w-[560px] border-collapse text-left text-xs sm:text-sm">
                 <thead>
                   <tr className="border-b border-line bg-subcard text-[11px] font-extrabold uppercase tracking-wider text-ink-muted">
-                    <th className="px-3.5 py-2.5">Stop #</th>
-                    <th className="px-3.5 py-2.5">Metro Station Name</th>
-                    <th className="px-3.5 py-2.5">Connecting Lines</th>
-                    <th className="px-3.5 py-2.5">Cumulative Time</th>
-                    <th className="px-3.5 py-2.5">Distance (km)</th>
-                    <th className="px-3.5 py-2.5">Journey Role</th>
+                    <th className="px-3 py-2.5 sm:px-3.5">Stop #</th>
+                    <th className="px-3 py-2.5 sm:px-3.5">
+                      Metro Station Name
+                    </th>
+                    <th className="px-3 py-2.5 sm:px-3.5">Connecting Lines</th>
+                    <th className="px-3 py-2.5 sm:px-3.5">Cumulative Time</th>
+                    <th className="px-3 py-2.5 sm:px-3.5">Distance (km)</th>
+                    <th className="px-3 py-2.5 sm:px-3.5">Journey Role</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-line">
@@ -465,10 +468,10 @@ export default async function MetroDynamicSeoPage({
                             : ""
                         }`}
                       >
-                        <td className="px-3.5 py-2.5 font-mono text-xs text-ink-muted">
+                        <td className="px-3 py-2.5 font-mono text-xs text-ink-muted sm:px-3.5">
                           {idx + 1}
                         </td>
-                        <td className="px-3.5 py-2.5 font-bold text-ink">
+                        <td className="px-3 py-2.5 font-bold text-ink sm:px-3.5">
                           <Link
                             href={buildMetroStationPath(stop.slug)}
                             className="hover:text-[#1956b4] hover:underline"
@@ -476,7 +479,7 @@ export default async function MetroDynamicSeoPage({
                             {stop.name}
                           </Link>
                         </td>
-                        <td className="px-3.5 py-2.5">
+                        <td className="px-3 py-2.5 sm:px-3.5">
                           <div className="flex flex-wrap items-center gap-1">
                             {stop.routeIds.map((rid) => {
                               const ln = linesMap.get(rid);
@@ -496,13 +499,13 @@ export default async function MetroDynamicSeoPage({
                             })}
                           </div>
                         </td>
-                        <td className="px-3.5 py-2.5 font-mono font-bold text-ink">
+                        <td className="px-3 py-2.5 font-mono font-bold text-ink sm:px-3.5">
                           {stop.cumulativeDurationMin} mins
                         </td>
-                        <td className="px-3.5 py-2.5 font-mono text-ink-soft">
+                        <td className="px-3 py-2.5 font-mono text-ink-soft sm:px-3.5">
                           {stop.cumulativeDistanceKm} km
                         </td>
-                        <td className="px-3.5 py-2.5">
+                        <td className="px-3 py-2.5 sm:px-3.5">
                           {isOrigin ? (
                             <span className="rounded bg-emerald-500/15 px-2 py-0.5 text-[10px] font-extrabold text-emerald-700 dark:text-emerald-300">
                               Origin Boarding
@@ -530,17 +533,19 @@ export default async function MetroDynamicSeoPage({
           </section>
 
           {/* Route-Specific FAQs */}
-          <section className="rounded-2xl border border-line bg-card p-5 shadow-xs sm:p-6">
-            <h2 className="text-lg font-extrabold text-ink sm:text-xl">
+          <section className="rounded-2xl border border-line bg-card p-4 shadow-xs sm:p-6">
+            <h2 className="text-base font-extrabold text-ink sm:text-xl">
               FAQs — {fromSt.name} to {toSt.name} Delhi NCR Metro
             </h2>
             <div className="mt-4 space-y-3">
               {routeFaqs.map((faq) => (
                 <div
                   key={faq.q}
-                  className="rounded-xl border border-line bg-subcard/40 p-4"
+                  className="rounded-xl border border-line bg-subcard/40 p-3.5 sm:p-4"
                 >
-                  <h3 className="text-sm font-extrabold text-ink">{faq.q}</h3>
+                  <h3 className="text-xs font-extrabold text-ink sm:text-sm">
+                    {faq.q}
+                  </h3>
                   <p className="mt-1.5 text-xs leading-relaxed text-ink-soft sm:text-sm">
                     {faq.a}
                   </p>
@@ -550,8 +555,8 @@ export default async function MetroDynamicSeoPage({
           </section>
 
           {/* Related Routes & Full Station Combination Links */}
-          <section className="rounded-2xl border border-line bg-card p-5 shadow-xs sm:p-6">
-            <h2 className="text-base font-extrabold text-ink sm:text-lg">
+          <section className="rounded-2xl border border-line bg-card p-4 shadow-xs sm:p-6">
+            <h2 className="text-sm font-extrabold text-ink sm:text-lg">
               More Popular Metro Routes from {fromSt.name} &amp; {toSt.name}
             </h2>
             <div className="mt-3 grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
@@ -579,8 +584,8 @@ export default async function MetroDynamicSeoPage({
                   Explore All {network.stops.length - 1} Metro Routes from{" "}
                   {fromSt.name} to Every Delhi NCR Station (A–Z)
                 </span>
-                <span className="rounded-lg border border-line bg-subcard px-2.5 py-1 text-[11px] font-bold">
-                  Show All Combinations ▼
+                <span className="shrink-0 rounded-lg border border-line bg-subcard px-2.5 py-1 text-[11px] font-bold">
+                  All {network.stops.length - 1} ▼
                 </span>
               </summary>
               <div className="mt-3 grid grid-cols-2 gap-1.5 sm:grid-cols-3 md:grid-cols-4">
@@ -600,7 +605,7 @@ export default async function MetroDynamicSeoPage({
             </details>
           </section>
         </div>
-      </div>
+      </main>
     );
   }
 
@@ -610,22 +615,17 @@ export default async function MetroDynamicSeoPage({
     const lineStops = line.stopIds
       .map((sid) => stopsById.get(sid))
       .filter((s): s is NonNullable<typeof s> => Boolean(s));
-    const fromSlug = lineStops[0]?.slug || "rajiv-chowk";
+    const fromSlug = lineStops[0]?.slug || "mg-road";
     const toSlug =
-      lineStops[lineStops.length - 1]?.slug || "huda-city-centre";
-    const linePlan = await fetchCachedMetroRoutePlan(
-      fromSlug,
-      toSlug,
-      "fastest",
-    );
+      lineStops[lineStops.length - 1]?.slug || "anand-vihar";
 
     return (
-      <div className="min-h-screen bg-canvas pb-16">
-        <section className="ta-hero-banner border-b border-line py-7 text-white sm:py-9">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <main className="min-h-screen bg-canvas pb-16 sm:pb-24">
+        <section className="ta-navy-hero pt-5 pb-12 sm:pt-7 sm:pb-16">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
             <nav
               aria-label="Breadcrumb"
-              className="mb-3 flex flex-wrap items-center gap-1.5 text-xs text-blue-100/90"
+              className="mb-3 flex flex-wrap items-center gap-1.5 text-xs text-slate-300"
             >
               <Link href="/" className="hover:text-white hover:underline">
                 Home
@@ -638,10 +638,10 @@ export default async function MetroDynamicSeoPage({
                 Delhi NCR Metro
               </Link>
               <span>/</span>
-              <span className="font-bold text-white">{line.badge}</span>
+              <span className="font-semibold text-white">{line.badge}</span>
             </nav>
 
-            <div className="flex flex-wrap items-center gap-2.5">
+            <div className="flex flex-wrap items-center gap-2">
               <span
                 style={{
                   backgroundColor: line.color,
@@ -651,67 +651,68 @@ export default async function MetroDynamicSeoPage({
               >
                 {line.badge} ({line.shortCode})
               </span>
-              <span className="rounded-full bg-white/15 px-3 py-0.5 text-xs font-bold">
+              <span className="rounded-full bg-white/15 px-3 py-0.5 text-xs font-bold text-white">
                 {line.totalStops} Stations • {line.totalDistanceKm} km • ~
                 {line.totalDurationMin} mins
               </span>
             </div>
 
-            <h1 className="mt-2 text-2xl font-black tracking-tight sm:text-3xl lg:text-4xl">
+            <h1 className="mt-2 text-xl font-black tracking-tight text-white sm:text-3xl lg:text-4xl">
               Delhi NCR Metro {line.badge} — Stations, Route Map, Interchanges
               &amp; Timings
             </h1>
-            <p className="mt-2 max-w-3xl text-xs leading-relaxed text-blue-100 sm:text-sm">
+            <p className="mt-1.5 max-w-3xl text-xs leading-relaxed text-slate-200 sm:mt-2 sm:text-sm">
               Complete station list for the{" "}
               <strong className="text-white">{line.badge}</strong> running
               between{" "}
               <strong className="text-white">{line.fromStationName}</strong> and{" "}
               <strong className="text-white">{line.toStationName}</strong> (
-              {line.zone}). Check station order, interchanges, and calculate
-              fares between any two stations below.
+              {line.zone}). Select any Origin and Destination below to view
+              exact route &amp; fare.
             </p>
           </div>
         </section>
 
-        <div className="mx-auto max-w-7xl space-y-8 px-4 pt-6 sm:px-6 lg:px-8">
+        <div className="relative z-20 mx-auto -mt-8 max-w-6xl space-y-6 px-3.5 sm:-mt-10 sm:space-y-8 sm:px-6 lg:px-8">
           <Suspense
             fallback={
-              <div className="h-64 animate-pulse rounded-2xl border border-line bg-card p-6" />
+              <div className="h-48 animate-pulse rounded-2xl border border-line bg-card p-6" />
             }
           >
             <MetroRouteFinder
+              key={line.slug}
               stations={network.stops}
               lines={network.routes}
+              mode="search-only"
               initialFromSlug={fromSlug}
               initialToSlug={toSlug}
               initialPreference="fastest"
-              initialResult={linePlan}
             />
           </Suspense>
 
-          <section className="rounded-2xl border border-line bg-card p-5 shadow-xs sm:p-6">
-            <h2 className="text-lg font-extrabold text-ink sm:text-xl">
+          <section className="rounded-2xl border border-line bg-card p-4 shadow-xs sm:p-6">
+            <h2 className="text-base font-extrabold text-ink sm:text-xl">
               All {lineStops.length} Stations on {line.badge} (
               {line.fromStationName} ↔ {line.toStationName})
             </h2>
-            <div className="mt-4 overflow-x-auto">
-              <table className="w-full min-w-[560px] border-collapse text-left text-xs sm:text-sm">
+            <div className="-mx-4 mt-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+              <table className="w-full min-w-[540px] border-collapse text-left text-xs sm:text-sm">
                 <thead>
                   <tr className="border-b border-line bg-subcard text-[11px] font-extrabold uppercase tracking-wider text-ink-muted">
-                    <th className="px-3.5 py-2.5">#</th>
-                    <th className="px-3.5 py-2.5">Station Name</th>
-                    <th className="px-3.5 py-2.5">Lines Served</th>
-                    <th className="px-3.5 py-2.5">First / Last Train</th>
-                    <th className="px-3.5 py-2.5">Plan Route</th>
+                    <th className="px-3 py-2.5 sm:px-3.5">#</th>
+                    <th className="px-3 py-2.5 sm:px-3.5">Station Name</th>
+                    <th className="px-3 py-2.5 sm:px-3.5">Lines Served</th>
+                    <th className="px-3 py-2.5 sm:px-3.5">First / Last Train</th>
+                    <th className="px-3 py-2.5 sm:px-3.5">Plan Route</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-line">
                   {lineStops.map((st, idx) => (
                     <tr key={st.id} className="hover:bg-subcard/60">
-                      <td className="px-3.5 py-2.5 font-mono text-xs text-ink-muted">
+                      <td className="px-3 py-2.5 font-mono text-xs text-ink-muted sm:px-3.5">
                         {idx + 1}
                       </td>
-                      <td className="px-3.5 py-2.5 font-extrabold text-ink">
+                      <td className="px-3 py-2.5 font-extrabold text-ink sm:px-3.5">
                         <Link
                           href={buildMetroStationPath(st.slug)}
                           className="hover:text-[#1956b4] hover:underline"
@@ -719,7 +720,7 @@ export default async function MetroDynamicSeoPage({
                           {st.name}
                         </Link>
                       </td>
-                      <td className="px-3.5 py-2.5">
+                      <td className="px-3 py-2.5 sm:px-3.5">
                         <div className="flex flex-wrap gap-1">
                           {st.routeIds.map((rid) => {
                             const ln = linesMap.get(rid);
@@ -739,10 +740,10 @@ export default async function MetroDynamicSeoPage({
                           })}
                         </div>
                       </td>
-                      <td className="px-3.5 py-2.5 font-mono text-xs text-ink-soft">
+                      <td className="px-3 py-2.5 font-mono text-xs text-ink-soft sm:px-3.5">
                         {st.firstTrain} – {st.lastTrain}
                       </td>
-                      <td className="px-3.5 py-2.5">
+                      <td className="px-3 py-2.5 sm:px-3.5">
                         <Link
                           href={buildMetroRoutePath(
                             st.slug,
@@ -762,20 +763,15 @@ export default async function MetroDynamicSeoPage({
             </div>
           </section>
         </div>
-      </div>
+      </main>
     );
   }
 
-  // CASE 3: Single Metro Station Page (/delhi-metro/mg-road, /delhi-metro/anand-vihar, etc.)
+  // CASE 3: Single Metro Station Page (/delhi-metro/shivaji-stadium, /delhi-metro/mg-road, etc.)
   const station = getMetroStationBySlugOrId(routeSlug);
   if (station) {
     const defaultDestSlug =
       station.slug === "rajiv-chowk" ? "huda-city-centre" : "rajiv-chowk";
-    const stationPlan = await fetchCachedMetroRoutePlan(
-      station.slug,
-      defaultDestSlug,
-      "fastest",
-    );
 
     const popularDestinations = [
       "mg-road",
@@ -793,12 +789,12 @@ export default async function MetroDynamicSeoPage({
     ].filter((s) => s !== station.slug);
 
     return (
-      <div className="min-h-screen bg-canvas pb-16">
-        <section className="ta-hero-banner border-b border-line py-7 text-white sm:py-9">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <main className="min-h-screen bg-canvas pb-16 sm:pb-24">
+        <section className="ta-navy-hero pt-5 pb-12 sm:pt-7 sm:pb-16">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
             <nav
               aria-label="Breadcrumb"
-              className="mb-3 flex flex-wrap items-center gap-1.5 text-xs text-blue-100/90"
+              className="mb-3 flex flex-wrap items-center gap-1.5 text-xs text-slate-300"
             >
               <Link href="/" className="hover:text-white hover:underline">
                 Home
@@ -811,7 +807,7 @@ export default async function MetroDynamicSeoPage({
                 Delhi NCR Metro
               </Link>
               <span>/</span>
-              <span className="font-bold text-white">
+              <span className="font-semibold text-white">
                 {station.name} Metro Station
               </span>
             </nav>
@@ -840,11 +836,11 @@ export default async function MetroDynamicSeoPage({
               )}
             </div>
 
-            <h1 className="mt-2 text-2xl font-black tracking-tight sm:text-3xl lg:text-4xl">
+            <h1 className="mt-2 text-xl font-black tracking-tight text-white sm:text-3xl lg:text-4xl">
               {station.name} Metro Station — Routes, Timings ({station.firstTrain}
               ), Lines &amp; Fare
             </h1>
-            <p className="mt-2 max-w-3xl text-xs leading-relaxed text-blue-100 sm:text-sm">
+            <p className="mt-1.5 max-w-3xl text-xs leading-relaxed text-slate-200 sm:mt-2 sm:text-sm">
               Plan your Delhi NCR Metro journey from{" "}
               <strong className="text-white">
                 {station.name} Metro Station
@@ -857,27 +853,28 @@ export default async function MetroDynamicSeoPage({
           </div>
         </section>
 
-        <div className="mx-auto max-w-7xl space-y-8 px-4 pt-6 sm:px-6 lg:px-8">
+        <div className="relative z-20 mx-auto -mt-8 max-w-6xl space-y-6 px-3.5 sm:-mt-10 sm:space-y-8 sm:px-6 lg:px-8">
           <Suspense
             fallback={
-              <div className="h-64 animate-pulse rounded-2xl border border-line bg-card p-6" />
+              <div className="h-48 animate-pulse rounded-2xl border border-line bg-card p-6" />
             }
           >
             <MetroRouteFinder
+              key={station.slug}
               stations={network.stops}
               lines={network.routes}
+              mode="search-only"
               initialFromSlug={station.slug}
               initialToSlug={defaultDestSlug}
               initialPreference="fastest"
-              initialResult={stationPlan}
             />
           </Suspense>
 
-          <section className="rounded-2xl border border-line bg-card p-5 shadow-xs sm:p-6">
-            <h2 className="text-lg font-extrabold text-ink sm:text-xl">
+          <section className="rounded-2xl border border-line bg-card p-4 shadow-xs sm:p-6">
+            <h2 className="text-base font-extrabold text-ink sm:text-xl">
               Direct Metro Route Links from {station.name}
             </h2>
-            <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-4 grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
               {popularDestinations.map((destSlug) => {
                 const dest = network.stops.find((s) => s.slug === destSlug);
                 if (!dest) return null;
@@ -885,12 +882,12 @@ export default async function MetroDynamicSeoPage({
                   <Link
                     key={`${station.slug}-to-${dest.slug}`}
                     href={buildMetroRoutePath(station.slug, dest.slug)}
-                    className="flex items-center justify-between rounded-xl border border-line bg-subcard/40 px-4 py-3 text-xs font-bold text-ink transition hover:border-[#1956b4] hover:text-[#1956b4]"
+                    className="flex items-center justify-between rounded-xl border border-line bg-subcard/40 px-3.5 py-3 text-xs font-bold text-ink transition hover:border-[#1956b4] hover:text-[#1956b4]"
                   >
-                    <span>
+                    <span className="truncate">
                       {station.name} → {dest.name} Metro Route
                     </span>
-                    <ArrowRightIcon className="h-4 w-4 text-ink-muted" />
+                    <ArrowRightIcon className="h-4 w-4 shrink-0 text-ink-muted" />
                   </Link>
                 );
               })}
@@ -902,8 +899,8 @@ export default async function MetroDynamicSeoPage({
                   All {network.stops.length - 1} Metro Route Combinations from{" "}
                   {station.name} (A–Z Stations)
                 </span>
-                <span className="rounded-lg border border-line bg-subcard px-2.5 py-1 text-[11px] font-bold">
-                  View All {network.stops.length - 1} Routes ▼
+                <span className="shrink-0 rounded-lg border border-line bg-subcard px-2.5 py-1 text-[11px] font-bold">
+                  View All {network.stops.length - 1} ▼
                 </span>
               </summary>
               <div className="mt-3 grid grid-cols-2 gap-1.5 sm:grid-cols-3 md:grid-cols-4">
@@ -923,7 +920,7 @@ export default async function MetroDynamicSeoPage({
             </details>
           </section>
         </div>
-      </div>
+      </main>
     );
   }
 

@@ -49,8 +49,8 @@ export const TOOL_CATEGORIES: ToolCategoryGroup[] = [
   },
   {
     id: "rail",
-    categoryTitle: "Rail Tools",
-    categorySubtitle: "Live train GPS, PNR & chart time",
+    categoryTitle: "Rail & Metro Tools",
+    categorySubtitle: "Live train GPS, PNR, chart time & Delhi NCR Metro",
     hubHref: "/rail/live-status",
     accentBadgeClass:
       "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300",

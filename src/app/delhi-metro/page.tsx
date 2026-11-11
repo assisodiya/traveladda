@@ -2,15 +2,9 @@ import type { Metadata } from "next";
 import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { Suspense } from "react";
-import {
-  ArrowRightIcon,
-  TrainIcon,
-} from "@/components/Icons";
+import { ArrowRightIcon, TrainIcon } from "@/components/Icons";
 import { MetroRouteFinder } from "@/components/MetroRouteFinder";
-import {
-  fetchCachedMetroNetworkSummary,
-  fetchCachedMetroRoutePlan,
-} from "@/lib/metro-service";
+import { fetchCachedMetroNetworkSummary } from "@/lib/metro-service";
 import {
   buildMetroLinePath,
   buildMetroRoutePath,
@@ -51,7 +45,7 @@ export const metadata: Metadata = {
 const METRO_HUB_FAQS = [
   {
     q: "How do I find the fastest Delhi NCR Metro route and interchange station?",
-    a: "Select your Origin and Destination stations in the Delhi NCR Metro Route Planner above. You can toggle between 'Fastest Route' (shortest travel time), 'Min Interchange' (fewest line changes), and 'Min Stops' to view step-by-step line colors, platform directions, intermediate stations, and exact transfer hubs.",
+    a: "Select your Origin and Destination stations in the Delhi NCR Metro Route Planner above and tap 'Find Metro Route & Fare'. You will be taken to the dedicated route details page where you can compare 'Fastest Route', 'Min Change' (minimum interchanges), and 'Min Stops' with step-by-step line colors, platform directions, intermediate stations, and fares.",
   },
   {
     q: "What are the Delhi Metro (DMRC) token and smart card fares in 2026?",
@@ -75,10 +69,7 @@ export default async function MetroHubPage() {
   "use cache";
   cacheLife("days");
 
-  const [network, defaultPlan] = await Promise.all([
-    fetchCachedMetroNetworkSummary(),
-    fetchCachedMetroRoutePlan("rajiv-chowk", "huda-city-centre", "fastest"),
-  ]);
+  const network = await fetchCachedMetroNetworkSummary();
 
   const linesMap = new Map(network.routes.map((r) => [r.id, r]));
   const majorInterchanges = network.stops.filter((s) => s.isInterchange);
@@ -133,7 +124,7 @@ export default async function MetroHubPage() {
   };
 
   return (
-    <div className="min-h-screen bg-canvas pb-16">
+    <main className="min-h-screen bg-canvas pb-16 sm:pb-24">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppJsonLd) }}
@@ -147,102 +138,111 @@ export default async function MetroHubPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
-      {/* Top Hero Banner */}
-      <section className="ta-hero-banner border-b border-line py-8 text-white sm:py-10">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <nav
-            aria-label="Breadcrumb"
-            className="mb-3 flex flex-wrap items-center gap-1.5 text-xs text-blue-100/90"
-          >
-            <Link href="/" className="hover:text-white hover:underline">
-              Home
-            </Link>
-            <span>/</span>
-            <span className="font-bold text-white">
-              Delhi NCR Metro Route &amp; Fare Finder
-            </span>
-          </nav>
+      {/* Deep Navy Hero Banner */}
+      <section className="ta-navy-hero pt-5 pb-12 sm:pt-7 sm:pb-16">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-300">
+            <nav
+              aria-label="Breadcrumb"
+              className="flex flex-wrap items-center gap-1.5"
+            >
+              <Link href="/" className="hover:text-white hover:underline">
+                Home
+              </Link>
+              <span>/</span>
+              <Link href="/tools" className="hover:text-white hover:underline">
+                Tools
+              </Link>
+              <span>/</span>
+              <span className="font-semibold text-white">
+                Delhi NCR Metro Route &amp; Fare
+              </span>
+            </nav>
 
-          <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-0.5 text-[11px] font-bold text-emerald-300">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+              12 Metro Lines • 262 Stations
+            </span>
+          </div>
+
+          <div className="mt-4 flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
             <div>
-              <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-bold text-white backdrop-blur-xs">
+              <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-[11px] font-bold text-white backdrop-blur-xs sm:text-xs">
                 <TrainIcon className="h-3.5 w-3.5 text-[#fc6203]" />
                 <span>
-                  Delhi NCR Metro Network • 12 Lines • 262 Stations • DMRC +
-                  Noida Aqua + Rapid Metro
+                  DMRC • Airport Express • Noida Aqua • Gurgaon Rapid Metro
                 </span>
               </div>
-              <h1 className="text-2xl font-black tracking-tight sm:text-3xl lg:text-4xl">
-                Delhi NCR Metro Route, Fare &amp; Interchange Finder
+              <h1 className="text-2xl font-extrabold tracking-tight text-white sm:text-3xl lg:text-4xl">
+                Delhi NCR Metro Route, Fare &amp; Timing Finder
               </h1>
-              <p className="mt-2 max-w-3xl text-xs leading-relaxed text-blue-100 sm:text-sm">
-                Search any Origin and Destination across Delhi, Noida, Greater
-                Noida, Gurugram, Faridabad, Ballabhgarh, Ghaziabad, and
-                Bahadurgarh. Compare{" "}
+              <p className="mt-2 max-w-3xl text-xs leading-relaxed text-slate-200 sm:text-sm">
+                Select your Origin and Destination metro station to check{" "}
                 <strong className="text-white">Fastest Route</strong> vs{" "}
                 <strong className="text-white">Minimum Interchange</strong>,
-                check token &amp; smart card fares, platform directions, and
+                official Token &amp; Smart Card fares, platform directions, and
                 station-by-station timings.
               </p>
             </div>
 
             <div className="flex flex-wrap items-center gap-2 text-xs">
               <a
-                href="#metro-lines-directory"
-                className="rounded-xl border border-white/25 bg-white/10 px-3 py-2 font-bold text-white transition hover:bg-white/20"
-              >
-                All 12 Metro Lines
-              </a>
-              <a
                 href="#popular-metro-routes"
-                className="rounded-xl border border-white/25 bg-white/10 px-3 py-2 font-bold text-white transition hover:bg-white/20"
+                className="rounded-xl border border-white/20 bg-white/10 px-3 py-2 font-bold text-white transition hover:bg-white/20"
               >
                 Popular Routes
               </a>
               <a
-                href="#dmrc-fare-chart"
-                className="rounded-xl border border-white/25 bg-white/10 px-3 py-2 font-bold text-white transition hover:bg-white/20"
+                href="#metro-lines-directory"
+                className="rounded-xl border border-white/20 bg-white/10 px-3 py-2 font-bold text-white transition hover:bg-white/20"
               >
-                DMRC Fare Chart
+                12 Metro Lines
+              </a>
+              <a
+                href="#dmrc-fare-chart"
+                className="rounded-xl border border-white/20 bg-white/10 px-3 py-2 font-bold text-white transition hover:bg-white/20"
+              >
+                Fare Chart
               </a>
             </div>
           </div>
         </div>
       </section>
 
-      <div className="mx-auto max-w-7xl space-y-10 px-4 pt-6 sm:px-6 lg:px-8">
-        {/* Interactive Metro Route Finder */}
+      {/* Main Content Container with Overlapping Search Box */}
+      <div className="relative z-20 mx-auto -mt-8 max-w-6xl space-y-8 px-3.5 sm:-mt-10 sm:space-y-10 sm:px-6 lg:px-8">
+        {/* Search-Only Interactive Metro Route Finder (Navigates to /delhi-metro/route/[routeSlug]) */}
         <Suspense
           fallback={
-            <div className="h-64 animate-pulse rounded-2xl border border-line bg-card p-6" />
+            <div className="h-48 animate-pulse rounded-2xl border border-line bg-card p-6" />
           }
         >
           <MetroRouteFinder
             stations={network.stops}
             lines={network.routes}
-            initialFromSlug="rajiv-chowk"
-            initialToSlug="huda-city-centre"
+            mode="search-only"
+            initialFromSlug="mg-road"
+            initialToSlug="anand-vihar"
             initialPreference="fastest"
-            initialResult={defaultPlan}
           />
         </Suspense>
 
         {/* Popular Delhi NCR Metro Routes Directory (Direct SSR Links) */}
         <section
           id="popular-metro-routes"
-          className="rounded-2xl border border-line bg-card p-5 shadow-xs sm:p-6"
+          className="rounded-2xl border border-line bg-card p-4 shadow-xs sm:p-6"
         >
-          <div className="mb-5 flex flex-wrap items-center justify-between gap-2 border-b border-line pb-3">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-line pb-3">
             <div>
               <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#1956b4] dark:text-blue-300">
-                Direct One-Click Route Pages
+                Top Commuter Corridors
               </span>
-              <h2 className="text-lg font-extrabold text-ink sm:text-xl">
+              <h2 className="text-base font-extrabold text-ink sm:text-xl">
                 Most Searched Delhi NCR Metro Routes (Fare, Stops &amp; Timings)
               </h2>
             </div>
             <span className="text-xs font-semibold text-ink-muted">
-              Click any route for full station-by-station schedule
+              Tap any route for full station details
             </span>
           </div>
 
@@ -251,7 +251,7 @@ export default async function MetroHubPage() {
               <Link
                 key={`${item.fromSlug}-${item.toSlug}`}
                 href={buildMetroRoutePath(item.fromSlug, item.toSlug)}
-                className="group flex flex-col justify-between rounded-xl border border-line bg-subcard/40 p-4 transition hover:border-[#1956b4] hover:bg-card hover:shadow-sm"
+                className="group flex flex-col justify-between rounded-xl border border-line bg-subcard/40 p-3.5 transition hover:border-[#1956b4] hover:bg-card hover:shadow-sm sm:p-4"
               >
                 <div>
                   <div className="flex items-center justify-between gap-2">
@@ -261,15 +261,15 @@ export default async function MetroHubPage() {
                     <ArrowRightIcon className="h-4 w-4 text-ink-muted transition group-hover:translate-x-0.5 group-hover:text-[#1956b4]" />
                   </div>
                   <h3 className="mt-2 text-sm font-extrabold text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-300">
-                    {item.fromName} → {item.toName} Metro
+                    {item.fromName} → {item.toName}
                   </h3>
                   <p className="mt-1 text-xs text-ink-muted">
                     {item.highlight}
                   </p>
                 </div>
                 <div className="mt-3 flex items-center justify-between border-t border-line pt-2 text-[11px] font-bold text-[#1956b4] dark:text-blue-300">
-                  <span>Check Route, Fare &amp; Platform</span>
-                  <span>View SSR Page →</span>
+                  <span>View Route, Fare &amp; Stops</span>
+                  <span>Open Route →</span>
                 </div>
               </Link>
             ))}
@@ -279,14 +279,14 @@ export default async function MetroHubPage() {
         {/* All 12 Delhi NCR Metro Lines Directory */}
         <section
           id="metro-lines-directory"
-          className="rounded-2xl border border-line bg-card p-5 shadow-xs sm:p-6"
+          className="rounded-2xl border border-line bg-card p-4 shadow-xs sm:p-6"
         >
-          <div className="mb-5 flex flex-wrap items-center justify-between gap-2 border-b border-line pb-3">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-line pb-3">
             <div>
               <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#fc6203]">
                 Complete DMRC, NMRC &amp; Rapid Metro Corridors
               </span>
-              <h2 className="text-lg font-extrabold text-ink sm:text-xl">
+              <h2 className="text-base font-extrabold text-ink sm:text-xl">
                 All 12 Delhi NCR Metro Lines — Terminals, Distance &amp;
                 Stations
               </h2>
@@ -296,12 +296,12 @@ export default async function MetroHubPage() {
             </span>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
             {network.routes.map((line) => (
               <div
                 key={line.id}
                 style={{ borderTop: `4px solid ${line.color}` }}
-                className="flex flex-col justify-between rounded-xl border border-line bg-subcard/30 p-4 shadow-2xs transition hover:border-[#1956b4]"
+                className="flex flex-col justify-between rounded-xl border border-line bg-subcard/30 p-3.5 shadow-2xs transition hover:border-[#1956b4] sm:p-4"
               >
                 <div>
                   <div className="flex items-center justify-between gap-2">
@@ -354,13 +354,13 @@ export default async function MetroHubPage() {
                   <Link
                     href={buildMetroRoutePath(
                       network.stops.find((s) => s.id === line.fromStopId)
-                        ?.slug || "rajiv-chowk",
+                        ?.slug || "mg-road",
                       network.stops.find((s) => s.id === line.toStopId)?.slug ||
-                        "huda-city-centre",
+                        "anand-vihar",
                     )}
                     className="text-ink-muted hover:text-ink hover:underline"
                   >
-                    Full Line Route
+                    End-to-End Route
                   </Link>
                 </div>
               </div>
@@ -371,13 +371,13 @@ export default async function MetroHubPage() {
         {/* Official DMRC Fare Chart & Smart Card Discount Table */}
         <section
           id="dmrc-fare-chart"
-          className="rounded-2xl border border-line bg-card p-5 shadow-xs sm:p-6"
+          className="rounded-2xl border border-line bg-card p-4 shadow-xs sm:p-6"
         >
           <div className="mb-4 border-b border-line pb-3">
             <span className="text-[11px] font-extrabold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">
               Official Distance-Based Tariff
             </span>
-            <h2 className="text-lg font-extrabold text-ink sm:text-xl">
+            <h2 className="text-base font-extrabold text-ink sm:text-xl">
               Delhi Metro (DMRC) Fare Chart — Token, Smart Card &amp; Sunday
               Discount
             </h2>
@@ -388,16 +388,26 @@ export default async function MetroHubPage() {
             </p>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[640px] border-collapse text-left text-xs sm:text-sm">
+          <div className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+            <table className="w-full min-w-[580px] border-collapse text-left text-xs sm:text-sm">
               <thead>
                 <tr className="border-b border-line bg-subcard text-[11px] font-extrabold uppercase tracking-wider text-ink-muted">
-                  <th className="px-4 py-3">Distance Slab</th>
-                  <th className="px-4 py-3">Mon–Sat Token / QR Fare</th>
-                  <th className="px-4 py-3">Smart Card Peak (10% Off)</th>
-                  <th className="px-4 py-3">Smart Card Off-Peak (20% Off)</th>
-                  <th className="px-4 py-3">Sunday &amp; National Holiday</th>
-                  <th className="px-4 py-3">Max Permitted Time</th>
+                  <th className="px-3.5 py-2.5 sm:px-4 sm:py-3">
+                    Distance Slab
+                  </th>
+                  <th className="px-3.5 py-2.5 sm:px-4 sm:py-3">
+                    Mon–Sat Token
+                  </th>
+                  <th className="px-3.5 py-2.5 sm:px-4 sm:py-3">
+                    Card Peak (10% Off)
+                  </th>
+                  <th className="px-3.5 py-2.5 sm:px-4 sm:py-3">
+                    Card Off-Peak (20% Off)
+                  </th>
+                  <th className="px-3.5 py-2.5 sm:px-4 sm:py-3">
+                    Sun &amp; Holiday
+                  </th>
+                  <th className="px-3.5 py-2.5 sm:px-4 sm:py-3">Max Time</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-line">
@@ -455,20 +465,24 @@ export default async function MetroHubPage() {
                     key={row.slab}
                     className="transition hover:bg-subcard/60"
                   >
-                    <td className="px-4 py-3 font-bold text-ink">{row.slab}</td>
-                    <td className="px-4 py-3 font-mono font-extrabold text-ink">
+                    <td className="px-3.5 py-2.5 font-bold text-ink sm:px-4 sm:py-3">
+                      {row.slab}
+                    </td>
+                    <td className="px-3.5 py-2.5 font-mono font-extrabold text-ink sm:px-4 sm:py-3">
                       {row.token}
                     </td>
-                    <td className="px-4 py-3 font-mono font-bold text-emerald-700 dark:text-emerald-300">
+                    <td className="px-3.5 py-2.5 font-mono font-bold text-emerald-700 sm:px-4 sm:py-3 dark:text-emerald-300">
                       {row.peak}
                     </td>
-                    <td className="px-4 py-3 font-mono font-bold text-emerald-700 dark:text-emerald-300">
+                    <td className="px-3.5 py-2.5 font-mono font-bold text-emerald-700 sm:px-4 sm:py-3 dark:text-emerald-300">
                       {row.offPeak}
                     </td>
-                    <td className="px-4 py-3 font-mono font-bold text-[#1956b4] dark:text-blue-300">
+                    <td className="px-3.5 py-2.5 font-mono font-bold text-[#1956b4] sm:px-4 sm:py-3 dark:text-blue-300">
                       {row.holiday}
                     </td>
-                    <td className="px-4 py-3 text-ink-muted">{row.maxTime}</td>
+                    <td className="px-3.5 py-2.5 text-ink-muted sm:px-4 sm:py-3">
+                      {row.maxTime}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -477,13 +491,13 @@ export default async function MetroHubPage() {
         </section>
 
         {/* Major Interchange Stations Hub Directory */}
-        <section className="rounded-2xl border border-line bg-card p-5 shadow-xs sm:p-6">
+        <section className="rounded-2xl border border-line bg-card p-4 shadow-xs sm:p-6">
           <div className="mb-4 border-b border-line pb-3">
             <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#1956b4] dark:text-blue-300">
               Delhi NCR Transfer Hubs ({majorInterchanges.length} Interchange
               Stations)
             </span>
-            <h2 className="text-lg font-extrabold text-ink sm:text-xl">
+            <h2 className="text-base font-extrabold text-ink sm:text-xl">
               Major Delhi Metro Interchange Stations &amp; Connecting Lines
             </h2>
           </div>
@@ -524,20 +538,20 @@ export default async function MetroHubPage() {
           </div>
         </section>
 
-        {/* Complete A-Z Directory of All 262 Delhi NCR Metro Stations for Crawlability */}
-        <section className="rounded-2xl border border-line bg-card p-5 shadow-xs sm:p-6">
+        {/* Complete A-Z Directory of All 262 Delhi NCR Metro Stations */}
+        <section className="rounded-2xl border border-line bg-card p-4 shadow-xs sm:p-6">
           <details className="group">
             <summary className="flex cursor-pointer list-none items-center justify-between gap-3 [&::-webkit-details-marker]:hidden">
               <div>
                 <span className="text-[11px] font-extrabold uppercase tracking-wider text-ink-muted">
                   Complete Station Index (262 Stations)
                 </span>
-                <h2 className="text-base font-extrabold text-ink sm:text-lg">
+                <h2 className="text-sm font-extrabold text-ink sm:text-lg">
                   Browse All 262 Delhi NCR Metro Stations (A–Z Station Pages)
                 </h2>
               </div>
-              <span className="rounded-lg border border-line bg-subcard px-3 py-1.5 text-xs font-bold text-[#1956b4] group-open:bg-[#1956b4] group-open:text-white dark:text-blue-300">
-                Expand All 262 Stations ▼
+              <span className="shrink-0 rounded-lg border border-line bg-subcard px-2.5 py-1.5 text-xs font-bold text-[#1956b4] group-open:bg-[#1956b4] group-open:text-white dark:text-blue-300">
+                All 262 ▼
               </span>
             </summary>
 
@@ -558,17 +572,19 @@ export default async function MetroHubPage() {
         </section>
 
         {/* Frequently Asked Questions */}
-        <section className="rounded-2xl border border-line bg-card p-5 shadow-xs sm:p-6">
-          <h2 className="text-lg font-extrabold text-ink sm:text-xl">
+        <section className="rounded-2xl border border-line bg-card p-4 shadow-xs sm:p-6">
+          <h2 className="text-base font-extrabold text-ink sm:text-xl">
             Frequently Asked Questions — Delhi NCR Metro Route &amp; Fares
           </h2>
           <div className="mt-4 space-y-3">
             {METRO_HUB_FAQS.map((faq) => (
               <div
                 key={faq.q}
-                className="rounded-xl border border-line bg-subcard/40 p-4"
+                className="rounded-xl border border-line bg-subcard/40 p-3.5 sm:p-4"
               >
-                <h3 className="text-sm font-extrabold text-ink">{faq.q}</h3>
+                <h3 className="text-xs font-extrabold text-ink sm:text-sm">
+                  {faq.q}
+                </h3>
                 <p className="mt-1.5 text-xs leading-relaxed text-ink-soft sm:text-sm">
                   {faq.a}
                 </p>
@@ -577,6 +593,6 @@ export default async function MetroHubPage() {
           </div>
         </section>
       </div>
-    </div>
+    </main>
   );
 }
