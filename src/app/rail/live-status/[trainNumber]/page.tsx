@@ -18,7 +18,10 @@ import { LiveTrainTracker } from "@/components/LiveTrainTracker";
 import { fetchSeoTrainPageData } from "@/lib/live-train-service";
 import {
   ALL_WEEK_DAYS,
+  buildTrainLiveStatusPath,
+  buildTrainSeoSlug,
   deriveTrainClasses,
+  extractTrainNumberFromParam,
   format24HourTime,
   formatIstTime,
   POPULAR_LIVE_TRAINS,
@@ -30,7 +33,7 @@ interface TrainPageProps {
 
 export function generateStaticParams() {
   return POPULAR_LIVE_TRAINS.slice(0, 8).map((train) => ({
-    trainNumber: train.trainNumber,
+    trainNumber: buildTrainSeoSlug(train.trainNumber, train.trainName),
   }));
 }
 
@@ -41,22 +44,25 @@ export async function generateMetadata({
   cacheLife("hours");
 
   const { trainNumber: rawParam } = await params;
-  const cleanTrain = (rawParam || "").replace(/\D/g, "");
-  if (!/^\d{3,5}$/.test(cleanTrain)) {
-    return {
-      title: "Train Not Found | TravelAdda Live Train Running Status",
-      robots: { index: false, follow: false },
-    };
-  }
-
-  const data = await fetchSeoTrainPageData(cleanTrain);
+  const data = await fetchSeoTrainPageData(rawParam);
   if (!data) {
+    const fallbackDigits = extractTrainNumberFromParam(rawParam || "");
+    if (!/^\d{3,5}$/.test(fallbackDigits)) {
+      return {
+        title: "Train Not Found | TravelAdda Live Train Running Status",
+        robots: { index: false, follow: false },
+      };
+    }
     return {
-      title: `${cleanTrain} Live Train Running Status & Time Table`,
-      alternates: { canonical: `/rail/live-status/${cleanTrain}` },
+      title: `${fallbackDigits} Live Train Running Status & Time Table`,
+      alternates: { canonical: buildTrainLiveStatusPath(fallbackDigits) },
     };
   }
 
+  const canonicalPath = buildTrainLiveStatusPath(
+    data.trainNumber,
+    data.trainName
+  );
   const haltStops = data.route.filter((s) => s.isHalt);
   const originStop = haltStops[0] ?? data.route[0];
   const destStop =
@@ -83,6 +89,8 @@ export async function generateMetadata({
     description,
     keywords: [
       data.trainNumber,
+      data.trainName,
+      `${data.trainNumber} ${data.trainName}`,
       `${data.trainNumber} train running status`,
       `${data.trainNumber} live status`,
       `${data.trainNumber} time table`,
@@ -95,12 +103,12 @@ export async function generateMetadata({
       `where is train ${data.trainNumber}`,
     ],
     alternates: {
-      canonical: `/rail/live-status/${cleanTrain}`,
+      canonical: canonicalPath,
     },
     openGraph: {
       title: `${data.trainNumber} ${data.trainName} Live Running Status & Time Table | TravelAdda`,
       description,
-      url: `/rail/live-status/${cleanTrain}`,
+      url: canonicalPath,
       siteName: "TravelAdda",
       locale: "en_IN",
       type: "website",
@@ -138,15 +146,15 @@ export default async function TrainLiveStatusByNumberPage({
   cacheLife("hours");
 
   const { trainNumber: rawParam } = await params;
-  const cleanTrain = (rawParam || "").replace(/\D/g, "");
-  if (!/^\d{3,5}$/.test(cleanTrain)) {
-    notFound();
-  }
-
-  const trainData = await fetchSeoTrainPageData(cleanTrain);
+  const trainData = await fetchSeoTrainPageData(rawParam);
   if (!trainData) {
     notFound();
   }
+  const cleanTrain = trainData.trainNumber;
+  const canonicalPath = buildTrainLiveStatusPath(
+    trainData.trainNumber,
+    trainData.trainName
+  );
 
   const haltStops = trainData.route.filter((s) => s.isHalt);
   const scheduleStops = haltStops.length >= 2 ? haltStops : trainData.route;
@@ -212,7 +220,7 @@ export default async function TrainLiveStatusByNumberPage({
     },
   ];
 
-  const canonicalUrl = `https://traveladda.in/rail/live-status/${cleanTrain}`;
+  const canonicalUrl = `https://traveladda.in${canonicalPath}`;
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -332,7 +340,7 @@ export default async function TrainLiveStatusByNumberPage({
             <div className="flex items-center gap-2">
               {trainData.train.returnTrain && (
                 <Link
-                  href={`/rail/live-status/${trainData.train.returnTrain}`}
+                  href={buildTrainLiveStatusPath(trainData.train.returnTrain)}
                   className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/10 px-3 py-1 font-semibold text-white transition hover:bg-white/15"
                 >
                   <SwapArrowsIcon className="h-3.5 w-3.5" />
@@ -639,7 +647,7 @@ export default async function TrainLiveStatusByNumberPage({
                 <p className="mt-2.5">
                   Looking for the return direction? Check{" "}
                   <Link
-                    href={`/rail/live-status/${trainData.train.returnTrain}`}
+                    href={buildTrainLiveStatusPath(trainData.train.returnTrain)}
                     className="font-bold text-[#1956b4] underline decoration-[#1956b4]/40 underline-offset-2 hover:decoration-[#1956b4] dark:text-blue-400"
                   >
                     Train #{trainData.train.returnTrain} Live Running Status
@@ -913,7 +921,10 @@ export default async function TrainLiveStatusByNumberPage({
             .map((train) => (
               <Link
                 key={train.trainNumber}
-                href={`/rail/live-status/${train.trainNumber}`}
+                href={buildTrainLiveStatusPath(
+                  train.trainNumber,
+                  train.trainName
+                )}
                 className="group flex flex-col justify-between rounded-xl border border-line bg-card p-3.5 transition hover:border-[#1956b4] hover:shadow-sm"
               >
                 <div>

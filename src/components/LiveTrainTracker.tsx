@@ -12,6 +12,7 @@ import {
 } from "react";
 import {
   ALL_WEEK_DAYS,
+  buildTrainLiveStatusPath,
   formatDelayText,
   formatIstTime,
   formatReadableDate,
@@ -181,9 +182,9 @@ function RoutePolylineMap({ data }: { data: NormalizedLiveTrainData }) {
     const coveredPath =
       data.progressPercent > 0
         ? svgPoints
-            .slice(0, splitIdx + 1)
-            .map(([x, y], idx) => `${idx === 0 ? "M" : "L"}${x},${y}`)
-            .join(" ")
+          .slice(0, splitIdx + 1)
+          .map(([x, y], idx) => `${idx === 0 ? "M" : "L"}${x},${y}`)
+          .join(" ")
         : "";
 
     let lastLabelX = -999;
@@ -202,16 +203,16 @@ function RoutePolylineMap({ data }: { data: NormalizedLiveTrainData }) {
 
     const currentMarker =
       data.currentLocation?.lat !== null &&
-      data.currentLocation?.lat !== undefined &&
-      data.currentLocation?.lng !== null &&
-      data.currentLocation?.lng !== undefined
+        data.currentLocation?.lat !== undefined &&
+        data.currentLocation?.lng !== null &&
+        data.currentLocation?.lng !== undefined
         ? (() => {
-            const [x, y] = project(
-              data.currentLocation.lat,
-              data.currentLocation.lng
-            );
-            return { x, y };
-          })()
+          const [x, y] = project(
+            data.currentLocation.lat,
+            data.currentLocation.lng
+          );
+          return { x, y };
+        })()
         : data.progressPercent > 0 && svgPoints[splitIdx]
           ? { x: svgPoints[splitIdx][0], y: svgPoints[splitIdx][1] }
           : svgPoints[0]
@@ -238,8 +239,8 @@ function RoutePolylineMap({ data }: { data: NormalizedLiveTrainData }) {
       ?.stop ??
     (data.nextHalt
       ? mapProjection.projectedHalts.find(
-          (h) => h.stop.stationCode === data.nextHalt?.stationCode
-        )?.stop
+        (h) => h.stop.stationCode === data.nextHalt?.stationCode
+      )?.stop
       : undefined) ??
     mapProjection.projectedHalts[0]?.stop;
 
@@ -476,7 +477,7 @@ const COACH_ROLE_STYLES: Record<CoachRole, string> = {
 };
 
 function noopSubscribe() {
-  return () => {};
+  return () => { };
 }
 
 export interface LiveTrainTrackerProps {
@@ -532,20 +533,20 @@ export function LiveTrainTracker({
     useState<OwnedLiveTrainApiResponse | null>(() =>
       initialData
         ? {
-            success: true,
-            provider: "TravelAdda Owned Rail API v2",
-            endpoint: `/api/trains/${initialData.trainNumber}/live?date=${initialData.startDate}`,
-            data: initialData,
-            meta: {
-              timestamp: initialData.lastUpdatedAt,
-              traceId: "ssr-initial",
-              source: "ssr-cache",
-              executionTime: 0,
-              poweredBy: "TravelAdda Live Train Gateway v2",
-              fetchedAt: initialData.lastUpdatedAt,
-              responseTimeMs: 0,
-            },
-          }
+          success: true,
+          provider: "TravelAdda Owned Rail API v2",
+          endpoint: `/api/trains/${initialData.trainNumber}/live?date=${initialData.startDate}`,
+          data: initialData,
+          meta: {
+            timestamp: initialData.lastUpdatedAt,
+            traceId: "ssr-initial",
+            source: "ssr-cache",
+            executionTime: 0,
+            poweredBy: "TravelAdda Live Train Gateway v2",
+            fetchedAt: initialData.lastUpdatedAt,
+            responseTimeMs: 0,
+          },
+        }
         : null
     );
   const [copied, setCopied] = useState(false);
@@ -684,7 +685,7 @@ export function LiveTrainTracker({
         if (!res.ok || !payload.success || !payload.data) {
           setErrorMsg(
             payload.error?.message ||
-              "Unable to fetch live running status for this train right now. Please verify the train number and start date."
+            "Unable to fetch live running status for this train right now. Please verify the train number and start date."
           );
         } else {
           setErrorMsg(null);
@@ -706,7 +707,7 @@ export function LiveTrainTracker({
     async (
       targetTrain: string,
       targetDate: string,
-      options?: { syncUrl?: boolean; useAutoDate?: boolean }
+      options?: { syncUrl?: boolean; useAutoDate?: boolean; trainName?: string }
     ) => {
       const syncUrl = options?.syncUrl ?? true;
       const useAutoDate = options?.useAutoDate ?? false;
@@ -724,10 +725,11 @@ export function LiveTrainTracker({
             : "";
           lastCheckedKeyRef.current = `${first.trainNumber}|${useAutoDate ? "auto" : cleanDate}`;
           if (syncUrl) {
-            const url =
-              !useAutoDate && cleanDate
-                ? `/rail/live-status/${first.trainNumber}?date=${cleanDate}`
-                : `/rail/live-status/${first.trainNumber}`;
+            const url = buildTrainLiveStatusPath(
+              first.trainNumber,
+              first.trainName,
+              !useAutoDate && cleanDate ? cleanDate : undefined
+            );
             router.push(url, { scroll: false });
           }
           await performLookup(first.trainNumber, cleanDate, useAutoDate);
@@ -753,9 +755,17 @@ export function LiveTrainTracker({
       lastCheckedKeyRef.current = `${digits}|${useAutoDate ? "auto" : cleanDate}`;
 
       if (syncUrl) {
-        const url = useAutoDate
-          ? `/rail/live-status/${digits}`
-          : `/rail/live-status/${digits}?date=${cleanDate}`;
+        const knownName =
+          options?.trainName ||
+          (initialData?.trainNumber === digits
+            ? initialData.trainName
+            : undefined) ||
+          suggestions.find((s) => s.trainNumber === digits)?.trainName;
+        const url = buildTrainLiveStatusPath(
+          digits,
+          knownName,
+          useAutoDate ? undefined : cleanDate
+        );
         if (initialTrainNumber === digits) {
           router.replace(url, { scroll: false });
         } else {
@@ -765,7 +775,7 @@ export function LiveTrainTracker({
 
       await performLookup(digits, cleanDate, useAutoDate);
     },
-    [initialTrainNumber, performLookup, router, suggestions, todayIst]
+    [initialData, initialTrainNumber, performLookup, router, suggestions, todayIst]
   );
 
   useEffect(() => {
@@ -862,8 +872,8 @@ export function LiveTrainTracker({
       `Route: ${trainData.train.source.name} (${trainData.train.source.code}) -> ${trainData.train.destination.name} (${trainData.train.destination.code})`,
       trainData.nextHalt
         ? `Next Halt: ${trainData.nextHalt.stationName} (${trainData.nextHalt.stationCode}) in ${trainData.nextHalt.distanceFromCurrentKm} km · ETA ${formatIstTime(
-            trainData.nextHalt.expectedArrival
-          )}`
+          trainData.nextHalt.expectedArrival
+        )}`
         : "",
     ].filter(Boolean);
 
@@ -1057,8 +1067,8 @@ export function LiveTrainTracker({
               const active = opt.isAuto
                 ? isAutoDate
                 : !isAutoDate &&
-                  Boolean(opt.value) &&
-                  effectiveDateDisplay === opt.value;
+                Boolean(opt.value) &&
+                effectiveDateDisplay === opt.value;
               return (
                 <button
                   key={opt.label}
@@ -1086,11 +1096,10 @@ export function LiveTrainTracker({
                       });
                     }
                   }}
-                  className={`shrink-0 cursor-pointer rounded-md border px-2.5 py-1 font-semibold transition ${
-                    active
+                  className={`shrink-0 cursor-pointer rounded-md border px-2.5 py-1 font-semibold transition ${active
                       ? "border-[#1956b4]/40 bg-blue-50 text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300"
                       : "border-line bg-subcard text-ink-soft hover:text-ink"
-                  }`}
+                    }`}
                 >
                   {opt.label}
                 </button>
@@ -1197,28 +1206,25 @@ export function LiveTrainTracker({
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="flex flex-wrap items-center gap-2">
                   <span
-                    className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-bold ${
-                      isRunningOrHalted
+                    className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-bold ${isRunningOrHalted
                         ? "border-emerald-400/40 bg-emerald-500/20 text-emerald-300"
                         : "border-white/20 bg-white/10 text-slate-200"
-                    }`}
+                      }`}
                   >
                     <span
-                      className={`h-2 w-2 rounded-full ${
-                        isRunningOrHalted
+                      className={`h-2 w-2 rounded-full ${isRunningOrHalted
                           ? "ta-led-blink bg-emerald-400"
                           : "bg-slate-300"
-                      }`}
+                        }`}
                     />
                     <span>{trainData.statusLabel}</span>
                   </span>
 
                   <span
-                    className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-[11px] font-bold ${
-                      trainData.delayMinutes > 0
+                    className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-[11px] font-bold ${trainData.delayMinutes > 0
                         ? "border-rose-400/40 bg-rose-500/20 text-rose-200"
                         : "border-emerald-400/35 bg-emerald-500/15 text-emerald-200"
-                    }`}
+                      }`}
                   >
                     <ClockIcon className="h-3 w-3" />
                     <span>{trainData.livePosition.delayStatus}</span>
@@ -1232,18 +1238,16 @@ export function LiveTrainTracker({
                   <button
                     type="button"
                     onClick={() => setAutoRefresh((prev) => !prev)}
-                    className={`inline-flex cursor-pointer items-center gap-1.5 rounded-lg border px-2.5 py-1 text-[11px] font-bold transition ${
-                      autoRefresh
+                    className={`inline-flex cursor-pointer items-center gap-1.5 rounded-lg border px-2.5 py-1 text-[11px] font-bold transition ${autoRefresh
                         ? "border-emerald-400/50 bg-emerald-500/20 text-emerald-200"
                         : "border-white/15 bg-white/10 text-slate-200 hover:bg-white/15"
-                    }`}
+                      }`}
                   >
                     <span
-                      className={`h-1.5 w-1.5 rounded-full ${
-                        autoRefresh
+                      className={`h-1.5 w-1.5 rounded-full ${autoRefresh
                           ? "ta-led-blink bg-emerald-400"
                           : "bg-slate-400"
-                      }`}
+                        }`}
                     />
                     <span>Auto 30s</span>
                   </button>
@@ -1348,9 +1352,9 @@ export function LiveTrainTracker({
                     <strong className="font-mono text-white">
                       {originStop?.scheduledDeparture
                         ? formatIstTime(
-                            originStop.actualDeparture ??
-                              originStop.scheduledDeparture
-                          )
+                          originStop.actualDeparture ??
+                          originStop.scheduledDeparture
+                        )
                         : "--:--"}
                     </strong>
                     {originStop?.platform ? ` · PF #${originStop.platform}` : ""}
@@ -1365,8 +1369,8 @@ export function LiveTrainTracker({
                     <strong className="font-mono text-white">
                       {destStop?.scheduledArrival
                         ? formatIstTime(
-                            destStop.actualArrival ?? destStop.scheduledArrival
-                          )
+                          destStop.actualArrival ?? destStop.scheduledArrival
+                        )
                         : "--:--"}
                     </strong>
                     {destStop?.platform ? ` · PF #${destStop.platform}` : ""}
@@ -1426,11 +1430,10 @@ export function LiveTrainTracker({
                         <span
                           key={day.key}
                           title={day.label}
-                          className={`inline-flex h-6 w-6 items-center justify-center rounded font-mono text-[11px] font-bold ${
-                            runs
+                          className={`inline-flex h-6 w-6 items-center justify-center rounded font-mono text-[11px] font-bold ${runs
                               ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-500/30 dark:bg-emerald-500/15 dark:text-emerald-300"
                               : "bg-card/60 text-ink-muted opacity-45"
-                          }`}
+                            }`}
                         >
                           {day.short}
                         </span>
@@ -1551,22 +1554,20 @@ export function LiveTrainTracker({
                   <button
                     type="button"
                     onClick={() => setShowAllStations(false)}
-                    className={`cursor-pointer rounded-md px-3 py-1.5 text-xs font-bold transition ${
-                      !showAllStations
+                    className={`cursor-pointer rounded-md px-3 py-1.5 text-xs font-bold transition ${!showAllStations
                         ? "bg-[#1956b4] text-white"
                         : "text-ink-soft hover:text-ink"
-                    }`}
+                      }`}
                   >
                     Stops ({trainData.train.totalHalts})
                   </button>
                   <button
                     type="button"
                     onClick={() => setShowAllStations(true)}
-                    className={`cursor-pointer rounded-md px-3 py-1.5 text-xs font-bold transition ${
-                      showAllStations
+                    className={`cursor-pointer rounded-md px-3 py-1.5 text-xs font-bold transition ${showAllStations
                         ? "bg-[#1956b4] text-white"
                         : "text-ink-soft hover:text-ink"
-                    }`}
+                      }`}
                   >
                     All ({trainData.train.totalRouteStations})
                   </button>
@@ -1625,24 +1626,22 @@ export function LiveTrainTracker({
                   <div key={`${stop.sequence}-${stop.stationCode}`}>
                     <div
                       ref={isCurrent ? liveTrainRowRef : undefined}
-                      className={`relative flex items-stretch gap-3 px-3.5 sm:gap-4 sm:px-6 ${
-                        isCurrent
+                      className={`relative flex items-stretch gap-3 px-3.5 sm:gap-4 sm:px-6 ${isCurrent
                           ? "bg-emerald-50/70 dark:bg-emerald-500/10"
                           : stop.isHalt
                             ? "bg-card hover:bg-subcard/45"
                             : "bg-subcard/30 hover:bg-subcard/55"
-                      }`}
+                        }`}
                     >
                       {/* Vertical Track Column */}
                       <div className="relative flex w-8 shrink-0 flex-col items-center sm:w-9">
                         <div
-                          className={`w-0.5 flex-1 ${
-                            isFirst
+                          className={`w-0.5 flex-1 ${isFirst
                               ? "bg-transparent"
                               : isDeparted || isCurrent
                                 ? "bg-emerald-500"
                                 : "border-l-2 border-dashed border-line-strong"
-                          }`}
+                            }`}
                         />
 
                         <div className="relative z-10 my-1 flex items-center justify-center">
@@ -1650,13 +1649,12 @@ export function LiveTrainTracker({
                             <LiveTrainBeaconIcon size="sm" active />
                           ) : (
                             <span
-                              className={`inline-flex items-center justify-center rounded-full border-2 font-mono text-[10px] font-bold ${
-                                isDeparted
+                              className={`inline-flex items-center justify-center rounded-full border-2 font-mono text-[10px] font-bold ${isDeparted
                                   ? "h-5 w-5 border-emerald-500 bg-emerald-500 text-white"
                                   : stop.isHalt
                                     ? "h-5 w-5 border-[#1956b4] bg-card text-[#1956b4] dark:border-blue-400 dark:text-blue-300"
                                     : "h-3 w-3 border-line-strong bg-subcard text-transparent"
-                              }`}
+                                }`}
                             >
                               {isDeparted ? "✓" : ""}
                             </span>
@@ -1664,13 +1662,12 @@ export function LiveTrainTracker({
                         </div>
 
                         <div
-                          className={`w-0.5 flex-1 ${
-                            isLast && !injectMovingTrainAfter
+                          className={`w-0.5 flex-1 ${isLast && !injectMovingTrainAfter
                               ? "bg-transparent"
                               : isDeparted
                                 ? "bg-emerald-500"
                                 : "border-l-2 border-dashed border-line-strong"
-                          }`}
+                            }`}
                         />
                       </div>
 
@@ -1680,20 +1677,18 @@ export function LiveTrainTracker({
                           <div className="min-w-0">
                             <div className="flex flex-wrap items-center gap-1.5">
                               <span
-                                className={`rounded px-1.5 py-0.5 font-mono text-xs font-bold ${
-                                  stop.isHalt
+                                className={`rounded px-1.5 py-0.5 font-mono text-xs font-bold ${stop.isHalt
                                     ? "bg-blue-50 text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300"
                                     : "bg-subcard text-ink-muted"
-                                }`}
+                                  }`}
                               >
                                 {stop.stationCode}
                               </span>
                               <span
-                                className={`text-sm ${
-                                  stop.isHalt
+                                className={`text-sm ${stop.isHalt
                                     ? "font-bold text-ink"
                                     : "font-medium text-ink-soft"
-                                }`}
+                                  }`}
                               >
                                 {stop.stationName}
                               </span>
@@ -1728,11 +1723,10 @@ export function LiveTrainTracker({
                               )}
                               {stop.isHalt && (
                                 <span
-                                  className={`rounded px-1.5 py-0.5 text-[10px] font-bold ${
-                                    effectiveDelay > 0
+                                  className={`rounded px-1.5 py-0.5 text-[10px] font-bold ${effectiveDelay > 0
                                       ? "bg-rose-50 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300"
                                       : "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300"
-                                  }`}
+                                    }`}
                                 >
                                   {effectiveDelay > 0
                                     ? `+${effectiveDelay}m late`
@@ -1752,12 +1746,11 @@ export function LiveTrainTracker({
                                   Arr
                                 </span>
                                 <span
-                                  className={`font-bold ${
-                                    arrActualStr &&
-                                    arrActualStr !== arrScheduledStr
+                                  className={`font-bold ${arrActualStr &&
+                                      arrActualStr !== arrScheduledStr
                                       ? "text-rose-600 dark:text-rose-400"
                                       : "text-ink"
-                                  }`}
+                                    }`}
                                 >
                                   {arrActualStr ?? arrScheduledStr}
                                 </span>
@@ -1765,25 +1758,24 @@ export function LiveTrainTracker({
                             )}
                             {!(
                               stop.sequence ===
-                                trainData.train.totalRouteStations &&
+                              trainData.train.totalRouteStations &&
                               !stop.scheduledDeparture
                             ) && (
-                              <div className="mt-0.5">
-                                <span className="mr-1 font-sans text-[10px] text-ink-muted">
-                                  Dep
-                                </span>
-                                <span
-                                  className={`font-bold ${
-                                    depActualStr &&
-                                    depActualStr !== depScheduledStr
-                                      ? "text-rose-600 dark:text-rose-400"
-                                      : "text-ink"
-                                  }`}
-                                >
-                                  {depActualStr ?? depScheduledStr}
-                                </span>
-                              </div>
-                            )}
+                                <div className="mt-0.5">
+                                  <span className="mr-1 font-sans text-[10px] text-ink-muted">
+                                    Dep
+                                  </span>
+                                  <span
+                                    className={`font-bold ${depActualStr &&
+                                        depActualStr !== depScheduledStr
+                                        ? "text-rose-600 dark:text-rose-400"
+                                        : "text-ink"
+                                      }`}
+                                  >
+                                    {depActualStr ?? depScheduledStr}
+                                  </span>
+                                </div>
+                              )}
                           </div>
                         </div>
 
@@ -1797,7 +1789,7 @@ export function LiveTrainTracker({
                           ) : (
                             <div className="mt-0.5 flex items-center gap-1.5 font-mono">
                               {arrActualStr &&
-                              arrActualStr !== arrScheduledStr ? (
+                                arrActualStr !== arrScheduledStr ? (
                                 <>
                                   <span className="text-ink-muted line-through">
                                     {arrScheduledStr}
@@ -1822,12 +1814,12 @@ export function LiveTrainTracker({
                           </span>
                           {stop.sequence ===
                             trainData.train.totalRouteStations &&
-                          !stop.scheduledDeparture ? (
+                            !stop.scheduledDeparture ? (
                             <span className="text-ink-muted">Destination</span>
                           ) : (
                             <div className="mt-0.5 flex items-center gap-1.5 font-mono">
                               {depActualStr &&
-                              depActualStr !== depScheduledStr ? (
+                                depActualStr !== depScheduledStr ? (
                                 <>
                                   <span className="text-ink-muted line-through">
                                     {depScheduledStr}
@@ -1854,11 +1846,10 @@ export function LiveTrainTracker({
                           )}
                           {stop.isHalt && (
                             <span
-                              className={`rounded-md px-2 py-0.5 text-[11px] font-bold ${
-                                effectiveDelay > 0
+                              className={`rounded-md px-2 py-0.5 text-[11px] font-bold ${effectiveDelay > 0
                                   ? "bg-rose-50 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300"
                                   : "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300"
-                              }`}
+                                }`}
                             >
                               {effectiveDelay > 0
                                 ? `+${effectiveDelay}m late`
@@ -1899,11 +1890,10 @@ export function LiveTrainTracker({
                                 </span>
                               )}
                               <span
-                                className={`rounded px-2 py-0.5 text-[10px] font-bold ${
-                                  trainData.delayMinutes > 0
+                                className={`rounded px-2 py-0.5 text-[10px] font-bold ${trainData.delayMinutes > 0
                                     ? "bg-rose-50 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300"
                                     : "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300"
-                                }`}
+                                  }`}
                               >
                                 {formatDelayText(trainData.delayMinutes)}
                               </span>
@@ -1923,7 +1913,7 @@ export function LiveTrainTracker({
                                 style={{
                                   width: `${Math.round(
                                     trainData.livePosition.haltSegmentProgress *
-                                      100
+                                    100
                                   )}%`,
                                 }}
                                 className="h-full rounded-full bg-emerald-500"
@@ -2053,11 +2043,10 @@ export function LiveTrainTracker({
                               prev.toUpperCase() === unit.code ? "" : unit.code
                             )
                           }
-                          className={`relative flex min-w-[70px] cursor-pointer flex-col items-center justify-between rounded-xl border px-2.5 py-2 text-center transition ${
-                            isMatch
+                          className={`relative flex min-w-[70px] cursor-pointer flex-col items-center justify-between rounded-xl border px-2.5 py-2 text-center transition ${isMatch
                               ? "border-[#fc6203] bg-orange-50 ring-2 ring-[#fc6203]/30 dark:bg-orange-500/15"
                               : COACH_ROLE_STYLES[unit.role]
-                          }`}
+                            }`}
                         >
                           <span className="text-[10px] font-semibold text-ink-muted">
                             {isLoco ? "ENG" : `#${unit.coachOrderFromEngine}`}

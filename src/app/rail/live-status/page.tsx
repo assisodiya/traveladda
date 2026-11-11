@@ -12,7 +12,10 @@ import {
   TrainIcon,
 } from "@/components/Icons";
 import { LiveTrainTracker } from "@/components/LiveTrainTracker";
-import { POPULAR_LIVE_TRAINS } from "@/lib/live-train-types";
+import {
+  buildTrainLiveStatusPath,
+  POPULAR_LIVE_TRAINS,
+} from "@/lib/live-train-types";
 
 export const metadata: Metadata = {
   title:
@@ -310,7 +313,10 @@ export default async function LiveTrainStatusPage() {
           {POPULAR_LIVE_TRAINS.map((train) => (
             <Link
               key={train.trainNumber}
-              href={`/rail/live-status/${train.trainNumber}`}
+              href={buildTrainLiveStatusPath(
+                train.trainNumber,
+                train.trainName
+              )}
               className="group flex flex-col justify-between rounded-xl border border-line bg-card p-3.5 transition hover:border-[#1956b4] hover:shadow-sm"
             >
               <div>

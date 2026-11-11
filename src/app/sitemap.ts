@@ -1,6 +1,9 @@
 import type { MetadataRoute } from "next";
 import { ALL_BLOG_POSTS } from "@/lib/blog-data";
-import { POPULAR_LIVE_TRAINS } from "@/lib/live-train-types";
+import {
+  buildTrainLiveStatusPath,
+  POPULAR_LIVE_TRAINS,
+} from "@/lib/live-train-types";
 
 const BASE_URL = "https://traveladda.in";
 
@@ -75,7 +78,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const trainStatusRoutes: MetadataRoute.Sitemap = POPULAR_LIVE_TRAINS.map(
     (train) => ({
-      url: `${BASE_URL}/rail/live-status/${train.trainNumber}`,
+      url: `${BASE_URL}${buildTrainLiveStatusPath(
+        train.trainNumber,
+        train.trainName
+      )}`,
       changeFrequency: "daily",
       priority: 0.92,
     })

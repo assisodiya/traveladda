@@ -9,6 +9,7 @@ import {
   useState,
   useSyncExternalStore,
 } from "react";
+import { buildTrainLiveStatusPath } from "@/lib/live-train-types";
 import type {
   NormalizedPnrData,
   OwnedPnrApiResponse,
@@ -237,11 +238,11 @@ export function PnrChecker({ compact = false }: { compact?: boolean }) {
   const pnrData = apiResponse?.success ? apiResponse.data : undefined;
 
   const liveTrainHref = pnrData?.train.number
-    ? `/rail/live-status/${encodeURIComponent(pnrData.train.number)}${
-        /^\d{4}-\d{2}-\d{2}$/.test(pnrData.train.journeyDate)
-          ? `?date=${encodeURIComponent(pnrData.train.journeyDate)}`
-          : ""
-      }`
+    ? buildTrainLiveStatusPath(
+        pnrData.train.number,
+        pnrData.train.name,
+        pnrData.train.journeyDate
+      )
     : "/rail/live-status";
 
   const overallBadgeStyles: Record<string, string> = {

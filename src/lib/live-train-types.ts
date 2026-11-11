@@ -585,8 +585,77 @@ export const POPULAR_LIVE_TRAINS: TrainSearchItem[] = [
 export function findCatalogTrain(
   trainNumber: string
 ): TrainSearchItem | undefined {
-  const clean = trainNumber.replace(/\D/g, "");
+  const clean = extractTrainNumberFromParam(trainNumber);
   return POPULAR_LIVE_TRAINS.find((t) => t.trainNumber === clean);
+}
+
+export function slugifyTrainName(name: string): string {
+  return (name || "")
+    .toLowerCase()
+    .replace(/&/g, " and ")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .replace(/-{2,}/g, "-");
+}
+
+export function extractTrainNumberFromParam(rawParam: string): string {
+  const decoded = decodeURIComponent(rawParam || "").trim();
+  const leadingMatch = /^(\d{3,5})(?:-|$)/.exec(decoded);
+  if (leadingMatch) return leadingMatch[1];
+
+  const anyNumberMatch = /\b(\d{4,5})\b/.exec(decoded);
+  if (anyNumberMatch) return anyNumberMatch[1];
+
+  const slugNeedle = slugifyTrainName(decoded);
+  if (slugNeedle.length >= 3) {
+    const matchedByName = POPULAR_LIVE_TRAINS.find((t) => {
+      const nameSlug = slugifyTrainName(t.trainName);
+      return (
+        nameSlug === slugNeedle ||
+        nameSlug.includes(slugNeedle) ||
+        slugNeedle.includes(nameSlug)
+      );
+    });
+    if (matchedByName) return matchedByName.trainNumber;
+  }
+
+  return decoded.replace(/\D/g, "").slice(0, 5);
+}
+
+export function buildTrainSeoSlug(
+  trainNumber: string,
+  trainName?: string | null
+): string {
+  const cleanNum = extractTrainNumberFromParam(trainNumber);
+  if (!cleanNum) return "";
+  const resolvedName =
+    (trainName &&
+      !trainName.startsWith("Indian Railways Express #") &&
+      trainName) ||
+    POPULAR_LIVE_TRAINS.find((t) => t.trainNumber === cleanNum)?.trainName ||
+    "";
+  const nameSlug = slugifyTrainName(resolvedName);
+  if (!nameSlug || nameSlug === cleanNum) {
+    return cleanNum;
+  }
+  const stripped = nameSlug.startsWith(`${cleanNum}-`)
+    ? nameSlug.slice(cleanNum.length + 1)
+    : nameSlug;
+  return stripped ? `${cleanNum}-${stripped}` : cleanNum;
+}
+
+export function buildTrainLiveStatusPath(
+  trainNumber: string,
+  trainName?: string | null,
+  date?: string | null
+): string {
+  const slug = buildTrainSeoSlug(trainNumber, trainName);
+  if (!slug) return "/rail/live-status";
+  const cleanDate =
+    date && /^\d{4}-\d{2}-\d{2}$/.test(date.trim()) ? date.trim() : "";
+  return cleanDate
+    ? `/rail/live-status/${slug}?date=${cleanDate}`
+    : `/rail/live-status/${slug}`;
 }
 
 export const ALL_WEEK_DAYS = [

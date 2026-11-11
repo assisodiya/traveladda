@@ -18,7 +18,10 @@ import {
   RAIL_BLOG_POSTS,
 } from "@/lib/blog-data";
 import { POPULAR_LIVE_FLIGHTS } from "@/lib/flight-types";
-import { POPULAR_LIVE_TRAINS } from "@/lib/live-train-types";
+import {
+  buildTrainLiveStatusPath,
+  POPULAR_LIVE_TRAINS,
+} from "@/lib/live-train-types";
 
 export const metadata: Metadata = {
   title:
@@ -253,7 +256,7 @@ export default async function Home() {
               {POPULAR_LIVE_TRAINS.slice(0, 5).map((t) => (
                 <Link
                   key={t.trainNumber}
-                  href={`/rail/live-status/${t.trainNumber}`}
+                  href={buildTrainLiveStatusPath(t.trainNumber, t.trainName)}
                   className="group flex items-center justify-between gap-3 py-3 transition hover:bg-subcard/60"
                 >
                   <div className="min-w-0">

@@ -4,6 +4,7 @@ import {
   computeHaltMinutes,
   decodePolyline,
   deriveTrackingState,
+  extractTrainNumberFromParam,
   findCatalogTrain,
   formatDelayText,
   formatDurationMinutes,
@@ -1181,7 +1182,19 @@ export async function fetchSeoTrainPageData(
   "use cache";
   cacheLife("hours");
 
-  const cleanTrain = (rawTrainInput || "").replace(/\D/g, "");
+  let cleanTrain = extractTrainNumberFromParam(rawTrainInput || "");
+  if (!/^\d{3,5}$/.test(cleanTrain)) {
+    const nameQuery = decodeURIComponent(rawTrainInput || "")
+      .replace(/[-_]+/g, " ")
+      .trim();
+    if (nameQuery.length >= 3) {
+      const searchRes = await searchOwnedTrains(nameQuery);
+      if (searchRes.data.length > 0) {
+        cleanTrain = searchRes.data[0].trainNumber;
+      }
+    }
+  }
+
   if (!/^\d{3,5}$/.test(cleanTrain)) {
     return null;
   }

@@ -11,6 +11,7 @@ import {
   parseFlightInput,
 } from "@/lib/flight-types";
 import {
+  buildTrainLiveStatusPath,
   getTodayIstDateString,
   POPULAR_LIVE_TRAINS,
   type OwnedTrainSearchApiResponse,
@@ -200,14 +201,19 @@ export function HeroSearchWidget() {
     navigateToFlight(code, num, flightDate || todayIst);
   };
 
-  const navigateToTrain = (digits: string, explicitDate?: string) => {
+  const navigateToTrain = (
+    digits: string,
+    explicitDate?: string,
+    trainName?: string
+  ) => {
     const cleanDate =
       explicitDate && /^\d{4}-\d{2}-\d{2}$/.test(explicitDate)
         ? explicitDate
         : "";
-    const targetUrl = cleanDate
-      ? `/rail/live-status/${digits}?date=${cleanDate}`
-      : `/rail/live-status/${digits}`;
+    const matchedName =
+      trainName ||
+      trainSuggestions.find((t) => t.trainNumber === digits)?.trainName;
+    const targetUrl = buildTrainLiveStatusPath(digits, matchedName, cleanDate);
     router.push(targetUrl);
   };
 
@@ -219,7 +225,11 @@ export function HeroSearchWidget() {
       return;
     }
     if (trainSuggestions.length > 0 && trainQuery.trim().length >= 2) {
-      navigateToTrain(trainSuggestions[0].trainNumber, trainDate);
+      navigateToTrain(
+        trainSuggestions[0].trainNumber,
+        trainDate,
+        trainSuggestions[0].trainName
+      );
       return;
     }
     setValidationMsg("Please enter a valid 4 or 5-digit train number or name.");
@@ -510,7 +520,7 @@ export function HeroSearchWidget() {
                         type="button"
                         onClick={() => {
                           setTrainDropdownOpen(false);
-                          navigateToTrain(t.trainNumber, trainDate);
+                          navigateToTrain(t.trainNumber, trainDate, t.trainName);
                         }}
                         className="flex w-full cursor-pointer items-center justify-between gap-2 rounded-lg px-3 py-2 text-left transition hover:bg-subcard"
                       >
@@ -565,7 +575,7 @@ export function HeroSearchWidget() {
                 <button
                   key={t.trainNumber}
                   type="button"
-                  onClick={() => navigateToTrain(t.trainNumber)}
+                  onClick={() => navigateToTrain(t.trainNumber, undefined, t.trainName)}
                   className="inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-full border border-line bg-subcard px-3 py-1 font-medium text-ink-soft transition hover:border-[#1956b4] hover:text-[#1956b4]"
                 >
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
