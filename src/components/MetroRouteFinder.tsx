@@ -382,7 +382,7 @@ export function MetroRouteFinder({
                     setFromOpen(true);
                   }}
                   placeholder="Enter Origin Station (e.g. MG Road)"
-                  className="ta-input h-12 w-full rounded-xl pr-16 pl-10 text-sm font-extrabold text-ink sm:pr-9"
+                  className="ta-search-box h-12 w-full rounded-xl border border-line-strong bg-input pr-16 pl-10 text-sm font-extrabold text-ink outline-none focus:border-[#1956b4] sm:pr-9"
                   autoComplete="off"
                 />
                 {fromQuery && (
@@ -506,7 +506,7 @@ export function MetroRouteFinder({
                     setToOpen(true);
                   }}
                   placeholder="Enter Destination (e.g. Anand Vihar)"
-                  className="ta-input h-12 w-full rounded-xl pr-16 pl-10 text-sm font-extrabold text-ink sm:pr-9"
+                  className="ta-search-box h-12 w-full rounded-xl border border-line-strong bg-input pr-16 pl-10 text-sm font-extrabold text-ink outline-none focus:border-[#1956b4] sm:pr-9"
                   autoComplete="off"
                 />
                 {toQuery && (
@@ -596,7 +596,7 @@ export function MetroRouteFinder({
             <button
               type="submit"
               disabled={navigating}
-              className="ta-btn-orange inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl px-6 text-sm font-extrabold text-white shadow-sm transition active:scale-[0.99] disabled:opacity-60 lg:w-auto"
+              className="ta-btn-primary inline-flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#fc6203] px-6 text-sm font-extrabold text-white shadow-md transition hover:bg-[#e55600] active:scale-[0.99] disabled:opacity-60 lg:w-auto"
             >
               {navigating ? (
                 <>

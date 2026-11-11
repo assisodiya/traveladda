@@ -138,7 +138,8 @@ html.dark .ta-cta-banner {
 }
 
 /* ixigo / Goibibo Solid Vibrant Orange Search CTA Button */
-.ta-btn-primary {
+.ta-btn-primary,
+.ta-btn-orange {
   background-color: #fc6203;
   color: #ffffff !important;
   box-shadow: 0 2px 8px rgba(252, 98, 3, 0.28);
@@ -148,13 +149,15 @@ html.dark .ta-cta-banner {
     transform 120ms ease;
 }
 
-.ta-btn-primary:hover {
+.ta-btn-primary:hover,
+.ta-btn-orange:hover {
   background-color: #e55600;
   box-shadow: 0 4px 12px rgba(252, 98, 3, 0.35);
 }
 
 /* Clean Segmented OTA Input Box */
-.ta-search-box {
+.ta-search-box,
+.ta-input {
   background-color: var(--ta-card);
   border: 1px solid var(--ta-border-strong);
   border-radius: 14px;
@@ -163,12 +166,14 @@ html.dark .ta-cta-banner {
     box-shadow 140ms ease;
 }
 
-.ta-search-box:focus-within {
+.ta-search-box:focus-within,
+.ta-input:focus {
   border-color: #1956b4;
   box-shadow: 0 0 0 3px rgba(25, 86, 180, 0.12);
 }
 
-html.dark .ta-search-box:focus-within {
+html.dark .ta-search-box:focus-within,
+html.dark .ta-input:focus {
   border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18);
 }
