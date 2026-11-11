@@ -266,7 +266,7 @@ export async function fetchOwnedTrainChartTime(
           "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) TravelAdda-ChartTimeEngine/2.0",
       },
       cache: "no-store",
-      signal: AbortSignal.timeout(9000),
+      signal: AbortSignal.timeout(4500),
     });
 
     if (response.ok) {
@@ -351,7 +351,7 @@ export async function fetchSeoChartTimePageData(
         "User-Agent":
           "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) TravelAdda-ChartTimeEngine/2.0",
       },
-      signal: AbortSignal.timeout(9000),
+      signal: AbortSignal.timeout(4500),
     });
 
     if (response.ok) {

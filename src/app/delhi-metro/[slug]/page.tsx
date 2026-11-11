@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import MetroDynamicSeoPage, {
   generateMetadata as baseGenerateMetadata,
-} from "@/app/metro/[routeSlug]/page";
+} from "@/app/delhi-metro/route/[routeSlug]/page";
 
 export async function generateStaticParams() {
   return [
@@ -17,16 +17,14 @@ export async function generateStaticParams() {
     "airport-express-line",
     "gurgaon-rapid-metro",
     "noida-aqua-line",
+    "mg-road",
+    "anand-vihar",
     "rajiv-chowk",
     "new-delhi",
     "kashmere-gate",
     "huda-city-centre",
-    "mg-road",
-    "anand-vihar",
     "igi-airport",
     "noida-electronic-city",
-    "hauz-khas",
-    "botanical-garden",
   ].map((slug) => ({ slug }));
 }
 
@@ -51,4 +49,3 @@ export default async function DelhiMetroSlugPage({
     params: Promise.resolve({ routeSlug: slug }),
   });
 }
-

@@ -64,8 +64,7 @@ export function Navbar() {
     pathname.startsWith("/air/") ||
     pathname.startsWith("/rail/") ||
     pathname.startsWith("/chart-times") ||
-    pathname.startsWith("/delhi-metro") ||
-    pathname.startsWith("/metro");
+    pathname.startsWith("/delhi-metro");
 
   const closeAllMenus = () => {
     if (desktopToolsRef.current) {

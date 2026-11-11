@@ -169,7 +169,7 @@ async function fetchUpstreamTrainForDate(
       "User-Agent": "TravelAdda-Portal/2.0 (+https://traveladda.in)",
     },
     ...(options?.allowCache ? {} : { cache: "no-store" as const }),
-    signal: AbortSignal.timeout(14000),
+    signal: AbortSignal.timeout(options?.allowCache ? 4500 : 10000),
   });
 
   const contentType = response.headers.get("content-type") || "";
@@ -1239,7 +1239,8 @@ export async function fetchSeoTrainPageData(
         }
       }
     } catch {
-      // Continue to next candidate date
+      // Upstream timed out or unreachable — fall back immediately so SSR/build never stalls
+      break;
     }
   }
 
