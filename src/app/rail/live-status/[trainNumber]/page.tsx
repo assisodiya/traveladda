@@ -15,6 +15,7 @@ import {
   TrainIcon,
 } from "@/components/Icons";
 import { LiveTrainTracker } from "@/components/LiveTrainTracker";
+import { buildChartTimePath } from "@/lib/chart-time-types";
 import { fetchSeoTrainPageData } from "@/lib/live-train-service";
 import {
   ALL_WEEK_DAYS,
@@ -442,6 +443,16 @@ export default async function TrainLiveStatusByNumberPage({
             >
               FAQs
             </a>
+            <span className="text-line-strong">·</span>
+            <Link
+              href={buildChartTimePath(
+                trainData.trainNumber,
+                trainData.trainName
+              )}
+              className="font-bold text-[#fc6203] hover:underline"
+            >
+              {trainData.trainNumber} Chart Preparation Time →
+            </Link>
           </div>
           <span className="inline-flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400">
             <ShieldCheckIcon className="h-4 w-4" />

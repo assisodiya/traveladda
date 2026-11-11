@@ -814,7 +814,7 @@ export const RAIL_BLOG_POSTS: BlogPost[] = [
       {
         label: "Check 12952 Tejas Rajdhani Chart Times",
         sublabel: "Live NDLS to MMCT station-by-station chart schedule",
-        href: "/rail/chart-time?train=12952",
+        href: "/chart-times/12952-mmct-tejas-raj-chart-times",
       },
       {
         label: "Verify Chart Preparation Status",
@@ -982,7 +982,7 @@ export const FEATURED_SEO_BLOG_POSTS: BlogPost[] = [
       {
         label: "12952 MMCT Tejas Raj Chart Schedule",
         sublabel: "See NDLS, KOTA, RTM, BRC & ST charting stations live",
-        href: "/rail/chart-time?train=12952",
+        href: "/chart-times/12952-mmct-tejas-raj-chart-times",
       },
       {
         label: "Check 10-Digit IRCTC PNR Status",

@@ -4,11 +4,13 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
+  buildChartTimePath,
   type EnrichedChartTimeData,
   type OwnedChartTimeApiResponse,
   POPULAR_CHART_TRAINS,
 } from "@/lib/chart-time-types";
 import {
+  buildTrainLiveStatusPath,
   type OwnedTrainSearchApiResponse,
   POPULAR_LIVE_TRAINS,
   type TrainSearchItem,
@@ -38,10 +40,22 @@ interface RecentChartSearch {
   route: string;
 }
 
-export function TrainChartTimeChecker() {
+export interface TrainChartTimeCheckerProps {
+  initialTrainNumber?: string;
+  initialData?: EnrichedChartTimeData | null;
+}
+
+export function TrainChartTimeChecker({
+  initialTrainNumber,
+  initialData = null,
+}: TrainChartTimeCheckerProps = {}) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const initialUrlTrain = searchParams.get("train") || "12952";
+  const initialUrlTrain =
+    initialData?.trainNumber ||
+    initialTrainNumber ||
+    searchParams.get("train") ||
+    "12952";
 
   const [query, setQuery] = useState(initialUrlTrain);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -51,9 +65,11 @@ export function TrainChartTimeChecker() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [chartData, setChartData] = useState<EnrichedChartTimeData | null>(
-    null
+    initialData
   );
-  const [selectedStationCode, setSelectedStationCode] = useState<string>("");
+  const [selectedStationCode, setSelectedStationCode] = useState<string>(
+    initialData?.stations[0]?.stationCode || initialData?.originStation || ""
+  );
   const [recentSearches, setRecentSearches] = useState<RecentChartSearch[]>(
     () => {
       if (typeof window === "undefined") return [];
@@ -149,7 +165,11 @@ export function TrainChartTimeChecker() {
   }, [query, remoteTrains]);
 
   const fetchChartSchedule = useCallback(
-    async (trainNumInput: string, updateUrl = true) => {
+    async (
+      trainNumInput: string,
+      updateUrl = true,
+      knownTrainName?: string
+    ) => {
       const digits = trainNumInput.replace(/\D/g, "").slice(0, 5);
       if (digits.length < 3) {
         setError(
@@ -163,7 +183,12 @@ export function TrainChartTimeChecker() {
       setDropdownOpen(false);
 
       if (updateUrl) {
-        router.replace(`/rail/chart-time?train=${digits}`, { scroll: false });
+        const targetPath = buildChartTimePath(digits, knownTrainName);
+        if (initialTrainNumber === digits) {
+          router.replace(targetPath, { scroll: false });
+        } else {
+          router.push(targetPath, { scroll: false });
+        }
       }
 
       try {
@@ -198,28 +223,37 @@ export function TrainChartTimeChecker() {
         setLoading(false);
       }
     },
-    [router, saveRecentTrain]
+    [initialTrainNumber, router, saveRecentTrain]
   );
 
   // Initial & URL parameter load
   useEffect(() => {
-    const paramTrain = searchParams.get("train") || "12952";
+    const paramTrain =
+      initialTrainNumber || searchParams.get("train") || "12952";
+    if (initialData && initialData.trainNumber === paramTrain) {
+      return;
+    }
     const timer = window.setTimeout(() => {
       setQuery(paramTrain);
       void fetchChartSchedule(paramTrain, false);
     }, 0);
     return () => window.clearTimeout(timer);
-  }, [searchParams, fetchChartSchedule]);
+  }, [initialData, initialTrainNumber, searchParams, fetchChartSchedule]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const digits = query.replace(/\D/g, "").slice(0, 5);
     if (digits.length >= 3) {
-      fetchChartSchedule(digits, true);
+      const matched = suggestions.find((s) => s.trainNumber === digits);
+      void fetchChartSchedule(digits, true, matched?.trainName);
       return;
     }
     if (suggestions.length > 0) {
-      fetchChartSchedule(suggestions[0].trainNumber, true);
+      void fetchChartSchedule(
+        suggestions[0].trainNumber,
+        true,
+        suggestions[0].trainName
+      );
       return;
     }
     setError("Please enter a valid 4 or 5-digit train number (e.g. 12952).");
@@ -236,7 +270,7 @@ export function TrainChartTimeChecker() {
 
   const handleCopySummary = async () => {
     if (!chartData) return;
-    const text = `${chartData.trainName} (${chartData.trainNumber}) Chart Time Summary:\n${chartData.summary}\nCheck live at https://traveladda.in/rail/chart-time?train=${chartData.trainNumber}`;
+    const text = `${chartData.trainName} (${chartData.trainNumber}) Chart Time Summary:\n${chartData.summary}\nCheck live at https://traveladda.in${buildChartTimePath(chartData.trainNumber, chartData.trainName, chartData.slug)}`;
     try {
       await navigator.clipboard.writeText(text);
       setCopiedSummary(true);
@@ -326,7 +360,11 @@ export function TrainChartTimeChecker() {
                       onClick={() => {
                         setQuery(t.trainNumber);
                         setDropdownOpen(false);
-                        fetchChartSchedule(t.trainNumber, true);
+                        void fetchChartSchedule(
+                          t.trainNumber,
+                          true,
+                          t.trainName
+                        );
                       }}
                       className="flex w-full cursor-pointer items-center justify-between gap-2 rounded-lg px-3 py-2 text-left transition hover:bg-subcard"
                     >
@@ -374,7 +412,11 @@ export function TrainChartTimeChecker() {
                   type="button"
                   onClick={() => {
                     setQuery(item.trainNumber);
-                    fetchChartSchedule(item.trainNumber, true);
+                    void fetchChartSchedule(
+                      item.trainNumber,
+                      true,
+                      item.trainName
+                    );
                   }}
                   className={`inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-full border px-2.5 py-1 transition ${
                     isCurrent
@@ -504,7 +546,10 @@ export function TrainChartTimeChecker() {
 
                 <div className="flex flex-wrap gap-2">
                   <Link
-                    href={`/rail/live-status?train=${chartData.trainNumber}`}
+                    href={buildTrainLiveStatusPath(
+                      chartData.trainNumber,
+                      chartData.trainName
+                    )}
                     className="inline-flex items-center gap-1.5 rounded-lg border border-white/20 bg-white/15 px-3.5 py-2 text-xs font-bold text-white transition hover:bg-white/25"
                   >
                     <TrainIcon className="h-3.5 w-3.5 text-emerald-300" />

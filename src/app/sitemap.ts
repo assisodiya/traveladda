@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { ALL_BLOG_POSTS } from "@/lib/blog-data";
+import { POPULAR_CHART_TRAINS } from "@/lib/chart-time-types";
 import {
   buildTrainLiveStatusPath,
   POPULAR_LIVE_TRAINS,
@@ -87,6 +88,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })
   );
 
+  const chartTimeRoutes: MetadataRoute.Sitemap = POPULAR_CHART_TRAINS.map(
+    (train) => ({
+      url: `${BASE_URL}/chart-times/${train.slug}`,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    })
+  );
+
   const blogRoutes: MetadataRoute.Sitemap = ALL_BLOG_POSTS.map((post) => ({
     url: `${BASE_URL}/blog/${post.slug}`,
     lastModified: post.publishedIso,
@@ -94,5 +103,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: post.primaryKeyword ? 0.88 : post.domain === "air" ? 0.85 : 0.8,
   }));
 
-  return [...coreRoutes, ...trainStatusRoutes, ...blogRoutes];
+  return [...coreRoutes, ...trainStatusRoutes, ...chartTimeRoutes, ...blogRoutes];
 }

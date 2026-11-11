@@ -327,7 +327,7 @@ export default async function TrainChartTimePage() {
           {POPULAR_CHART_TRAINS.map((train) => (
             <Link
               key={train.trainNumber}
-              href={`/rail/chart-time?train=${train.trainNumber}`}
+              href={`/chart-times/${train.slug}`}
               className="group flex flex-col justify-between rounded-xl border border-line bg-card p-3.5 transition hover:border-[#1956b4] hover:shadow-sm"
             >
               <div>

@@ -100,49 +100,174 @@ export function format24hTo12h(time24: string | undefined | null): string {
   return `${hour12}:${String(m).padStart(2, "0")} ${period}`;
 }
 
-export const POPULAR_CHART_TRAINS: {
+export interface PopularChartTrainItem {
   trainNumber: string;
   trainName: string;
   route: string;
   firstChart: string;
-}[] = [
+  slug: string;
+}
+
+export const POPULAR_CHART_TRAINS: PopularChartTrainItem[] = [
   {
     trainNumber: "12952",
     trainName: "Mmct Tejas Rajdhani",
     route: "NDLS → MMCT",
     firstChart: "8:55 AM",
+    slug: "12952-mmct-tejas-raj-chart-times",
   },
   {
     trainNumber: "12951",
     trainName: "New Delhi Tejas Rajdhani",
     route: "MMCT → NDLS",
     firstChart: "9:00 AM",
+    slug: "12951-new-delhi-tejas-rajdhani-chart-times",
   },
   {
     trainNumber: "12301",
     trainName: "Howrah Rajdhani Express",
     route: "HWH → NDLS",
     firstChart: "8:50 AM",
+    slug: "12301-howrah-rajdhani-express-chart-times",
+  },
+  {
+    trainNumber: "12302",
+    trainName: "New Delhi Howrah Rajdhani",
+    route: "NDLS → HWH",
+    firstChart: "8:50 AM",
+    slug: "12302-new-delhi-howrah-rajdhani-chart-times",
   },
   {
     trainNumber: "22436",
     trainName: "Vande Bharat Express",
     route: "NDLS → BSB",
     firstChart: "8:00 PM (Prev Day)",
+    slug: "22436-vande-bharat-express-chart-times",
+  },
+  {
+    trainNumber: "22435",
+    trainName: "Varanasi Vande Bharat",
+    route: "BSB → NDLS",
+    firstChart: "7:00 AM",
+    slug: "22435-varanasi-vande-bharat-chart-times",
   },
   {
     trainNumber: "12986",
     trainName: "Jaipur Double Decker",
     route: "DEE → JP",
-    firstChart: "9:25 AM",
+    firstChart: "9:25 PM (Prev Day)",
+    slug: "12986-jaipur-double-decker-chart-times",
   },
   {
     trainNumber: "12002",
     trainName: "Bhopal Shatabdi Express",
     route: "NDLS → RKMP",
     firstChart: "8:00 PM (Prev Day)",
+    slug: "12002-bhopal-shatabdi-express-chart-times",
+  },
+  {
+    trainNumber: "12622",
+    trainName: "Tamil Nadu Express",
+    route: "NDLS → MAS",
+    firstChart: "1:55 PM",
+    slug: "12622-tamil-nadu-express-chart-times",
+  },
+  {
+    trainNumber: "12424",
+    trainName: "Dibrugarh Rajdhani Express",
+    route: "NDLS → DBRG",
+    firstChart: "8:20 AM",
+    slug: "12424-dibrugarh-rajdhani-express-chart-times",
+  },
+  {
+    trainNumber: "12051",
+    trainName: "Madgaon Jan Shatabdi",
+    route: "CSMT → MAO",
+    firstChart: "8:00 PM (Prev Day)",
+    slug: "12051-madgaon-jan-shatabdi-chart-times",
+  },
+  {
+    trainNumber: "20901",
+    trainName: "Gandhinagar Vande Bharat",
+    route: "MMCT → GNC",
+    firstChart: "8:00 PM (Prev Day)",
+    slug: "20901-gandhinagar-vande-bharat-chart-times",
   },
 ];
+
+function slugifyChartToken(input: string): string {
+  return (input || "")
+    .toLowerCase()
+    .replace(/&/g, " and ")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .replace(/-{2,}/g, "-");
+}
+
+export function extractTrainNumberFromChartSlug(rawSlug: string): string {
+  const decoded = decodeURIComponent(rawSlug || "").trim();
+  const leading = /^(\d{3,5})(?:-|$)/.exec(decoded);
+  if (leading) return leading[1];
+
+  const anyNum = /\b(\d{4,5})\b/.exec(decoded);
+  if (anyNum) return anyNum[1];
+
+  const cleanSlug = slugifyChartToken(decoded).replace(/-chart-times?$/, "");
+  if (cleanSlug.length >= 3) {
+    const matched = POPULAR_CHART_TRAINS.find((t) => {
+      const s = t.slug.replace(/-chart-times?$/, "");
+      return (
+        s === cleanSlug ||
+        s.includes(cleanSlug) ||
+        slugifyChartToken(t.trainName) === cleanSlug
+      );
+    });
+    if (matched) return matched.trainNumber;
+  }
+
+  return decoded.replace(/\D/g, "").slice(0, 5);
+}
+
+export function buildChartTimeSlug(
+  trainNumber: string,
+  trainName?: string | null,
+  upstreamSlug?: string | null
+): string {
+  const cleanNum = extractTrainNumberFromChartSlug(trainNumber);
+  if (upstreamSlug && upstreamSlug.trim()) {
+    const s = slugifyChartToken(upstreamSlug);
+    if (s.startsWith(cleanNum)) {
+      return s.endsWith("-chart-times") ? s : `${s}-chart-times`;
+    }
+  }
+
+  const catalogMatch = POPULAR_CHART_TRAINS.find(
+    (t) => t.trainNumber === cleanNum
+  );
+  if (catalogMatch) {
+    return catalogMatch.slug;
+  }
+
+  const namePart = slugifyChartToken(trainName || "");
+  if (!namePart || namePart === cleanNum) {
+    return `${cleanNum}-chart-times`;
+  }
+  const stripped = namePart.startsWith(`${cleanNum}-`)
+    ? namePart.slice(cleanNum.length + 1)
+    : namePart.replace(/-chart-times?$/, "");
+  return stripped
+    ? `${cleanNum}-${stripped}-chart-times`
+    : `${cleanNum}-chart-times`;
+}
+
+export function buildChartTimePath(
+  trainNumber: string,
+  trainName?: string | null,
+  upstreamSlug?: string | null
+): string {
+  const slug = buildChartTimeSlug(trainNumber, trainName, upstreamSlug);
+  return slug ? `/chart-times/${slug}` : "/rail/chart-time";
+}
 
 export const FALLBACK_12952_CHART_DATA: UpstreamChartTimeResponse = {
   trainNumber: "12952",
