@@ -108,19 +108,6 @@ export function MetroRouteFinder({
   const toBoxRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setFromSlug(initialFromSlug);
-    setToSlug(initialToSlug);
-    setFromQuery(
-      stationsBySlug.get(initialFromSlug)?.name || initialFromSlug,
-    );
-    setToQuery(stationsBySlug.get(initialToSlug)?.name || initialToSlug);
-    if (initialResult) {
-      setPlanResult(initialResult);
-      setActiveOptionIndex(0);
-    }
-  }, [initialFromSlug, initialToSlug, initialResult, stationsBySlug]);
-
-  useEffect(() => {
     function handleOutside(e: MouseEvent) {
       const target = e.target as Node;
       if (fromBoxRef.current && !fromBoxRef.current.contains(target)) {
@@ -1075,7 +1062,9 @@ export function MetroRouteFinder({
                                           {stIdx + 1}.
                                         </span>
                                         <Link
-                                          href={`/metro/${stop.slug}`}
+                                          href={buildMetroStationPath(
+                                            stop.slug,
+                                          )}
                                           className="font-semibold text-ink hover:text-[#1956b4] hover:underline"
                                         >
                                           {stop.name}
@@ -1119,7 +1108,9 @@ export function MetroRouteFinder({
                                     : "Alight for Interchange"}
                                 </span>
                                 <Link
-                                  href={`/metro/${seg.toStation.slug}`}
+                                  href={buildMetroStationPath(
+                                    seg.toStation.slug,
+                                  )}
                                   className="text-sm font-extrabold text-ink hover:text-[#1956b4] hover:underline sm:text-base"
                                 >
                                   {seg.toStation.name}

@@ -15,8 +15,10 @@ import {
   getMetroStationBySlugOrId,
 } from "@/lib/metro-service";
 import {
+  buildMetroLinePath,
   buildMetroRoutePath,
   buildMetroRouteSlug,
+  buildMetroStationPath,
   POPULAR_METRO_ROUTES,
   parseMetroRouteSlug,
 } from "@/lib/metro-types";
@@ -30,7 +32,7 @@ export async function generateStaticParams() {
     "yellow-line",
     "blue-line",
     "blue-line-vaishali",
-    "green-line",
+    "green-line", 
     "violet-line",
     "pink-line",
     "magenta-line",
@@ -86,12 +88,12 @@ export async function generateMetadata({
           "DMRC Fare Calculator",
         ],
         alternates: {
-          canonical: `/metro/${plan.routeSlug}`,
+          canonical: `/delhi-metro/route/${plan.routeSlug}`,
         },
         openGraph: {
           title: `${fromName} to ${toName} Metro Route — ₹${rec.fare.tokenFareInr} Fare, ${rec.totalDurationMin} Mins & ${rec.totalStops} Stops`,
           description: `${fromName} to ${toName} by Delhi Metro takes ~${rec.totalDurationMin} mins (${rec.totalStops} stops, ${rec.totalDistanceKm} km) with ₹${rec.fare.tokenFareInr} token fare (${changeText}).`,
-          url: `https://traveladda.in/metro/${plan.routeSlug}`,
+          url: `https://traveladda.in/delhi-metro/route/${plan.routeSlug}`,
           type: "article",
         },
       };
@@ -104,7 +106,7 @@ export async function generateMetadata({
       title: `Delhi Metro ${line.badge} — All ${line.totalStops} Stations, Route Map, Interchanges & Timings | TravelAdda`,
       description: `Complete station list and route guide for Delhi NCR Metro ${line.badge} (${line.fromStationName} to ${line.toStationName}): ${line.totalStops} stations, ${line.totalDistanceKm} km length, ~${line.totalDurationMin} mins travel time, interchanges & fares.`,
       alternates: {
-        canonical: `/metro/${line.slug}`,
+        canonical: buildMetroLinePath(line.slug),
       },
     };
   }
@@ -115,7 +117,7 @@ export async function generateMetadata({
       title: `${station.name} Metro Station — Route Planner, Lines, First/Last Train (${station.firstTrain}) & Fares | Delhi NCR Metro`,
       description: `Find metro routes from ${station.name} Metro Station in Delhi NCR. Check connecting metro lines, first train (${station.firstTrain}), last train (${station.lastTrain}), interchange details, and token/smart card fares.`,
       alternates: {
-        canonical: `/metro/${station.slug}`,
+        canonical: buildMetroStationPath(station.slug),
       },
     };
   }
@@ -226,13 +228,13 @@ export default async function MetroDynamicSeoPage({
           "@type": "ListItem",
           position: 2,
           name: "Delhi NCR Metro",
-          item: "https://traveladda.in/metro",
+          item: "https://traveladda.in/delhi-metro",
         },
         {
           "@type": "ListItem",
           position: 3,
           name: `${fromSt.name} to ${toSt.name} Metro`,
-          item: `https://traveladda.in/metro/${plan.routeSlug}`,
+          item: `https://traveladda.in/delhi-metro/route/${plan.routeSlug}`,
         },
       ],
     };
@@ -277,7 +279,10 @@ export default async function MetroDynamicSeoPage({
                 Home
               </Link>
               <span>/</span>
-              <Link href="/metro" className="hover:text-white hover:underline">
+              <Link
+                href="/delhi-metro"
+                className="hover:text-white hover:underline"
+              >
                 Delhi NCR Metro
               </Link>
               <span>/</span>
@@ -395,7 +400,7 @@ export default async function MetroDynamicSeoPage({
                   <tr className="bg-card font-semibold text-ink">
                     <td className="px-3.5 py-3 font-extrabold">
                       <Link
-                        href={`/metro/${fromSt.slug}`}
+                        href={buildMetroStationPath(fromSt.slug)}
                         className="text-[#1956b4] hover:underline dark:text-blue-300"
                       >
                         {fromSt.name}
@@ -403,7 +408,7 @@ export default async function MetroDynamicSeoPage({
                     </td>
                     <td className="px-3.5 py-3 font-extrabold">
                       <Link
-                        href={`/metro/${toSt.slug}`}
+                        href={buildMetroStationPath(toSt.slug)}
                         className="text-[#1956b4] hover:underline dark:text-blue-300"
                       >
                         {toSt.name}
@@ -481,7 +486,7 @@ export default async function MetroDynamicSeoPage({
                         </td>
                         <td className="px-3.5 py-2.5 font-bold text-ink">
                           <Link
-                            href={`/metro/${stop.slug}`}
+                            href={buildMetroStationPath(stop.slug)}
                             className="hover:text-[#1956b4] hover:underline"
                           >
                             {stop.name}
@@ -583,6 +588,32 @@ export default async function MetroDynamicSeoPage({
                 );
               })}
             </div>
+
+            <details className="group mt-4 border-t border-line pt-4">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-2 text-xs font-extrabold text-[#1956b4] [&::-webkit-details-marker]:hidden dark:text-blue-300">
+                <span>
+                  Explore All {network.stops.length - 1} Metro Routes from{" "}
+                  {fromSt.name} to Every Delhi NCR Station (A–Z)
+                </span>
+                <span className="rounded-lg border border-line bg-subcard px-2.5 py-1 text-[11px] font-bold">
+                  Show All Combinations ▼
+                </span>
+              </summary>
+              <div className="mt-3 grid grid-cols-2 gap-1.5 sm:grid-cols-3 md:grid-cols-4">
+                {[...network.stops]
+                  .filter((s) => s.id !== fromSt.id)
+                  .sort((a, b) => a.name.localeCompare(b.name))
+                  .map((dest) => (
+                    <Link
+                      key={`all-${fromSt.slug}-to-${dest.slug}`}
+                      href={buildMetroRoutePath(fromSt.slug, dest.slug)}
+                      className="truncate rounded-lg border border-line/70 bg-subcard/30 px-2.5 py-1.5 text-[11px] font-semibold text-ink-soft transition hover:border-[#1956b4] hover:text-[#1956b4]"
+                    >
+                      {fromSt.name} to {dest.name}
+                    </Link>
+                  ))}
+              </div>
+            </details>
           </section>
         </div>
       </div>
@@ -616,7 +647,10 @@ export default async function MetroDynamicSeoPage({
                 Home
               </Link>
               <span>/</span>
-              <Link href="/metro" className="hover:text-white hover:underline">
+              <Link
+                href="/delhi-metro"
+                className="hover:text-white hover:underline"
+              >
                 Delhi NCR Metro
               </Link>
               <span>/</span>
@@ -695,7 +729,7 @@ export default async function MetroDynamicSeoPage({
                       </td>
                       <td className="px-3.5 py-2.5 font-extrabold text-ink">
                         <Link
-                          href={`/metro/${st.slug}`}
+                          href={buildMetroStationPath(st.slug)}
                           className="hover:text-[#1956b4] hover:underline"
                         >
                           {st.name}
@@ -786,7 +820,10 @@ export default async function MetroDynamicSeoPage({
                 Home
               </Link>
               <span>/</span>
-              <Link href="/metro" className="hover:text-white hover:underline">
+              <Link
+                href="/delhi-metro"
+                className="hover:text-white hover:underline"
+              >
                 Delhi NCR Metro
               </Link>
               <span>/</span>
@@ -874,6 +911,32 @@ export default async function MetroDynamicSeoPage({
                 );
               })}
             </div>
+
+            <details className="group mt-5 border-t border-line pt-4">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-2 text-xs font-extrabold text-[#1956b4] [&::-webkit-details-marker]:hidden dark:text-blue-300">
+                <span>
+                  All {network.stops.length - 1} Metro Route Combinations from{" "}
+                  {station.name} (A–Z Stations)
+                </span>
+                <span className="rounded-lg border border-line bg-subcard px-2.5 py-1 text-[11px] font-bold">
+                  View All {network.stops.length - 1} Routes ▼
+                </span>
+              </summary>
+              <div className="mt-3 grid grid-cols-2 gap-1.5 sm:grid-cols-3 md:grid-cols-4">
+                {[...network.stops]
+                  .filter((s) => s.id !== station.id)
+                  .sort((a, b) => a.name.localeCompare(b.name))
+                  .map((dest) => (
+                    <Link
+                      key={`st-${station.slug}-to-${dest.slug}`}
+                      href={buildMetroRoutePath(station.slug, dest.slug)}
+                      className="truncate rounded-lg border border-line/70 bg-subcard/30 px-2.5 py-1.5 text-[11px] font-semibold text-ink-soft transition hover:border-[#1956b4] hover:text-[#1956b4]"
+                    >
+                      {station.name} to {dest.name}
+                    </Link>
+                  ))}
+              </div>
+            </details>
           </section>
         </div>
       </div>

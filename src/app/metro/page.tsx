@@ -12,7 +12,9 @@ import {
   fetchCachedMetroRoutePlan,
 } from "@/lib/metro-service";
 import {
+  buildMetroLinePath,
   buildMetroRoutePath,
+  buildMetroStationPath,
   POPULAR_METRO_ROUTES,
 } from "@/lib/metro-types";
 
@@ -27,20 +29,21 @@ export const metadata: Metadata = {
     "Delhi Metro Fare Calculator",
     "Delhi NCR Metro Timings",
     "Delhi Metro Map Stations",
+    "MG Road to Anand Vihar Metro Route",
     "Rajiv Chowk to Huda City Centre Metro",
     "New Delhi to IGI Airport Metro Route",
     "Noida Aqua Line Route",
     "Gurgaon Rapid Metro Route",
   ],
   alternates: {
-    canonical: "/metro",
+    canonical: "/delhi-metro",
   },
   openGraph: {
     title:
       "Delhi NCR Metro Route, Fare, Timings & Interchange Planner | TravelAdda",
     description:
       "Find the fastest or minimum-interchange Delhi NCR Metro route across all 262 stations and 12 metro lines with official token & smart card fares.",
-    url: "https://traveladda.in/metro",
+    url: "https://traveladda.in/delhi-metro",
     type: "website",
   },
 };
@@ -84,7 +87,7 @@ export default async function MetroHubPage() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "Delhi NCR Metro Route, Fare & Interchange Planner",
-    url: "https://traveladda.in/metro",
+    url: "https://traveladda.in/delhi-metro",
     applicationCategory: "TravelApplication",
     operatingSystem: "All",
     description:
@@ -124,7 +127,7 @@ export default async function MetroHubPage() {
         "@type": "ListItem",
         position: 2,
         name: "Delhi NCR Metro Route & Fare Finder",
-        item: "https://traveladda.in/metro",
+        item: "https://traveladda.in/delhi-metro",
       },
     ],
   };
@@ -343,7 +346,7 @@ export default async function MetroHubPage() {
 
                 <div className="mt-3 flex items-center justify-between gap-2 border-t border-line pt-2.5 text-xs font-bold">
                   <Link
-                    href={`/metro/${line.slug}`}
+                    href={buildMetroLinePath(line.slug)}
                     className="text-[#1956b4] hover:underline dark:text-blue-300"
                   >
                     View {line.totalStops} Stations →
@@ -489,7 +492,7 @@ export default async function MetroHubPage() {
             {majorInterchanges.map((st) => (
               <Link
                 key={st.id}
-                href={`/metro/${st.slug}`}
+                href={buildMetroStationPath(st.slug)}
                 className="flex items-center justify-between gap-2 rounded-xl border border-line bg-subcard/40 px-3.5 py-2.5 text-xs transition hover:border-[#1956b4] hover:bg-card"
               >
                 <div className="min-w-0">
@@ -544,7 +547,7 @@ export default async function MetroHubPage() {
                 .map((st) => (
                   <Link
                     key={st.id}
-                    href={`/metro/${st.slug}`}
+                    href={buildMetroStationPath(st.slug)}
                     className="truncate rounded-lg border border-line/70 bg-subcard/30 px-2.5 py-1.5 text-xs font-semibold text-ink-soft transition hover:border-[#1956b4] hover:text-[#1956b4]"
                   >
                     {st.name}

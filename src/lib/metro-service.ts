@@ -460,6 +460,7 @@ function computeDijkstraOption(
           stopsCount: nextStops,
           prevKey: curr.key,
           edgeUsed: {
+            from: curr.stopId,
             ...edge,
             transferSecAdded: transferSec,
           },

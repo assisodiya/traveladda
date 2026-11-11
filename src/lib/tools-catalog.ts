@@ -91,7 +91,7 @@ export const TOOL_CATEGORIES: ToolCategoryGroup[] = [
         shortTitle: "Delhi Metro",
         description:
           "Find fastest & min-interchange routes, fares & timings across all 12 DMRC, Noida Aqua & Rapid Metro lines",
-        href: "/metro",
+        href: "/delhi-metro",
         badge: "NEW",
         iconKey: "train",
       },

@@ -74,7 +74,7 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/metro"
+                  href="/delhi-metro"
                   className="font-medium text-ink-soft transition hover:text-[#1956b4] dark:hover:text-blue-300"
                 >
                   Delhi NCR Metro Route &amp; Fare
