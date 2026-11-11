@@ -244,6 +244,52 @@ html.dark .ta-input:focus {
   animation: taTrackDash 1.3s linear infinite;
 }
 
+@keyframes taPlaneFloat {
+  0%,
+  100% {
+    transform: translateY(0px) rotate(-6deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(4deg);
+  }
+}
+
+@keyframes taRadarSweep {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes taTrainGlide {
+  0% {
+    transform: translateX(-12%);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateX(12%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-12%);
+    opacity: 0.7;
+  }
+}
+
+.ta-404-plane {
+  animation: taPlaneFloat 3.6s ease-in-out infinite;
+}
+
+.ta-404-radar-sweep {
+  animation: taRadarSweep 6s linear infinite;
+}
+
+.ta-404-train-glide {
+  animation: taTrainGlide 5s ease-in-out infinite;
+}
+
 /* Clean touch horizontal scrollbars */
 .ta-no-scrollbar {
   -ms-overflow-style: none;

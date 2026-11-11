@@ -3268,6 +3268,491 @@ export const METRO_BLOG_POSTS: BlogPost[] = [
       },
     ],
   },
+  {
+    slug: "how-to-recharge-delhi-metro-smart-card-online-avm-top-up-balance-check",
+    domain: "metro",
+    title:
+      "How to Recharge Delhi Metro Smart Card Online (UPI, Paytm, PhonePe) & Check Balance at AVM Machine",
+    excerpt:
+      "Recharged your Delhi Metro card online via UPI, Paytm, or PhonePe but the gate still shows low balance? Learn the mandatory 5-second AVM 'Top-Up' validation step, how to check your card balance, minimum ₹10 entry rules, and NCMC vs DMRC Smart Card differences.",
+    category: "Metro Fare & Tickets",
+    readTime: "7 min read",
+    publishedDate: "November 2026",
+    publishedIso: "2026-11-11",
+    author: {
+      name: "Siddharth Verma",
+      role: "Urban Transit & NCR Mobility Analyst",
+    },
+    accentColor: "from-blue-600 via-indigo-600 to-emerald-600",
+    heroTagline: "Step-by-Step DMRC Smart Card & NCMC Online Recharge + AVM Top-Up Guide",
+    primaryKeyword: "how to recharge delhi metro card online",
+    seoKeywords: [
+      "how to recharge delhi metro card online",
+      "how to check delhi metro card balance online",
+      "dmrc smart card avm top up validation",
+      "delhi metro card recharge paytm phonepe upi",
+      "minimum balance required in delhi metro card",
+      "ncmc card vs dmrc smart card recharge",
+      "dmrc smart card security deposit refund rules",
+    ],
+    keyTakeaways: [
+      "After recharging a classic DMRC Smart Card online (via UPI, Paytm, PhonePe, Amazon Pay, or DMRC app), you MUST tap your card on the AVM (Add Value Machine) at any metro station and press 'Top-Up' to load the money onto the card's offline chip.",
+      "You need a minimum balance of ₹10 on your DMRC Smart Card to enter the AFC gates at any station (and up to ₹50 negative exit grace if your trip fare exceeds your remaining balance).",
+      "Unlike apps that only show your last online payment, your exact live chip balance is displayed on the AVM touchscreen at any station and on the AFC gate LED screen every time you exit.",
+    ],
+    quickActionLinks: [
+      {
+        label: "Calculate Exact Metro Fare & Smart Card Discount",
+        sublabel: "Compare Token vs 10% Peak & 20% Off-Peak Card fare",
+        href: "/delhi-metro",
+      },
+      {
+        label: "Read Full Delhi Metro Fare Slab Chart (2026)",
+        sublabel: "Weekday, Sunday & WhatsApp QR ticket rules",
+        href: "/blog/delhi-metro-fare-chart-smart-card-ncmc-whatsapp-qr-ticket-guide",
+      },
+      {
+        label: "MG Road → Anand Vihar Metro Route & Fare",
+        sublabel: "Check Smart Card Peak & Off-Peak savings",
+        href: "/delhi-metro/route/mg-road-to-anand-vihar",
+      },
+    ],
+    sections: [
+      {
+        heading: "1. How to Recharge Your Delhi Metro Smart Card Online (Step-by-Step)",
+        paragraphs: [
+          "Every classic DMRC Smart Card has an 8 to 10-digit unique engraved card number printed on the back. You can recharge it in under 30 seconds from any major UPI or wallet app (minimum recharge ₹100, in multiples of ₹50, up to ₹3,000 maximum card balance).",
+        ],
+        bullets: [
+          {
+            label: "Step 1: Enter Your 8 to 10-Digit DMRC Card Number",
+            detail:
+              "Open Paytm, PhonePe, Google Pay, Amazon Pay, or the official DMRC Momentum 2.0 app → tap 'Metro Recharge' → select 'Delhi Metro' → type the card number printed on the back of your card and pay via UPI.",
+          },
+          {
+            label: "Step 2 (CRITICAL): Validate at the Station AVM (Add Value Machine)",
+            detail:
+              "Because classic DMRC Smart Cards store balance offline on the card's MIFARE chip (for instant 0.2-second gate opening), an online payment does NOT update your physical card until you place the card on the yellow/blue AVM kiosk near Customer Care and tap 'Top-Up' on the screen!",
+          },
+          {
+            label: "How Long Is an Unvalidated Online Recharge Valid?",
+            detail:
+              "Your online recharge stays queued on the DMRC server for up to 30 days. Whenever you next visit any of the 262 Delhi Metro stations, place your card on the AVM slot for 3 seconds to credit the balance.",
+          },
+        ],
+      },
+      {
+        heading: "2. How to Check Delhi Metro Card Balance & Minimum Balance Conditions",
+        paragraphs: [
+          "Many commuters search for a live online balance checker, but because classic DMRC Smart Cards store their balance directly on the physical card chip rather than in the cloud, here are the 3 accurate ways to check your balance:",
+        ],
+        bullets: [
+          {
+            label: "1. At Any Station AVM (Add Value Machine) Kiosk",
+            detail:
+              "Place your Smart Card in the reader slot of any AVM near the entry gates and tap 'Card Balance / Enquiry'—it displays your exact remaining balance and last 5 transactions.",
+          },
+          {
+            label: "2. On the AFC Exit Gate Screen When Leaving a Station",
+            detail:
+              "Every time you tap out at your destination station, the AFC gate's top display shows the fare deducted (with 10% or 20% discount applied) and your remaining card balance.",
+          },
+          {
+            label: "3. Minimum ₹10 Entry Condition & Negative Balance Exit Grace",
+            detail:
+              "Your card must have at least ₹10 balance to open the Entry AFC gate. If you enter with ₹15 and take a ₹40 ride, the Exit gate will allow you to exit (taking your card to -₹25 against your ₹50 security deposit), and the negative amount is automatically adjusted on your next recharge.",
+          },
+          {
+            label: "4. NCMC (One Nation One Card) vs Classic DMRC Smart Card",
+            detail:
+              "NCMC Rupay cards require offline 'Balance Update' at Customer Care/AVM after UPI top-up, and while NCMC works across Airport Express, DMRC, and Noida Aqua Line, only the classic DMRC Smart Card unlocks the 10% Peak / 20% Off-Peak fare discount.",
+          },
+        ],
+        callout: {
+          title: "What If Your DMRC Smart Card Stops Working or Gets Damaged?",
+          text: "Hand over the unreadable or expired Smart Card at any station's Customer Care counter. If the card is not physically broken/bent, DMRC transfers your remaining balance to a replacement card (or revalidates an inactive card for free even if unused for over 1 year).",
+        },
+      },
+    ],
+    faqs: [
+      {
+        question: "Why is my online Delhi Metro card recharge not showing at the entry gate?",
+        answer:
+          "After paying online via Paytm, PhonePe, or UPI, you must place your physical DMRC Smart Card on the AVM (Add Value Machine) kiosk located near the Customer Care booth at any metro station and tap 'Top-Up' to write the balance onto the card chip.",
+      },
+      {
+        question: "What is the minimum balance required to enter Delhi Metro with a Smart Card?",
+        answer:
+          "A minimum balance of ₹10 is required on a DMRC Smart Card to enter the AFC gates at any regular DMRC station.",
+      },
+      {
+        question: "Does a Delhi Metro Smart Card expire if not used for a year?",
+        answer:
+          "If a DMRC Smart Card is not used for a long period, it only becomes temporarily inactive—your balance is never forfeited. Simply tap it at any station Customer Care counter and the operator will reactivate it immediately at no extra cost.",
+      },
+    ],
+  },
+  {
+    slug: "delhi-metro-luggage-baggage-allowance-prohibited-items-liquor-pet-rules",
+    domain: "metro",
+    title:
+      "Delhi Metro Luggage & Baggage Allowance 2026: Weight Limit (25 kg), Bag Size, 2 Liquor Bottles Rule & Prohibited Items",
+    excerpt:
+      "Can you carry a large check-in suitcase, tools, or sealed alcohol bottles inside Delhi Metro? Check the official 2026 DMRC & CISF baggage weight limits (25 kg on regular lines vs 32 kg on Airport Express), maximum bag dimensions, and restricted items list.",
+    category: "Delhi Metro Guide",
+    readTime: "8 min read",
+    publishedDate: "November 2026",
+    publishedIso: "2026-11-11",
+    author: {
+      name: "Siddharth Verma",
+      role: "Urban Transit & NCR Mobility Analyst",
+    },
+    accentColor: "from-rose-600 via-orange-600 to-amber-500",
+    heroTagline: "Official DMRC & CISF Security Check Baggage, Liquor & Restricted Items Rules",
+    primaryKeyword: "delhi metro luggage limit and prohibited items",
+    seoKeywords: [
+      "delhi metro luggage limit and prohibited items",
+      "how much weight is allowed in delhi metro",
+      "is alcohol allowed in delhi metro 2 bottles rule",
+      "delhi metro bag size limit",
+      "are pets allowed in delhi metro",
+      "airport express line luggage limit 32 kg",
+      "cisf prohibited items in delhi metro",
+    ],
+    keyTakeaways: [
+      "On regular DMRC lines (Red, Yellow, Blue, Green, Violet, Pink, Magenta, Grey), passengers can carry 1 bag up to 25 kg with maximum dimensions of 80 cm × 50 cm × 30 cm.",
+      "On the Orange Airport Express Line, flyers can carry 2 check-in suitcases up to 32 kg each (maximum 90 cm × 75 cm × 45 cm) with dedicated in-coach luggage racks.",
+      "DMRC allows carrying up to 2 sealed bottles of alcohol per adult passenger across Delhi Metro corridors (subject to state excise limits when entering UP/Noida or Haryana/Gurgaon).",
+    ],
+    quickActionLinks: [
+      {
+        label: "New Delhi → IGI Airport Metro Route",
+        sublabel: "Orange Airport Express (32 kg × 2 bags allowed)",
+        href: "/delhi-metro/route/new-delhi-to-igi-airport",
+      },
+      {
+        label: "Calculate Flight Cabin & Check-In Baggage Fees",
+        sublabel: "Compare airline baggage vs metro luggage limits",
+        href: "/tools/air",
+      },
+      {
+        label: "Plan Any Station-to-Station Metro Route",
+        sublabel: "Check interchanges, travel time & fares",
+        href: "/delhi-metro",
+      },
+    ],
+    sections: [
+      {
+        heading: "1. Official DMRC Baggage Weight & Size Limits (Regular Lines vs Airport Express)",
+        paragraphs: [
+          "Every bag entering a Delhi NCR Metro station passes through a CISF X-ray baggage scanner equipped with a metal U-shaped size gauge at the conveyor entrance. If a bag or commercial bundle exceeds the size gauge or weight limit, CISF personnel will deny entry at security.",
+        ],
+        bullets: [
+          {
+            label: "Regular DMRC Lines (Yellow, Blue, Red, Pink, Magenta, Violet, Green, Grey)",
+            detail:
+              "Maximum Weight: 25 kg • Maximum Dimensions: 80 cm (length) × 50 cm (width) × 30 cm (height) • Allowance: 1 medium/large suitcase plus a small handbag/laptop backpack per passenger. Unpacked commercial sacks/bundles (boris) are strictly prohibited.",
+          },
+          {
+            label: "Orange Airport Express Line (New Delhi ↔ IGI Airport T3 ↔ Yashobhoomi)",
+            detail:
+              "Maximum Weight: 32 kg per bag (up to 2 bags per passenger) • Maximum Dimensions: 90 cm × 75 cm × 45 cm • Specially designed for international and domestic airline passengers with wide AFC gates and onboard luggage racks.",
+          },
+        ],
+      },
+      {
+        heading: "2. The 2 Sealed Liquor Bottles Rule, Pets & CISF Prohibited Items Checklist",
+        paragraphs: [
+          "Knowing what CISF security screens for at the X-ray machine prevents last-minute confiscation or delays when catching a train or flight.",
+        ],
+        bullets: [
+          {
+            label: "Alcohol Rule: Up to 2 Sealed Bottles Permitted",
+            detail:
+              "Following DMRC & CISF committee guidelines, adult passengers are permitted to carry up to two completely sealed bottles of liquor inside the Delhi Metro on all lines. Unsealed/opened bottles and drinking alcohol inside stations or trains are strictly prohibited. Note: If travelling into Noida (UP) or Gurgaon/Faridabad (Haryana), state excise cross-border possession rules still apply.",
+          },
+          {
+            label: "Sharp Objects, Tools & Flammables (Strictly Prohibited)",
+            detail:
+              "Knives (even small kitchen/Swiss knives over 4 inches), box cutters, screwdrivers/heavy metal tools, cigarette lighters, matchboxes, firecrackers, petrol/kerosene, paint cans, and compressed gas cylinders are confiscated at X-ray.",
+          },
+          {
+            label: "Pets, Animals & Bicycles",
+            detail:
+              "Pets (dogs, cats, birds—even inside cages/carriers) and full-size non-folding bicycles are NOT permitted inside Delhi Metro trains.",
+          },
+          {
+            label: "What About Self-Defense Pepper Spray for Women?",
+            detail:
+              "Women commuters are permitted to carry a small pocket-sized self-defense pepper spray canister through CISF security after declaration at the frisking booth.",
+          },
+        ],
+        callout: {
+          title: "Travelling to Terminal 1 (T1) with Heavy Airline Check-In Bags?",
+          text: "Terminal 1 IGI Airport is on the Magenta Line (regular DMRC rules: 25 kg max per bag). If you are carrying two 23–30 kg international suitcases for a connecting flight, verify your terminal on TravelAdda's Live Flight Status tracker first!",
+        },
+      },
+    ],
+    faqs: [
+      {
+        question: "How much luggage weight is allowed in Delhi Metro?",
+        answer:
+          "Passengers can carry 1 piece of luggage weighing up to 25 kg (up to 80 cm × 50 cm × 30 cm) on regular DMRC lines, and up to 2 bags of 32 kg each (90 cm × 75 cm × 45 cm) on the Orange Airport Express Line.",
+      },
+      {
+        question: "Are sealed liquor bottles allowed in Delhi Metro?",
+        answer:
+          "Yes, DMRC permits carrying up to 2 sealed bottles of alcohol per adult passenger across all metro corridors, provided the seal is intact and the passenger is not intoxicated.",
+      },
+      {
+        question: "Are cigarette lighters or matchboxes allowed in Delhi Metro?",
+        answer:
+          "No. All flammable items including cigarette lighters, matchboxes, and firecrackers are strictly prohibited past CISF security checks.",
+      },
+    ],
+  },
+  {
+    slug: "delhi-metro-coach-seat-guide-ladies-coach-reserved-seats-fines-penalties",
+    domain: "metro",
+    title:
+      "Delhi Metro Coach & Seat Guide: First Coach Ladies Reservation, Senior Citizen Seats & Official DMRC Fines Chart",
+    excerpt:
+      "Which coach is reserved for women in Delhi Metro? Understand the First Coach in Moving Direction rule, red/burgundy reserved seats in general coaches, and the official DMRC penalty table for sitting on the floor, eating, or obstructing train doors.",
+    category: "Delhi Metro Guide",
+    readTime: "7 min read",
+    publishedDate: "November 2026",
+    publishedIso: "2026-11-11",
+    author: {
+      name: "Siddharth Verma",
+      role: "Urban Transit & NCR Mobility Analyst",
+    },
+    accentColor: "from-pink-600 via-rose-600 to-indigo-700",
+    heroTagline: "Complete Guide to DMRC Coach Layout, Reserved Seating & O&M Act Penalties",
+    primaryKeyword: "delhi metro ladies coach and seat rules",
+    seoKeywords: [
+      "delhi metro ladies coach and seat rules",
+      "which coach is ladies coach in delhi metro",
+      "fine for entering ladies coach in delhi metro",
+      "sitting on floor in delhi metro fine",
+      "dmrc fines and penalties list",
+      "senior citizen reserved seats in delhi metro",
+      "playing loud reels music in delhi metro fine",
+    ],
+    keyTakeaways: [
+      "The VERY FIRST COACH in the moving direction of every Delhi Metro train (except the Airport Express Line) is exclusively reserved for women at all hours of the day.",
+      "In every general coach, designated seats (marked with overhead stickers and distinct seat colors) are reserved for Women, Senior Citizens, and Persons with Disabilities (Divyangjan).",
+      "Under the Delhi Metro Railway (Operation & Maintenance) Act, entering the Ladies Coach carries a ₹250 fine, sitting on the coach floor or eating/spitting carries a ₹200 fine, and obstructing doors carries up to ₹1,000–₹5,000 or prosecution.",
+    ],
+    quickActionLinks: [
+      {
+        label: "Plan Your Delhi NCR Metro Route",
+        sublabel: "Check platform direction, stops, time & fare",
+        href: "/delhi-metro",
+      },
+      {
+        label: "Rajiv Chowk → Huda City Centre Route",
+        sublabel: "8-coach Yellow Line platform & direction guide",
+        href: "/delhi-metro/route/rajiv-chowk-to-huda-city-centre",
+      },
+      {
+        label: "Kashmere Gate → Raja Nahar Singh Route",
+        sublabel: "Violet Line corridor & interchange guide",
+        href: "/delhi-metro/route/kashmere-gate-to-raja-nahar-singh",
+      },
+    ],
+    sections: [
+      {
+        heading: "1. How to Spot the Ladies Coach & Reserved Seats Inside General Coaches",
+        paragraphs: [
+          "Delhi Metro operates 6-coach and 8-coach trains across its corridors. Whether it is 6:00 AM or 11:00 PM on a weekday or Sunday, the **first coach in the moving direction of the train** is 100% reserved for women passengers.",
+        ],
+        bullets: [
+          {
+            label: "Coach 1 (First Coach in Direction of Travel) = Ladies Coach",
+            detail:
+              "Look for the bright pink 'Women Only / महिला कोच' boards and pink floor markings at the front end of every platform. Boys up to 12 years of age accompanying a female passenger are allowed in the Ladies Coach.",
+          },
+          {
+            label: "Reserved Seats in General Coaches (Coaches 2 to 6/8)",
+            detail:
+              "Inside every general coach, pairs of seats near the doors and middle bays (often highlighted in red/burgundy or clearly labeled above the window) are reserved for Senior Citizens, Persons with Disabilities (Divyangjan), and Women.",
+          },
+          {
+            label: "Wheelchair & Stretcher Bay in End Coaches",
+            detail:
+              "The first and last coaches of every train feature a dedicated open bay with foldable tip-up seats, safety belts, and a low-height emergency intercom button for wheelchair users.",
+          },
+        ],
+      },
+      {
+        heading: "2. Official DMRC Fines, Penalties & Travelling Conditions (O&M Act)",
+        paragraphs: [
+          "DMRC flying squads and CISF teams conduct regular surprise checks across all lines. Below are the official on-the-spot fines under the Delhi Metro Railway (Operation and Maintenance) Act:",
+        ],
+        bullets: [
+          {
+            label: "Male Passenger Entering the Ladies Coach (Section 64)",
+            detail:
+              "On-the-spot fine of ₹250 plus immediate deboarding from the reserved coach.",
+          },
+          {
+            label: "Sitting on the Coach Floor / Blocking Gangways or Escalators (Section 59)",
+            detail:
+              "Sitting squat on the train floor, playing loud music/reels without earphones, or creating nuisance attracts a ₹200 penalty and forfeiture of fare.",
+          },
+          {
+            label: "Eating, Drinking, Spitting or Littering Inside Trains/Stations (Section 59)",
+            detail:
+              "Eating food, chewing gum/gutkha, or spitting inside metro premises or coaches carries an immediate ₹200 fine.",
+          },
+          {
+            label: "Obstructing Train Doors or Misusing Emergency Alarms (Section 62/67)",
+            detail:
+              "Blocking automatic sliding doors with hands/bags or pulling the Passenger Emergency Alarm without valid reason carries a penalty up to ₹1,000–₹5,000 and/or imprisonment.",
+          },
+          {
+            label: "Overstaying Inside the Paid Area",
+            detail:
+              "Exiting the same station after 20 minutes or exceeding the journey time limit (65 mins for ₹10–₹20 fare, 100 mins for ₹30 fare, 180 mins for ₹40–₹60 fare) incurs a ₹10 per hour penalty (maximum ₹50).",
+          },
+        ],
+        callout: {
+          title: "Women's Safety Helpline Inside Delhi Metro",
+          text: "In case of any emergency or harassment inside a coach, press the red PEA (Passenger Emergency Alarm) button next to any door to speak directly with the Train Operator, or call the 24x7 DMRC Helpline at 155370 or CISF Control Room at 155655.",
+        },
+      },
+    ],
+    faqs: [
+      {
+        question: "Which coach is the Ladies Coach in Delhi Metro?",
+        answer:
+          "The first coach in the moving direction of the train (Coach 1 at the front of the platform) is reserved exclusively for women at all times on all DMRC lines (except the Airport Express Line).",
+      },
+      {
+        question: "What is the fine for sitting on the floor in Delhi Metro?",
+        answer:
+          "Sitting on the floor of a Delhi Metro coach is treated as a nuisance/obstruction under Section 59 of the DMRC O&M Act and carries a ₹200 fine.",
+      },
+      {
+        question: "Can a male passenger travel with his wife or mother inside the Ladies Coach?",
+        answer:
+          "No. Adult male passengers (even when accompanying female family members) are not allowed inside the First Coach (Ladies Coach); families travelling together should board Coaches 2 to 8.",
+      },
+    ],
+  },
+  {
+    slug: "delhi-metro-parking-charges-feeder-electric-buses-e-rickshaw-last-mile-guide",
+    domain: "metro",
+    title:
+      "Delhi Metro Parking Charges 2026: Car, Bike & Night Parking Rates, FASTag Entry & Electric Feeder Bus Guide",
+    excerpt:
+      "Planning to park your car or two-wheeler at a Delhi NCR Metro station? Check the official 2026 DMRC Park-and-Ride tariff slabs (up to 4 hrs, 12 hrs, >12 hrs, night & monthly passes), FASTag/Smart Card parking lots, and last-mile E-Rickshaw & AC Feeder Bus connectivity.",
+    category: "NCR Commuter Guide",
+    readTime: "7 min read",
+    publishedDate: "November 2026",
+    publishedIso: "2026-11-11",
+    author: {
+      name: "Siddharth Verma",
+      role: "Urban Transit & NCR Mobility Analyst",
+    },
+    accentColor: "from-teal-600 via-emerald-600 to-blue-700",
+    heroTagline: "Official DMRC Park-and-Ride Rates, Monthly Passes & Last-Mile Connectivity",
+    primaryKeyword: "delhi metro parking charges",
+    seoKeywords: [
+      "delhi metro parking charges",
+      "dmrc car and bike parking rates 2026",
+      "delhi metro monthly parking pass price",
+      "night parking charges in delhi metro",
+      "which metro stations have car parking in delhi",
+      "delhi metro electric feeder bus and e rickshaw",
+    ],
+    keyTakeaways: [
+      "Over 100+ Delhi NCR Metro stations feature authorized DMRC Park-and-Ride facilities for 4-Wheelers (Cars/SUVs), 2-Wheelers (Bikes/Scooters), and Bicycles.",
+      "Standard DMRC daytime parking slabs are structured into 3 tiers: Up to 4 hours, 4 to 12 hours, and Beyond 12 hours, plus separate Night Parking (11:00 PM to 5:00 AM) and Monthly Commuter Passes.",
+      "Note: DMRC occasionally suspends surface parking for 24–36 hours on 26 January (Republic Day) and 15 August (Independence Day) for security protocols and may apply GRAP Stage-3/4 pollution surcharges when directed by CAQM.",
+    ],
+    quickActionLinks: [
+      {
+        label: "Open Delhi NCR Metro Route & Station Finder",
+        sublabel: "Search all 262 stations & check first/last train timings",
+        href: "/delhi-metro",
+      },
+      {
+        label: "Dwarka Sector 21 → Rajiv Chowk Route",
+        sublabel: "Major Blue Line & Airport Express Park-and-Ride hub",
+        href: "/delhi-metro/route/dwarka-sector-21-to-rajiv-chowk",
+      },
+      {
+        label: "Botanical Garden → Hauz Khas Route",
+        sublabel: "Multi-level parking at Botanical Garden Noida",
+        href: "/delhi-metro/route/botanical-garden-to-hauz-khas",
+      },
+    ],
+    sections: [
+      {
+        heading: "1. Official DMRC Park-and-Ride Tariff Chart (Cars, Two-Wheelers & Cycles)",
+        paragraphs: [
+          "Every authorized DMRC parking lot displays a large blue tariff board at the entry boom barrier and issues a handheld POS machine printed slip (or accepts FASTag / NCMC / UPI). Never pay overcharged flat rates without a printed time-stamped receipt.",
+        ],
+        bullets: [
+          {
+            label: "4-Wheelers (Cars / SUVs / Jeeps)",
+            detail:
+              "Up to 4 Hours: ₹30 • 4 to 12 Hours: ₹50 • More than 12 Hours (Day): ₹60 • Night Parking (11:00 PM to 5:00 AM extra): ₹60 • Monthly Day Pass: ₹1,300 (Day + Night Monthly: ₹2,200).",
+          },
+          {
+            label: "2-Wheelers (Motorcycles / Scooters / EVs)",
+            detail:
+              "Up to 4 Hours: ₹15 • 4 to 12 Hours: ₹25 • More than 12 Hours (Day): ₹30 • Night Parking (11:00 PM to 5:00 AM extra): ₹30 • Monthly Day Pass: ₹600 (Day + Night Monthly: ₹1,000).",
+          },
+          {
+            label: "Bicycles",
+            detail:
+              "Up to 4 Hours: ₹5 • 4 to 12 Hours: ₹5 • More than 12 Hours: ₹10 • Night Parking: ₹10 • Monthly Pass: ₹135.",
+          },
+        ],
+      },
+      {
+        heading: "2. Major Multi-Level Parking Stations & Last-Mile Feeder Connectivity",
+        paragraphs: [
+          "If your home or office is 1 to 4 km away from the nearest metro station, DMRC integrates three dedicated last-mile transport options directly outside station gates:",
+        ],
+        bullets: [
+          {
+            label: "Top Multi-Level & Large Park-and-Ride Metro Hubs",
+            detail:
+              "Kashmere Gate, New Delhi (Airport Line), Dwarka Sector 21, Botanical Garden (Noida), Millennium City Centre Gurugram, IFFCO Chowk,MG Road, Rohini Sector 18, Vishwavidyalaya, Anand Vihar, Noida Sector 62, and Badarpur Border.",
+          },
+          {
+            label: "DMRC/DEVI AC Electric Feeder Buses",
+            detail:
+              "Low-floor air-conditioned electric midi-buses connect residential sectors in Rohini, Dwarka, Vasant Kunj, Saket, East Delhi, and Najafgarh directly to metro stations with fares starting at ₹10–₹25.",
+          },
+          {
+            label: "Smart E-Rickshaws (SmartE / Cab-E) & Public Bicycle Sharing (Yulu / MYBYK)",
+            detail:
+              "GPS-enabled Smart E-Rickshaws operate from dedicated charging stands outside 40+ stations (starting at ₹10–₹15 for the first 2 km), while Yulu and MYBYK electric/pedal cycles can be unlocked via QR code from the DMRC Momentum 2.0 app.",
+          },
+        ],
+        callout: {
+          title: "Security Alert: Republic Day (26 Jan) & Independence Day (15 Aug) Parking Closure",
+          text: "Every year from 6:00 AM on 25 January to 2:00 PM on 26 January (and from 6:00 AM on 14 August to 2:00 PM on 15 August), all Delhi Metro parking lots remain temporarily closed for high-alert security sanitisation.",
+        },
+      },
+    ],
+    faqs: [
+      {
+        question: "What are the car and bike parking charges at Delhi Metro stations?",
+        answer:
+          "For cars (4-wheelers), official DMRC parking charges are ₹30 (up to 4 hours), ₹50 (4–12 hours), and ₹60 (over 12 hours). For two-wheelers (bikes/scooters), charges are ₹15 (up to 4 hours), ₹25 (4–12 hours), and ₹30 (over 12 hours).",
+      },
+      {
+        question: "Can I leave my car overnight in a Delhi Metro parking lot?",
+        answer:
+          "Yes, overnight parking is permitted at most DMRC Park-and-Ride lots with an additional Night Parking charge of ₹60 per night for cars and ₹30 per night for two-wheelers (applicable between 11:00 PM and 5:00 AM).",
+      },
+    ],
+  },
 ];
 
 export const ALL_BLOG_POSTS: BlogPost[] = [
