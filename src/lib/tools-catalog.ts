@@ -85,6 +85,16 @@ export const TOOL_CATEGORIES: ToolCategoryGroup[] = [
         badge: "NEW",
         iconKey: "clock",
       },
+      {
+        id: "delhi-ncr-metro",
+        title: "Delhi NCR Metro Route & Fare",
+        shortTitle: "Delhi Metro",
+        description:
+          "Find fastest & min-interchange routes, fares & timings across all 12 DMRC, Noida Aqua & Rapid Metro lines",
+        href: "/metro",
+        badge: "NEW",
+        iconKey: "train",
+      },
     ],
   },
   {

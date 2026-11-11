@@ -62,7 +62,9 @@ export function Navbar() {
   const isToolsRoute =
     pathname.startsWith("/tools") ||
     pathname.startsWith("/air/") ||
-    pathname.startsWith("/rail/");
+    pathname.startsWith("/rail/") ||
+    pathname.startsWith("/chart-times") ||
+    pathname.startsWith("/metro");
 
   const closeAllMenus = () => {
     if (desktopToolsRef.current) {
