@@ -99,6 +99,7 @@ async function BlogArticleContent({
 
   const isAirPost = post.domain === "air";
   const isHotelPost = post.domain === "hotel";
+  const isMetroPost = post.domain === "metro";
   const sameDomainPosts = ALL_BLOG_POSTS.filter(
     (p) => p.domain === post.domain && p.slug !== post.slug
   ).slice(0, 5);
@@ -120,12 +121,16 @@ async function BlogArticleContent({
     ? "Live Flight Status"
     : isHotelPost
       ? "Hotels & Stays"
-      : "Rail Tools";
+      : isMetroPost
+        ? "Delhi NCR Metro"
+        : "Rail Tools";
   const domainBreadcrumbHref = isAirPost
     ? "/air/flight-status"
     : isHotelPost
       ? "/tools/hotel"
-      : "/rail/live-status";
+      : isMetroPost
+        ? "/delhi-metro"
+        : "/rail/live-status";
 
   const jsonLdGraph: Record<string, unknown>[] = [
     {
@@ -161,21 +166,21 @@ async function BlogArticleContent({
       },
       about: isAirPost
         ? {
-            "@type": "WebApplication",
-            name: "TravelAdda Live Flight Status Tracker",
-            url: "https://traveladda.in/air/flight-status",
-          }
+          "@type": "WebApplication",
+          name: "TravelAdda Live Flight Status Tracker",
+          url: "https://traveladda.in/air/flight-status",
+        }
         : isHotelPost
           ? {
-              "@type": "WebApplication",
-              name: "TravelAdda Hotel Room GST Calculator & Stay Guide",
-              url: "https://traveladda.in/tools/hotel",
-            }
+            "@type": "WebApplication",
+            name: "TravelAdda Hotel Room GST Calculator & Stay Guide",
+            url: "https://traveladda.in/tools/hotel",
+          }
           : {
-              "@type": "WebApplication",
-              name: "TravelAdda Indian Railways Live & PNR Suite",
-              url: "https://traveladda.in/rail/live-status",
-            },
+            "@type": "WebApplication",
+            name: "TravelAdda Indian Railways Live & PNR Suite",
+            url: "https://traveladda.in/rail/live-status",
+          },
     },
     {
       "@type": "BreadcrumbList",
@@ -260,13 +265,12 @@ async function BlogArticleContent({
 
           <div className="mt-4 flex flex-wrap items-center gap-2.5 text-xs">
             <span
-              className={`rounded px-2.5 py-0.5 font-bold ${
-                isAirPost
+              className={`rounded px-2.5 py-0.5 font-bold ${isAirPost
                   ? "bg-blue-50 text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300"
                   : isHotelPost
                     ? "bg-amber-50 text-amber-800 dark:bg-amber-500/15 dark:text-amber-300"
                     : "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300"
-              }`}
+                }`}
             >
               {post.category}
             </span>
@@ -310,7 +314,9 @@ async function BlogArticleContent({
                   ? "Check Flight Status"
                   : isHotelPost
                     ? "Calculate Hotel GST"
-                    : "Spot Train Live"}
+                    : isMetroPost
+                      ? "Find Metro Route & Fare"
+                      : "Spot Train Live"}
               </span>
               <ArrowRightIcon className="h-3.5 w-3.5" />
             </Link>
@@ -532,14 +538,18 @@ async function BlogArticleContent({
                   ? "Check Live Flight Status, Terminal & Boarding Gate"
                   : isHotelPost
                     ? "Calculate Hotel GST Slabs & Track Your Flight or Train"
-                    : "Spot Your Train's Live Station & Coach Position"}
+                    : isMetroPost
+                      ? "Find Fastest Delhi NCR Metro Route, Fare & Interchange Stops"
+                      : "Spot Your Train's Live Station & Coach Position"}
               </h3>
               <p className="mt-0.5 text-xs text-slate-300">
                 {isAirPost
                   ? "Real-time departure, arrival, gate, and baggage carousel updates."
                   : isHotelPost
                     ? "Compare 0%, 12%, and 18% hotel GST slabs and track live PNR & flight arrivals."
-                    : "Real-time station progress, platform numbers, and coach sequence."}
+                    : isMetroPost
+                      ? "Compare Fastest, Minimum Interchange, and Minimum Stops routes across all 12 Delhi NCR Metro lines."
+                      : "Real-time station progress, platform numbers, and coach sequence."}
               </p>
             </div>
             <Link
@@ -551,7 +561,9 @@ async function BlogArticleContent({
                   ? "Track Flight"
                   : isHotelPost
                     ? "Open Hotel Tools"
-                    : "Spot Train"}
+                    : isMetroPost
+                      ? "Open Metro Route Finder"
+                      : "Spot Train"}
               </span>
               <ArrowRightIcon className="h-3.5 w-3.5" />
             </Link>
@@ -618,6 +630,40 @@ async function BlogArticleContent({
                   >
                     <PlaneIcon className="h-3.5 w-3.5 text-[#1956b4] dark:text-blue-400" />
                     <span>Live Flight Status Tracker</span>
+                  </Link>
+                </div>
+              </div>
+            ) : isMetroPost ? (
+              <div className="rounded-2xl border border-line bg-card p-5 shadow-xs">
+                <h3 className="text-base font-extrabold text-ink">
+                  Plan Delhi NCR Metro Route
+                </h3>
+                <p className="mt-1 text-xs leading-relaxed text-ink-soft">
+                  Check station-to-station metro routes, DMRC token &amp; Smart
+                  Card fares, interchanges, and first/last train timings across
+                  all 12 lines.
+                </p>
+                <div className="mt-4 space-y-2">
+                  <Link
+                    href="/delhi-metro"
+                    className="ta-btn-primary inline-flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-xs font-bold"
+                  >
+                    <TrainIcon className="h-3.5 w-3.5" />
+                    <span>Open Metro Route Finder</span>
+                  </Link>
+                  <Link
+                    href="/delhi-metro/route/mg-road-to-anand-vihar"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-line bg-subcard px-4 py-2.5 text-xs font-bold text-ink hover:border-[#1956b4]"
+                  >
+                    <TicketIcon className="h-3.5 w-3.5 text-[#fc6203]" />
+                    <span>MG Road → Anand Vihar Route</span>
+                  </Link>
+                  <Link
+                    href="/delhi-metro/route/new-delhi-to-igi-airport"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-line bg-subcard px-4 py-2.5 text-xs font-bold text-ink hover:border-[#1956b4]"
+                  >
+                    <PlaneIcon className="h-3.5 w-3.5 text-[#1956b4] dark:text-blue-400" />
+                    <span>New Delhi → IGI Airport Route</span>
                   </Link>
                 </div>
               </div>

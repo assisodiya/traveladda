@@ -35,11 +35,17 @@ export type BlogCategory =
   | "AI Travel Tech"
   | "Route Comparisons"
   | "Weekend Getaways"
-  | "Scenic Rail";
+  | "Scenic Rail"
+  | "Delhi Metro Guide"
+  | "Airport Metro Guide"
+  | "Metro Fare & Tickets"
+  | "Metro Phase 4 Updates"
+  | "Rail-to-Metro Transit"
+  | "NCR Commuter Guide";
 
 export interface BlogPost {
   slug: string;
-  domain: "air" | "rail" | "hotel";
+  domain: "air" | "rail" | "hotel" | "metro";
   title: string;
   excerpt: string;
   category: BlogCategory;
@@ -2492,8 +2498,781 @@ export const HOTEL_BLOG_POSTS: BlogPost[] = FEATURED_SEO_BLOG_POSTS.filter(
   (post) => post.domain === "hotel"
 );
 
+export const METRO_BLOG_POSTS: BlogPost[] = [
+  {
+    slug: "delhi-metro-route-map-lines-interchange-stations-guide",
+    domain: "metro",
+    title:
+      "Delhi NCR Metro Route Map 2026: Complete Guide to All 12 Lines, 262 Stations & Interchange Hubs",
+    excerpt:
+      "Master the entire Delhi NCR Metro network across Delhi, Noida, Greater Noida, Gurgaon, Ghaziabad, and Faridabad—including all 12 color-coded corridors, 29+ interchange hubs, and how to compare Fastest vs Minimum Interchange routes.",
+    category: "Delhi Metro Guide",
+    readTime: "9 min read",
+    publishedDate: "November 2026",
+    publishedIso: "2026-11-11",
+    author: {
+      name: "Siddharth Verma",
+      role: "Urban Transit & NCR Mobility Analyst",
+    },
+    accentColor: "from-blue-700 via-indigo-600 to-rose-600",
+    heroTagline: "Complete Delhi, Noida & Gurgaon Metro Network Masterclass",
+    primaryKeyword: "delhi metro route map",
+    seoKeywords: [
+      "delhi metro route map",
+      "delhi metro route finder",
+      "delhi metro lines color code",
+      "dmrc interchange stations list",
+      "delhi ncr metro stations list",
+      "yellow line blue line magenta line pink line delhi metro",
+      "how many lines in delhi metro 2026",
+      "fastest metro route delhi",
+    ],
+    keyTakeaways: [
+      "The integrated Delhi NCR Metro network spans 12 operational lines (DMRC, Airport Express, Noida–Greater Noida Aqua Line, and Gurgaon Rapid Metro) covering 262+ stations.",
+      "Using orbital corridors like the Pink Line (Ring Metro) and Magenta Line (Janakpuri West–Botanical Garden) saves 15 to 25 minutes by bypassing crowded central hubs like Rajiv Chowk.",
+      "Always compare 'Fastest Route' vs 'Minimum Interchange Route'—sometimes one extra interchange cuts 8–12 stops off a cross-NCR commute.",
+    ],
+    quickActionLinks: [
+      {
+        label: "Open Delhi NCR Metro Route Finder",
+        sublabel: "Compare Fastest, Min Interchange & Min Stops routes",
+        href: "/delhi-metro",
+      },
+      {
+        label: "MG Road → Anand Vihar Metro Route",
+        sublabel: "Gurgaon to East Delhi ISBT & Railway Terminal",
+        href: "/delhi-metro/route/mg-road-to-anand-vihar",
+      },
+      {
+        label: "Hauz Khas → Botanical Garden Route",
+        sublabel: "Direct 13-stop Magenta Line express corridor",
+        href: "/delhi-metro/route/hauz-khas-to-botanical-garden",
+      },
+      {
+        label: "Rajiv Chowk → Huda City Centre Route",
+        sublabel: "Yellow Line spine from Connaught Place to Gurgaon",
+        href: "/delhi-metro/route/rajiv-chowk-to-huda-city-centre",
+      },
+    ],
+    sections: [
+      {
+        heading: "1. How the 12 Color-Coded Delhi NCR Metro Lines Connect the Capital Region",
+        paragraphs: [
+          "The Delhi NCR Metro is India's largest and busiest rapid transit system, linking Central, North, South, East, and West Delhi seamlessly with satellite hubs in Gurgaon (Gurugram), Noida, Greater Noida, Faridabad, Bahadurgarh, and Ghaziabad.",
+          "Unlike single-line transit systems, Delhi Metro combines radial trunk corridors (Yellow, Blue, Red, and Violet Lines) with high-frequency orbital ring corridors (Pink Line and Magenta Line) so commuters can switch lines without entering central Connaught Place.",
+        ],
+        bullets: [
+          {
+            label: "Yellow Line (Samaypur Badli ↔ Millennium City Centre Gurugram)",
+            detail:
+              "37 stations • The north–south spine connecting Delhi University, Kashmere Gate ISBT, Old Delhi (Chandni Chowk), New Delhi Railway Station, Rajiv Chowk, AIIMS, Hauz Khas, Qutab Minar, and Gurgaon.",
+          },
+          {
+            label: "Blue Line Main & Branch (Dwarka Sec 21 ↔ Noida Electronic City / Vaishali)",
+            detail:
+              "58 stations combined • The east–west powerhouse linking Dwarka, Janakpuri West, Karol Bagh, Rajiv Chowk, Mandi House, Yamuna Bank, Anand Vihar ISBT, Vaishali, and Noida Sectors 15, 18, 52, and 62.",
+          },
+          {
+            label: "Magenta Line (Janakpuri West ↔ Botanical Garden)",
+            detail:
+              "25 stations • Driverless automated corridor connecting West Delhi, Terminal 1 IGI Airport, Vasant Vihar, Munirka, IIT Delhi, Hauz Khas, Kalkaji Mandir, Jamia Millia Islamia, and Botanical Garden (Noida).",
+          },
+          {
+            label: "Pink Line (Majlis Park ↔ Shiv Vihar)",
+            detail:
+              "38 stations • India's longest orbital Ring Metro corridor connecting Azadpur, Netaji Subhash Place, Punjabi Bagh West, Rajouri Garden, Dhaula Kuan (Airport Express link), Sarojini Nagar, Lajpat Nagar, Hazrat Nizamuddin, Mayur Vihar-I, Anand Vihar, and Welcome.",
+          },
+          {
+            label: "Red, Violet, Green & Grey Lines",
+            detail:
+              "Red Line connects Rithala to Shaheed Sthal (New Bus Adda Ghaziabad); Violet Line connects Kashmere Gate to Raja Nahar Singh (Ballabhgarh/Faridabad); Green Line serves Inderlok/Kirti Nagar to Brigadier Hoshiar Singh (Bahadurgarh); Grey Line serves Dwarka to Dhansa Bus Stand.",
+          },
+          {
+            label: "Airport Express (Orange), Noida Aqua Line & Gurgaon Rapid Metro",
+            detail:
+              "Airport Express runs at 110+ km/h from New Delhi to IGI Airport T3 and Yashobhoomi Dwarka Sector 25; Noida Aqua Line serves Noida Sector 51 to Greater Noida Depot; Rapid Metro connects Sikanderpur to Cyber City and Golf Course Road.",
+          },
+        ],
+      },
+      {
+        heading: "2. Major Multi-Line Interchange Hubs Every Commuter Should Know",
+        paragraphs: [
+          "Knowing which interchange station has a short platform-to-platform transfer versus a longer skywalk transfer can save you 10+ minutes during morning and evening rush hours.",
+        ],
+        bullets: [
+          {
+            label: "Kashmere Gate (Triple Interchange: Red + Yellow + Violet Lines)",
+            detail:
+              "DMRC's largest three-tier mega hub directly attached to Maharana Pratap ISBT Kashmere Gate. Follow color-coded floor footprints for smooth transfers between Red (elevated), Yellow (underground), and Violet (underground) platforms.",
+          },
+          {
+            label: "Rajiv Chowk (Yellow + Blue Line Central Hub)",
+            detail:
+              "Located beneath Connaught Place Central Park. Upper underground level serves the Blue Line (towards Dwarka or Noida/Vaishali); lower level serves the Yellow Line (towards Samaypur Badli or Gurugram).",
+          },
+          {
+            label: "Hauz Khas (Yellow + Magenta Line South Delhi Bypass)",
+            detail:
+              "Instead of travelling all the way up to Rajiv Chowk when commuting between Gurgaon and Noida, switch at Hauz Khas to the Magenta Line towards Botanical Garden and save 20+ minutes.",
+          },
+          {
+            label: "Central Secretariat & Mandi House (Yellow/Blue ↔ Violet Line)",
+            detail:
+              "Central Secretariat offers a fast cross-platform transfer between Yellow and Violet Lines, while Mandi House links Blue Line passengers directly to the Violet Line.",
+          },
+          {
+            label: "Walkway Transfers (Noida Sec 52↔51 & Dhaula Kuan↔Durgabai Deshmukh)",
+            detail:
+              "Four major out-of-paid-area skywalk/walkway transfers link Noida Sector 52 (Blue) to Noida Sector 51 (Aqua Line), Dhaula Kuan (Airport Express) to Durgabai Deshmukh South Campus (Pink), and New Delhi (Yellow) to New Delhi Airport Express.",
+          },
+        ],
+        callout: {
+          title: "Pro Tip: Compare Fastest vs Minimum Interchange Before You Board",
+          text: "On TravelAdda's Delhi Metro Route Finder, toggle between 'Fastest', 'Min Change', and 'Min Stops' tabs. When traveling with heavy luggage or senior citizens, choosing 'Min Change' often avoids a 5-minute concourse walk for only 3 extra minutes of train time.",
+        },
+      },
+    ],
+    faqs: [
+      {
+        question: "How many metro lines and stations are operational in Delhi NCR in 2026?",
+        answer:
+          "The unified Delhi NCR Metro network features 12 operational lines—including 10 DMRC lines (Red, Yellow, Blue Main, Blue Vaishali Branch, Green, Violet, Pink, Magenta, Grey, and Orange Airport Express), the Noida–Greater Noida Aqua Line, and the Gurgaon Rapid Metro—serving 262+ stations.",
+      },
+      {
+        question: "Which Delhi Metro station has 3 metro lines?",
+        answer:
+          "Kashmere Gate (Red, Yellow, and Violet Lines) and Azadpur (Yellow, Pink, and Phase 4 Magenta extension) serve as triple-line interchange hubs.",
+      },
+      {
+        question: "What are the general operating timings of Delhi Metro?",
+        answer:
+          "Most Delhi Metro corridors start revenue service between 05:15 AM and 05:30 AM (04:45 AM on the Airport Express Line) and run last trains from terminal stations around 11:00 PM to 11:30 PM.",
+      },
+    ],
+  },
+  {
+    slug: "delhi-metro-airport-express-line-igi-terminal-1-2-3-timings-fare",
+    domain: "metro",
+    title:
+      "How to Reach IGI Airport (Terminal 1, T2 & T3) by Delhi Metro: Airport Express & Magenta Line Timings, Fare & Check-In Guide",
+    excerpt:
+      "Don't board the wrong metro line for your flight! Learn whether to take the high-speed Orange Airport Express Line (for Terminal 3 & T2) or the Magenta Line (for Terminal 1), complete with 04:45 AM first-train timings, ₹60 fare chart, and Metro station baggage check-in rules.",
+    category: "Airport Metro Guide",
+    readTime: "7 min read",
+    publishedDate: "November 2026",
+    publishedIso: "2026-11-11",
+    author: {
+      name: "Capt. Vikramaditya Rao",
+      role: "Aviation Operations & Airspace Analyst",
+    },
+    accentColor: "from-orange-600 via-amber-500 to-blue-700",
+    heroTagline: "Zero-Traffic Metro Transit to IGI Airport T1, T2 & T3",
+    primaryKeyword: "delhi airport metro timings and fare",
+    seoKeywords: [
+      "delhi airport metro timings and fare",
+      "new delhi to igi airport metro route",
+      "airport express line timings",
+      "how to reach terminal 1 igi airport by metro",
+      "terminal 2 and 3 metro station delhi",
+      "shivaji stadium airport metro check in",
+      "dhaula kuan to igi airport metro fare",
+      "yashobhoomi dwarka sector 25 airport metro",
+    ],
+    keyTakeaways: [
+      "Terminal 2 (T2) and Terminal 3 (T3) are served by 'IGI Airport' station on the Orange Airport Express Line (19 minutes from New Delhi Railway Station, ₹60 fare).",
+      "Terminal 1 (T1D domestic departures/arrivals) is served by 'Terminal 1 IGI Airport' station on the Magenta Line—NOT the Orange Airport Express Line.",
+      "The Airport Express Line starts early at 04:45 AM and runs every 10 minutes up to 11:40 PM, making it the most reliable way to beat NH-48 highway traffic.",
+    ],
+    quickActionLinks: [
+      {
+        label: "New Delhi → IGI Airport (T3/T2) Route",
+        sublabel: "19 mins non-stop on Orange Airport Express (₹60)",
+        href: "/delhi-metro/route/new-delhi-to-igi-airport",
+      },
+      {
+        label: "Hauz Khas → Terminal 1 IGI Airport",
+        sublabel: "Direct Magenta Line route to Domestic Terminal 1",
+        href: "/delhi-metro/route/hauz-khas-to-terminal-1-igi-airport",
+      },
+      {
+        label: "Check Live Flight Status & Terminal",
+        sublabel: "Confirm whether your flight departs from T1, T2, or T3",
+        href: "/air/flight-status",
+      },
+      {
+        label: "Explore Airport Express Line Stations",
+        sublabel: "All 7 stations from New Delhi to Yashobhoomi Dwarka Sec 25",
+        href: "/delhi-metro/airport-express-line",
+      },
+    ],
+    sections: [
+      {
+        heading: "1. Critical Rule: Which Metro Line Goes to Terminal 1 vs Terminal 2 & Terminal 3?",
+        paragraphs: [
+          "The #1 mistake flyers make when taking the Delhi Metro to Indira Gandhi International (IGI) Airport is confusing the two completely separate airport metro stations located 7 km apart.",
+          "Before leaving home, check your airline boarding pass or run your flight number on TravelAdda's Live Flight Status tracker to verify your exact departure terminal (T1, T2, or T3).",
+        ],
+        bullets: [
+          {
+            label: "For Terminal 3 (T3) & Terminal 2 (T2) → Take Orange Airport Express Line",
+            detail:
+              "Alight at 'IGI Airport' metro station on the Orange Line. T3 is directly connected via a short underground walk-through tunnel with travellators; T2 is a 5-to-7 minute covered walkway from the same station.",
+          },
+          {
+            label: "For Terminal 1 (T1 / Domestic) → Take Magenta Line (Line 8)",
+            detail:
+              "Alight at 'Terminal 1 IGI Airport' metro station on the Magenta Line (between Janakpuri West and Botanical Garden). Exit gates open directly outside the T1 arrival/departure forecourt.",
+          },
+          {
+            label: "What If You Accidentally Reach T3 Instead of T1?",
+            detail:
+              "DIAL operates a 24x7 inter-terminal shuttle bus every 20 minutes between T1, T2, and T3 (free for passengers holding a connecting flight ticket or ₹25 for general passengers), or you can connect via Aerocity.",
+          },
+        ],
+      },
+      {
+        heading: "2. Airport Express Line Stations, Travel Time & 2026 Fare Chart",
+        paragraphs: [
+          "The Orange Airport Express Line spans 24.9 km across 7 stations: New Delhi (Yellow Line link) → Shivaji Stadium (Connaught Place) → Dhaula Kuan (Pink Line link) → Delhi Aerocity → IGI Airport (T3/T2) → Dwarka Sector 21 (Blue Line link) → Yashobhoomi Dwarka Sector 25.",
+        ],
+        bullets: [
+          {
+            label: "New Delhi Station to IGI Airport (T3/T2)",
+            detail:
+              "Travel Time: ~19 minutes • Distance: 19.2 km • Single Journey Fare: ₹60 • First Train: 04:45 AM • Last Train: 11:40 PM.",
+          },
+          {
+            label: "Shivaji Stadium (Connaught Place) to IGI Airport",
+            detail:
+              "Travel Time: ~16 minutes • Single Journey Fare: ₹50 • Ideal for flyers staying in Connaught Place, Janpath, or Patel Chowk.",
+          },
+          {
+            label: "Dhaula Kuan (Pink Line Skywalk) to IGI Airport",
+            detail:
+              "Travel Time: ~10 minutes • Single Journey Fare: ₹40 • Connected via a 750m travellator skywalk to Durgabai Deshmukh South Campus on the Pink Line.",
+          },
+          {
+            label: "Dwarka Sector 21 / Yashobhoomi Sector 25 to IGI Airport",
+            detail:
+              "Travel Time: 4 to 7 minutes • Single Journey Fare: ₹20 to ₹30 • Fastest transfer for Blue Line passengers from Dwarka, Janakpuri, and Rajouri Garden.",
+          },
+        ],
+        callout: {
+          title: "City Check-In at New Delhi Airport Metro Station",
+          text: "Flying Air India or IndiGo from Terminal 3? Selected flights support early baggage drop and boarding pass issuance right inside New Delhi Airport Express Metro station between 2 to 12 hours before departure, letting you ride the train hands-free!",
+        },
+      },
+    ],
+    faqs: [
+      {
+        question: "What is the metro fare from New Delhi Railway Station to IGI Airport T3?",
+        answer:
+          "The single-journey fare on the Orange Airport Express Line from New Delhi station to IGI Airport (Terminal 3 / Terminal 2) is ₹60, and the journey takes approximately 19 minutes.",
+      },
+      {
+        question: "How early does the first Airport Metro start in Delhi?",
+        answer:
+          "The first train on the Airport Express Line departs from both New Delhi and Yashobhoomi Dwarka Sector 25 at 04:45 AM daily, reaching IGI Airport Terminal 3 around 05:00 AM.",
+      },
+      {
+        question: "Can I carry large check-in suitcases inside Delhi Metro?",
+        answer:
+          "On the Orange Airport Express Line, two check-in bags up to 32 kg each (up to 90 cm × 75 cm × 45 cm) are permitted per passenger with dedicated luggage racks inside every coach. On regular DMRC lines (like Magenta Line to T1), bags up to 25 kg (80 cm × 50 cm × 30 cm) are allowed through the X-ray scanners.",
+      },
+    ],
+  },
+  {
+    slug: "delhi-metro-fare-chart-smart-card-ncmc-whatsapp-qr-ticket-guide",
+    domain: "metro",
+    title:
+      "Delhi Metro Fare Chart 2026: DMRC Token Slabs, NCMC Card, WhatsApp QR Ticket & 20% Off-Peak Discount Rules",
+    excerpt:
+      "Everything you need to know about DMRC ticket prices in 2026: official distance-wise weekday vs Sunday fare slabs (₹10 to ₹60), how to unlock the 20% Smart Card off-peak discount, and how to book instant WhatsApp QR tickets without standing in queues.",
+    category: "Metro Fare & Tickets",
+    readTime: "7 min read",
+    publishedDate: "November 2026",
+    publishedIso: "2026-11-11",
+    author: {
+      name: "Siddharth Verma",
+      role: "Urban Transit & NCR Mobility Analyst",
+    },
+    accentColor: "from-emerald-600 via-teal-600 to-blue-700",
+    heroTagline: "Official DMRC Fare Slabs, Smart Card Savings & QR Ticketing",
+    primaryKeyword: "delhi metro fare chart",
+    seoKeywords: [
+      "delhi metro fare chart",
+      "dmrc fare calculator",
+      "delhi metro whatsapp ticket number",
+      "dmrc smart card 20 percent discount timings",
+      "delhi metro sunday fare chart",
+      "ncmc card delhi metro",
+      "delhi metro tourist card price 1 day 3 day",
+      "minimum and maximum fare in delhi metro",
+    ],
+    keyTakeaways: [
+      "Regular DMRC fares range from ₹10 (0–2 km) to ₹60 (>32 km) on weekdays, and drop to ₹10–₹50 on Sundays and National Holidays (26 Jan, 15 Aug, 2 Oct).",
+      "DMRC Smart Card users get a flat 10% discount on every ride plus an extra 10% Off-Peak discount (total 20% off) when entering a station before 8:00 AM, between 12:00 PM and 5:00 PM, or after 9:00 PM.",
+      "You can buy instant mobile QR tickets on WhatsApp by sending 'Hi' to +91 9650855800 or via the DMRC Momentum 2.0, Paytm, PhonePe, and ONDC apps.",
+    ],
+    quickActionLinks: [
+      {
+        label: "Calculate Exact Station-to-Station Metro Fare",
+        sublabel: "Check Token, Peak Smart Card, Off-Peak & Sunday fare",
+        href: "/delhi-metro",
+      },
+      {
+        label: "Rajiv Chowk → Noida Electronic City Fare",
+        sublabel: "Check distance slab & Smart Card savings",
+        href: "/delhi-metro/route/rajiv-chowk-to-noida-electronic-city",
+      },
+      {
+        label: "Kashmere Gate → Huda City Centre Fare",
+        sublabel: "Full Yellow Line fare & travel time breakdown",
+        href: "/delhi-metro/route/kashmere-gate-to-huda-city-centre",
+      },
+    ],
+    sections: [
+      {
+        heading: "1. Official DMRC Distance-Wise Fare Chart (Weekdays vs Sundays & National Holidays)",
+        paragraphs: [
+          "Delhi Metro Rail Corporation (DMRC) calculates fares automatically based on the shortest track distance between your origin and destination stations across all interconnected DMRC corridors (Red, Yellow, Blue, Green, Violet, Pink, Magenta, and Grey Lines).",
+          "On Sundays and the three National Holidays (Republic Day on 26 January, Independence Day on 15 August, and Gandhi Jayanti on 2 October), DMRC applies a discounted Concessional Fare Table across the network.",
+        ],
+        bullets: [
+          {
+            label: "0 to 2 km Distance Slab",
+            detail:
+              "Weekday Token/QR: ₹10 • Smart Card Peak (10% off): ₹9 • Smart Card Off-Peak (20% off): ₹8 • Sunday/National Holiday: ₹10.",
+          },
+          {
+            label: "2 to 5 km Distance Slab",
+            detail:
+              "Weekday Token/QR: ₹20 • Smart Card Peak (10% off): ₹18 • Smart Card Off-Peak (20% off): ₹16 • Sunday/National Holiday: ₹10.",
+          },
+          {
+            label: "5 to 12 km Distance Slab",
+            detail:
+              "Weekday Token/QR: ₹30 • Smart Card Peak (10% off): ₹27 • Smart Card Off-Peak (20% off): ₹24 • Sunday/National Holiday: ₹20.",
+          },
+          {
+            label: "12 to 21 km Distance Slab",
+            detail:
+              "Weekday Token/QR: ₹40 • Smart Card Peak (10% off): ₹36 • Smart Card Off-Peak (20% off): ₹32 • Sunday/National Holiday: ₹30.",
+          },
+          {
+            label: "21 to 32 km Distance Slab",
+            detail:
+              "Weekday Token/QR: ₹50 • Smart Card Peak (10% off): ₹45 • Smart Card Off-Peak (20% off): ₹40 • Sunday/National Holiday: ₹40.",
+          },
+          {
+            label: "Beyond 32 km Distance Slab",
+            detail:
+              "Weekday Token/QR: ₹60 (Maximum DMRC Fare) • Smart Card Peak (10% off): ₹54 • Smart Card Off-Peak (20% off): ₹48 • Sunday/National Holiday: ₹50.",
+          },
+        ],
+      },
+      {
+        heading: "2. How the 10% Peak vs 20% Off-Peak Smart Card Discount Works",
+        paragraphs: [
+          "Using a DMRC Smart Card saves daily commuters ₹150 to ₹400 every month compared to single-journey QR tickets. Even better, if you tap in at the Entry AFC gate during non-rush hours, DMRC doubles your discount from 10% to 20%.",
+        ],
+        bullets: [
+          {
+            label: "20% Off-Peak Discount Windows (Monday to Saturday)",
+            detail:
+              "Valid when you tap in at your origin station: (1) From start of service until 8:00 AM, (2) Between 12:00 PM noon and 5:00 PM, and (3) From 9:00 PM until the last train.",
+          },
+          {
+            label: "10% Peak Hours Discount Windows",
+            detail:
+              "Valid during morning rush (8:00 AM to 12:00 PM) and evening rush (5:00 PM to 9:00 PM).",
+          },
+          {
+            label: "Maximum Stay Time Limit Inside Paid Area",
+            detail:
+              "Once you tap in, you must exit within: 65 minutes for ₹10–₹20 fares, 100 minutes for ₹30 fares, and 180 minutes (3 hours) for ₹40–₹60 fares (or 20 minutes if exiting at the same station) to avoid an overstay penalty of ₹10 per hour (capped at ₹50).",
+          },
+        ],
+        callout: {
+          title: "How to Book a Delhi Metro WhatsApp QR Ticket in 30 Seconds",
+          text: "Save +91 9650855800 on your phone, send 'Hi' on WhatsApp, choose your language, tap 'Buy Ticket', select your Origin and Destination stations, and pay via UPI. Hold the mobile QR code screen at 80%+ brightness over the purple QR scanner slot on the AFC gate!",
+        },
+      },
+    ],
+    faqs: [
+      {
+        question: "What is the official WhatsApp number for Delhi Metro QR ticket booking?",
+        answer:
+          "The official DMRC WhatsApp chatbot number is +91 9650855800. You can book up to 6 single-journey or return QR tickets in a single transaction across all DMRC lines including the Airport Express Line.",
+      },
+      {
+        question: "Does a DMRC Smart Card work directly on the Noida Aqua Line?",
+        answer:
+          "The Noida–Greater Noida Aqua Line is operated by NMRC and uses separate AFC gates at Noida Sector 51. You can use an NCMC (National Common Mobility Card), the NMRC app, or buy a QR ticket at Noida Sector 51 after walking the 300m walkway from Noida Sector 52 (Blue Line).",
+      },
+      {
+        question: "What is the price of a Delhi Metro Tourist Card for unlimited travel?",
+        answer:
+          "DMRC offers 1-Day (₹200 including ₹50 refundable security deposit) and 3-Day (₹500 including ₹50 refundable deposit) Tourist Smart Cards for unlimited rides on all DMRC lines (excluding the Airport Express Line).",
+      },
+    ],
+  },
+  {
+    slug: "delhi-metro-phase-4-new-lines-golden-line-rk-ashram-janakpuri-updates",
+    domain: "metro",
+    title:
+      "Delhi Metro Phase 4 Expansion (2026–27): Golden Line (Aerocity–Tughlakabad), Magenta Line Extension & Ring Metro Guide",
+    excerpt:
+      "Track the hottest Delhi Metro Phase 4 developments for 2026–27: the Magenta Line extension from Janakpuri West to RK Ashram Marg, India's first complete Ring Metro on the Pink Line, the Golden Line connecting Aerocity & IGI T1 to Tughlakabad, and new corridors to Saket, Indraprastha & Kundli.",
+    category: "Metro Phase 4 Updates",
+    readTime: "8 min read",
+    publishedDate: "November 2026",
+    publishedIso: "2026-11-11",
+    author: {
+      name: "Siddharth Verma",
+      role: "Urban Transit & NCR Mobility Analyst",
+    },
+    accentColor: "from-amber-500 via-yellow-600 to-purple-700",
+    heroTagline: "Future-Ready Guide to DMRC Phase 4 Corridors & New Interchanges",
+    primaryKeyword: "delhi metro phase 4 update",
+    seoKeywords: [
+      "delhi metro phase 4 update",
+      "golden line delhi metro stations",
+      "janakpuri west to rk ashram marg metro",
+      "majlis park to maujpur pink line ring metro",
+      "aerocity to tughlakabad metro line",
+      "lajpat nagar to saket g block metro",
+      "inderlok to indraprastha green line extension",
+      "rithala narela kundli metro corridor",
+    ],
+    keyTakeaways: [
+      "Phase 4 Priority Corridors add over 65 km across 3 major lines: Magenta Line Extension (Janakpuri West–RK Ashram), Pink Line Ring completion (Majlis Park–Maujpur), and the brand-new Golden Line (Aerocity–Tughlakabad).",
+      "Three additional Phase 4 corridors—Lajpat Nagar to Saket G-Block, Inderlok to Indraprastha (Green Line extension), and Rithala–Narela–Kundli (Red Line extension into Haryana)—further expand NCR connectivity.",
+      "Once the Golden Line links Delhi Aerocity (Orange Line) with Tughlakabad (Violet Line) via Vasant Kunj, Chhatarpur, and Saket, South Delhi flyers will have direct 15-minute access to IGI Airport.",
+    ],
+    quickActionLinks: [
+      {
+        label: "Explore Current Magenta Line Route & Stations",
+        sublabel: "Janakpuri West to Botanical Garden (25 stations)",
+        href: "/delhi-metro/magenta-line",
+      },
+      {
+        label: "Explore Pink Line Ring Corridor",
+        sublabel: "Majlis Park to Shiv Vihar (38 stations)",
+        href: "/delhi-metro/pink-line",
+      },
+      {
+        label: "Plan Any Delhi NCR Metro Journey",
+        sublabel: "Interactive station-to-station route & fare finder",
+        href: "/delhi-metro",
+      },
+    ],
+    sections: [
+      {
+        heading: "1. The 3 Priority Phase 4 Corridors Transforming Delhi Commutes",
+        paragraphs: [
+          "DMRC's Phase 4 expansion focuses on closing the missing orbital links in North, Outer West, and South Delhi while introducing advanced driverless 6-coach rolling stock and three-level elevated viaducts (including a double-decker flyover-cum-metro viaduct on the Maujpur corridor).",
+        ],
+        bullets: [
+          {
+            label: "Magenta Line Extension (Janakpuri West ↔ RK Ashram Marg — 29.26 km)",
+            detail:
+              "Opened in stages starting with Krishna Park Extension, this corridor brings direct Magenta Line connectivity to Keshopur, Paschim Vihar, Peeragarhi (Green Line link), Mangolpuri, West Enclave, Pitampura (Red Line link), Haiderpur Badli Mor (Yellow Line link), Majlis Park (Pink Line link), Azadpur, Pulbangash, Sadar Bazar, and RK Ashram Marg (Blue Line link).",
+          },
+          {
+            label: "Pink Line Complete Ring Metro (Majlis Park ↔ Maujpur-Babarpur — 12.31 km)",
+            detail:
+              "Connects Burari, Jharoda Majra, Jagatpur Village, Soorghat, Sonia Vihar, Khajuri Khas, Bhajanpura, and Yamuna Vihar to Maujpur-Babarpur—completing India's first full circular 70-km Ring Metro.",
+          },
+          {
+            label: "Golden Line / Line 10 (Delhi Aerocity ↔ Tughlakabad — 23.62 km)",
+            detail:
+              "Connects Aerocity (Airport Express Line) to Mahipalpur, Vasant Kunj, Kishangarh, Chhatarpur (Yellow Line interchange), Chhatarpur Mandir, Ignou, Neb Sarai, Saket G-Block, Ambedkar Nagar, Khanpur, Sangam Vihar, Maa Anandmayee Marg, and Tughlakabad (Violet Line interchange).",
+          },
+        ],
+      },
+      {
+        heading: "2. Newly Sanctioned Corridors: Saket G-Block, Indraprastha & Kundli (Haryana)",
+        paragraphs: [
+          "Beyond the initial three priority corridors, three strategic Phase 4 extensions connect dense residential pockets in South Delhi, Central Delhi, and Sonipat/Kundli.",
+        ],
+        bullets: [
+          {
+            label: "Lajpat Nagar ↔ Saket G-Block Corridor (8.38 km)",
+            detail:
+              "Provides last-mile metro access to Andrews Ganj, Greater Kailash-1, Chirag Delhi (Magenta Line interchange), Pushp Bhawan, Saket District Centre, and Saket G-Block (Golden Line interchange).",
+          },
+          {
+            label: "Inderlok ↔ Indraprastha Green Line Extension (12.37 km)",
+            detail:
+              "Extends the Green Line from Inderlok right through Daya Basti, Sarai Rohilla, Ajmal Khan Park, Nabi Karim, New Delhi Railway Station, Delhi Gate, and LNJP Hospital to Indraprastha (Blue Line).",
+          },
+          {
+            label: "Rithala ↔ Narela ↔ Nathupur (Kundli) Red Line Extension (26.46 km)",
+            detail:
+              "Extends the Red Line across Rohini Sectors 25, 26, 31, 32, 36, Bawana Industrial Area, Narela, and across the Haryana border into Kundli and Nathupur.",
+          },
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "What is the Golden Line in Delhi Metro Phase 4?",
+        answer:
+          "Originally referred to as the Silver Line during planning and officially designated the Golden Line (Line 10), it is a 23.62-km corridor with 15 stations connecting Delhi Aerocity on the Airport Express Line to Tughlakabad on the Violet Line via Vasant Kunj, Chhatarpur, and Saket.",
+      },
+      {
+        question: "Which station is the first operational stretch of Delhi Metro Phase 4?",
+        answer:
+          "The underground stretch from Janakpuri West to Krishna Park Extension on the Magenta Line (Line 8) opened first, followed by progressive stages toward Pitampura, Majlis Park, and RK Ashram Marg.",
+      },
+    ],
+  },
+  {
+    slug: "new-delhi-anand-vihar-hazrat-nizamuddin-railway-station-metro-connectivity",
+    domain: "metro",
+    title:
+      "Indian Railways to Delhi Metro Transfer Guide: New Delhi (NDLS), Anand Vihar (ANVT), Hazrat Nizamuddin (NZM) & Old Delhi (DLI)",
+    excerpt:
+      "Arriving in Delhi on a Rajdhani, Shatabdi, or Vande Bharat Express? Here is the exact platform exit, skywalk direction, and metro line for New Delhi Railway Station (NDLS), Hazrat Nizamuddin (NZM), Anand Vihar Terminal (ANVT), and Old Delhi Junction (DLI).",
+    category: "Rail-to-Metro Transit",
+    readTime: "8 min read",
+    publishedDate: "November 2026",
+    publishedIso: "2026-11-11",
+    author: {
+      name: "Aarav Deshmukh",
+      role: "Principal Rail Systems & PRS Analyst",
+    },
+    accentColor: "from-indigo-700 via-blue-600 to-emerald-600",
+    heroTagline: "Platform-to-Metro Exit Guide for Every Major Delhi Railway Terminal",
+    primaryKeyword: "new delhi railway station metro gate and route",
+    seoKeywords: [
+      "new delhi railway station metro gate and route",
+      "hazrat nizamuddin railway station nearest metro",
+      "anand vihar railway station to rajiv chowk metro",
+      "old delhi railway station chandni chowk metro",
+      "delhi cantt railway station nearest metro",
+      "sarai kale khan nizamuddin pink line metro",
+      "ndls platform 16 ajmeri gate metro skywalk",
+    ],
+    keyTakeaways: [
+      "New Delhi Railway Station (NDLS) is served by TWO metro lines at Platform 16 (Ajmeri Gate side): the Yellow Line (for Rajiv Chowk, Gurgaon & North Delhi) and the Orange Airport Express Line (for IGI Airport T3).",
+      "Hazrat Nizamuddin Railway Station (NZM) is directly connected at its Sarai Kale Khan exit to 'Sarai Kale Khan - Nizamuddin' station on the Pink Line.",
+      "Anand Vihar Terminal (ANVT) is a triple-mode hub where the Railway Station, ISBT Bus Terminal, Blue Line Metro, and Pink Line Metro all meet at a single complex.",
+    ],
+    quickActionLinks: [
+      {
+        label: "New Delhi Station → Huda City Centre (Gurgaon)",
+        sublabel: "Direct Yellow Line route from NDLS Platform 16",
+        href: "/delhi-metro/route/new-delhi-to-huda-city-centre",
+      },
+      {
+        label: "Anand Vihar ISBT → Rajiv Chowk Route",
+        sublabel: "Direct Blue Line route from ANVT to Connaught Place",
+        href: "/delhi-metro/route/anand-vihar-to-rajiv-chowk",
+      },
+      {
+        label: "Check Live Train Running Status & Platform",
+        sublabel: "Verify your arrival time & platform at NDLS, NZM or ANVT",
+        href: "/rail/live-status",
+      },
+      {
+        label: "Check 10-Digit IRCTC PNR Status",
+        sublabel: "Confirm coach & berth before arriving in Delhi",
+        href: "/rail/pnr-status",
+      },
+    ],
+    sections: [
+      {
+        heading: "1. New Delhi Railway Station (NDLS) → Yellow Line & Airport Express Line",
+        paragraphs: [
+          "New Delhi Railway Station has 16 platforms with two main exits: Platform 1 (Paharganj side) and Platform 16 (Ajmeri Gate side). Both the Yellow Line and Orange Airport Express Line metro stations are located on the **Platform 16 (Ajmeri Gate)** side.",
+          "Use the elevated pedestrian skywalk from the Foot Over Bridge (FOB) at Platform 16 to walk directly into the New Delhi Metro concourse without stepping into auto/taxi traffic below.",
+        ],
+        bullets: [
+          {
+            label: "Going to Connaught Place, AIIMS, Hauz Khas or Gurgaon?",
+            detail:
+              "Board the Yellow Line towards Millennium City Centre Gurugram. Rajiv Chowk is just 1 stop (2 minutes) away!",
+          },
+          {
+            label: "Going to Noida, Vaishali, Karol Bagh or Dwarka?",
+            detail:
+              "Take the Yellow Line 1 stop to Rajiv Chowk and switch to the Blue Line, OR walk 650m from Platform 1 (Paharganj side) to RK Ashram Marg (Blue Line).",
+          },
+          {
+            label: "Going to IGI Airport (Terminal 3 / Terminal 2)?",
+            detail:
+              "Follow the Orange signs through the Skywalk to the New Delhi Airport Express station—trains reach IGI Airport in 19 minutes.",
+          },
+        ],
+      },
+      {
+        heading: "2. Hazrat Nizamuddin (NZM), Anand Vihar (ANVT) & Old Delhi (DLI) Transfers",
+        paragraphs: [
+          "Southbound Rajdhani, Duronto, and Gatimaan Express trains typically arrive at Hazrat Nizamuddin (NZM), while eastbound trains from UP, Bihar, and West Bengal frequently use Anand Vihar Terminal (ANVT).",
+        ],
+        bullets: [
+          {
+            label: "Hazrat Nizamuddin (NZM) → Sarai Kale Khan - Nizamuddin (Pink Line)",
+            detail:
+              "Exit from Platform 1 / Sarai Kale Khan side (East exit) and walk 250 meters into the Pink Line metro station. From here, Lajpat Nagar (Violet Line link) is 3 stops away and Mayur Vihar-I (Blue Line link) is 2 stops away.",
+          },
+          {
+            label: "Anand Vihar Terminal (ANVT) → Anand Vihar ISBT (Blue + Pink Line)",
+            detail:
+              "Directly connected via Foot Over Bridge to the elevated Anand Vihar Metro Station. Board the Blue Line for Noida/Dwarka/Connaught Place or the Pink Line for North/South Delhi.",
+          },
+          {
+            label: "Old Delhi Junction (DLI) → Chandni Chowk Metro Station (Yellow Line)",
+            detail:
+              "Do NOT get off at 'Delhi Gate'! Alight at 'Chandni Chowk' on the Yellow Line—Exit Gate 3 opens right into the Old Delhi Railway Station courtyard.",
+          },
+        ],
+        callout: {
+          title: "Track Your Train Arrival Before Booking Your Metro QR Ticket",
+          text: "Since DMRC QR tickets expire at the end of the operating day and Smart Cards have an entry-to-exit time limit, check your train's exact arrival delay on TravelAdda's Live Train Status tracker before generating your metro QR ticket.",
+        },
+      },
+    ],
+    faqs: [
+      {
+        question: "Which metro station is closest to New Delhi Railway Station?",
+        answer:
+          "'New Delhi' metro station (serving both the Yellow Line and the Orange Airport Express Line) is directly outside Platform 16 (Ajmeri Gate side) and connected via an elevated skywalk.",
+      },
+      {
+        question: "Which metro station is nearest to Hazrat Nizamuddin Railway Station?",
+        answer:
+          "'Sarai Kale Khan - Nizamuddin' on the Pink Line is located right outside the Sarai Kale Khan (East) exit of Hazrat Nizamuddin Railway Station (about a 3-minute walk).",
+      },
+      {
+        question: "Which metro station is for Old Delhi Railway Station (DLI)?",
+        answer:
+          "Chandni Chowk Metro Station on the Yellow Line (Gate No. 3) is directly linked to Old Delhi Railway Station.",
+      },
+    ],
+  },
+  {
+    slug: "noida-greater-noida-gurgaon-delhi-metro-commuter-guide-aqua-rapid-metro",
+    domain: "metro",
+    title:
+      "Noida, Greater Noida & Gurgaon to Delhi Metro Commuter Guide: Aqua Line Walkway, Magenta Shortcut & Rapid Metro",
+    excerpt:
+      "Commuting daily between Gurgaon (Cyber City / MG Road / Huda City Centre) and Noida or Greater Noida? Discover how the Hauz Khas–Botanical Garden Magenta Line saves 22 minutes, how the Noida Sector 52–51 Aqua Line walkway works, and how to switch at Sikanderpur.",
+    category: "NCR Commuter Guide",
+    readTime: "8 min read",
+    publishedDate: "November 2026",
+    publishedIso: "2026-11-11",
+    author: {
+      name: "Siddharth Verma",
+      role: "Urban Transit & NCR Mobility Analyst",
+    },
+    accentColor: "from-pink-600 via-purple-600 to-cyan-600",
+    heroTagline: "Smart Shortcuts for Gurgaon, Noida & Greater Noida Office Commuters",
+    primaryKeyword: "gurgaon to noida metro route",
+    seoKeywords: [
+      "gurgaon to noida metro route",
+      "huda city centre to botanical garden metro",
+      "mg road to anand vihar metro route",
+      "noida sector 52 to sector 51 aqua line walkway",
+      "sikanderpur to cyber city rapid metro",
+      "botanical garden to hauz khas metro time",
+      "pari chowk greater noida to delhi metro route",
+    ],
+    keyTakeaways: [
+      "Travelling between Gurgaon and Noida via the Magenta Line (Hauz Khas ↔ Botanical Garden) takes ~50 minutes vs ~72 minutes via Rajiv Chowk—saving 22 minutes each way.",
+      "To reach Greater Noida (Pari Chowk / Knowledge Park II), alight at Noida Sector 52 on the DMRC Blue Line and use the 300-meter dedicated covered walkway & free e-rickshaw corridor to Noida Sector 51 on the Aqua Line.",
+      "Gurgaon Rapid Metro accepts DMRC Smart Cards and QR tickets seamlessly at the Sikanderpur interchange (Yellow Line) for immediate access to Cyber City and Golf Course Road.",
+    ],
+    quickActionLinks: [
+      {
+        label: "Huda City Centre → Noida Electronic City",
+        sublabel: "Compare Gurgaon to Noida Sector 62 routes",
+        href: "/delhi-metro/route/huda-city-centre-to-noida-electronic-city",
+      },
+      {
+        label: "Hauz Khas → Botanical Garden (Magenta Shortcut)",
+        sublabel: "13 stops • 31 mins • ₹40 direct South Delhi–Noida link",
+        href: "/delhi-metro/route/hauz-khas-to-botanical-garden",
+      },
+      {
+        label: "MG Road → Anand Vihar ISBT Route",
+        sublabel: "Fastest Yellow + Blue Line interchange breakdown",
+        href: "/delhi-metro/route/mg-road-to-anand-vihar",
+      },
+      {
+        label: "Explore Noida Aqua Line Stations",
+        sublabel: "All 21 stations from Noida Sector 51 to Depot Station",
+        href: "/delhi-metro/noida-aqua-line",
+      },
+    ],
+    sections: [
+      {
+        heading: "1. The Magenta Line Shortcut: Why You Should Skip Rajiv Chowk Between Gurgaon & Noida",
+        paragraphs: [
+          "Before the Magenta Line opened between Hauz Khas and Botanical Garden, every commuter traveling between Gurgaon (Huda City Centre, IFFCO Chowk, MG Road, Sikanderpur) and Noida had to ride the Yellow Line all the way into Central Delhi (Rajiv Chowk) and board a packed Blue Line train back south-east toward Noida.",
+          "Today, switching at **Hauz Khas** onto the Magenta Line cuts out 9 stations and saves 20 to 25 minutes in each direction.",
+        ],
+        bullets: [
+          {
+            label: "Route A: Via Hauz Khas + Magenta Line (Recommended Fastest Route)",
+            detail:
+              "Huda City Centre → Hauz Khas (Yellow Line, 10 stops) → Switch to Magenta Line → Botanical Garden (13 stops). Total stops: 23 • Travel time: ~54 mins.",
+          },
+          {
+            label: "Route B: Via Rajiv Chowk + Blue Line (Traditional Central Route)",
+            detail:
+              "Huda City Centre → Rajiv Chowk (Yellow Line, 19 stops) → Switch to Blue Line → Botanical Garden (11 stops). Total stops: 30 • Travel time: ~72 mins.",
+          },
+        ],
+      },
+      {
+        heading: "2. How to Transfer Between Blue Line (Noida Sec 52) & Aqua Line (Noida Sec 51)",
+        paragraphs: [
+          "Whether you are heading to NSEZ, Noida Sector 137/142 corporate parks, India Expo Mart (Knowledge Park II), or Pari Chowk in Greater Noida, your gateway is the **Noida Sector 52 ↔ Noida Sector 51** interchange.",
+        ],
+        bullets: [
+          {
+            label: "Step 1: Exit at Noida Sector 52 (DMRC Blue Line)",
+            detail:
+              "Take the Blue Line branch towards Noida Electronic City (NOT the Vaishali branch at Yamuna Bank) and alight at Noida Sector 52.",
+          },
+          {
+            label: "Step 2: 300-Meter Dedicated Covered Walkway",
+            detail:
+              "Follow the 'Aqua Line / Sector 51' signage to the dedicated, barrier-free 300m covered pedestrian walkway equipped with free dedicated e-rickshaws (~4 minutes transfer).",
+          },
+          {
+            label: "Step 3: Board Aqua Line at Noida Sector 51",
+            detail:
+              "Tap your NCMC card or scan an NMRC QR ticket to board towards Depot Station (Greater Noida). Pari Chowk is 18 stops (~36 minutes) from Noida Sector 51.",
+          },
+        ],
+        callout: {
+          title: "Gurgaon Cyber City & Golf Course Road via Sikanderpur",
+          text: "For offices in DLF CyberHub, Moulsari Avenue, Phase 2, Phase 3, or Sector 55–56, alight at Sikanderpur on the Yellow Line. A covered concourse bridge leads straight onto the Gurgaon Rapid Metro—and your existing DMRC Smart Card or QR ticket works across the entire Rapid Metro loop!",
+        },
+      },
+    ],
+    faqs: [
+      {
+        question: "What is the fastest metro route from Gurgaon (Huda City Centre) to Noida?",
+        answer:
+          "Take the Yellow Line from Millennium City Centre Gurugram (Huda City Centre) to Hauz Khas, transfer to the Magenta Line towards Botanical Garden, and if heading to Noida Sector 62/Electronic City, switch to the Blue Line at Botanical Garden.",
+      },
+      {
+        question: "Does DMRC Smart Card work on Gurgaon Rapid Metro?",
+        answer:
+          "Yes! Gurgaon Rapid Metro is fully integrated with DMRC ticketing, so your DMRC Smart Card, NCMC card, and WhatsApp QR ticket work seamlessly through the Sikanderpur transfer.",
+      },
+    ],
+  },
+];
+
 export const ALL_BLOG_POSTS: BlogPost[] = [
   ...FEATURED_SEO_BLOG_POSTS,
+  ...METRO_BLOG_POSTS,
   ...FLIGHT_BLOG_POSTS,
   ...RAIL_BLOG_POSTS,
 ];

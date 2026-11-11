@@ -13,6 +13,7 @@ import {
   FEATURED_SEO_BLOG_POSTS,
   FLIGHT_BLOG_POSTS,
   HOTEL_BLOG_POSTS,
+  METRO_BLOG_POSTS,
   RAIL_BLOG_POSTS,
 } from "@/lib/blog-data";
 
@@ -128,6 +129,13 @@ export default async function BlogIndexPage() {
                 <span>Train Status</span>
               </Link>
               <Link
+                href="/delhi-metro"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/10 px-4 py-2 text-xs font-bold text-white transition hover:bg-white/15"
+              >
+                <TrainIcon className="h-3.5 w-3.5 text-amber-300" />
+                <span>Delhi Metro</span>
+              </Link>
+              <Link
                 href="/tools/hotel"
                 className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/10 px-4 py-2 text-xs font-bold text-white transition hover:bg-white/15"
               >
@@ -144,6 +152,12 @@ export default async function BlogIndexPage() {
               className="rounded-full bg-white/15 px-3 py-1 font-semibold text-white hover:bg-white/25"
             >
               Top 10 Holiday &amp; Comparison Guides (2026–27)
+            </a>
+            <a
+              href="#delhi-metro-guides"
+              className="rounded-full bg-[#fc6203] px-3 py-1 font-bold text-white hover:bg-[#e55800]"
+            >
+              Delhi NCR Metro Guides (New)
             </a>
             <a
               href="#flight-guides"
@@ -248,6 +262,79 @@ export default async function BlogIndexPage() {
               </article>
             );
           })}
+        </div>
+      </section>
+
+      {/* DELHI NCR METRO ROUTE, FARE & PHASE 4 GUIDES */}
+      <section
+        id="delhi-metro-guides"
+        className="mx-auto mt-12 max-w-6xl px-4 sm:mt-16 sm:px-6 lg:px-8"
+      >
+        <div className="flex flex-wrap items-end justify-between gap-2">
+          <div>
+            <span className="text-xs font-bold uppercase tracking-wider text-[#fc6203]">
+              Delhi NCR Metro Authority Guides
+            </span>
+            <h2 className="mt-0.5 text-lg font-extrabold text-ink sm:text-2xl">
+              Delhi NCR Metro Route Map, Fare Slabs, Airport Express &amp; Phase 4 Guides
+            </h2>
+            <p className="mt-0.5 text-xs text-ink-soft sm:text-sm">
+              Complete guides to all 12 Delhi NCR Metro lines, IGI Airport Terminal 1/2/3 metro connectivity, WhatsApp QR tickets, 20% Smart Card discounts, and Phase 4 Golden Line &amp; Ring Metro updates.
+            </p>
+          </div>
+          <Link
+            href="/delhi-metro"
+            className="inline-flex items-center gap-1 text-xs font-bold text-[#1956b4] hover:underline dark:text-blue-400"
+          >
+            <span>Open Delhi Metro Route Finder</span>
+            <ArrowRightIcon className="h-3.5 w-3.5" />
+          </Link>
+        </div>
+
+        <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {METRO_BLOG_POSTS.map((post) => (
+            <article
+              key={post.slug}
+              className="group flex flex-col justify-between rounded-xl border border-line bg-card p-5 transition hover:border-[#1956b4] hover:shadow-md"
+            >
+              <div>
+                <div className="flex items-center justify-between gap-2 text-xs">
+                  <span className="rounded bg-blue-50 px-2 py-0.5 font-bold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
+                    {post.category}
+                  </span>
+                  <span className="inline-flex items-center gap-1 text-ink-muted">
+                    <ClockIcon className="h-3 w-3" />
+                    <span>{post.readTime}</span>
+                  </span>
+                </div>
+
+                <h3 className="mt-3 text-base font-bold leading-snug text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-400">
+                  <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+                </h3>
+
+                <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-ink-soft">
+                  {post.excerpt}
+                </p>
+              </div>
+
+              <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-line pt-3 text-xs">
+                {post.primaryKeyword ? (
+                  <span className="rounded bg-subcard px-2 py-0.5 font-mono text-[11px] text-ink-muted">
+                    #{post.primaryKeyword}
+                  </span>
+                ) : (
+                  <span className="text-ink-muted">{post.publishedDate}</span>
+                )}
+                <Link
+                  href={`/blog/${post.slug}`}
+                  className="inline-flex items-center gap-1 font-bold text-[#1956b4] dark:text-blue-400"
+                >
+                  <span>Read Guide</span>
+                  <ArrowRightIcon className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+            </article>
+          ))}
         </div>
       </section>
 

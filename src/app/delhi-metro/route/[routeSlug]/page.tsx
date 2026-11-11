@@ -3,8 +3,9 @@ import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import { ArrowRightIcon, SwapIcon } from "@/components/Icons";
+import { ArrowRightIcon, ClockIcon, SwapIcon } from "@/components/Icons";
 import { MetroRouteFinder } from "@/components/MetroRouteFinder";
+import { METRO_BLOG_POSTS } from "@/lib/blog-data";
 import {
   fetchCachedMetroNetworkSummary,
   fetchCachedMetroRoutePlan,
@@ -108,6 +109,75 @@ export async function generateMetadata({
     description:
       "Check Delhi NCR Metro routes, token & smart card fares, travel time, and interchanges across all 262 stations.",
   };
+}
+
+function MetroBlogGuidesSection() {
+  return (
+    <section className="rounded-2xl border border-line bg-card p-4 shadow-xs sm:p-6">
+      <div className="mb-4 flex flex-wrap items-end justify-between gap-2 border-b border-line pb-3">
+        <div>
+          <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#fc6203]">
+            Delhi Metro Authority Guides &amp; Hot Topics
+          </span>
+          <h2 className="text-base font-extrabold text-ink sm:text-xl">
+            Delhi NCR Metro Route Map, IGI Airport Express, Fare Slabs &amp;
+            Phase 4 Guides
+          </h2>
+        </div>
+        <Link
+          href="/blog#delhi-metro-guides"
+          className="inline-flex items-center gap-1 text-xs font-bold text-[#1956b4] hover:underline dark:text-blue-300"
+        >
+          <span>All Metro Guides</span>
+          <ArrowRightIcon className="h-3.5 w-3.5" />
+        </Link>
+      </div>
+
+      <div className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
+        {METRO_BLOG_POSTS.map((post) => (
+          <article
+            key={post.slug}
+            className="group flex flex-col justify-between rounded-xl border border-line bg-subcard/35 p-4 transition hover:border-[#1956b4] hover:bg-card hover:shadow-xs"
+          >
+            <div>
+              <div className="flex items-center justify-between gap-2 text-xs">
+                <span className="rounded bg-blue-50 px-2 py-0.5 text-[11px] font-extrabold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
+                  {post.category}
+                </span>
+                <span className="inline-flex items-center gap-1 text-[11px] text-ink-muted">
+                  <ClockIcon className="h-3 w-3" />
+                  <span>{post.readTime}</span>
+                </span>
+              </div>
+              <h3 className="mt-2.5 text-sm font-extrabold leading-snug text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-300">
+                <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+              </h3>
+              <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-ink-soft">
+                {post.excerpt}
+              </p>
+            </div>
+
+            <div className="mt-3 flex items-center justify-between border-t border-line pt-2.5 text-xs">
+              {post.primaryKeyword ? (
+                <span className="rounded bg-card px-2 py-0.5 font-mono text-[10px] font-semibold text-ink-muted">
+                  #{post.primaryKeyword}
+                </span>
+              ) : (
+                <span className="text-ink-muted">{post.publishedDate}</span>
+              )}
+              <Link
+                href={`/blog/${post.slug}`}
+                className="inline-flex items-center gap-1 font-extrabold text-[#1956b4] dark:text-blue-300"
+              >
+                <span>Read Guide</span>
+                <ArrowRightIcon className="h-3.5 w-3.5" />
+              </Link>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
 }
 
 export default async function MetroDynamicSeoPage({
@@ -462,11 +532,10 @@ export default async function MetroDynamicSeoPage({
                     return (
                       <tr
                         key={`${stop.stopId}-${idx}`}
-                        className={`transition hover:bg-subcard/60 ${
-                          isOrigin || isDest || isTransferHere
+                        className={`transition hover:bg-subcard/60 ${isOrigin || isDest || isTransferHere
                             ? "bg-blue-50/40 font-bold dark:bg-blue-950/20"
                             : ""
-                        }`}
+                          }`}
                       >
                         <td className="px-3 py-2.5 font-mono text-xs text-ink-muted sm:px-3.5">
                           {idx + 1}
@@ -604,6 +673,8 @@ export default async function MetroDynamicSeoPage({
               </div>
             </details>
           </section>
+
+          <MetroBlogGuidesSection />
         </div>
       </main>
     );
@@ -762,6 +833,8 @@ export default async function MetroDynamicSeoPage({
               </table>
             </div>
           </section>
+
+          <MetroBlogGuidesSection />
         </div>
       </main>
     );
@@ -919,6 +992,8 @@ export default async function MetroDynamicSeoPage({
               </div>
             </details>
           </section>
+
+          <MetroBlogGuidesSection />
         </div>
       </main>
     );
