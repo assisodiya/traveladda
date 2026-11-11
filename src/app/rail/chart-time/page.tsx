@@ -18,7 +18,11 @@ import {
   FEATURED_SEO_BLOG_POSTS,
   RAIL_BLOG_POSTS,
 } from "@/lib/blog-data";
-import { POPULAR_CHART_TRAINS } from "@/lib/chart-time-types";
+import { buildChartTimePath, POPULAR_CHART_TRAINS } from "@/lib/chart-time-types";
+import {
+  ALL_CATALOG_TRAINS,
+  buildTrainLiveStatusPath,
+} from "@/lib/live-train-types";
 
 export const metadata: Metadata = {
   title:
@@ -354,6 +358,51 @@ export default async function TrainChartTimePage() {
             </Link>
           ))}
         </div>
+
+        {/* Complete Indian Railways Train Chart Time Directory */}
+        <details className="group mt-6 rounded-2xl border border-line bg-card p-4 sm:p-5">
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-sm font-extrabold text-ink sm:text-base">
+            <span>
+              Browse All {ALL_CATALOG_TRAINS.length} Trains — Station-Wise 1st
+              &amp; 2nd Chart Time Directory
+            </span>
+            <ChevronDownIcon className="h-4 w-4 shrink-0 text-ink-muted transition group-open:rotate-180" />
+          </summary>
+          <p className="mt-1.5 text-xs text-ink-soft">
+            Select any train below to check its 1st reservation chart time, 2nd
+            vacancy chart time, and remote charting station (
+            <code className="font-mono">chartRemoteStation</code>) for every
+            halt:
+          </p>
+          <div className="mt-4 grid grid-cols-1 gap-2 border-t border-line pt-4 sm:grid-cols-2 lg:grid-cols-3">
+            {ALL_CATALOG_TRAINS.map((train) => (
+              <div
+                key={`chart-dir-${train.trainNumber}`}
+                className="flex items-center justify-between gap-2 rounded-lg border border-line/70 bg-subcard/40 px-3 py-2 text-xs transition hover:border-[#1956b4]"
+              >
+                <Link
+                  href={buildChartTimePath(train.trainNumber, train.trainName)}
+                  className="min-w-0 flex-1 truncate font-semibold text-ink hover:text-[#1956b4] dark:hover:text-blue-400"
+                >
+                  <span className="mr-1.5 font-mono font-bold text-[#1956b4] dark:text-blue-400">
+                    {train.trainNumber}
+                  </span>
+                  <span>{train.trainName}</span>
+                </Link>
+                <Link
+                  href={buildTrainLiveStatusPath(
+                    train.trainNumber,
+                    train.trainName
+                  )}
+                  className="shrink-0 rounded bg-emerald-50 px-1.5 py-0.5 text-[10px] font-bold text-emerald-700 hover:underline dark:bg-emerald-500/15 dark:text-emerald-300"
+                  title={`${train.trainNumber} Live Train Running Status`}
+                >
+                  Live Status
+                </Link>
+              </div>
+            ))}
+          </div>
+        </details>
       </section>
 
       {/* 3-Step How It Works */}

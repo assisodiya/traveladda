@@ -1,11 +1,12 @@
 import type { MetadataRoute } from "next";
 import { ALL_BLOG_POSTS } from "@/lib/blog-data";
-import { POPULAR_CHART_TRAINS } from "@/lib/chart-time-types";
+import { buildChartTimePath, POPULAR_CHART_TRAINS } from "@/lib/chart-time-types";
 import {
   buildFlightStatusPath,
   POPULAR_LIVE_FLIGHTS,
 } from "@/lib/flight-types";
 import {
+  ALL_CATALOG_TRAINS,
   buildTrainLiveStatusPath,
   POPULAR_LIVE_TRAINS,
 } from "@/lib/live-train-types";
@@ -103,24 +104,49 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  const trainStatusRoutes: MetadataRoute.Sitemap = POPULAR_LIVE_TRAINS.map(
+  const popularTrainSet = new Set(
+    POPULAR_LIVE_TRAINS.map((t) => t.trainNumber),
+  );
+  const trainStatusRoutes: MetadataRoute.Sitemap = ALL_CATALOG_TRAINS.map(
     (train) => ({
       url: `${BASE_URL}${buildTrainLiveStatusPath(
         train.trainNumber,
         train.trainName,
       )}`,
       changeFrequency: "daily",
-      priority: 0.92,
+      priority: popularTrainSet.has(train.trainNumber) ? 0.94 : 0.89,
     }),
   );
 
-  const chartTimeRoutes: MetadataRoute.Sitemap = POPULAR_CHART_TRAINS.map(
-    (train) => ({
-      url: `${BASE_URL}/chart-times/${train.slug}`,
-      changeFrequency: "weekly",
-      priority: 0.9,
-    }),
-  );
+  const chartUrlSet = new Set<string>();
+  const chartTimeRoutes: MetadataRoute.Sitemap = [];
+
+  for (const train of POPULAR_CHART_TRAINS) {
+    const fullUrl = `${BASE_URL}/chart-times/${train.slug}`;
+    if (!chartUrlSet.has(fullUrl)) {
+      chartUrlSet.add(fullUrl);
+      chartTimeRoutes.push({
+        url: fullUrl,
+        changeFrequency: "weekly",
+        priority: 0.92,
+      });
+    }
+  }
+
+  for (const train of ALL_CATALOG_TRAINS) {
+    const fullUrl = `${BASE_URL}${buildChartTimePath(
+      train.trainNumber,
+      train.trainName,
+    )}`;
+    if (!chartUrlSet.has(fullUrl)) {
+      chartUrlSet.add(fullUrl);
+      chartTimeRoutes.push({
+        url: fullUrl,
+        changeFrequency: "weekly",
+        priority: popularTrainSet.has(train.trainNumber) ? 0.9 : 0.86,
+      });
+    }
+  }
 
   const flightStatusRoutes: MetadataRoute.Sitemap = POPULAR_LIVE_FLIGHTS.map(
     (flight) => ({

@@ -1,3 +1,5 @@
+import { ALL_CATALOG_TRAINS } from "./live-train-types";
+
 export interface UpstreamChartStation {
   stationCode: string;
   stationName: string;
@@ -223,6 +225,12 @@ export function extractTrainNumberFromChartSlug(rawSlug: string): string {
       );
     });
     if (matched) return matched.trainNumber;
+
+    const matchedCatalog = ALL_CATALOG_TRAINS.find((t) => {
+      const s = slugifyChartToken(t.trainName);
+      return s === cleanSlug || s.includes(cleanSlug) || cleanSlug.includes(s);
+    });
+    if (matchedCatalog) return matchedCatalog.trainNumber;
   }
 
   return decoded.replace(/\D/g, "").slice(0, 5);
@@ -248,7 +256,14 @@ export function buildChartTimeSlug(
     return catalogMatch.slug;
   }
 
-  const namePart = slugifyChartToken(trainName || "");
+  const resolvedName =
+    (trainName &&
+      !trainName.startsWith("Indian Railways Express #") &&
+      trainName) ||
+    ALL_CATALOG_TRAINS.find((t) => t.trainNumber === cleanNum)?.trainName ||
+    "";
+
+  const namePart = slugifyChartToken(resolvedName);
   if (!namePart || namePart === cleanNum) {
     return `${cleanNum}-chart-times`;
   }

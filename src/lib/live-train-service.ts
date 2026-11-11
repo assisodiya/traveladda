@@ -1,5 +1,6 @@
 import { cacheLife } from "next/cache";
 import {
+  ALL_CATALOG_TRAINS,
   ALL_WEEK_DAYS,
   computeHaltMinutes,
   decodePolyline,
@@ -998,13 +999,13 @@ export async function searchOwnedTrains(
   }
 
   const lower = cleanQuery.toLowerCase();
-  const fallback = POPULAR_LIVE_TRAINS.filter(
+  const fallback = ALL_CATALOG_TRAINS.filter(
     (t) =>
       t.trainNumber.includes(lower) ||
       t.trainName.toLowerCase().includes(lower) ||
       t.sourceCode.toLowerCase().includes(lower) ||
       t.destinationCode.toLowerCase().includes(lower)
-  );
+  ).slice(0, 20);
 
   return {
     success: true,

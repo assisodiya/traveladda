@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import { ALL_BLOG_POSTS } from "@/lib/blog-data";
-import { POPULAR_CHART_TRAINS } from "@/lib/chart-time-types";
+import { buildChartTimePath, POPULAR_CHART_TRAINS } from "@/lib/chart-time-types";
 import {
   buildFlightStatusPath,
   POPULAR_LIVE_FLIGHTS,
 } from "@/lib/flight-types";
 import {
+  ALL_CATALOG_TRAINS,
   buildTrainLiveStatusPath,
-  POPULAR_LIVE_TRAINS,
 } from "@/lib/live-train-types";
 import { getAllMetroLines, getAllMetroStations } from "@/lib/metro-service";
 import {
@@ -67,13 +67,13 @@ export async function GET() {
     `- **10-Digit IRCTC PNR Status Checker**: ${BASE_URL}/rail/pnr-status`,
     `- **Train Reservation Chart Preparation Time Hub**: ${BASE_URL}/rail/chart-time`,
     "",
-    "### Popular Live Train Running Status URLs",
-    ...POPULAR_LIVE_TRAINS.map(
+    "### Complete Indian Railways Live Train Status & Chart Time Directory",
+    ...ALL_CATALOG_TRAINS.map(
       (t) =>
-        `- [${t.trainNumber} ${t.trainName} (${t.sourceCode} → ${t.destinationCode})](${BASE_URL}${buildTrainLiveStatusPath(t.trainNumber, t.trainName)})`,
+        `- **${t.trainNumber} ${t.trainName}** (${t.sourceCode} → ${t.destinationCode} | ${t.type}) — [Live Running Status](${BASE_URL}${buildTrainLiveStatusPath(t.trainNumber, t.trainName)}) | [1st & 2nd Chart Time](${BASE_URL}${buildChartTimePath(t.trainNumber, t.trainName)})`,
     ),
     "",
-    "### Popular Train Chart Preparation Time URLs",
+    "### Popular Train Chart Preparation Time Highlights",
     ...POPULAR_CHART_TRAINS.map(
       (t) =>
         `- [${t.trainNumber} ${t.trainName} (${t.route}) — 1st Chart: ${t.firstChart}](${BASE_URL}/chart-times/${t.slug})`,

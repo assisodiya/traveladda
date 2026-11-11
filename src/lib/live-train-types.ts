@@ -1,3 +1,5 @@
+import { EXTENDED_INDIAN_RAILWAYS_TRAINS } from "./train-catalog";
+
 export interface TrainEndpointStation {
   code: string;
   name: string;
@@ -582,11 +584,26 @@ export const POPULAR_LIVE_TRAINS: TrainSearchItem[] = [
   },
 ];
 
+export const ALL_CATALOG_TRAINS: TrainSearchItem[] = (() => {
+  const seen = new Set<string>();
+  const combined: TrainSearchItem[] = [];
+  for (const train of [
+    ...POPULAR_LIVE_TRAINS,
+    ...EXTENDED_INDIAN_RAILWAYS_TRAINS,
+  ]) {
+    if (!seen.has(train.trainNumber)) {
+      seen.add(train.trainNumber);
+      combined.push(train);
+    }
+  }
+  return combined;
+})();
+
 export function findCatalogTrain(
   trainNumber: string
 ): TrainSearchItem | undefined {
   const clean = extractTrainNumberFromParam(trainNumber);
-  return POPULAR_LIVE_TRAINS.find((t) => t.trainNumber === clean);
+  return ALL_CATALOG_TRAINS.find((t) => t.trainNumber === clean);
 }
 
 export function slugifyTrainName(name: string): string {
@@ -608,7 +625,7 @@ export function extractTrainNumberFromParam(rawParam: string): string {
 
   const slugNeedle = slugifyTrainName(decoded);
   if (slugNeedle.length >= 3) {
-    const matchedByName = POPULAR_LIVE_TRAINS.find((t) => {
+    const matchedByName = ALL_CATALOG_TRAINS.find((t) => {
       const nameSlug = slugifyTrainName(t.trainName);
       return (
         nameSlug === slugNeedle ||
@@ -632,7 +649,7 @@ export function buildTrainSeoSlug(
     (trainName &&
       !trainName.startsWith("Indian Railways Express #") &&
       trainName) ||
-    POPULAR_LIVE_TRAINS.find((t) => t.trainNumber === cleanNum)?.trainName ||
+    ALL_CATALOG_TRAINS.find((t) => t.trainNumber === cleanNum)?.trainName ||
     "";
   const nameSlug = slugifyTrainName(resolvedName);
   if (!nameSlug || nameSlug === cleanNum) {
@@ -682,8 +699,8 @@ export function shiftDateString(yyyyMmDd: string, offsetDays: number): string {
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(yyyyMmDd);
   const base = match
     ? new Date(
-        Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3]))
-      )
+      Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3]))
+    )
     : new Date();
   base.setUTCDate(base.getUTCDate() + offsetDays);
   const y = base.getUTCFullYear();
