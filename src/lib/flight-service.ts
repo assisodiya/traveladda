@@ -1,5 +1,6 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
+import { cacheLife } from "next/cache";
 import {
   AIRLINE_DISPLAY_ALIASES,
   type AirlineSearchItem,
@@ -13,6 +14,7 @@ import {
   type OwnedAirlineSearchApiResponse,
   type OwnedFlightStatusApiResponse,
   POPULAR_AIRLINES,
+  shiftIsoDateByDays,
   type UpstreamFlightViewAirline,
 } from "./flight-types";
 
@@ -890,4 +892,52 @@ export async function fetchOwnedFlightStatus(
     };
   }
 }
+
+export async function fetchCachedFlightStatusForSeo(
+  airlineCode: string,
+  flightNumber: string,
+  departureDate?: string | null
+): Promise<NormalizedFlightStatusData | null> {
+  "use cache";
+  cacheLife("minutes");
+
+  const todayIst = getFlightTodayIstDateString();
+  const primaryDate =
+    departureDate && /^\d{4}-\d{2}-\d{2}$/.test(departureDate)
+      ? departureDate
+      : todayIst;
+
+  const res = await fetchOwnedFlightStatus(
+    airlineCode,
+    flightNumber,
+    primaryDate
+  );
+  if (res.body.success && res.body.data) {
+    return res.body.data;
+  }
+
+  // Fallback to tomorrow or yesterday if flight only operates on specific days or crossed midnight UTC
+  if (!departureDate) {
+    const tomorrowRes = await fetchOwnedFlightStatus(
+      airlineCode,
+      flightNumber,
+      shiftIsoDateByDays(todayIst, 1)
+    );
+    if (tomorrowRes.body.success && tomorrowRes.body.data) {
+      return tomorrowRes.body.data;
+    }
+
+    const yesterdayRes = await fetchOwnedFlightStatus(
+      airlineCode,
+      flightNumber,
+      shiftIsoDateByDays(todayIst, -1)
+    );
+    if (yesterdayRes.body.success && yesterdayRes.body.data) {
+      return yesterdayRes.body.data;
+    }
+  }
+
+  return null;
+}
+
 

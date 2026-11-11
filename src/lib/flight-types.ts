@@ -201,6 +201,154 @@ export const AIRLINE_DISPLAY_ALIASES: Record<
     preferredName: "Thai Airways",
     keywords: ["thai", "thai airways", "tg", "bangkok"],
   },
+  FZ: {
+    preferredName: "flydubai",
+    keywords: ["flydubai", "fly dubai", "fz"],
+  },
+  G9: {
+    preferredName: "Air Arabia",
+    keywords: ["air arabia", "g9", "sharjah"],
+  },
+  WY: {
+    preferredName: "Oman Air",
+    keywords: ["oman air", "wy", "muscat"],
+  },
+  GF: {
+    preferredName: "Gulf Air",
+    keywords: ["gulf air", "gf", "bahrain"],
+  },
+  KU: {
+    preferredName: "Kuwait Airways",
+    keywords: ["kuwait airways", "ku"],
+  },
+  SV: {
+    preferredName: "Saudia",
+    keywords: ["saudia", "saudi arabian airlines", "sv", "jeddah", "riyadh"],
+  },
+  XY: {
+    preferredName: "flynas",
+    keywords: ["flynas", "fly nas", "xy"],
+  },
+  J9: {
+    preferredName: "Jazeera Airways",
+    keywords: ["jazeera", "jazeera airways", "j9"],
+  },
+  UL: {
+    preferredName: "SriLankan Airlines",
+    keywords: ["srilankan", "srilankan airlines", "ul", "colombo"],
+  },
+  MH: {
+    preferredName: "Malaysia Airlines",
+    keywords: ["malaysia airlines", "mh", "kuala lumpur"],
+  },
+  OD: {
+    preferredName: "Batik Air Malaysia",
+    keywords: ["batik air", "malindo", "od"],
+  },
+  AK: {
+    preferredName: "AirAsia",
+    keywords: ["airasia", "air asia", "ak"],
+  },
+  FD: {
+    preferredName: "Thai AirAsia",
+    keywords: ["thai airasia", "fd"],
+  },
+  VN: {
+    preferredName: "Vietnam Airlines",
+    keywords: ["vietnam airlines", "vn", "hanoi", "ho chi minh"],
+  },
+  VJ: {
+    preferredName: "VietJet Air",
+    keywords: ["vietjet", "vietjet air", "vj"],
+  },
+  CX: {
+    preferredName: "Cathay Pacific",
+    keywords: ["cathay", "cathay pacific", "cx", "hong kong"],
+  },
+  JL: {
+    preferredName: "Japan Airlines",
+    keywords: ["japan airlines", "jal", "jl", "tokyo"],
+  },
+  NH: {
+    preferredName: "ANA All Nippon Airways",
+    keywords: ["ana", "all nippon", "nh", "tokyo"],
+  },
+  KE: {
+    preferredName: "Korean Air",
+    keywords: ["korean air", "ke", "seoul"],
+  },
+  TK: {
+    preferredName: "Turkish Airlines",
+    keywords: ["turkish", "turkish airlines", "tk", "istanbul"],
+  },
+  AF: {
+    preferredName: "Air France",
+    keywords: ["air france", "af", "paris"],
+  },
+  KL: {
+    preferredName: "KLM Royal Dutch Airlines",
+    keywords: ["klm", "royal dutch", "kl", "amsterdam"],
+  },
+  LX: {
+    preferredName: "SWISS",
+    keywords: ["swiss", "swiss international", "lx", "zurich"],
+  },
+  AY: {
+    preferredName: "Finnair",
+    keywords: ["finnair", "ay", "helsinki"],
+  },
+  VS: {
+    preferredName: "Virgin Atlantic",
+    keywords: ["virgin", "virgin atlantic", "vs", "london"],
+  },
+  UA: {
+    preferredName: "United Airlines",
+    keywords: ["united", "united airlines", "ua"],
+  },
+  AA: {
+    preferredName: "American Airlines",
+    keywords: ["american", "american airlines", "aa"],
+  },
+  DL: {
+    preferredName: "Delta Air Lines",
+    keywords: ["delta", "delta air lines", "dl"],
+  },
+  AC: {
+    preferredName: "Air Canada",
+    keywords: ["air canada", "ac", "toronto"],
+  },
+  QF: {
+    preferredName: "Qantas",
+    keywords: ["qantas", "qf", "sydney", "melbourne"],
+  },
+  ET: {
+    preferredName: "Ethiopian Airlines",
+    keywords: ["ethiopian", "ethiopian airlines", "et", "addis ababa"],
+  },
+  MK: {
+    preferredName: "Air Mauritius",
+    keywords: ["air mauritius", "mk"],
+  },
+  KQ: {
+    preferredName: "Kenya Airways",
+    keywords: ["kenya airways", "kq", "nairobi"],
+  },
+  HY: {
+    preferredName: "Uzbekistan Airways",
+    keywords: ["uzbekistan airways", "hy", "tashkent"],
+  },
+  KC: {
+    preferredName: "Air Astana",
+    keywords: ["air astana", "kc", "almaty"],
+  },
+  AZ: {
+    preferredName: "ITA Airways",
+    keywords: ["ita airways", "alitalia", "az", "rome"],
+  },
+  LO: {
+    preferredName: "LOT Polish Airlines",
+    keywords: ["lot polish", "lo", "warsaw"],
+  },
 };
 
 export const POPULAR_AIRLINES: AirlineSearchItem[] = [
@@ -366,6 +514,14 @@ export const POPULAR_LIVE_FLIGHTS: PopularFlightPreset[] = [
   {
     airlineCode: "6E",
     airlineName: "IndiGo",
+    flightNumber: "1205",
+    routeCodes: "DEL → BOM",
+    routeCities: "New Delhi to Mumbai",
+    category: "Domestic",
+  },
+  {
+    airlineCode: "6E",
+    airlineName: "IndiGo",
     flightNumber: "2045",
     routeCodes: "DEL → BOM",
     routeCities: "New Delhi to Mumbai",
@@ -428,6 +584,210 @@ export const POPULAR_LIVE_FLIGHTS: PopularFlightPreset[] = [
     category: "International",
   },
 ];
+
+function slugifyAirlineToken(input: string): string {
+  return (input || "")
+    .toLowerCase()
+    .replace(/\(.*?\)/g, " ")
+    .replace(/&/g, " and ")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .replace(/-{2,}/g, "-");
+}
+
+export function getAirlineNameByCode(
+  airlineCode: string,
+  fallbackName?: string | null
+): string {
+  const upper = (airlineCode || "").trim().toUpperCase();
+  if (AIRLINE_DISPLAY_ALIASES[upper]?.preferredName) {
+    return AIRLINE_DISPLAY_ALIASES[upper].preferredName;
+  }
+  const popular = POPULAR_AIRLINES.find((a) => a.code === upper);
+  if (popular?.name) {
+    return popular.name;
+  }
+  if (fallbackName && fallbackName.trim() && fallbackName.trim().toUpperCase() !== upper) {
+    return fallbackName.trim();
+  }
+  return upper;
+}
+
+/**
+ * Builds canonical SEO flight status slug:
+ * e.g., buildFlightStatusSlug("6E", "1205", "IndiGo") => "indigo-6e-1205-flight-status"
+ * e.g., buildFlightStatusSlug("AI", "101", "Air India") => "air-india-ai-101-flight-status"
+ */
+export function buildFlightStatusSlug(
+  airlineCode: string,
+  flightNumber: string,
+  airlineName?: string | null
+): string {
+  const cleanCode = (airlineCode || "").trim().toLowerCase();
+  const cleanNum = (flightNumber || "")
+    .trim()
+    .replace(/^0+(?=\d)/, "")
+    .toLowerCase();
+  const resolvedName = getAirlineNameByCode(airlineCode, airlineName);
+  const nameSlug = slugifyAirlineToken(resolvedName);
+
+  if (!nameSlug || nameSlug === cleanCode) {
+    return `${cleanCode}-${cleanNum}-flight-status`;
+  }
+  // Avoid duplicating code if nameSlug already ends with "-6e"
+  if (nameSlug.endsWith(`-${cleanCode}`)) {
+    return `${nameSlug}-${cleanNum}-flight-status`;
+  }
+  return `${nameSlug}-${cleanCode}-${cleanNum}-flight-status`;
+}
+
+export function buildFlightStatusPath(
+  airlineCode: string,
+  flightNumber: string,
+  airlineName?: string | null,
+  departureDate?: string | null
+): string {
+  const slug = buildFlightStatusSlug(airlineCode, flightNumber, airlineName);
+  const basePath = `/flight-status/${slug}`;
+  if (
+    departureDate &&
+    /^\d{4}-\d{2}-\d{2}$/.test(departureDate) &&
+    departureDate !== getFlightTodayIstDateString()
+  ) {
+    return `${basePath}?date=${encodeURIComponent(departureDate)}`;
+  }
+  return basePath;
+}
+
+export interface ParsedFlightStatusSlug {
+  airlineCode: string;
+  flightNumber: string;
+  airlineName: string;
+  canonicalSlug: string;
+}
+
+/**
+ * Parses any SEO flight slug such as:
+ * - "indigo-6e-1205-flight-status"
+ * - "air-india-ai-101-flight-status"
+ * - "6e-1205-flight-status"
+ * - "6e1205-flight-status"
+ * - "indigo-1205-flight-status"
+ * - "lufthansa-lh-761"
+ */
+export function parseFlightStatusSlug(
+  rawSlug: string
+): ParsedFlightStatusSlug | null {
+  const decoded = decodeURIComponent(rawSlug || "")
+    .trim()
+    .toLowerCase()
+    .replace(/-?(?:live-)?flight-status$/i, "")
+    .replace(/-?status$/i, "")
+    .replace(/^-+|-+$/g, "");
+
+  if (!decoded) return null;
+
+  // Pattern 1: "...-<2-or-3-char-code>-<1-to-4-digit-flight-num>" or "<code-slug>-<flight-num>"
+  const tokens = decoded.split("-").filter(Boolean);
+  if (tokens.length >= 2) {
+    const lastToken = tokens[tokens.length - 1];
+    const secondLastToken = tokens[tokens.length - 2];
+
+    // Case 1A: secondLastToken is a 2-3 char IATA/ICAO code and lastToken is flight number
+    if (
+      /^\d{1,4}[a-z]?$/i.test(lastToken) &&
+      /^[a-z0-9]{2,3}$/i.test(secondLastToken) &&
+      /[a-z]/i.test(secondLastToken)
+    ) {
+      const airlineCode = secondLastToken.toUpperCase();
+      const flightNumber = lastToken.replace(/^0+(?=\d)/, "").toUpperCase();
+      const prefixSlug = tokens.slice(0, -2).join("-");
+      const fallbackName = prefixSlug
+        ? prefixSlug
+            .split("-")
+            .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+            .join(" ")
+        : undefined;
+      const airlineName = getAirlineNameByCode(airlineCode, fallbackName);
+      return {
+        airlineCode,
+        flightNumber,
+        airlineName,
+        canonicalSlug: buildFlightStatusSlug(
+          airlineCode,
+          flightNumber,
+          airlineName
+        ),
+      };
+    }
+
+    // Case 1B: lastToken is combined "<code2><digits>" e.g. "indigo-6e1205"
+    const combinedMatch = /^([a-z0-9]{2}|[a-z]{3})0*(\d{1,4}[a-z]?)$/i.exec(
+      lastToken
+    );
+    if (combinedMatch && /[a-z]/i.test(combinedMatch[1])) {
+      const airlineCode = combinedMatch[1].toUpperCase();
+      const flightNumber = combinedMatch[2].toUpperCase();
+      const airlineName = getAirlineNameByCode(airlineCode);
+      return {
+        airlineCode,
+        flightNumber,
+        airlineName,
+        canonicalSlug: buildFlightStatusSlug(
+          airlineCode,
+          flightNumber,
+          airlineName
+        ),
+      };
+    }
+
+    // Case 1C: "<airline-name-slug>-<flight-number>" e.g. "indigo-1205" or "air-india-101"
+    if (/^\d{1,4}[a-z]?$/i.test(lastToken)) {
+      const namePart = tokens.slice(0, -1).join(" ");
+      for (const [code, aliasInfo] of Object.entries(AIRLINE_DISPLAY_ALIASES)) {
+        if (
+          slugifyAirlineToken(aliasInfo.preferredName) ===
+            tokens.slice(0, -1).join("-") ||
+          aliasInfo.keywords.some((k) => k === namePart)
+        ) {
+          const flightNumber = lastToken.replace(/^0+(?=\d)/, "").toUpperCase();
+          return {
+            airlineCode: code,
+            flightNumber,
+            airlineName: aliasInfo.preferredName,
+            canonicalSlug: buildFlightStatusSlug(
+              code,
+              flightNumber,
+              aliasInfo.preferredName
+            ),
+          };
+        }
+      }
+    }
+  }
+
+  // Pattern 2: Single token like "6e1205" or "ai101"
+  const singleMatch = /^([a-z0-9]{2}|[a-z]{3})0*(\d{1,4}[a-z]?)$/i.exec(
+    decoded
+  );
+  if (singleMatch && /[a-z]/i.test(singleMatch[1])) {
+    const airlineCode = singleMatch[1].toUpperCase();
+    const flightNumber = singleMatch[2].toUpperCase();
+    const airlineName = getAirlineNameByCode(airlineCode);
+    return {
+      airlineCode,
+      flightNumber,
+      airlineName,
+      canonicalSlug: buildFlightStatusSlug(
+        airlineCode,
+        flightNumber,
+        airlineName
+      ),
+    };
+  }
+
+  return null;
+}
 
 export function getFlightTodayIstDateString(): string {
   const formatter = new Intl.DateTimeFormat("en-CA", {

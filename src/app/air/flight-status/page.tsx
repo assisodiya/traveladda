@@ -13,7 +13,11 @@ import {
 } from "@/components/Icons";
 import { LiveFlightTracker } from "@/components/LiveFlightTracker";
 import { FLIGHT_BLOG_POSTS } from "@/lib/blog-data";
-import { POPULAR_AIRLINES, POPULAR_LIVE_FLIGHTS } from "@/lib/flight-types";
+import {
+  buildFlightStatusPath,
+  POPULAR_AIRLINES,
+  POPULAR_LIVE_FLIGHTS,
+} from "@/lib/flight-types";
 
 export const metadata: Metadata = {
   title:
@@ -298,7 +302,11 @@ export default async function LiveFlightStatusPage() {
           {POPULAR_LIVE_FLIGHTS.map((flight) => (
             <Link
               key={`${flight.airlineCode}-${flight.flightNumber}`}
-              href={`/air/flight-status?airline=${flight.airlineCode}&flight=${flight.flightNumber}`}
+              href={buildFlightStatusPath(
+                flight.airlineCode,
+                flight.flightNumber,
+                flight.airlineName
+              )}
               className="group flex flex-col justify-between rounded-xl border border-line bg-card p-3.5 shadow-2xs transition hover:border-[#1956b4] hover:shadow-sm"
             >
               <div className="flex items-center justify-between gap-2">

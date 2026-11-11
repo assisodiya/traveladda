@@ -111,6 +111,65 @@ const THEME_INIT_SCRIPT = `
 })();
 `;
 
+const GLOBAL_AI_SITE_JSON_LD = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://traveladda.in/#organization",
+      name: "TravelAdda",
+      url: "https://traveladda.in",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://traveladda.in/assets/TravelAdda-travel-logo.png",
+        width: 2056,
+        height: 765,
+      },
+      description:
+        "Indian real-time transit and travel intelligence platform covering Delhi NCR Metro (12 lines, 262 stations), Indian Railways Live Train Running Status, 10-Digit IRCTC PNR Status, Reservation Chart Preparation Times, and Live Flight Tracking.",
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://traveladda.in/#website",
+      name: "TravelAdda",
+      url: "https://traveladda.in",
+      publisher: {
+        "@id": "https://traveladda.in/#organization",
+      },
+      inLanguage: "en-IN",
+      speakable: {
+        "@type": "SpeakableSpecification",
+        cssSelector: ["h1", "h2", "article p"],
+      },
+      potentialAction: [
+        {
+          "@type": "SearchAction",
+          name: "Search Delhi NCR Metro Route",
+          target: {
+            "@type": "EntryPoint",
+            urlTemplate:
+              "https://traveladda.in/delhi-metro?from={origin_slug}&to={destination_slug}",
+          },
+          "query-input": [
+            "required name=origin_slug",
+            "required name=destination_slug",
+          ],
+        },
+        {
+          "@type": "SearchAction",
+          name: "Track Live Train Running Status",
+          target: {
+            "@type": "EntryPoint",
+            urlTemplate:
+              "https://traveladda.in/rail/live-status?train={train_number}",
+          },
+          "query-input": "required name=train_number",
+        },
+      ],
+    },
+  ],
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -119,6 +178,27 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <link
+          rel="alternate"
+          type="text/plain"
+          href="/llms.txt"
+          title="LLM & Generative AI Agent Index (llms.txt)"
+        />
+        <link
+          rel="alternate"
+          type="text/plain"
+          href="/llms-full.txt"
+          title="Full LLM Knowledge Base (llms-full.txt)"
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(GLOBAL_AI_SITE_JSON_LD).replace(
+              /</g,
+              "\\u003c",
+            ),
+          }}
+        />
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>
       <body className="flex min-h-screen flex-col bg-canvas text-ink antialiased">

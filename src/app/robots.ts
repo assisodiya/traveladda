@@ -1,29 +1,87 @@
 import type { MetadataRoute } from "next";
 
+const PUBLIC_ALLOW_PATHS = [
+  "/",
+  "/delhi-metro",
+  "/delhi-metro/",
+  "/flight-status/",
+  "/chart-times/",
+  "/rail/",
+  "/air/",
+  "/blog",
+  "/blog/",
+  "/tools",
+  "/tools/",
+  "/llms.txt",
+  "/llms-full.txt",
+  "/api/metro/route",
+  "/api/metro/stations",
+  "/favicon.ico",
+  "/icon1",
+  "/icon2",
+  "/apple-icon",
+  "/manifest.webmanifest",
+  "/assets/",
+  "/airlines/",
+  "/api/flights/icon/",
+];
+
+const PRIVATE_API_DISALLOW_PATHS = [
+  "/api/pnr",
+  "/api/trains",
+  "/api/flights/airlines",
+  "/api/flights/status",
+];
+
+/**
+ * Explicit allow rules for traditional search engines AND Generative AI / LLM crawlers
+ * (OpenAI ChatGPT Search, Google Gemini / AI Overviews, Anthropic Claude, Perplexity,
+ * Microsoft Copilot, Apple Intelligence, Meta AI, Amazon Rufus, DuckAssist, Cohere, etc.)
+ */
+const AI_AND_SEARCH_AGENTS = [
+  "GPTBot",
+  "OAI-SearchBot",
+  "ChatGPT-User",
+  "Googlebot",
+  "Google-Extended",
+  "GoogleOther",
+  "ClaudeBot",
+  "Claude-Web",
+  "anthropic-ai",
+  "PerplexityBot",
+  "Perplexity-User",
+  "Bingbot",
+  "Applebot",
+  "Applebot-Extended",
+  "Meta-ExternalAgent",
+  "Meta-ExternalFetcher",
+  "FacebookBot",
+  "Amazonbot",
+  "DuckAssistBot",
+  "YouBot",
+  "cohere-ai",
+  "CCBot",
+];
+
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
       {
         userAgent: "*",
-        allow: [
-          "/",
-          "/favicon.ico",
-          "/icon1",
-          "/icon2",
-          "/apple-icon",
-          "/manifest.webmanifest",
-          "/assets/",
-          "/airlines/",
-          "/api/flights/icon/",
-        ],
-        disallow: [
-          "/api/pnr",
-          "/api/trains",
-          "/api/flights/airlines",
-          "/api/flights/status",
-        ],
+        allow: PUBLIC_ALLOW_PATHS,
+        disallow: PRIVATE_API_DISALLOW_PATHS,
+      },
+      {
+        userAgent: AI_AND_SEARCH_AGENTS,
+        allow: PUBLIC_ALLOW_PATHS,
+        disallow: PRIVATE_API_DISALLOW_PATHS,
       },
     ],
-    sitemap: "https://traveladda.in/sitemap.xml",
+    host: "https://traveladda.in",
+    sitemap: [
+      "https://traveladda.in/sitemap.xml",
+      "https://traveladda.in/llms.txt",
+      "https://traveladda.in/llms-full.txt",
+    ],
   };
 }

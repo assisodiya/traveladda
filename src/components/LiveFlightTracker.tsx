@@ -12,7 +12,9 @@ import {
 } from "react";
 import {
   type AirlineSearchItem,
+  buildFlightStatusPath,
   type FlightLifecycleTone,
+  getAirlineNameByCode,
   getFlightTodayIstDateString,
   type NormalizedFlightLeg,
   type NormalizedFlightStatusData,
@@ -137,7 +139,21 @@ function formatFriendlyDateLabel(isoDate: string): string {
   }).format(utc);
 }
 
-export function LiveFlightTracker() {
+export interface LiveFlightTrackerProps {
+  initialAirlineCode?: string;
+  initialAirlineName?: string;
+  initialFlightNumber?: string;
+  initialDate?: string;
+  initialFlightData?: NormalizedFlightStatusData | null;
+}
+
+export function LiveFlightTracker({
+  initialAirlineCode,
+  initialAirlineName,
+  initialFlightNumber,
+  initialDate,
+  initialFlightData = null,
+}: LiveFlightTrackerProps = {}) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -156,6 +172,7 @@ export function LiveFlightTracker() {
   const urlAirline = (
     searchParams.get("airline") ??
     searchParams.get("code") ??
+    initialAirlineCode ??
     ""
   )
     .trim()
@@ -163,11 +180,14 @@ export function LiveFlightTracker() {
   const urlFlightNo = (
     searchParams.get("flight") ??
     searchParams.get("flightNumber") ??
+    initialFlightNumber ??
     ""
   ).trim();
   const urlDate = (
     searchParams.get("date") ??
     searchParams.get("departureDate") ??
+    initialDate ??
+    initialFlightData?.query.departureDate ??
     ""
   ).trim();
 
@@ -175,10 +195,14 @@ export function LiveFlightTracker() {
     if (urlAirline) {
       const match = POPULAR_AIRLINES.find((a) => a.code === urlAirline);
       if (match) return match;
+      const resolvedName = getAirlineNameByCode(
+        urlAirline,
+        initialFlightData?.primaryFlight.airlineName ?? initialAirlineName
+      );
       return {
         id: 0,
         code: urlAirline,
-        name: urlAirline,
+        name: resolvedName,
         aliasName: null,
         phoneFree: "",
         phoneOther: "",
@@ -190,7 +214,7 @@ export function LiveFlightTracker() {
       } satisfies AirlineSearchItem;
     }
     return POPULAR_AIRLINES[0];
-  }, [urlAirline]);
+  }, [urlAirline, initialAirlineName, initialFlightData]);
 
   const [selectedAirline, setSelectedAirline] =
     useState<AirlineSearchItem | null>(initialAirlineObj);
@@ -207,7 +231,7 @@ export function LiveFlightTracker() {
   const effectiveDate = selectedDate || todayIst;
 
   const [flightData, setFlightData] =
-    useState<NormalizedFlightStatusData | null>(null);
+    useState<NormalizedFlightStatusData | null>(initialFlightData);
   const [selectedLegIndex, setSelectedLegIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -217,7 +241,11 @@ export function LiveFlightTracker() {
 
   const airlineBoxRef = useRef<HTMLDivElement>(null);
   const flightNoInputRef = useRef<HTMLInputElement>(null);
-  const lastFetchedSignatureRef = useRef<string>("");
+  const lastFetchedSignatureRef = useRef<string>(
+    initialFlightData
+      ? `${initialFlightData.query.airlineCode}|${initialFlightData.query.flightNumber}|${initialFlightData.query.departureDate}`
+      : ""
+  );
 
   const yesterdayDate = useMemo(
     () => (todayIst ? shiftIsoDateByDays(todayIst, -1) : ""),
@@ -294,7 +322,11 @@ export function LiveFlightTracker() {
       airlineCodeRaw: string,
       flightNoRaw: string,
       depDateRaw: string,
-      options?: { pushUrl?: boolean; silent?: boolean }
+      options?: {
+        pushUrl?: boolean;
+        silent?: boolean;
+        airlineNameHint?: string;
+      }
     ) => {
       const cleanAirline = airlineCodeRaw.trim().toUpperCase();
       const parsed = parseFlightInput(flightNoRaw);
@@ -319,12 +351,15 @@ export function LiveFlightTracker() {
         return;
       }
 
+      const initialSeoPath = buildFlightStatusPath(
+        finalAirline,
+        finalFlightNo,
+        options?.airlineNameHint,
+        finalDate
+      );
+
       if (options?.pushUrl) {
-        const params = new URLSearchParams();
-        params.set("airline", finalAirline);
-        params.set("flight", finalFlightNo);
-        params.set("date", finalDate);
-        router.replace(`/air/flight-status?${params.toString()}`, {
+        router.push(initialSeoPath, {
           scroll: false,
         });
       }
@@ -366,6 +401,17 @@ export function LiveFlightTracker() {
         setErrorHint(null);
 
         const primary = json.data.primaryFlight;
+        if (options?.pushUrl && primary.airlineName) {
+          const canonicalSeoPath = buildFlightStatusPath(
+            finalAirline,
+            finalFlightNo,
+            primary.airlineName,
+            finalDate
+          );
+          if (canonicalSeoPath !== initialSeoPath) {
+            router.replace(canonicalSeoPath, { scroll: false });
+          }
+        }
         setSelectedAirline((prev) => {
           if (prev && prev.code === finalAirline && prev.name !== finalAirline) {
             return prev;
@@ -501,8 +547,15 @@ export function LiveFlightTracker() {
       parsed.extractedAirlineCode ?? selectedAirline?.code ?? "";
     const numToUse = parsed.extractedFlightNumber || flightNumberInput.trim();
     const dateToUse = effectiveDate || getFlightTodayIstDateString();
+    const nameHint =
+      selectedAirline && selectedAirline.code === codeToUse
+        ? selectedAirline.name
+        : undefined;
     lastFetchedSignatureRef.current = `${codeToUse}|${numToUse}|${dateToUse}`;
-    void executeFlightLookup(codeToUse, numToUse, dateToUse, { pushUrl: true });
+    void executeFlightLookup(codeToUse, numToUse, dateToUse, {
+      pushUrl: true,
+      airlineNameHint: nameHint,
+    });
   };
 
   const handleQuickPresetClick = (
@@ -536,6 +589,7 @@ export function LiveFlightTracker() {
     lastFetchedSignatureRef.current = `${airlineCode}|${flightNumber}|${targetDate}`;
     void executeFlightLookup(airlineCode, flightNumber, targetDate, {
       pushUrl: true,
+      airlineNameHint: airlineName,
     });
   };
 

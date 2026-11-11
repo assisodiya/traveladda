@@ -2,6 +2,10 @@ import type { MetadataRoute } from "next";
 import { ALL_BLOG_POSTS } from "@/lib/blog-data";
 import { POPULAR_CHART_TRAINS } from "@/lib/chart-time-types";
 import {
+  buildFlightStatusPath,
+  POPULAR_LIVE_FLIGHTS,
+} from "@/lib/flight-types";
+import {
   buildTrainLiveStatusPath,
   POPULAR_LIVE_TRAINS,
 } from "@/lib/live-train-types";
@@ -87,6 +91,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.7,
     },
+    {
+      url: `${BASE_URL}/llms.txt`,
+      changeFrequency: "daily",
+      priority: 0.9,
+    },
+    {
+      url: `${BASE_URL}/llms-full.txt`,
+      changeFrequency: "daily",
+      priority: 0.88,
+    },
   ];
 
   const trainStatusRoutes: MetadataRoute.Sitemap = POPULAR_LIVE_TRAINS.map(
@@ -105,6 +119,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${BASE_URL}/chart-times/${train.slug}`,
       changeFrequency: "weekly",
       priority: 0.9,
+    }),
+  );
+
+  const flightStatusRoutes: MetadataRoute.Sitemap = POPULAR_LIVE_FLIGHTS.map(
+    (flight) => ({
+      url: `${BASE_URL}${buildFlightStatusPath(
+        flight.airlineCode,
+        flight.flightNumber,
+        flight.airlineName,
+      )}`,
+      changeFrequency: "hourly",
+      priority: 0.94,
     }),
   );
 
@@ -187,6 +213,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     ...coreRoutes,
+    ...flightStatusRoutes,
     ...trainStatusRoutes,
     ...chartTimeRoutes,
     ...metroLineRoutes,
