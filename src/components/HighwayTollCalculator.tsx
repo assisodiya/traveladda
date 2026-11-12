@@ -8,6 +8,7 @@ import {
   ArrowRightIcon,
   CalculatorIcon,
   CheckCircleIcon,
+  CloseIcon,
   CopyIcon,
   MapPinIcon,
   PrinterIcon,
@@ -17,6 +18,8 @@ import {
   ShieldCheckIcon,
   SwapIcon,
   TicketIcon,
+  TranslateIcon,
+  WhatsAppIcon,
   ZapIcon,
 } from "@/components/Icons";
 import {
@@ -538,8 +541,11 @@ export default function HighwayTollCalculator({
             <div
               role="group"
               aria-label="Language Switcher"
-              className="inline-flex rounded-xl border border-[#1956b4]/30 bg-subcard p-1"
+              className="inline-flex items-center gap-1 rounded-xl border border-[#1956b4]/30 bg-subcard p-1"
             >
+              <span className="pl-1.5 text-[#1956b4] dark:text-blue-300">
+                <TranslateIcon className="h-3.5 w-3.5" />
+              </span>
               <button
                 type="button"
                 onClick={() => setLang("en")}
@@ -642,9 +648,9 @@ export default function HighwayTollCalculator({
                       setFromDropdownOpen(true);
                     }}
                     aria-label="Clear origin city"
-                    className="cursor-pointer absolute right-2.5 top-1/2 -translate-y-1/2 rounded-md px-2 py-1 text-xs font-bold text-ink-muted hover:bg-subcard hover:text-ink"
+                    className="cursor-pointer absolute right-2.5 top-1/2 -translate-y-1/2 inline-flex h-7 w-7 items-center justify-center rounded-md text-ink-muted hover:bg-subcard hover:text-ink"
                   >
-                    ✕
+                    <CloseIcon className="h-4 w-4" />
                   </button>
                 )}
               </div>
@@ -754,9 +760,9 @@ export default function HighwayTollCalculator({
                       setToDropdownOpen(true);
                     }}
                     aria-label="Clear destination city"
-                    className="cursor-pointer absolute right-2.5 top-1/2 -translate-y-1/2 rounded-md px-2 py-1 text-xs font-bold text-ink-muted hover:bg-subcard hover:text-ink"
+                    className="cursor-pointer absolute right-2.5 top-1/2 -translate-y-1/2 inline-flex h-7 w-7 items-center justify-center rounded-md text-ink-muted hover:bg-subcard hover:text-ink"
                   >
-                    ✕
+                    <CloseIcon className="h-4 w-4" />
                   </button>
                 )}
               </div>
@@ -1186,7 +1192,7 @@ export default function HighwayTollCalculator({
                     onClick={handleWhatsAppShare}
                     className="cursor-pointer inline-flex items-center justify-center gap-1 rounded-lg bg-emerald-600 px-2 py-2 text-[11px] font-extrabold text-white transition hover:bg-emerald-700"
                   >
-                    <span>💬</span>
+                    <WhatsAppIcon className="h-3.5 w-3.5 shrink-0" />
                     <span className="truncate">
                       {isHindi ? "WhatsApp" : "WhatsApp"}
                     </span>

@@ -21,11 +21,13 @@ import {
   CheckCircleIcon,
   ClockIcon,
   CopyIcon,
+  EmailSendIcon,
   LuggageIcon,
   PlaneIcon,
   SearchIcon,
   ShieldCheckIcon,
   TicketIcon,
+  WhatsAppIcon,
 } from "./Icons";
 
 interface DgcaCompensationCheckerProps {
@@ -293,8 +295,9 @@ ${passengerName.trim() || "[Your Name]"}
               </button>
             </div>
             {flightFetchNote && (
-              <p className="mt-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-300">
-                ✓ {flightFetchNote}
+              <p className="mt-1.5 flex items-center gap-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-300">
+                <CheckCircleIcon className="h-3.5 w-3.5 shrink-0" />
+                <span>{flightFetchNote}</span>
               </p>
             )}
           </div>
@@ -851,7 +854,7 @@ ${passengerName.trim() || "[Your Name]"}
                 Auto-Generated DGCA CAR Compensation Claim Email
               </h3>
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <button
                 type="button"
                 onClick={handleCopyClaimEmail}
@@ -860,11 +863,28 @@ ${passengerName.trim() || "[Your Name]"}
                 <CopyIcon className="h-3.5 w-3.5" />
                 <span>{copiedClaim ? "Copied Claim!" : "Copy Claim Text"}</span>
               </button>
+              <button
+                type="button"
+                onClick={() => {
+                  if (typeof window !== "undefined") {
+                    window.open(
+                      `https://wa.me/?text=${encodeURIComponent(claimEmailBody)}`,
+                      "_blank",
+                      "noopener,noreferrer",
+                    );
+                  }
+                }}
+                className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl bg-emerald-600 px-3.5 py-2 text-xs font-extrabold text-white shadow-xs transition hover:bg-emerald-700"
+              >
+                <WhatsAppIcon className="h-3.5 w-3.5" />
+                <span>Share on WhatsApp</span>
+              </button>
               <a
                 href={`mailto:${selectedAirline.nodalOfficer.email}?cc=${selectedAirline.appellateAuthority.email}&subject=${encodeURIComponent(claimEmailSubject)}&body=${encodeURIComponent(claimEmailBody)}`}
                 className="inline-flex items-center gap-1.5 rounded-xl border border-line-strong bg-subcard px-3.5 py-2 text-xs font-extrabold text-ink transition hover:border-[#1956b4]"
               >
-                <span>Email Nodal Officer →</span>
+                <EmailSendIcon className="h-3.5 w-3.5 text-[#1956b4] dark:text-blue-300" />
+                <span>Email Nodal Officer</span>
               </a>
             </div>
           </div>

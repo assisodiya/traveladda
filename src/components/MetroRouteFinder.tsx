@@ -17,6 +17,7 @@ import {
   ArrowRightIcon,
   CheckCircleIcon,
   ClockIcon,
+  CloseIcon,
   CompassIcon,
   MapPinIcon,
   RefreshIcon,
@@ -393,9 +394,9 @@ export function MetroRouteFinder({
                       setFromOpen(true);
                     }}
                     aria-label="Clear origin station"
-                    className="absolute top-1/2 right-11 -translate-y-1/2 rounded-md px-2 py-1 text-xs font-bold text-ink-muted hover:bg-subcard hover:text-ink lg:right-2.5"
+                    className="absolute top-1/2 right-11 -translate-y-1/2 inline-flex h-7 w-7 items-center justify-center rounded-md text-ink-muted hover:bg-subcard hover:text-ink lg:right-2.5"
                   >
-                    ✕
+                    <CloseIcon className="h-4 w-4" />
                   </button>
                 )}
               </div>
@@ -517,9 +518,9 @@ export function MetroRouteFinder({
                       setToOpen(true);
                     }}
                     aria-label="Clear destination station"
-                    className="absolute top-1/2 right-11 -translate-y-1/2 rounded-md px-2 py-1 text-xs font-bold text-ink-muted hover:bg-subcard hover:text-ink lg:right-2.5"
+                    className="absolute top-1/2 right-11 -translate-y-1/2 inline-flex h-7 w-7 items-center justify-center rounded-md text-ink-muted hover:bg-subcard hover:text-ink lg:right-2.5"
                   >
-                    ✕
+                    <CloseIcon className="h-4 w-4" />
                   </button>
                 )}
               </div>
@@ -1308,7 +1309,7 @@ export function MetroRouteFinder({
                                     }}
                                     className="flex h-5 w-5 items-center justify-center rounded-full border-2 border-white text-[10px] font-black shadow-sm ring-2 ring-slate-900/10 sm:h-6 sm:w-6 dark:border-slate-900"
                                   >
-                                    ✓
+                                    <CheckCircleIcon className="h-3.5 w-3.5" />
                                   </span>
                                 </div>
 

@@ -5,9 +5,12 @@ import Link from "next/link";
 import {
   CheckCircleIcon,
   ClockIcon,
+  CloseIcon,
   CopyIcon,
   ShieldCheckIcon,
   SparklesIcon,
+  TranslateIcon,
+  WhatsAppIcon,
 } from "@/components/Icons";
 import {
   BookingSource,
@@ -390,8 +393,11 @@ export default function RailRefundCalculator({
             <div
               role="group"
               aria-label="Language Switcher"
-              className="inline-flex rounded-xl border border-[#1956b4]/30 bg-card p-1 shadow-2xs"
+              className="inline-flex items-center gap-1 rounded-xl border border-[#1956b4]/30 bg-card p-1 shadow-2xs"
             >
+              <span className="pl-1.5 text-[#1956b4] dark:text-blue-300">
+                <TranslateIcon className="h-3.5 w-3.5" />
+              </span>
               <button
                 type="button"
                 onClick={() => setLang("en")}
@@ -1747,7 +1753,7 @@ export default function RailRefundCalculator({
                     onClick={handleWhatsAppShare}
                     className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-emerald-600 px-3 py-2 text-xs font-bold text-white transition hover:bg-emerald-700"
                   >
-                    <span>💬</span>
+                    <WhatsAppIcon className="h-4 w-4" />
                     <span>
                       {isHindi ? "WhatsApp शेयर" : "Share on WhatsApp"}
                     </span>
@@ -1803,9 +1809,10 @@ export default function RailRefundCalculator({
               <button
                 type="button"
                 onClick={() => setIsJsonModalOpen(false)}
-                className="px-2 text-lg font-extrabold text-ink-muted hover:text-ink"
+                aria-label="Close JSON Modal"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-ink-muted hover:bg-subcard hover:text-ink"
               >
-                ✕
+                <CloseIcon className="h-5 w-5" />
               </button>
             </div>
 
