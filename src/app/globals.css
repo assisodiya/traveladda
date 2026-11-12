@@ -61,34 +61,36 @@ html {
   background-color: var(--ta-canvas);
   color: var(--ta-ink);
   -webkit-tap-highlight-color: transparent;
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 /* Boost mobile typography legibility so small labels, receipts & badges read clearly on phones */
 @media (max-width: 639px) {
   html {
-    font-size: 16.5px;
+    font-size: 16px;
     -webkit-text-size-adjust: 100%;
   }
 
   .text-\[9px\],
   .text-\[10px\] {
-    font-size: 0.75rem !important;
+    font-size: 0.74rem !important;
     line-height: 1.35 !important;
   }
 
   .text-\[11px\] {
-    font-size: 0.8125rem !important;
-    line-height: 1.42 !important;
+    font-size: 0.8rem !important;
+    line-height: 1.4 !important;
   }
 
   .text-xs {
-    font-size: 0.845rem !important;
-    line-height: 1.48 !important;
+    font-size: 0.825rem !important;
+    line-height: 1.45 !important;
   }
 
   .text-sm {
-    font-size: 0.935rem !important;
-    line-height: 1.5 !important;
+    font-size: 0.915rem !important;
+    line-height: 1.48 !important;
   }
 }
 
@@ -96,7 +98,8 @@ body {
   font-family: var(--font-sans);
   background-color: var(--ta-canvas);
   color: var(--ta-ink);
-  overflow-x: clip;
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
 /* Defer offscreen section rendering for faster initial mobile paint (LCP & TBT) */

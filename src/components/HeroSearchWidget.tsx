@@ -276,9 +276,9 @@ export function HeroSearchWidget() {
   ];
 
   return (
-    <div className="rounded-2xl border border-line bg-card shadow-xl shadow-slate-900/10 dark:shadow-black/40">
-      {/* Top OTA Service Tab Bar (ixigo / Goibibo style) */}
-      <div className="ta-no-scrollbar flex items-center gap-1 overflow-x-auto border-b border-line px-3 pt-2.5 sm:gap-2 sm:px-6 sm:pt-3">
+    <div className="w-full max-w-full overflow-hidden rounded-2xl border border-line bg-card shadow-xl shadow-slate-900/10 dark:shadow-black/40">
+      {/* Top OTA Service Tab Bar (2x2 Grid on Mobile, Horizontal Tabs on Desktop) */}
+      <div className="grid grid-cols-2 border-b border-line p-1.5 sm:flex sm:items-center sm:gap-2 sm:px-6 sm:pt-3 sm:pb-0">
         {TABS.map((tab) => {
           const active = mode === tab.id;
           return (
@@ -289,16 +289,16 @@ export function HeroSearchWidget() {
                 setMode(tab.id);
                 setValidationMsg("");
               }}
-              className={`relative inline-flex shrink-0 cursor-pointer items-center gap-2 px-3.5 py-2.5 text-xs font-bold transition sm:px-4 sm:py-3 sm:text-sm ${
+              className={`relative inline-flex min-w-0 cursor-pointer items-center justify-center gap-1.5 rounded-xl px-2.5 py-2.5 text-xs font-bold transition sm:shrink-0 sm:justify-start sm:rounded-none sm:px-4 sm:py-3 sm:text-sm ${
                 active
-                  ? "text-[#1956b4] dark:text-blue-400"
+                  ? "bg-blue-50/90 text-[#1956b4] sm:bg-transparent dark:bg-blue-500/15 dark:text-blue-400 sm:dark:bg-transparent"
                   : "text-ink-muted hover:text-ink"
               }`}
             >
               {tab.icon}
-              <span>{tab.label}</span>
+              <span className="truncate">{tab.label}</span>
               {active && (
-                <span className="absolute right-0 bottom-0 left-0 h-[3px] rounded-t-full bg-[#fc6203]" />
+                <span className="hidden sm:block sm:absolute sm:right-0 sm:bottom-0 sm:left-0 sm:h-[3px] sm:rounded-t-full sm:bg-[#fc6203]" />
               )}
             </button>
           );
@@ -306,13 +306,13 @@ export function HeroSearchWidget() {
       </div>
 
       {/* Search Body */}
-      <div className="p-4 sm:p-6">
+      <div className="min-w-0 p-3.5 sm:p-6">
         {/* 1. FLIGHT STATUS SEARCH */}
         {mode === "flight" && (
-          <form onSubmit={handleFlightSubmit} className="space-y-3.5">
-            <div className="grid divide-y divide-line rounded-xl border border-line-strong bg-input lg:grid-cols-[1.3fr_0.95fr_0.85fr_auto] lg:divide-x lg:divide-y-0">
+          <form onSubmit={handleFlightSubmit} className="min-w-0 space-y-3.5">
+            <div className="grid min-w-0 divide-y divide-line rounded-xl border border-line-strong bg-input lg:grid-cols-[1.3fr_0.95fr_0.85fr_auto] lg:divide-x lg:divide-y-0">
               {/* Cell 1: Airline Search */}
-              <div ref={airlineBoxRef} className="relative px-3.5 py-2.5">
+              <div ref={airlineBoxRef} className="relative min-w-0 px-3.5 py-2.5">
                 <label
                   htmlFor="hero-airline-input"
                   className="block text-[11px] font-semibold uppercase tracking-wide text-ink-muted"
@@ -383,15 +383,15 @@ export function HeroSearchWidget() {
               </div>
 
               {/* Cell 2: Flight Number */}
-              <div className="px-3.5 py-2.5">
+              <div className="min-w-0 px-3.5 py-2.5">
                 <label
                   htmlFor="hero-flight-no"
                   className="block text-[11px] font-semibold uppercase tracking-wide text-ink-muted"
                 >
                   Flight Number
                 </label>
-                <div className="mt-1 flex items-center gap-2">
-                  <span className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-xs font-bold text-ink-soft dark:bg-slate-800">
+                <div className="mt-1 flex min-w-0 items-center gap-2">
+                  <span className="shrink-0 rounded bg-slate-100 px-1.5 py-0.5 font-mono text-xs font-bold text-ink-soft dark:bg-slate-800">
                     {selectedAirline.code}
                   </span>
                   <input
@@ -404,14 +404,14 @@ export function HeroSearchWidget() {
                       if (validationMsg) setValidationMsg("");
                     }}
                     placeholder="e.g. 2045 or 562"
-                    className="w-full bg-transparent text-sm font-bold text-ink placeholder:font-normal placeholder:text-ink-muted focus:outline-none sm:text-base"
+                    className="min-w-0 w-full bg-transparent text-sm font-bold text-ink placeholder:font-normal placeholder:text-ink-muted focus:outline-none sm:text-base"
                   />
                   {flightNumber && (
                     <button
                       type="button"
                       onClick={() => setFlightNumber("")}
                       aria-label="Clear flight number"
-                      className="text-ink-muted hover:text-ink"
+                      className="shrink-0 text-ink-muted hover:text-ink"
                     >
                       <CloseIcon className="h-3.5 w-3.5" />
                     </button>
@@ -420,7 +420,7 @@ export function HeroSearchWidget() {
               </div>
 
               {/* Cell 3: Departure Date */}
-              <div className="px-3.5 py-2.5">
+              <div className="min-w-0 px-3.5 py-2.5">
                 <label
                   htmlFor="hero-flight-date"
                   className="block text-[11px] font-semibold uppercase tracking-wide text-ink-muted"
@@ -432,7 +432,7 @@ export function HeroSearchWidget() {
                   type="date"
                   value={flightDate || todayIst}
                   onChange={(e) => setFlightDate(e.target.value)}
-                  className="mt-1 w-full bg-transparent text-sm font-bold text-ink focus:outline-none sm:text-base"
+                  className="mt-1 block min-w-0 w-full max-w-full bg-transparent text-sm font-bold text-ink focus:outline-none sm:text-base"
                 />
               </div>
 
@@ -447,8 +447,8 @@ export function HeroSearchWidget() {
               </div>
             </div>
 
-            {/* Clean Quick Flight Chips */}
-            <div className="ta-no-scrollbar flex items-center gap-2 overflow-x-auto text-xs">
+            {/* Clean Quick Flight Chips (Wraps on Mobile so it never overflows) */}
+            <div className="flex flex-wrap items-center gap-1.5 text-xs sm:gap-2">
               <span className="shrink-0 font-medium text-ink-muted">
                 Popular Flights:
               </span>
@@ -474,9 +474,9 @@ export function HeroSearchWidget() {
 
         {/* 2. LIVE TRAIN STATUS SEARCH */}
         {mode === "train" && (
-          <form onSubmit={handleTrainSubmit} className="space-y-3.5">
-            <div className="grid divide-y divide-line rounded-xl border border-line-strong bg-input lg:grid-cols-[1.5fr_0.9fr_auto] lg:divide-x lg:divide-y-0">
-              <div ref={trainBoxRef} className="relative px-3.5 py-2.5">
+          <form onSubmit={handleTrainSubmit} className="min-w-0 space-y-3.5">
+            <div className="grid min-w-0 divide-y divide-line rounded-xl border border-line-strong bg-input lg:grid-cols-[1.5fr_0.9fr_auto] lg:divide-x lg:divide-y-0">
+              <div ref={trainBoxRef} className="relative min-w-0 px-3.5 py-2.5">
                 <label
                   htmlFor="hero-train-input"
                   className="block text-[11px] font-semibold uppercase tracking-wide text-ink-muted"
@@ -541,7 +541,7 @@ export function HeroSearchWidget() {
                 )}
               </div>
 
-              <div className="px-3.5 py-2.5">
+              <div className="min-w-0 px-3.5 py-2.5">
                 <label
                   htmlFor="hero-train-date"
                   className="block text-[11px] font-semibold uppercase tracking-wide text-ink-muted"
@@ -553,7 +553,7 @@ export function HeroSearchWidget() {
                   type="date"
                   value={trainDate || todayIst}
                   onChange={(e) => setTrainDate(e.target.value)}
-                  className="mt-1 w-full bg-transparent text-sm font-bold text-ink focus:outline-none sm:text-base"
+                  className="mt-1 block min-w-0 w-full max-w-full bg-transparent text-sm font-bold text-ink focus:outline-none sm:text-base"
                 />
               </div>
 
@@ -567,7 +567,7 @@ export function HeroSearchWidget() {
               </div>
             </div>
 
-            <div className="ta-no-scrollbar flex items-center gap-2 overflow-x-auto text-xs">
+            <div className="flex flex-wrap items-center gap-1.5 text-xs sm:gap-2">
               <span className="shrink-0 font-medium text-ink-muted">
                 Popular Trains:
               </span>
@@ -640,12 +640,12 @@ export function HeroSearchWidget() {
 
         {/* 4. HOTEL GST & BAGGAGE QUICK UTILITY */}
         {mode === "hotel" && (
-          <div className="grid gap-4 md:grid-cols-[1.3fr_1fr]">
-            <div className="grid grid-cols-3 divide-x divide-line rounded-xl border border-line-strong bg-input">
-              <div className="px-3.5 py-2.5">
+          <div className="grid min-w-0 gap-4 md:grid-cols-[1.3fr_1fr]">
+            <div className="grid min-w-0 grid-cols-3 divide-x divide-line rounded-xl border border-line-strong bg-input">
+              <div className="min-w-0 px-2.5 py-2.5 sm:px-3.5">
                 <label
                   htmlFor="hero-room-rate"
-                  className="block text-[11px] font-semibold uppercase tracking-wide text-ink-muted"
+                  className="block truncate text-[11px] font-semibold uppercase tracking-wide text-ink-muted"
                 >
                   Tariff / Night (₹)
                 </label>
@@ -655,13 +655,13 @@ export function HeroSearchWidget() {
                   min={0}
                   value={roomRate}
                   onChange={(e) => setRoomRate(e.target.value)}
-                  className="mt-1 w-full bg-transparent font-mono text-base font-bold text-ink focus:outline-none"
+                  className="mt-1 min-w-0 w-full bg-transparent font-mono text-sm font-bold text-ink focus:outline-none sm:text-base"
                 />
               </div>
-              <div className="px-3.5 py-2.5">
+              <div className="min-w-0 px-2.5 py-2.5 sm:px-3.5">
                 <label
                   htmlFor="hero-nights"
-                  className="block text-[11px] font-semibold uppercase tracking-wide text-ink-muted"
+                  className="block truncate text-[11px] font-semibold uppercase tracking-wide text-ink-muted"
                 >
                   Nights
                 </label>
@@ -672,14 +672,14 @@ export function HeroSearchWidget() {
                   max={30}
                   value={nights}
                   onChange={(e) => setNights(e.target.value)}
-                  className="mt-1 w-full bg-transparent font-mono text-base font-bold text-ink focus:outline-none"
+                  className="mt-1 min-w-0 w-full bg-transparent font-mono text-sm font-bold text-ink focus:outline-none sm:text-base"
                 />
               </div>
-              <div className="flex flex-col justify-center bg-subcard px-3.5 py-2.5">
-                <span className="text-[11px] font-semibold text-ink-muted">
+              <div className="flex min-w-0 flex-col justify-center bg-subcard px-2.5 py-2.5 sm:px-3.5">
+                <span className="truncate text-[11px] font-semibold text-ink-muted">
                   Total ({gstRate}% GST)
                 </span>
-                <span className="mt-0.5 font-mono text-base font-extrabold text-[#1956b4] dark:text-blue-300">
+                <span className="mt-0.5 truncate font-mono text-sm font-extrabold text-[#1956b4] sm:text-base dark:text-blue-300">
                   ₹{totalWithTax.toLocaleString("en-IN")}
                 </span>
               </div>

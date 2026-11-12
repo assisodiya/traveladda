@@ -106,7 +106,7 @@ export default async function Home() {
   };
 
   return (
-    <main className="pb-16">
+    <main className="w-full max-w-full overflow-x-hidden pb-16">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -128,18 +128,18 @@ export default async function Home() {
       </section>
 
       {/* Overlapping Unified White Search Card */}
-      <section className="mx-auto -mt-9 max-w-5xl px-4 sm:-mt-12 sm:px-6 lg:px-8">
+      <section className="mx-auto -mt-9 max-w-5xl px-3.5 sm:-mt-12 sm:px-6 lg:px-8">
         <HeroSearchWidget />
       </section>
 
       {/* 4-Card Clean Utility Strip */}
-      <section className="mx-auto mt-8 max-w-6xl px-4 sm:mt-10 sm:px-6 lg:px-8">
+      <section className="mx-auto mt-8 max-w-6xl px-3.5 sm:mt-10 sm:px-6 lg:px-8">
         <div className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
           {QUICK_SERVICES.map((item) => (
             <Link
               key={item.title}
               href={item.href}
-              className="group flex items-start gap-3.5 rounded-xl border border-line bg-card p-4 shadow-2xs transition hover:border-[#1956b4] hover:shadow-md"
+              className="group flex min-w-0 items-start gap-3.5 rounded-xl border border-line bg-card p-4 shadow-2xs transition hover:border-[#1956b4] hover:shadow-md"
             >
               <span
                 className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${item.iconClass}`}
@@ -167,27 +167,27 @@ export default async function Home() {
       </section>
 
       {/* Popular Flights & Trains Two-Column Quick Status Directory */}
-      <section className="mx-auto mt-10 max-w-6xl px-4 sm:mt-14 sm:px-6 lg:px-8">
-        <div className="grid gap-6 lg:grid-cols-2">
+      <section className="mx-auto mt-10 max-w-6xl px-3.5 sm:mt-14 sm:px-6 lg:px-8">
+        <div className="grid min-w-0 gap-6 lg:grid-cols-2">
           {/* Popular Live Flights Card */}
-          <div className="rounded-2xl border border-line bg-card p-5 shadow-2xs sm:p-6">
-            <div className="flex items-center justify-between border-b border-line pb-3.5">
-              <div className="flex items-center gap-2.5">
-                <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
+          <div className="min-w-0 overflow-hidden rounded-2xl border border-line bg-card p-4 shadow-2xs sm:p-6">
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line pb-3.5">
+              <div className="flex min-w-0 items-center gap-2.5">
+                <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
                   <PlaneIcon className="h-4 w-4" />
                 </span>
-                <div>
-                  <h2 className="text-base font-bold text-ink sm:text-lg">
+                <div className="min-w-0">
+                  <h2 className="truncate text-base font-bold text-ink sm:text-lg">
                     Popular Flight Status Checks
                   </h2>
-                  <p className="text-xs text-ink-muted">
+                  <p className="truncate text-xs text-ink-muted">
                     Tap any flight for terminal, gate &amp; live arrival
                   </p>
                 </div>
               </div>
               <Link
                 href="/air/flight-status"
-                className="text-xs font-bold text-[#1956b4] hover:underline dark:text-blue-300"
+                className="shrink-0 text-xs font-bold text-[#1956b4] hover:underline dark:text-blue-300"
               >
                 Search all →
               </Link>
@@ -198,16 +198,16 @@ export default async function Home() {
                 <Link
                   key={`${f.airlineCode}-${f.flightNumber}`}
                   href={`/air/flight-status?airline=${f.airlineCode}&flight=${f.flightNumber}`}
-                  className="group flex items-center justify-between gap-3 py-3 transition hover:bg-subcard/60"
+                  className="group flex min-w-0 items-center justify-between gap-2.5 py-3 transition hover:bg-subcard/60"
                 >
-                  <div className="flex min-w-0 items-center gap-3">
+                  <div className="flex min-w-0 flex-1 items-center gap-2.5 sm:gap-3">
                     <AirlineLogo
                       code={f.airlineCode}
                       name={f.airlineName}
                       size="sm"
                     />
-                    <div className="min-w-0">
-                      <p className="text-sm font-bold text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-300">
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-bold text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-300">
                         {f.airlineName}{" "}
                         <span className="font-mono text-[#1956b4] dark:text-blue-300">
                           {f.airlineCode} {f.flightNumber}
@@ -218,11 +218,11 @@ export default async function Home() {
                       </p>
                     </div>
                   </div>
-                  <div className="flex shrink-0 items-center gap-2">
+                  <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
                     <span className="rounded bg-subcard px-2 py-1 font-mono text-xs font-semibold text-ink-soft">
                       {f.routeCodes}
                     </span>
-                    <ArrowRightIcon className="h-4 w-4 text-ink-muted group-hover:text-[#1956b4]" />
+                    <ArrowRightIcon className="h-4 w-4 shrink-0 text-ink-muted group-hover:text-[#1956b4]" />
                   </div>
                 </Link>
               ))}
@@ -230,24 +230,24 @@ export default async function Home() {
           </div>
 
           {/* Popular Live Trains Card */}
-          <div className="rounded-2xl border border-line bg-card p-5 shadow-2xs sm:p-6">
-            <div className="flex items-center justify-between border-b border-line pb-3.5">
-              <div className="flex items-center gap-2.5">
-                <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
+          <div className="min-w-0 overflow-hidden rounded-2xl border border-line bg-card p-4 shadow-2xs sm:p-6">
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line pb-3.5">
+              <div className="flex min-w-0 items-center gap-2.5">
+                <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
                   <TrainIcon className="h-4 w-4" />
                 </span>
-                <div>
-                  <h2 className="text-base font-bold text-ink sm:text-lg">
+                <div className="min-w-0">
+                  <h2 className="truncate text-base font-bold text-ink sm:text-lg">
                     Popular Live Train Running Status
                   </h2>
-                  <p className="text-xs text-ink-muted">
+                  <p className="truncate text-xs text-ink-muted">
                     Live GPS station, platform &amp; coach position
                   </p>
                 </div>
               </div>
               <Link
                 href="/rail/live-status"
-                className="text-xs font-bold text-[#1956b4] hover:underline dark:text-blue-300"
+                className="shrink-0 text-xs font-bold text-[#1956b4] hover:underline dark:text-blue-300"
               >
                 Spot all →
               </Link>
@@ -258,24 +258,26 @@ export default async function Home() {
                 <Link
                   key={t.trainNumber}
                   href={buildTrainLiveStatusPath(t.trainNumber, t.trainName)}
-                  className="group flex items-center justify-between gap-3 py-3 transition hover:bg-subcard/60"
+                  className="group flex min-w-0 items-center justify-between gap-2.5 py-3 transition hover:bg-subcard/60"
                 >
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="rounded bg-emerald-50 px-2 py-0.5 font-mono text-xs font-bold text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex min-w-0 items-center gap-2">
+                      <span className="shrink-0 rounded bg-emerald-50 px-2 py-0.5 font-mono text-xs font-bold text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
                         {t.trainNumber}
                       </span>
                       <p className="truncate text-sm font-bold text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-300">
                         {t.trainName}
                       </p>
                     </div>
-                    <p className="mt-0.5 text-xs text-ink-muted">{t.type}</p>
+                    <p className="mt-0.5 truncate text-xs text-ink-muted">
+                      {t.type}
+                    </p>
                   </div>
-                  <div className="flex shrink-0 items-center gap-2">
+                  <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
                     <span className="rounded bg-subcard px-2 py-1 font-mono text-xs font-semibold text-ink-soft">
                       {t.sourceCode} → {t.destinationCode}
                     </span>
-                    <ArrowRightIcon className="h-4 w-4 text-ink-muted group-hover:text-[#1956b4]" />
+                    <ArrowRightIcon className="h-4 w-4 shrink-0 text-ink-muted group-hover:text-[#1956b4]" />
                   </div>
                 </Link>
               ))}
@@ -284,9 +286,9 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Clean Travel Tools Row (Air Baggage + Hotel GST + PNR Decoder) */}
-      <section className="mx-auto mt-10 max-w-6xl px-4 sm:mt-14 sm:px-6 lg:px-8">
-        <div className="grid gap-4 md:grid-cols-3">
+      {/* Clean Travel Tools Row */}
+      <section className="mx-auto mt-10 max-w-6xl px-3.5 sm:mt-14 sm:px-6 lg:px-8">
+        <div className="grid min-w-0 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <Link
             href="/rail/pnr-status"
             className="flex items-center justify-between rounded-xl border border-line bg-card p-5 transition hover:border-[#1956b4]"
