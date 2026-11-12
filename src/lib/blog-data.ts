@@ -622,6 +622,105 @@ export const FLIGHT_BLOG_POSTS: BlogPost[] = [
 
 export const RAIL_BLOG_POSTS: BlogPost[] = [
   {
+    slug: "irctc-train-ticket-cancellation-charges-refund-rules-2026-gazette-gsr-41e-prs-rounding",
+    domain: "rail",
+    title:
+      "IRCTC Train Ticket Cancellation & Refund Rules 2026: PRS Double ₹5 Rounding, RAC/WL & Gazette G.S.R. 41(E) Explained",
+    excerpt:
+      "Why did IRCTC deduct ₹355 instead of 25% on your Vande Bharat ticket, or ₹190 instead of ₹180 in 3AC? Complete breakdown of CRIS PRS two-stage ₹5 rounding, Gazette G.S.R. 41(E) (72h/8h rules for Vande Bharat Sleeper), RAC/WL clerkage, and Agent RSP PG fees.",
+    category: "Waitlist & Quotas",
+    readTime: "8 min read",
+    publishedDate: "November 2026",
+    publishedIso: "2026-11-12",
+    author: {
+      name: "Aarav Deshmukh",
+      role: "Lead Rail Infrastructure & Rolling Stock Analyst",
+    },
+    accentColor: "from-blue-700 via-indigo-700 to-emerald-600",
+    heroTagline: "100% Verified CRIS PRS Cancellation Math & Gazette G.S.R. 41(E) Handbook",
+    primaryKeyword: "IRCTC ticket cancellation charges and refund rules 2026",
+    seoKeywords: [
+      "IRCTC ticket cancellation charges 2026",
+      "train ticket refund calculator India",
+      "Vande Bharat Sleeper 72 hours 8 hours cancellation rule Gazette GSR 41E",
+      "why 190 deducted instead of 180 in 3AC cancellation",
+      "RAC and Waiting List WL ticket cancellation charges",
+      "TQWL tatkal waiting list refund rules",
+    ],
+    keyTakeaways: [
+      "Under Ministry of Railways Gazette Notification G.S.R. 41(E) (16 Jan 2026), the 72-hour (25%), 72h–8h (50%), and <8h (₹0) cancellation slabs apply ONLY to Vande Bharat Sleeper Express and Amrit Bharat II Express—all other trains follow the 48h / 12h / 4h rules.",
+      "CRIS PRS applies Two-Stage ₹5 Rounding on AC 25% and 50% deductions: first rounding the Ex-GST percentage cut up to the next ₹5 multiple, then adding 5% GST, and finally rounding the total up a second time to the next ₹5 multiple.",
+      "Waitlisted (WL and TQWL) e-tickets NEVER have a ₹0 refund—even if cancelled less than 30 minutes before departure or auto-cancelled after chart preparation, only ₹60 (SL/2S) or ₹65 (AC) clerkage per passenger is deducted.",
+    ],
+    quickActionLinks: [
+      {
+        label: "IRCTC Refund Calculator",
+        sublabel: "Calculate Exact PRS Bank Refund",
+        href: "/rail/refund-calculator",
+      },
+      {
+        label: "RAC Ticket Refund Calculator",
+        sublabel: "Only ₹65/₹60 Cut Up to 30m Before Departure",
+        href: "/rail/refund-calculator/rac-ticket-cancellation-refund-calculator",
+      },
+      {
+        label: "Waiting List (WL) Refund Calc",
+        sublabel: "Never ₹0 on e-Tickets • ₹65/₹60 Clerkage",
+        href: "/rail/refund-calculator/waiting-list-wl-ticket-refund-calculator",
+      },
+      {
+        label: "Vande Bharat Sleeper (72h/8h)",
+        sublabel: "Official Gazette G.S.R. 41(E) Calculator",
+        href: "/rail/refund-calculator/vande-bharat-sleeper-amrit-bharat-72-hour-refund-rules",
+      },
+    ],
+    sections: [
+      {
+        heading: "1. Decoded: How CRIS PRS Double ₹5 Rounding Works on AC Tickets",
+        paragraphs: [
+          "Passengers cancelling an AC train ticket within 48 hours of departure are often puzzled when the amount deducted by IRCTC is ₹3 to ₹8 higher than a simple 25% or 50% calculation on the ticket fare.",
+          "Here is the exact 4-step algorithm verified against live CRIS PRS JSON responses (such as SBC Vande Bharat CC with ₹1,032 Train Fare + ₹363 Catering = ₹1,395 Total):",
+        ],
+        bullets: [
+          {
+            label: "Step 1: Isolate Combined Ex-GST Base",
+            detail:
+              "PRS strips the ₹49 train GST from ₹1,032 (= ₹983 Ex-GST train base) and strips the ₹16.38 catering GST from ₹363 (= ₹346.62 Ex-GST catering base), giving a combined Ex-GST base of ₹1,329.62.",
+          },
+          {
+            label: "Step 2: Apply 25% & Stage-1 ₹5 Round-Up",
+            detail:
+              "25% of ₹1,329.62 = ₹332.405. PRS immediately rounds this base cut UP to the next ₹5 multiple: ₹335.00.",
+          },
+          {
+            label: "Step 3: Add 5% Cancellation GST on Rounded Base",
+            detail:
+              "5% GST on ₹335.00 = ₹16.75, making the intermediate subtotal ₹335 + ₹16.75 = ₹351.75.",
+          },
+          {
+            label: "Step 4: Stage-2 ₹5 Round-Up",
+            detail:
+              "Finally, PRS rounds ₹351.75 UP a second time to the next multiple of ₹5, resulting in the exact ₹355.00 deduction and ₹1,040.00 net refund!",
+          },
+        ],
+      },
+      {
+        heading: "2. Gazette Notification G.S.R. 41(E) (16 Jan 2026): 72h/8h vs 48h/12h/4h Rules",
+        paragraphs: [
+          "In January 2026, viral social media posts claimed that Indian Railways had replaced the 48-hour and 4-hour cancellation rules across all trains with a 72-hour and 8-hour rule. In reality, Gazette of India Notification G.S.R. 41(E) applies the 72h/8h schedule strictly to two newly notified train categories: Vande Bharat Sleeper Express and Amrit Bharat II Express.",
+          "All regular trains—including Vande Bharat Chair Car (CC/EC), Rajdhani, Shatabdi, Duronto, and Mail/Express—continue to follow the standard >48h flat fee, 48h–12h (25%), 12h–4h (50% if chart not prepared), and <4h / post-chart (₹0) rules.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "Why does IRCTC deduct ₹190 instead of ₹180 when cancelling a 3AC ticket before 48 hours?",
+        answer:
+          "The base flat fee for 3AC, 3E, and CC is ₹180. Adding 5% GST (₹9) gives ₹189, which CRIS PRS rounds up to the next multiple of ₹5: ₹190 per passenger.",
+      },
+    ],
+  },
+  {
     slug: "decode-10-digit-indian-railways-pnr-number",
     domain: "rail",
     title: "What Every Digit of Your 10-Digit Indian Railways PNR Secretly Reveals",

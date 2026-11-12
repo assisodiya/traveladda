@@ -24,6 +24,10 @@ import {
   buildAirlineCompensationPath,
   DGCA_AIRLINE_PROFILES,
 } from "@/lib/dgca-compensation-types";
+import {
+  buildRefundScenarioPath,
+  REFUND_SEO_SCENARIOS,
+} from "@/lib/rail-refund-service";
 import { getAllIndexableTollRouteSlugs } from "@/lib/toll-service";
 
 const BASE_URL = "https://traveladda.in";
@@ -60,6 +64,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: SITEMAP_LAST_MODIFIED,
       changeFrequency: "daily",
       priority: 0.94,
+    },
+    {
+      url: `${BASE_URL}/rail/refund-calculator`,
+      lastModified: SITEMAP_LAST_MODIFIED,
+      changeFrequency: "daily",
+      priority: 0.96,
     },
     {
       url: `${BASE_URL}/delhi-metro`,
@@ -338,11 +348,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }),
   );
 
+  // IRCTC Train Ticket Cancellation & Refund Calculator Programmatic SSR Pages (29 scenarios)
+  const railRefundRoutes: MetadataRoute.Sitemap = REFUND_SEO_SCENARIOS.map(
+    (scenario) => ({
+      url: `${BASE_URL}${buildRefundScenarioPath(scenario.slug)}`,
+      lastModified: SITEMAP_LAST_MODIFIED,
+      changeFrequency: "weekly",
+      priority: 0.91,
+    }),
+  );
+
   return [
     ...coreRoutes,
     ...flightStatusRoutes,
     ...dgcaAirlineRoutes,
     ...tollRoutes,
+    ...railRefundRoutes,
     ...trainStatusRoutes,
     ...chartTimeRoutes,
     ...metroLineRoutes,

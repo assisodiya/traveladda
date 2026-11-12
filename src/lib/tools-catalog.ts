@@ -96,6 +96,16 @@ export const TOOL_CATEGORIES: ToolCategoryGroup[] = [
         iconKey: "clock",
       },
       {
+        id: "irctc-refund-calculator",
+        title: "IRCTC Ticket Refund Calculator",
+        shortTitle: "Ticket Refund Calc",
+        description:
+          "Calculate PRS verified CNF, RAC, WL, Tatkal & Vande Bharat Sleeper (72h/8h Gazette) refund",
+        href: "/rail/refund-calculator",
+        badge: "NEW",
+        iconKey: "calculator",
+      },
+      {
         id: "delhi-ncr-metro",
         title: "Delhi NCR Metro Route & Fare",
         shortTitle: "Delhi Metro",
