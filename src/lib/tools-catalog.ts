@@ -45,6 +45,16 @@ export const TOOL_CATEGORIES: ToolCategoryGroup[] = [
         href: "/tools/air",
         iconKey: "luggage",
       },
+      {
+        id: "dgca-flight-compensation",
+        title: "DGCA Flight Delay & Refund Checker",
+        shortTitle: "DGCA Compensation",
+        description:
+          "Check ₹5,000–₹20,000 DGCA / EU261 compensation & generate Nodal Officer claim",
+        href: "/air/flight-compensation",
+        badge: "NEW",
+        iconKey: "calculator",
+      },
     ],
   },
   {
@@ -99,12 +109,22 @@ export const TOOL_CATEGORIES: ToolCategoryGroup[] = [
   },
   {
     id: "hotel",
-    categoryTitle: "Hotel Tools",
-    categorySubtitle: "Room tariff & GST slab calculator",
-    hubHref: "/tools/hotel",
+    categoryTitle: "Road & Hotel Tools",
+    categorySubtitle: "NHAI FASTag highway toll, fuel & hotel GST",
+    hubHref: "/toll-calculator",
     accentBadgeClass:
       "bg-amber-50 text-amber-800 dark:bg-amber-500/15 dark:text-amber-300",
     items: [
+      {
+        id: "nhai-highway-toll-calculator",
+        title: "NHAI FASTag Toll & Fuel Calculator",
+        shortTitle: "Highway Toll & Fuel",
+        description:
+          "Calculate plaza-by-plaza NHAI FASTag toll, 24h return discount & Petrol/Diesel/CNG/EV cost",
+        href: "/toll-calculator",
+        badge: "NEW",
+        iconKey: "calculator",
+      },
       {
         id: "hotel-gst-calculator",
         title: "Hotel Room GST Calculator",

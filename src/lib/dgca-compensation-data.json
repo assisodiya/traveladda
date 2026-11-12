@@ -1,0 +1,347 @@
+{
+  "version": "2026.11",
+  "authority": "Directorate General of Civil Aviation (DGCA India) — Civil Aviation Requirements (CAR) Section 3, Series M, Part IV & MoCA Passenger Charter",
+  "lastUpdated": "2026-11-12",
+  "cancellationSlabs": [
+    {
+      "id": "block-up-to-1h",
+      "label": "Flight Block Time ≤ 1 Hour",
+      "exampleRoutes": "Delhi–Jaipur, Bengaluru–Chennai, Mumbai–Pune, Guwahati–Shillong",
+      "maxStatutoryCashInr": 5000,
+      "formulaDescription": "₹5,000 or 100% of booked one-way basic fare + airline fuel charge, whichever is lower (in addition to 100% full ticket refund or free alternate flight)."
+    },
+    {
+      "id": "block-1h-to-2h",
+      "label": "Flight Block Time > 1 Hour up to 2 Hours",
+      "exampleRoutes": "Delhi–Lucknow, Mumbai–Ahmedabad, Delhi–Varanasi, Hyderabad–Bengaluru, Mumbai–Goa",
+      "maxStatutoryCashInr": 7500,
+      "formulaDescription": "₹7,500 or 100% of booked one-way basic fare + airline fuel charge, whichever is lower (in addition to 100% full ticket refund or free alternate flight)."
+    },
+    {
+      "id": "block-over-2h",
+      "label": "Flight Block Time > 2 Hours",
+      "exampleRoutes": "Delhi–Mumbai, Delhi–Bengaluru, Delhi–Kolkata, Mumbai–Kolkata, Delhi–Chennai, Delhi–Guwahati",
+      "maxStatutoryCashInr": 10000,
+      "formulaDescription": "₹10,000 or 100% of booked one-way basic fare + airline fuel charge, whichever is lower (in addition to 100% full ticket refund or free alternate flight)."
+    }
+  ],
+  "deniedBoardingSlabs": [
+    {
+      "id": "alt-within-1h",
+      "label": "Alternate Flight Scheduled Within 1 Hour",
+      "multiplierPercent": 0,
+      "maxStatutoryCashInr": 0,
+      "formulaDescription": "No cash compensation required if the airline arranges an alternate flight scheduled to depart within 1 hour of the original scheduled departure time."
+    },
+    {
+      "id": "alt-within-24h",
+      "label": "Alternate Flight Within 24 Hours",
+      "multiplierPercent": 200,
+      "maxStatutoryCashInr": 10000,
+      "formulaDescription": "200% of booked one-way basic fare + airline fuel charge, subject to a maximum of ₹10,000."
+    },
+    {
+      "id": "alt-over-24h-or-refund",
+      "label": "Alternate Flight > 24 Hours (or Passenger Opts for Refund)",
+      "multiplierPercent": 400,
+      "maxStatutoryCashInr": 20000,
+      "formulaDescription": "400% of booked one-way basic fare + airline fuel charge, subject to a maximum of ₹20,000 (plus 100% full ticket refund if you do not travel on an alternate flight)."
+    }
+  ],
+  "internationalEuUkSlabs": [
+    {
+      "id": "eu-short",
+      "label": "Short-Haul (≤ 1,500 km)",
+      "compensationEur": 250,
+      "approxInr": 23000
+    },
+    {
+      "id": "eu-medium",
+      "label": "Medium-Haul (1,500 – 3,500 km)",
+      "compensationEur": 400,
+      "approxInr": 36800
+    },
+    {
+      "id": "eu-long-india",
+      "label": "Long-Haul India ↔ Europe/UK (> 3,500 km, Delay ≥ 3–4 hrs)",
+      "compensationEur": 600,
+      "approxInr": 55200
+    }
+  ],
+  "baggageRules": {
+    "domesticMaxLiabilityInr": 20000,
+    "domesticPerKgInr": 350,
+    "internationalMaxSdr": 1288,
+    "internationalApproxInr": 145000,
+    "cargoMaxPerKgInr": 350
+  },
+  "airlines": [
+    {
+      "code": "6E",
+      "name": "IndiGo",
+      "slug": "indigo-6e-flight-delay-cancellation-refund-compensation",
+      "type": "Domestic & International LCC",
+      "nodalOfficer": {
+        "name": "Nodal Officer — Customer Relations (IndiGo)",
+        "email": "nodalofficer@goindigo.in",
+        "phone": "+91-124-4973838 / +91-124-6173838"
+      },
+      "appellateAuthority": {
+        "name": "Appellate Authority (IndiGo — InterGlobe Aviation Ltd.)",
+        "email": "appellateauthority@goindigo.in"
+      },
+      "supportEmail": "customer.relations@goindigo.in",
+      "planBPortalUrl": "https://www.goindigo.in/plan-b.html",
+      "refundPortalUrl": "https://www.goindigo.in/initiate-refund.html",
+      "baggagePolicyNote": "15 kg check-in (1 piece) + 7 kg cabin bag on standard domestic Economy fares."
+    },
+    {
+      "code": "AI",
+      "name": "Air India",
+      "slug": "air-india-ai-flight-delay-cancellation-refund-compensation",
+      "type": "Full-Service Carrier (Tata Group)",
+      "nodalOfficer": {
+        "name": "Nodal Officer — Customer Support (Air India)",
+        "email": "nodalofficer@airindia.com",
+        "phone": "+91-11-69329333 / +91-11-69329999"
+      },
+      "appellateAuthority": {
+        "name": "Appellate Authority (Air India Ltd.)",
+        "email": "appellateauthority@airindia.com"
+      },
+      "supportEmail": "contactus@airindia.com",
+      "planBPortalUrl": "https://www.airindia.com/in/en/manage/booking.html",
+      "refundPortalUrl": "https://www.airindia.com/in/en/contact-us/customer-support-portal.html",
+      "baggagePolicyNote": "15 kg check-in (Comfort) / 25 kg (Comfort Plus) + 7 kg cabin bag on domestic Economy."
+    },
+    {
+      "code": "IX",
+      "name": "Air India Express",
+      "slug": "air-india-express-ix-flight-delay-cancellation-refund-compensation",
+      "type": "Domestic & International Value Carrier (Tata Group)",
+      "nodalOfficer": {
+        "name": "Nodal Officer (Air India Express / AIX Connect)",
+        "email": "nodalofficer@airindiaexpress.com",
+        "phone": "+91-80-46662222 / +91-80-67662222"
+      },
+      "appellateAuthority": {
+        "name": "Appellate Authority (Air India Express Ltd.)",
+        "email": "appellateauthority@airindiaexpress.com"
+      },
+      "supportEmail": "customersupport@airindiaexpress.com",
+      "planBPortalUrl": "https://www.airindiaexpress.com/manage-booking",
+      "refundPortalUrl": "https://www.airindiaexpress.com/support",
+      "baggagePolicyNote": "15 kg check-in + 7 kg Xpress Lite/Value cabin baggage on domestic flights."
+    },
+    {
+      "code": "QP",
+      "name": "Akasa Air",
+      "slug": "akasa-air-qp-flight-delay-cancellation-refund-compensation",
+      "type": "Domestic & International LCC",
+      "nodalOfficer": {
+        "name": "Nodal Officer (SNV Aviation Pvt. Ltd. — Akasa Air)",
+        "email": "nodalofficer@akasaair.com",
+        "phone": "+91-9606112131"
+      },
+      "appellateAuthority": {
+        "name": "Appellate Authority (Akasa Air)",
+        "email": "appellateauthority@akasaair.com"
+      },
+      "supportEmail": "info@akasaair.com",
+      "planBPortalUrl": "https://www.akasaair.com/manage-booking",
+      "refundPortalUrl": "https://www.akasaair.com/customer-support",
+      "baggagePolicyNote": "15 kg check-in (1 piece) + 7 kg cabin baggage on domestic Saver/Flexi fares."
+    },
+    {
+      "code": "SG",
+      "name": "SpiceJet",
+      "slug": "spicejet-sg-flight-delay-cancellation-refund-compensation",
+      "type": "Domestic & International LCC",
+      "nodalOfficer": {
+        "name": "Nodal Officer — Customer Relations (SpiceJet)",
+        "email": "nodalofficer@spicejet.com",
+        "phone": "+91-124-4983410 / +91-124-7101600"
+      },
+      "appellateAuthority": {
+        "name": "Appellate Authority (SpiceJet Ltd.)",
+        "email": "appellateauthority@spicejet.com"
+      },
+      "supportEmail": "custrelations@spicejet.com",
+      "planBPortalUrl": "https://changes.spicejet.com/",
+      "refundPortalUrl": "https://www.spicejet.com/CustomerSupport.aspx",
+      "baggagePolicyNote": "15 kg check-in (1 piece) + 7 kg hand baggage on domestic routes."
+    },
+    {
+      "code": "9I",
+      "name": "Alliance Air",
+      "slug": "alliance-air-9i-flight-delay-cancellation-refund-compensation",
+      "type": "Regional Connectivity (UDAN) Carrier",
+      "nodalOfficer": {
+        "name": "Nodal Officer (Alliance Air Aviation Ltd.)",
+        "email": "nodalofficer@allianceair.in",
+        "phone": "+91-44-35001111"
+      },
+      "appellateAuthority": {
+        "name": "Appellate Authority (Alliance Air)",
+        "email": "appellateauthority@allianceair.in"
+      },
+      "supportEmail": "helpdesk@allianceair.in",
+      "planBPortalUrl": "https://www.allianceair.in/",
+      "refundPortalUrl": "https://www.allianceair.in/customer-support",
+      "baggagePolicyNote": "15 kg check-in + 5 kg cabin bag on ATR-72/42 regional aircraft."
+    },
+    {
+      "code": "S5",
+      "name": "Star Air",
+      "slug": "star-air-s5-flight-delay-cancellation-refund-compensation",
+      "type": "Regional Commuter Airline",
+      "nodalOfficer": {
+        "name": "Nodal Officer (Ghodawat Enterprises — Star Air)",
+        "email": "nodalofficer@starair.in",
+        "phone": "+91-80-40519111 / +91-9970555111"
+      },
+      "appellateAuthority": {
+        "name": "Appellate Authority (Star Air)",
+        "email": "appellateauthority@starair.in"
+      },
+      "supportEmail": "CustomerCare@starair.in",
+      "planBPortalUrl": "https://starair.in/ManageBooking",
+      "refundPortalUrl": "https://starair.in/ContactUs",
+      "baggagePolicyNote": "15 kg check-in + 7 kg cabin bag on Embraer E175/ERJ145 aircraft."
+    },
+    {
+      "code": "IC",
+      "name": "Fly91",
+      "slug": "fly91-ic-flight-delay-cancellation-refund-compensation",
+      "type": "Regional Carrier",
+      "nodalOfficer": {
+        "name": "Nodal Officer (Just Udo Aviation — Fly91)",
+        "email": "nodalofficer@fly91.in",
+        "phone": "+91-832-3509191"
+      },
+      "appellateAuthority": {
+        "name": "Appellate Authority (Fly91)",
+        "email": "appellateauthority@fly91.in"
+      },
+      "supportEmail": "support@fly91.in",
+      "planBPortalUrl": "https://fly91.in/",
+      "refundPortalUrl": "https://fly91.in/contact-us",
+      "baggagePolicyNote": "15 kg check-in + 7 kg cabin baggage."
+    },
+    {
+      "code": "EK",
+      "name": "Emirates",
+      "slug": "emirates-ek-flight-delay-cancellation-refund-compensation",
+      "type": "International Full-Service Carrier",
+      "nodalOfficer": {
+        "name": "India Customer Affairs (Emirates)",
+        "email": "customer.affairs@emirates.com",
+        "phone": "+91-9167003333"
+      },
+      "appellateAuthority": {
+        "name": "Emirates Customer Relations Hub",
+        "email": "customer.affairs@emirates.com"
+      },
+      "supportEmail": "customer.affairs@emirates.com",
+      "planBPortalUrl": "https://www.emirates.com/in/english/manage-booking/",
+      "refundPortalUrl": "https://www.emirates.com/in/english/help/forms/refund-request/",
+      "baggagePolicyNote": "25 kg to 35 kg check-in + 7 kg cabin baggage depending on fare tier."
+    },
+    {
+      "code": "QR",
+      "name": "Qatar Airways",
+      "slug": "qatar-airways-qr-flight-delay-cancellation-refund-compensation",
+      "type": "International Full-Service Carrier",
+      "nodalOfficer": {
+        "name": "Customer Care India (Qatar Airways)",
+        "email": "tell-us@qatarairways.com.qa",
+        "phone": "+91-79-61556000"
+      },
+      "appellateAuthority": {
+        "name": "Qatar Airways Appellate Customer Relations",
+        "email": "tell-us@qatarairways.com.qa"
+      },
+      "supportEmail": "tell-us@qatarairways.com.qa",
+      "planBPortalUrl": "https://www.qatarairways.com/en-in/manage-booking.html",
+      "refundPortalUrl": "https://www.qatarairways.com/en-in/help.html",
+      "baggagePolicyNote": "25 kg to 35 kg check-in + 7 kg hand baggage on India–Doha corridors."
+    },
+    {
+      "code": "EY",
+      "name": "Etihad Airways",
+      "slug": "etihad-airways-ey-flight-delay-cancellation-refund-compensation",
+      "type": "International Full-Service Carrier",
+      "nodalOfficer": {
+        "name": "Guest Relations India (Etihad Airways)",
+        "email": "guestrelations@etihad.ae",
+        "phone": "1800-123-3901"
+      },
+      "appellateAuthority": {
+        "name": "Etihad Airways Guest Affairs",
+        "email": "guestrelations@etihad.ae"
+      },
+      "supportEmail": "guestrelations@etihad.ae",
+      "planBPortalUrl": "https://www.etihad.com/en-in/manage",
+      "refundPortalUrl": "https://www.etihad.com/en-in/help",
+      "baggagePolicyNote": "23 kg to 30 kg check-in + 7 kg cabin bag."
+    },
+    {
+      "code": "BA",
+      "name": "British Airways",
+      "slug": "british-airways-ba-flight-delay-cancellation-refund-compensation",
+      "type": "International Carrier (UK261 & DGCA Covered)",
+      "nodalOfficer": {
+        "name": "Customer Relations India & UK261 Claims (British Airways)",
+        "email": "customer.relations@ba.com",
+        "phone": "+91-124-4120715"
+      },
+      "appellateAuthority": {
+        "name": "British Airways Dispute Resolution / CEDR",
+        "email": "customer.relations@ba.com"
+      },
+      "supportEmail": "customer.relations@ba.com",
+      "planBPortalUrl": "https://www.britishairways.com/travel/managebooking/public/en_in",
+      "refundPortalUrl": "https://www.britishairways.com/travel/feedbackclaims/public/en_in",
+      "baggagePolicyNote": "Covered by both DGCA CAR (India departures) and UK261 (£520 / ~₹56,000 for 3h+ delay)."
+    },
+    {
+      "code": "LH",
+      "name": "Lufthansa",
+      "slug": "lufthansa-lh-flight-delay-cancellation-refund-compensation",
+      "type": "International Carrier (EU261 & DGCA Covered)",
+      "nodalOfficer": {
+        "name": "Customer Relations India & EU261 Claims (Lufthansa)",
+        "email": "customer.relations@lufthansa.com",
+        "phone": "1800-102-5838"
+      },
+      "appellateAuthority": {
+        "name": "Lufthansa Arbitration Board (SÖP / DGCA AirSewa)",
+        "email": "customer.relations@lufthansa.com"
+      },
+      "supportEmail": "customer.relations@lufthansa.com",
+      "planBPortalUrl": "https://www.lufthansa.com/in/en/my-bookings",
+      "refundPortalUrl": "https://www.lufthansa.com/in/en/compensation-in-the-event-of-flight-irregularities",
+      "baggagePolicyNote": "Covered by EU Regulation 261/2004 (€600 / ~₹55,200 for ≥3h arrival delay) + DGCA CAR."
+    },
+    {
+      "code": "SQ",
+      "name": "Singapore Airlines",
+      "slug": "singapore-airlines-sq-flight-delay-cancellation-refund-compensation",
+      "type": "International Full-Service Carrier",
+      "nodalOfficer": {
+        "name": "Customer Affairs India (Singapore Airlines)",
+        "email": "in_feedback@singaporeair.com.sg",
+        "phone": "1800-121-212"
+      },
+      "appellateAuthority": {
+        "name": "Singapore Airlines Customer Affairs",
+        "email": "in_feedback@singaporeair.com.sg"
+      },
+      "supportEmail": "in_feedback@singaporeair.com.sg",
+      "planBPortalUrl": "https://www.singaporeair.com/en_UK/in/plan-travel/manage-booking/",
+      "refundPortalUrl": "https://www.singaporeair.com/en_UK/in/help-page/",
+      "baggagePolicyNote": "25 kg to 30 kg check-in + 7 kg hand luggage on India–Singapore flights."
+    }
+  ]
+}
+

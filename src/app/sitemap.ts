@@ -20,6 +20,11 @@ import {
   buildMetroStationPath,
   POPULAR_METRO_ROUTES,
 } from "@/lib/metro-types";
+import {
+  buildAirlineCompensationPath,
+  DGCA_AIRLINE_PROFILES,
+} from "@/lib/dgca-compensation-types";
+import { getAllIndexableTollRouteSlugs } from "@/lib/toll-service";
 
 const BASE_URL = "https://traveladda.in";
 const SITEMAP_LAST_MODIFIED = "2026-11-12T06:00:00.000Z";
@@ -58,6 +63,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${BASE_URL}/delhi-metro`,
+      lastModified: SITEMAP_LAST_MODIFIED,
+      changeFrequency: "daily",
+      priority: 0.96,
+    },
+    {
+      url: `${BASE_URL}/air/flight-compensation`,
+      lastModified: SITEMAP_LAST_MODIFIED,
+      changeFrequency: "daily",
+      priority: 0.96,
+    },
+    {
+      url: `${BASE_URL}/toll-calculator`,
       lastModified: SITEMAP_LAST_MODIFIED,
       changeFrequency: "daily",
       priority: 0.96,
@@ -301,9 +318,31 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: post.primaryKeyword ? 0.88 : post.domain === "air" ? 0.85 : 0.8,
   }));
 
+  // DGCA Airline Compensation Programmatic SSR Pages (14 airlines)
+  const dgcaAirlineRoutes: MetadataRoute.Sitemap = DGCA_AIRLINE_PROFILES.map(
+    (airline) => ({
+      url: `${BASE_URL}${buildAirlineCompensationPath(airline.slug)}`,
+      lastModified: SITEMAP_LAST_MODIFIED,
+      changeFrequency: "weekly",
+      priority: 0.91,
+    }),
+  );
+
+  // NHAI FASTag Highway Toll & Fuel Calculator City-to-City Routes (158+ corridors)
+  const tollRoutes: MetadataRoute.Sitemap = getAllIndexableTollRouteSlugs().map(
+    (route) => ({
+      url: `${BASE_URL}${route.routePath}`,
+      lastModified: SITEMAP_LAST_MODIFIED,
+      changeFrequency: "weekly",
+      priority: route.isPrimaryCorridor ? 0.92 : 0.86,
+    }),
+  );
+
   return [
     ...coreRoutes,
     ...flightStatusRoutes,
+    ...dgcaAirlineRoutes,
+    ...tollRoutes,
     ...trainStatusRoutes,
     ...chartTimeRoutes,
     ...metroLineRoutes,

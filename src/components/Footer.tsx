@@ -33,6 +33,14 @@ export function Footer() {
               </li>
               <li>
                 <Link
+                  href="/air/flight-compensation"
+                  className="font-medium text-ink-soft transition hover:text-[#1956b4] dark:hover:text-blue-300"
+                >
+                  DGCA Flight Delay &amp; Refund Checker
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/tools/air"
                   className="text-ink-muted transition hover:text-[#1956b4] dark:hover:text-blue-300"
                 >
@@ -78,6 +86,14 @@ export function Footer() {
                   className="font-medium text-ink-soft transition hover:text-[#1956b4] dark:hover:text-blue-300"
                 >
                   Delhi NCR Metro Route &amp; Fare
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/toll-calculator"
+                  className="font-medium text-ink-soft transition hover:text-[#1956b4] dark:hover:text-blue-300"
+                >
+                  NHAI FASTag Toll &amp; Fuel Calculator
                 </Link>
               </li>
               <li>

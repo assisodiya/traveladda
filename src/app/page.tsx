@@ -340,6 +340,60 @@ export default async function Home() {
             </div>
             <HotelIcon className="h-7 w-7 shrink-0 text-[#1956b4]" />
           </Link>
+
+          <Link
+            href="/air/flight-compensation"
+            className="flex items-center justify-between rounded-xl border border-line bg-card p-5 transition hover:border-[#1956b4]"
+          >
+            <div className="space-y-1">
+              <span className="text-xs font-bold text-[#1956b4] dark:text-blue-300">
+                DGCA CAR SERIES M • NEW
+              </span>
+              <h3 className="text-base font-bold text-ink">
+                Flight Delay &amp; Refund Compensation
+              </h3>
+              <p className="text-xs text-ink-muted">
+                Check ₹5,000–₹20,000 DGCA / EU261 payout &amp; Nodal Officer claim
+              </p>
+            </div>
+            <PlaneIcon className="h-7 w-7 shrink-0 text-[#1956b4]" />
+          </Link>
+
+          <Link
+            href="/toll-calculator"
+            className="flex items-center justify-between rounded-xl border border-line bg-card p-5 transition hover:border-[#1956b4]"
+          >
+            <div className="space-y-1">
+              <span className="text-xs font-bold text-amber-600 dark:text-amber-400">
+                NHAI FASTAG • NEW
+              </span>
+              <h3 className="text-base font-bold text-ink">
+                Highway Toll &amp; Fuel Cost Calculator
+              </h3>
+              <p className="text-xs text-ink-muted">
+                Plaza-by-plaza FASTag toll, 24h return discount &amp; Petrol/EV cost
+              </p>
+            </div>
+            <ClockIcon className="h-7 w-7 shrink-0 text-[#1956b4]" />
+          </Link>
+
+          <Link
+            href="/delhi-metro"
+            className="flex items-center justify-between rounded-xl border border-line bg-card p-5 transition hover:border-[#1956b4]"
+          >
+            <div className="space-y-1">
+              <span className="text-xs font-bold text-emerald-700 dark:text-emerald-300">
+                DMRC + AQUA + RAPID
+              </span>
+              <h3 className="text-base font-bold text-ink">
+                Delhi NCR Metro Route &amp; Fare
+              </h3>
+              <p className="text-xs text-ink-muted">
+                Fastest &amp; min-interchange routes across 293 stations
+              </p>
+            </div>
+            <TrainIcon className="h-7 w-7 shrink-0 text-[#1956b4]" />
+          </Link>
         </div>
       </section>
 

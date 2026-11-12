@@ -4,6 +4,8 @@ const PUBLIC_ALLOW_PATHS = [
   "/",
   "/delhi-metro",
   "/delhi-metro/",
+  "/toll-calculator",
+  "/toll-calculator/",
   "/flight-status/",
   "/chart-times/",
   "/rail/",
