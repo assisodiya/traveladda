@@ -368,6 +368,35 @@ export default async function ChartTimeByTrainSlugPage({
             </span>
           </Link>
         </div>
+
+        {/* Cross-Tool Intent Loop: Train-Specific Chart Time -> PRS Refund Calculator */}
+        <div className="mt-4 rounded-2xl border border-amber-300/80 bg-amber-50/80 p-4 shadow-2xs dark:border-amber-500/30 dark:bg-amber-950/30">
+          <div className="flex flex-col justify-between gap-3 lg:flex-row lg:items-center">
+            <div className="space-y-1">
+              <div className="text-xs font-extrabold text-ink sm:text-sm">
+                Cancelling a Ticket on {chartData.trainNumber} {chartData.trainName} Before or After Charting ({chartData.originFirstChart12h})?
+              </div>
+              <p className="text-xs text-ink-soft">
+                Calculate exact CRIS PRS bank refund with Double ₹5 Rounding before or after{" "}
+                <strong>{chartData.originFirstChart12h}</strong> chart lock for Confirmed (CNF), RAC, Waitlist (WL), or Tatkal tickets.
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-2 shrink-0">
+              <Link
+                href="/rail/refund-calculator"
+                className="rounded-xl bg-[#1956b4] px-3.5 py-2 text-xs font-extrabold text-white transition hover:bg-[#144696]"
+              >
+                Calculate {chartData.trainNumber} Ticket Refund →
+              </Link>
+              <Link
+                href="/rail/refund-calculator/after-chart-preparation-train-ticket-cancellation-rules"
+                className="rounded-xl border border-line bg-card px-3 py-2 text-xs font-bold text-ink transition hover:border-[#1956b4] hover:text-[#1956b4]"
+              >
+                Post-Chart Refund Rules
+              </Link>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* SSR SECTION 1: About Train {trainNumber} Chart Preparation & Key Details (Google AI Overview Block) */}

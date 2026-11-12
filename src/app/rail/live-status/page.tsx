@@ -289,6 +289,41 @@ export default async function LiveTrainStatusPage() {
             <span>All 17 zones · Vande Bharat, Rajdhani &amp; Express</span>
           </div>
         </div>
+
+        {/* Cross-Tool Intent Loop: Train Delayed >3h TDR 100% Refund & Chart Time */}
+        <div className="mt-4 rounded-2xl border border-[#1956b4]/25 bg-blue-50/70 p-4 shadow-2xs dark:border-blue-500/30 dark:bg-blue-950/30">
+          <div className="flex flex-col justify-between gap-3 lg:flex-row lg:items-center">
+            <div className="space-y-1">
+              <div className="text-xs font-extrabold text-ink sm:text-sm">
+                Is Your Train Delayed Over 3 Hours or Need to Cancel Your Ticket?
+              </div>
+              <p className="text-xs text-ink-soft">
+                If your train is delayed by <strong>more than 3 hours</strong> at your boarding station and you do not travel, file an online TDR before departure for a{" "}
+                <strong>100% Full Fare Refund (₹0 deduction, even on Confirmed Tatkal)</strong>.
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-2 shrink-0">
+              <Link
+                href="/rail/refund-calculator/train-cancelled-delayed-3-hours-tdr-refund-calculator"
+                className="rounded-xl bg-[#1956b4] px-3.5 py-2 text-xs font-extrabold text-white transition hover:bg-[#144696]"
+              >
+                3+ Hr Delay 100% TDR Refund →
+              </Link>
+              <Link
+                href="/rail/refund-calculator"
+                className="rounded-xl border border-line bg-card px-3 py-2 text-xs font-bold text-ink transition hover:border-[#1956b4] hover:text-[#1956b4]"
+              >
+                IRCTC Refund Calculator
+              </Link>
+              <Link
+                href="/rail/chart-time"
+                className="rounded-xl border border-line bg-card px-3 py-2 text-xs font-bold text-[#fc6203] transition hover:border-[#fc6203]"
+              >
+                Check Chart Time
+              </Link>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* Popular Live Trains Quick Directory */}

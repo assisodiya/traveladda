@@ -393,6 +393,30 @@ export default async function FlightStatusSeoDetailPage({
             initialFlightData={flightData}
           />
         </Suspense>
+
+        {/* Cross-Tool Intent Loop: Flight Specific Delay -> DGCA Compensation Checker */}
+        <div className="mt-4 rounded-2xl border border-amber-300/80 bg-amber-50/85 p-4 shadow-2xs dark:border-amber-500/30 dark:bg-amber-950/30">
+          <div className="flex flex-col justify-between gap-3 lg:flex-row lg:items-center">
+            <div className="space-y-1">
+              <div className="text-xs font-extrabold text-ink sm:text-sm">
+                Is {resolvedAirlineName} {flightCode} Delayed &gt;2 Hours, Cancelled or Overbooked?
+              </div>
+              <p className="text-xs text-ink-soft">
+                Under DGCA Passenger Charter rules, you may be entitled to free meals, alternate flights, or up to{" "}
+                <strong>₹10,000–₹20,000 statutory compensation</strong>. Generate your official{" "}
+                {resolvedAirlineName} Nodal Officer claim notice in 30 seconds.
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-2 shrink-0">
+              <Link
+                href="/air/flight-compensation"
+                className="rounded-xl bg-[#1956b4] px-3.5 py-2 text-xs font-extrabold text-white transition hover:bg-[#144696]"
+              >
+                Check {resolvedAirlineName} DGCA Compensation →
+              </Link>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* Server-Rendered SEO Summary & Route Intelligence Table */}

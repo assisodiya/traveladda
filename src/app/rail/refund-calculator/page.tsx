@@ -82,6 +82,24 @@ const REFUND_HUB_FAQS = [
     answer:
       "When you enter the Grand Total printed on an Agent (RSP/CSC) ticket, our calculator first subtracts the fixed Agent Service Charge (₹40 for AC / ₹20 for Non-AC), then reverses the Payment Gateway charge (0.75% if PG Base ≤ ₹2,000; 1.00% if PG Base > ₹2,000), and finally subtracts the IRCTC Convenience Fee (₹35.40 AC / ₹17.70 Non-AC) and Travel Insurance to isolate the exact refundable Railway Fare + Catering.",
   },
+  {
+    question:
+      "कन्फर्म ट्रेन टिकट कैंसिल करने पर कितना पैसा कटता है? (Confirmed Train Ticket Cancellation Charges in Hindi)",
+    answer:
+      "सामान्य ट्रेनों (राजधानी, शताब्दी, वंदे भारत चेयर कार, मेल/एक्सप्रेस) में प्रस्थान से 48 घंटे पहले कन्फर्म टिकट कैंसिल करने पर प्रति यात्री फ्लैट शुल्क कटता है: 3AC/CC ₹190 (₹180+GST), 2AC ₹210 (₹200+GST), 1AC/EC ₹255 (₹240+GST), स्लीपर ₹120 और 2S ₹60। प्रस्थान से 48 से 12 घंटे के बीच 25% किराया (न्यूनतम फ्लैट शुल्क + डबल ₹5 राउंडिंग) और 12 से 4 घंटे के बीच (चार्ट बनने से पहले) 50% किराया कटता है। चार्ट बनने के बाद कन्फर्म टिकट पर ₹0 रिफंड मिलता है।",
+  },
+  {
+    question:
+      "RAC और वेटिंग लिस्ट (WL / TQWL) टिकट कैंसिल करने पर कितना रिफंड मिलता है? (RAC & Waiting List Ticket Refund in Hindi)",
+    answer:
+      "वेटिंग लिस्ट (GNWL / RLWL / PQWL / TQWL) ई-टिकट पर कभी भी 25% या 50% कटौती नहीं होती — चाहे आप चार्ट बनने के बाद कैंसिल करें या टिकट अपने आप कैंसिल हो जाए, प्रति यात्री केवल क्लर्केज शुल्क (स्लीपर/2S में ₹60 और सभी AC क्लास में ₹65 = ₹60 + ₹3 GST राउंडेड) कटता है और बाकी पूरा किराया बैंक में वापस आता है। RAC टिकट ट्रेन छूटने से 30 मिनट पहले तक कैंसिल करने पर भी केवल ₹60 / ₹65 ही कटता है।",
+  },
+  {
+    question:
+      "वंदे भारत स्लीपर का नया 72-घंटे और 8-घंटे वाला कैंसिलेशन नियम क्या है? (Vande Bharat Sleeper 72 Hour Rule in Hindi)",
+    answer:
+      "रेल मंत्रालय की गजट अधिसूचना G.S.R. 41(E) (16 जनवरी 2026) के तहत 72-घंटे और 8-घंटे का नियम केवल 'वंदे भारत स्लीपर एक्सप्रेस' और 'अमृत भारत II एक्सप्रेस' पर लागू होता है: प्रस्थान से 72 घंटे पहले भी कोई फ्लैट फीस नहीं है बल्कि सीधा 25% किराया कटता है, 72 घंटे से 8 घंटे के बीच 50% कटता है, और ट्रेन छूटने से 8 घंटे के भीतर कन्फर्म टिकट पर ₹0 रिफंड मिलता है। सामान्य वंदे भारत चेयर कार (CC/EC) में पुराना 48h/12h/4h नियम ही लागू है।",
+  },
 ];
 
 export default async function RailRefundCalculatorHubPage() {

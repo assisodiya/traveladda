@@ -315,6 +315,37 @@ export default async function TrainChartTimePage() {
             <span>Day offset badges (Same Day / +1 Day / -1 Day)</span>
           </div>
         </div>
+
+        {/* Cross-Tool Intent Loop: Pre-Chart vs Post-Chart PRS Refund Calculator */}
+        <div className="mt-4 rounded-2xl border border-amber-300/80 bg-amber-50/80 p-4 shadow-2xs dark:border-amber-500/30 dark:bg-amber-950/30">
+          <div className="flex flex-col justify-between gap-3 lg:flex-row lg:items-center">
+            <div className="space-y-1">
+              <div className="text-xs font-extrabold text-ink sm:text-sm">
+                Cancelling Before or After 1st Reservation Chart Preparation?
+              </div>
+              <p className="text-xs text-ink-soft">
+                Once the 1st chart locks, <strong>Confirmed (CNF) tickets get ₹0 refund</strong>, whereas{" "}
+                <strong>RAC &amp; Waitlisted (WL) tickets still get full refund minus ₹60/₹65 clerkage</strong>{" "}
+                up to 30 mins before departure. Check exact PRS deduction for{" "}
+                <strong>48h/12h/4h Regular Trains vs 72h/8h Vande Bharat Sleeper</strong>.
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-2 shrink-0">
+              <Link
+                href="/rail/refund-calculator/after-chart-preparation-train-ticket-cancellation-rules"
+                className="rounded-xl bg-[#1956b4] px-3.5 py-2 text-xs font-extrabold text-white transition hover:bg-[#144696]"
+              >
+                Post-Chart Refund Rules →
+              </Link>
+              <Link
+                href="/rail/refund-calculator"
+                className="rounded-xl border border-line bg-card px-3 py-2 text-xs font-bold text-ink transition hover:border-[#1956b4] hover:text-[#1956b4]"
+              >
+                Open PRS Refund Calculator
+              </Link>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* Quick Directory of Popular Trains for Chart Times */}

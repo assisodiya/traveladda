@@ -106,6 +106,8 @@ export default function RailRefundCalculator({
     message: string;
   } | null>(null);
   const [copiedSummary, setCopiedSummary] = useState(false);
+  const [lang, setLang] = useState<"en" | "hi">("en");
+  const isHindi = lang === "hi";
 
   const result = useMemo(() => {
     const isUnchangedFromInitial =
@@ -258,31 +260,56 @@ export default function RailRefundCalculator({
     }
   };
 
-  const handleCopyRefundReceipt = () => {
-    const text = [
-      `IRCTC / Indian Railways Refund Receipt (TravelAdda PRS Verified)`,
-      `• Mode & Status: ${state.bookingSource} • ${result.classConfig.shortName} • ${STATUS_META[state.ticketStatus].shortLabel}`,
-      `• Regime: ${
+  const buildReceiptShareText = () => {
+    const scenarioPath = activeScenarioSlug
+      ? `https://traveladda.in/rail/refund-calculator/${activeScenarioSlug}`
+      : "https://traveladda.in/rail/refund-calculator";
+    return [
+      isHindi
+        ? `🚆 *IRCTC / भारतीय रेलवे टिकट रिफंड रसीद (TravelAdda PRS Verified)*`
+        : `🚆 *IRCTC / Indian Railways Refund Receipt (TravelAdda PRS Verified)*`,
+      `• ${isHindi ? "बुकिंग व स्टेटस" : "Mode & Status"}: ${state.bookingSource} • ${result.classConfig.shortName} • ${STATUS_META[state.ticketStatus].shortLabel}`,
+      `• ${isHindi ? "नियम (Regime)" : "Regime"}: ${
         isRegularRegime
-          ? "Regular Trains (48h / 12h / 4h)"
+          ? isHindi
+            ? "सामान्य ट्रेन / वंदे भारत चेयर कार (48h / 12h / 4h)"
+            : "Regular Trains (48h / 12h / 4h)"
+          : isHindi
+          ? "वंदे भारत स्लीपर / अमृत भारत II (72h / 8h गजट)"
           : "Vande Bharat Sleeper / Amrit Bharat II (72h / 8h Gazette)"
       }`,
-      `• Grand Total Paid: ${formatINR(result.extracted.grandTotalPaid)}`,
-      `• Pure Railway Fare (${result.cancellingPax} Pax): ${formatINR(
+      `• ${isHindi ? "ग्राहक द्वारा कुल भुगतान (Grand Total)" : "Grand Total Paid"}: ${formatINR(result.extracted.grandTotalPaid)}`,
+      `• ${isHindi ? `शुद्ध रेलवे किराया (${result.cancellingPax} यात्री)` : `Pure Railway Fare (${result.cancellingPax} Pax)`}: ${formatINR(
         result.totalCancellingTicketFare
       )}`,
-      `• PRS Cancellation Deduction: -${formatINR(result.finalRailwayCut)} (${
+      `• ${isHindi ? "रेलवे कैंसिलेशन कटौती (PRS Cut)" : "PRS Cancellation Deduction"}: -${formatINR(result.finalRailwayCut)} (${
         result.perPaxFormulaStr
       })`,
-      `• Final Net Bank Refund: ${formatINR(result.totalNetRefund)} (${formatINR(
+      `• *${isHindi ? "बैंक में आने वाला कुल रिफंड" : "Final Net Bank Refund"}: ${formatINR(result.totalNetRefund)}* (${formatINR(
         result.perPaxNetRefund
       )}/Pax)`,
+      `🔗 ${isHindi ? "अपना रिफंड चेक करें" : "Check live PRS refund"}: ${scenarioPath}`,
     ].join("\n");
+  };
+
+  const handleCopyRefundReceipt = () => {
+    const text = buildReceiptShareText();
 
     if (typeof navigator !== "undefined" && navigator.clipboard) {
       navigator.clipboard.writeText(text);
       setCopiedSummary(true);
       setTimeout(() => setCopiedSummary(false), 2200);
+    }
+  };
+
+  const handleWhatsAppShare = () => {
+    const text = buildReceiptShareText();
+    if (typeof window !== "undefined") {
+      window.open(
+        `https://wa.me/?text=${encodeURIComponent(text)}`,
+        "_blank",
+        "noopener,noreferrer"
+      );
     }
   };
 
@@ -309,31 +336,86 @@ export default function RailRefundCalculator({
           <div className="space-y-1.5">
             <div className="flex flex-wrap items-center gap-2">
               <span className="rounded-full bg-[#1956b4] px-2.5 py-0.5 text-[11px] font-extrabold uppercase tracking-wider text-white">
-                Gazette of India G.S.R. 41(E) — 16 Jan 2026
+                {isHindi
+                  ? "भारत का राजपत्र G.S.R. 41(E) — 16 जनवरी 2026"
+                  : "Gazette of India G.S.R. 41(E) — 16 Jan 2026"}
               </span>
               <span className="text-xs font-extrabold text-ink sm:text-sm">
-                72-Hour &amp; 8-Hour Rule Applies ONLY to 2 Trains — Regular Trains Follow 48h / 12h / 4h!
+                {isHindi
+                  ? "72-घंटे और 8-घंटे का नियम केवल 2 ट्रेनों पर लागू — बाकी सभी ट्रेनों में 48h / 12h / 4h नियम!"
+                  : "72-Hour & 8-Hour Rule Applies ONLY to 2 Trains — Regular Trains Follow 48h / 12h / 4h!"}
               </span>
             </div>
             <p className="text-xs leading-relaxed text-ink-soft">
-              Under Ministry of Railways Gazette Notification{" "}
-              <strong>G.S.R. 41(E)</strong>: <strong>1. Vande Bharat Sleeper Express</strong> and{" "}
-              <strong>2. Amrit Bharat II Express</strong> deduct{" "}
-              <strong>25% (&gt;72h, no flat fee)</strong>,{" "}
-              <strong>50% (72h to 8h)</strong>, and{" "}
-              <strong>₹0 (&lt;8h or post-chart)</strong>. All other trains{" "}
-              <strong>
-                (Regular Vande Bharat Chair Car CC/EC, Rajdhani, Shatabdi, Duronto, Mail/Express)
-              </strong>{" "}
-              follow:{" "}
-              <strong>
-                &gt;48h Flat Fee, 48h–12h (25% Cut), &lt;12h to ≥4h if Chart Not Prepared (50% Cut), and Post-Chart / &lt;4h (₹0 Refund)
-              </strong>
-              .
+              {isHindi ? (
+                <>
+                  रेल मंत्रालय गजट अधिसूचना <strong>G.S.R. 41(E)</strong> के अनुसार:{" "}
+                  <strong>1. वंदे भारत स्लीपर एक्सप्रेस</strong> और{" "}
+                  <strong>2. अमृत भारत II एक्सप्रेस</strong> में{" "}
+                  <strong>&gt;72h (25% कटौती, कोई फ्लैट शुल्क नहीं)</strong>,{" "}
+                  <strong>72h से 8h (50% कटौती)</strong> और{" "}
+                  <strong>&lt;8h या चार्ट के बाद (₹0 रिफंड)</strong> लागू है। अन्य सभी ट्रेनों{" "}
+                  <strong>
+                    (सामान्य वंदे भारत चेयर कार CC/EC, राजधानी, शताब्दी, दुरंतो, मेल/एक्सप्रेस)
+                  </strong>{" "}
+                  में{" "}
+                  <strong>
+                    &gt;48h फ्लैट शुल्क, 48h–12h (25% कटौती), &lt;12h से ≥4h चार्ट बनने से पहले (50% कटौती), और चार्ट बनने के बाद / &lt;4h (₹0 रिफंड)
+                  </strong>{" "}
+                  लागू है।
+                </>
+              ) : (
+                <>
+                  Under Ministry of Railways Gazette Notification{" "}
+                  <strong>G.S.R. 41(E)</strong>: <strong>1. Vande Bharat Sleeper Express</strong> and{" "}
+                  <strong>2. Amrit Bharat II Express</strong> deduct{" "}
+                  <strong>25% (&gt;72h, no flat fee)</strong>,{" "}
+                  <strong>50% (72h to 8h)</strong>, and{" "}
+                  <strong>₹0 (&lt;8h or post-chart)</strong>. All other trains{" "}
+                  <strong>
+                    (Regular Vande Bharat Chair Car CC/EC, Rajdhani, Shatabdi, Duronto, Mail/Express)
+                  </strong>{" "}
+                  follow:{" "}
+                  <strong>
+                    &gt;48h Flat Fee, 48h–12h (25% Cut), &lt;12h to ≥4h if Chart Not Prepared (50% Cut), and Post-Chart / &lt;4h (₹0 Refund)
+                  </strong>
+                  .
+                </>
+              )}
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2 shrink-0">
+            {/* Language Toggle: English / हिंदी */}
+            <div
+              role="group"
+              aria-label="Language Switcher"
+              className="inline-flex rounded-xl border border-[#1956b4]/30 bg-card p-1 shadow-2xs"
+            >
+              <button
+                type="button"
+                onClick={() => setLang("en")}
+                className={`rounded-lg px-2.5 py-1.5 text-xs font-extrabold transition ${
+                  !isHindi
+                    ? "bg-[#1956b4] text-white shadow-2xs"
+                    : "text-ink-soft hover:bg-subcard"
+                }`}
+              >
+                English
+              </button>
+              <button
+                type="button"
+                onClick={() => setLang("hi")}
+                className={`rounded-lg px-2.5 py-1.5 text-xs font-extrabold transition ${
+                  isHindi
+                    ? "bg-[#fc6203] text-white shadow-2xs"
+                    : "text-ink-soft hover:bg-subcard"
+                }`}
+              >
+                हिंदी
+              </button>
+            </div>
+
             <div className="inline-flex flex-wrap rounded-xl border border-line bg-card p-1 shadow-2xs">
               <button
                 type="button"
@@ -346,7 +428,9 @@ export default function RailRefundCalculator({
                     : "text-ink-soft hover:bg-subcard"
                 }`}
               >
-                Regular Trains / Vande Bharat CC (48h / 12h / 4h)
+                {isHindi
+                  ? "सामान्य ट्रेन / वंदे भारत CC (48h / 12h / 4h)"
+                  : "Regular Trains / Vande Bharat CC (48h / 12h / 4h)"}
               </button>
               <button
                 type="button"
@@ -362,7 +446,9 @@ export default function RailRefundCalculator({
                     : "text-ink-soft hover:bg-subcard"
                 }`}
               >
-                Vande Bharat Sleeper / Amrit Bharat II (72h / 8h)
+                {isHindi
+                  ? "वंदे भारत स्लीपर / अमृत भारत II (72h / 8h)"
+                  : "Vande Bharat Sleeper / Amrit Bharat II (72h / 8h)"}
               </button>
             </div>
           </div>
@@ -441,7 +527,9 @@ export default function RailRefundCalculator({
                 <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#1956b4] text-xs font-extrabold text-white">
                   1
                 </span>
-                Where Was the Ticket Booked? (Booking Source)
+                {isHindi
+                  ? "टिकट कहाँ से बुक किया गया है? (Booking Source)"
+                  : "Where Was the Ticket Booked? (Booking Source)"}
               </h2>
               <span className="rounded-lg border border-blue-200 bg-blue-50/80 px-2.5 py-1 text-[11px] font-bold text-[#1956b4] dark:border-blue-500/30 dark:bg-blue-950/50 dark:text-blue-300">
                 {state.bookingSource === "AGENT"
@@ -461,18 +549,30 @@ export default function RailRefundCalculator({
                 [
                   {
                     id: "PERSONAL" as BookingSource,
-                    title: "Personal IRCTC ID",
-                    sub: "Only IRCTC Fee • ₹0 PG Charge",
+                    title: isHindi
+                      ? "Personal IRCTC ID (व्यक्तिगत)"
+                      : "Personal IRCTC ID",
+                    sub: isHindi
+                      ? "केवल IRCTC शुल्क • ₹0 PG शुल्क"
+                      : "Only IRCTC Fee • ₹0 PG Charge",
                   },
                   {
                     id: "AGENT" as BookingSource,
-                    title: "Agent ID (RSP / CSC)",
-                    sub: "IRCTC + Agent ₹40/₹20 + PG 0.75%/1%",
+                    title: isHindi
+                      ? "Agent ID (अधिकृत एजेंट / CSC)"
+                      : "Agent ID (RSP / CSC)",
+                    sub: isHindi
+                      ? "IRCTC + एजेंट ₹40/₹20 + PG 0.75%/1%"
+                      : "IRCTC + Agent ₹40/₹20 + PG 0.75%/1%",
                   },
                   {
                     id: "COUNTER" as BookingSource,
-                    title: "Railway Counter (PRS)",
-                    sub: "Zero IRCTC / Agent / PG Fees",
+                    title: isHindi
+                      ? "Railway Counter (रेलवे काउंटर)"
+                      : "Railway Counter (PRS)",
+                    sub: isHindi
+                      ? "शून्य IRCTC / एजेंट / PG शुल्क"
+                      : "Zero IRCTC / Agent / PG Fees",
                   },
                 ]
               ).map((src) => {
@@ -584,7 +684,9 @@ export default function RailRefundCalculator({
               <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#1956b4] text-xs font-extrabold text-white">
                 2
               </span>
-              Select Coach Class &amp; Current Ticket Status
+              {isHindi
+                ? "कोच श्रेणी (Class) और वर्तमान टिकट स्थिति चुनें"
+                : "Select Coach Class & Current Ticket Status"}
             </h2>
 
             {/* Coach Class Grid */}
@@ -670,7 +772,9 @@ export default function RailRefundCalculator({
                 <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#1956b4] text-xs font-extrabold text-white">
                   3
                 </span>
-                When Was the Ticket Cancelled? (Time Before Departure)
+                {isHindi
+                  ? "टिकट कब कैंसिल किया जा रहा है? (प्रस्थान से पहले का समय)"
+                  : "When Was the Ticket Cancelled? (Time Before Departure)"}
               </h2>
               <span className="rounded-lg border border-amber-300 bg-amber-100/80 px-2.5 py-1 text-xs font-extrabold text-amber-950 dark:border-amber-500/30 dark:bg-amber-950/50 dark:text-amber-200">
                 Gap: {result.hoursWhole}h {result.minutesRemainder}m (
@@ -843,7 +947,9 @@ export default function RailRefundCalculator({
               <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#1956b4] text-xs font-extrabold text-white">
                 4
               </span>
-              Passengers, Ticket Fare (Grand Total vs Pure Fare), Catering &amp; Insurance
+              {isHindi
+                ? "यात्री संख्या, टिकट किराया (Grand Total या Pure Fare), कैटरिंग और बीमा"
+                : "Passengers, Ticket Fare (Grand Total vs Pure Fare), Catering & Insurance"}
             </h2>
 
             {/* Passenger Selectors */}
@@ -1380,25 +1486,27 @@ export default function RailRefundCalculator({
               <div className="mt-4 grid grid-cols-2 gap-3">
                 <div className="rounded-2xl border border-emerald-400/40 bg-emerald-500/20 p-3.5">
                   <div className="text-[11px] font-bold uppercase tracking-wider text-emerald-200">
-                    Net Bank Refund
+                    {isHindi ? "कुल बैंक रिफंड (Net Refund)" : "Net Bank Refund"}
                   </div>
                   <div className="mt-1 text-2xl font-extrabold text-emerald-300 sm:text-3xl">
                     {formatINR(result.totalNetRefund)}
                   </div>
                   <div className="mt-0.5 text-[11px] text-emerald-100">
-                    Per Pax Refund: {formatINR(result.perPaxNetRefund)}
+                    {isHindi ? "प्रति यात्री रिफंड:" : "Per Pax Refund:"}{" "}
+                    {formatINR(result.perPaxNetRefund)}
                   </div>
                 </div>
 
                 <div className="rounded-2xl border border-rose-400/40 bg-rose-500/20 p-3.5">
                   <div className="text-[11px] font-bold uppercase tracking-wider text-rose-200">
-                    PRS Railway Cut
+                    {isHindi ? "रेलवे कटौती (PRS Cut)" : "PRS Railway Cut"}
                   </div>
                   <div className="mt-1 text-2xl font-extrabold text-rose-300 sm:text-3xl">
                     - {formatINR(result.finalRailwayCut)}
                   </div>
                   <div className="mt-0.5 text-[11px] text-rose-100">
-                    {formatINR(result.perPaxRailwayCut)} / Passenger
+                    {formatINR(result.perPaxRailwayCut)} /{" "}
+                    {isHindi ? "यात्री" : "Passenger"}
                   </div>
                 </div>
               </div>
@@ -1575,55 +1683,76 @@ export default function RailRefundCalculator({
                 )}
               </div>
 
-              {/* Dynamic Shareable QR Refund Pass & Copy Receipt Button */}
-              <div className="flex items-center justify-between gap-3 rounded-2xl border border-line bg-subcard/60 p-3">
-                <div className="flex items-center gap-3">
-                  <div
-                    aria-label="Dynamic QR Refund Receipt Pass"
-                    className="grid shrink-0 grid-cols-21 gap-[1px] rounded-lg border border-line bg-white p-1.5 shadow-2xs"
-                    style={{ width: 64, height: 64 }}
-                  >
-                    {qrMatrix.flatMap((row, rIdx) =>
-                      row.map((cell, cIdx) => (
-                        <span
-                          key={`${rIdx}-${cIdx}`}
-                          className={
-                            cell ? "bg-slate-950" : "bg-transparent"
-                          }
-                          style={{ width: 2, height: 2 }}
-                        />
-                      ))
-                    )}
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-1 text-xs font-extrabold text-ink">
-                      <ShieldCheckIcon className="h-3.5 w-3.5 text-emerald-600" />
-                      <span>Dynamic PRS Refund Pass</span>
+              {/* Dynamic Shareable QR Refund Pass & Copy / WhatsApp Share Buttons */}
+              <div className="space-y-2.5 rounded-2xl border border-line bg-subcard/60 p-3">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <div
+                      aria-label="Dynamic QR Refund Receipt Pass"
+                      className="grid shrink-0 grid-cols-21 gap-[1px] rounded-lg border border-line bg-white p-1.5 shadow-2xs"
+                      style={{ width: 64, height: 64 }}
+                    >
+                      {qrMatrix.flatMap((row, rIdx) =>
+                        row.map((cell, cIdx) => (
+                          <span
+                            key={`${rIdx}-${cIdx}`}
+                            className={
+                              cell ? "bg-slate-950" : "bg-transparent"
+                            }
+                            style={{ width: 2, height: 2 }}
+                          />
+                        ))
+                      )}
                     </div>
-                    <p className="mt-0.5 text-[10px] text-ink-muted">
-                      Net Refund {formatINR(result.totalNetRefund)} • Cut{" "}
-                      {formatINR(result.finalRailwayCut)}
-                    </p>
+                    <div>
+                      <div className="flex items-center gap-1 text-xs font-extrabold text-ink">
+                        <ShieldCheckIcon className="h-3.5 w-3.5 text-emerald-600" />
+                        <span>
+                          {isHindi
+                            ? "डायनामिक PRS रिफंड पास"
+                            : "Dynamic PRS Refund Pass"}
+                        </span>
+                      </div>
+                      <p className="mt-0.5 text-[10px] text-ink-muted">
+                        {isHindi ? "कुल रिफंड" : "Net Refund"}{" "}
+                        {formatINR(result.totalNetRefund)} •{" "}
+                        {isHindi ? "कटौती" : "Cut"}{" "}
+                        {formatINR(result.finalRailwayCut)}
+                      </p>
+                    </div>
                   </div>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={handleCopyRefundReceipt}
-                  className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-[#1956b4] px-3 py-2 text-xs font-bold text-white transition hover:bg-[#144696]"
-                >
-                  {copiedSummary ? (
-                    <>
-                      <CheckCircleIcon className="h-3.5 w-3.5" />
-                      <span>Copied!</span>
-                    </>
-                  ) : (
-                    <>
-                      <CopyIcon className="h-3.5 w-3.5" />
-                      <span>Copy Receipt</span>
-                    </>
-                  )}
-                </button>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={handleCopyRefundReceipt}
+                    className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#1956b4] px-3 py-2 text-xs font-bold text-white transition hover:bg-[#144696]"
+                  >
+                    {copiedSummary ? (
+                      <>
+                        <CheckCircleIcon className="h-3.5 w-3.5" />
+                        <span>{isHindi ? "कॉपी हो गया!" : "Copied!"}</span>
+                      </>
+                    ) : (
+                      <>
+                        <CopyIcon className="h-3.5 w-3.5" />
+                        <span>{isHindi ? "रसीद कॉपी करें" : "Copy Receipt"}</span>
+                      </>
+                    )}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleWhatsAppShare}
+                    className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-emerald-600 px-3 py-2 text-xs font-bold text-white transition hover:bg-emerald-700"
+                  >
+                    <span>💬</span>
+                    <span>
+                      {isHindi ? "WhatsApp शेयर" : "Share on WhatsApp"}
+                    </span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>

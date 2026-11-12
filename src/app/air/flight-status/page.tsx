@@ -280,6 +280,31 @@ export default async function LiveFlightStatusPage() {
         <Suspense fallback={<FlightTrackerSkeleton />}>
           <LiveFlightTracker />
         </Suspense>
+
+        {/* Cross-Tool Intent Loop: Flight Delayed / Cancelled -> DGCA ₹20,000 Compensation Checker */}
+        <div className="mt-4 rounded-2xl border border-amber-300/80 bg-amber-50/85 p-4 shadow-2xs dark:border-amber-500/30 dark:bg-amber-950/30">
+          <div className="flex flex-col justify-between gap-3 lg:flex-row lg:items-center">
+            <div className="space-y-1">
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-[#fc6203] px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-white">
+                DGCA CAR Section 3, Series M, Part IV
+              </div>
+              <div className="text-xs font-extrabold text-ink sm:text-sm">
+                Is Your Flight Delayed Over 2 Hours, Cancelled, or Denied Boarding?
+              </div>
+              <p className="text-xs text-ink-soft">
+                Check statutory eligibility for up to <strong>₹10,000–₹20,000 cash compensation</strong>, free meals, hotel stay, or 100% refund and generate a ready-to-send Airline Nodal Officer legal claim notice.
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-2 shrink-0">
+              <Link
+                href="/air/flight-compensation"
+                className="rounded-xl bg-[#1956b4] px-3.5 py-2 text-xs font-extrabold text-white transition hover:bg-[#144696]"
+              >
+                Check ₹20,000 DGCA Compensation →
+              </Link>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* POPULAR LIVE FLIGHTS DIRECTORY */}

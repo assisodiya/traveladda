@@ -453,11 +453,47 @@ export default async function TrainLiveStatusByNumberPage({
             >
               {trainData.trainNumber} Chart Preparation Time →
             </Link>
+            <span className="text-line-strong">·</span>
+            <Link
+              href="/rail/refund-calculator"
+              className="font-bold text-emerald-700 hover:underline dark:text-emerald-400"
+            >
+              Calculate {trainData.trainNumber} Refund →
+            </Link>
           </div>
           <span className="inline-flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400">
             <ShieldCheckIcon className="h-4 w-4" />
             <span>Live NTES / GPS Synchronized</span>
           </span>
+        </div>
+
+        {/* Cross-Tool Intent Loop: Train Delayed >3h TDR 100% Refund & PRS Refund Calculator */}
+        <div className="mt-4 rounded-2xl border border-[#1956b4]/25 bg-blue-50/70 p-4 shadow-2xs dark:border-blue-500/30 dark:bg-blue-950/30">
+          <div className="flex flex-col justify-between gap-3 lg:flex-row lg:items-center">
+            <div className="space-y-1">
+              <div className="text-xs font-extrabold text-ink sm:text-sm">
+                Is {trainData.trainNumber} {trainData.trainName} Delayed &gt;3 Hours or Need to Cancel Your Ticket?
+              </div>
+              <p className="text-xs text-ink-soft">
+                If Train {trainData.trainNumber} is running more than <strong>3 hours late</strong> at your boarding station and you do not travel, file an online TDR before departure for a{" "}
+                <strong>100% Full Fare Refund (₹0 deduction)</strong>, or calculate your exact CRIS PRS cancellation refund.
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-2 shrink-0">
+              <Link
+                href="/rail/refund-calculator/train-cancelled-delayed-3-hours-tdr-refund-calculator"
+                className="rounded-xl bg-[#1956b4] px-3.5 py-2 text-xs font-extrabold text-white transition hover:bg-[#144696]"
+              >
+                3+ Hr Delay 100% TDR Refund →
+              </Link>
+              <Link
+                href="/rail/refund-calculator"
+                className="rounded-xl border border-line bg-card px-3 py-2 text-xs font-bold text-ink transition hover:border-[#1956b4] hover:text-[#1956b4]"
+              >
+                Calculate PRS Refund
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 

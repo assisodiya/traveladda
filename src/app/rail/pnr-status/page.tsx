@@ -139,6 +139,55 @@ export default async function PnrStatusPage() {
         </div>
       </section>
 
+      {/* Cross-Tool Intent Loop: PNR Status -> IRCTC Refund Calculator & Chart Time */}
+      <section className="mx-auto mt-6 max-w-5xl px-4 sm:px-6 lg:px-8">
+        <div className="rounded-2xl border border-[#1956b4]/25 bg-blue-50/70 p-4 shadow-2xs sm:p-5 dark:border-blue-500/30 dark:bg-blue-950/30">
+          <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
+            <div className="space-y-1">
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-[#1956b4] px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-white">
+                PRS Verified + Gazette G.S.R. 41(E)
+              </div>
+              <h2 className="text-sm font-extrabold text-ink sm:text-base">
+                Need to Cancel Your Confirmed (CNF), RAC or Waitlisted (WL) Ticket?
+              </h2>
+              <p className="text-xs leading-relaxed text-ink-soft">
+                Calculate your exact Indian Railways bank refund with{" "}
+                <strong>Double ₹5 PRS Rounding</strong> (Waitlist/RAC cuts only{" "}
+                <strong>₹60 / ₹65</strong> even up to 30 mins before departure) or check
+                when your boarding station&apos;s reservation chart locks.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2 shrink-0">
+              <Link
+                href="/rail/refund-calculator"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-[#1956b4] px-3.5 py-2 text-xs font-extrabold text-white shadow-2xs transition hover:bg-[#144696]"
+              >
+                <span>Calculate Exact PRS Refund →</span>
+              </Link>
+              <Link
+                href="/rail/refund-calculator/waiting-list-wl-ticket-refund-calculator"
+                className="rounded-xl border border-line bg-card px-3 py-2 text-xs font-bold text-ink transition hover:border-[#1956b4] hover:text-[#1956b4]"
+              >
+                WL Refund (₹65 Cut)
+              </Link>
+              <Link
+                href="/rail/refund-calculator/rac-ticket-cancellation-refund-calculator"
+                className="rounded-xl border border-line bg-card px-3 py-2 text-xs font-bold text-ink transition hover:border-[#1956b4] hover:text-[#1956b4]"
+              >
+                RAC Refund
+              </Link>
+              <Link
+                href="/rail/chart-time"
+                className="rounded-xl border border-line bg-card px-3 py-2 text-xs font-bold text-[#fc6203] transition hover:border-[#fc6203]"
+              >
+                Check Chart Time
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Ticket Status & Berth Code Decoder */}
       <section
         id="decoder"

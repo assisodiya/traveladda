@@ -82,6 +82,24 @@ const TOLL_HUB_FAQS = [
     answer:
       "TravelAdda combines the exact plaza-by-plaza FASTag toll tariff for your vehicle class (Car/SUV, LCV, Bus/Truck, or Multi-Axle) with origin-city retail fuel prices (₹/Litre for Petrol & Diesel, ₹/kg for CNG, and ₹/kWh for DC Fast Charging) divided by your vehicle's real-world highway mileage.",
   },
+  {
+    question:
+      "NHAI FASTag से 24 घंटे में वापसी (Return Journey) करने पर टोल टैक्स में कितनी छूट मिलती है?",
+    answer:
+      "भारतीय राष्ट्रीय राजमार्ग प्राधिकरण (NHAI) के टोल प्लाजा पर यदि आपकी गाड़ी जाने के 24 घंटे के भीतर उसी टोल प्लाजा से वापस लौटती है, तो FASTag से दोबारा पूरा टोल नहीं कटता बल्कि लगभग 25% की छूट (दो तरफ के 2x किराये के बजाय ~1.5x रिटर्न पास) अपने आप लागू हो जाती है।",
+  },
+  {
+    question:
+      "अगर FASTag ब्लैकलिस्ट है या बैलेंस कम है तो टोल प्लाजा पर कितना जुर्माना लगता है?",
+    answer:
+      "सड़क परिवहन और राजमार्ग मंत्रालय (MoRTH) के नियमों के अनुसार, यदि किसी वाहन का FASTag सक्रिय (Active) नहीं है, KYV अधूरा है या वॉलेट में पर्याप्त बैलेंस नहीं है, तो FASTag लेन में प्रवेश करने पर दोगुना (200% डबल) टोल शुल्क वसूला जाता है।",
+  },
+  {
+    question:
+      "दो शहरों के बीच कार का कुल टोल टैक्स और पेट्रोल/डीजल/CNG खर्च कैसे चेक करें?",
+    answer:
+      "ऊपर दिए गए TravelAdda टोल और फ्यूल कैलकुलेटर में अपना शुरुआती शहर (जैसे Delhi, Mumbai, Bengaluru) और गंतव्य शहर (जैसे Jaipur, Agra, Pune) चुनें, अपनी गाड़ी और ईंधन (Petrol, Diesel, CNG या EV) चुनें — आपको रास्ते के सभी टोल प्लाजा की लिस्ट, कुल FASTag टोल, ईंधन खर्च और प्रति यात्री खर्च तुरंत मिल जाएगा।",
+  },
 ];
 
 export default async function TollCalculatorHubPage() {

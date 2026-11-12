@@ -206,6 +206,8 @@ export default function HighwayTollCalculator({
   const [navigating, setNavigating] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [copiedUrl, setCopiedUrl] = useState<boolean>(false);
+  const [lang, setLang] = useState<"en" | "hi">("en");
+  const isHindi = lang === "hi";
 
   const fromBoxRef = useRef<HTMLDivElement>(null);
   const toBoxRef = useRef<HTMLDivElement>(null);
@@ -481,6 +483,28 @@ export default function HighwayTollCalculator({
     }
   };
 
+  const handleWhatsAppShare = () => {
+    if (!plan || typeof window === "undefined") return;
+    const shareUrl = `https://traveladda.in${currentDynamicPath}`;
+    const text = [
+      isHindi
+        ? `🚗 *NHAI FASTag टोल और फ्यूल ट्रिप पास (${plan.fromCity.name} → ${plan.toCity.name})*`
+        : `🚗 *NHAI FASTag Highway Toll & Fuel Trip Pass (${plan.fromCity.name} → ${plan.toCity.name})*`,
+      `• ${isHindi ? "रूट दूरी व समय" : "Distance & Time"}: ${plan.effectiveDistanceKm} km (${plan.durationFormatted}) • ${plan.tripModeLabel}`,
+      `• ${isHindi ? "वाहन व ईंधन" : "Vehicle & Fuel"}: ${VEHICLE_CATEGORY_META[plan.vehicleCategory].shortLabel} • ${plan.fuelType.toUpperCase()}`,
+      `• ${isHindi ? "NHAI FASTag टोल टैक्स" : "NHAI FASTag Toll Tax"}: ₹${plan.appliedTollInr.toLocaleString("en-IN")} (${plan.plazaCount || "NHAI"} Plazas)`,
+      `• ${isHindi ? "अनुमानित ईंधन खर्च" : "Estimated Fuel Cost"}: ₹${plan.fuelCostInr.toLocaleString("en-IN")} (${plan.fuelUnitsRequired} ${plan.fuelUnitName})`,
+      `• *${isHindi ? "कुल ट्रिप खर्च" : "Total Road Trip Cost"}: ₹${plan.totalTripCostInr.toLocaleString("en-IN")}* (₹${plan.costPerPassengerInr.toLocaleString("en-IN")}/${isHindi ? "यात्री" : "pax"})`,
+      `🔗 ${isHindi ? "सभी टोल प्लाजा और रूट मैप देखें" : "Live Plaza-by-Plaza Toll & Route"}: ${shareUrl}`,
+    ].join("\n");
+
+    window.open(
+      `https://wa.me/?text=${encodeURIComponent(text)}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  };
+
   return (
     <div className="space-y-6 sm:space-y-8">
       {/* Main Search & Filter Card (SSR + White Mode & Dark Mode) */}
@@ -494,44 +518,88 @@ export default function HighwayTollCalculator({
             <div className="min-w-0">
               <h2 className="truncate text-sm font-extrabold text-ink sm:text-base">
                 {isDedicatedRoutePage && plan
-                  ? `${plan.fromCity.name} to ${plan.toCity.name} Highway Toll & Fuel Planner`
+                  ? isHindi
+                    ? `${plan.fromCity.name} से ${plan.toCity.name} NHAI FASTag टोल और ईंधन कैलकुलेटर`
+                    : `${plan.fromCity.name} to ${plan.toCity.name} Highway Toll & Fuel Planner`
+                  : isHindi
+                  ? "NHAI FASTag हाईवे टोल टैक्स और फ्यूल खर्च कैलकुलेटर"
                   : "Search NHAI FASTag Highway Toll & Fuel Cost"}
               </h2>
               <p className="truncate text-[11px] text-ink-muted sm:text-xs">
-                40+ Cities • 52+ NHAI &amp; Expressway Plazas • SSR Route Pages &amp; Dynamic QR
+                {isHindi
+                  ? "40+ शहर • 1,560 हाईवे रूट • 24h रिटर्न छूट और डायनामिक QR पास"
+                  : "40+ Cities • 52+ NHAI & Expressway Plazas • SSR Route Pages & Dynamic QR"}
               </p>
             </div>
           </div>
 
-          {/* Journey Mode Action Buttons */}
-          <div
-            role="group"
-            aria-label="Journey type"
-            className="grid grid-cols-3 gap-1 rounded-xl border border-line bg-subcard p-1 sm:inline-flex"
-          >
-            {(
-              [
-                { id: "one-way", label: "One-Way" },
-                { id: "return-24h", label: "24h Return (-25%)" },
-                { id: "round-trip", label: "Round Trip" },
-              ] as const
-            ).map((tab) => {
-              const isSelected = tripMode === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => setTripMode(tab.id)}
-                  className={`cursor-pointer rounded-lg px-2.5 py-1.5 text-center text-[11px] font-extrabold transition sm:px-3 sm:text-xs ${
-                    isSelected
-                      ? "bg-[#1956b4] text-white shadow-xs"
-                      : "text-ink-soft hover:text-ink"
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              );
-            })}
+          <div className="flex flex-wrap items-center gap-2">
+            {/* Language Switcher: English / हिंदी */}
+            <div
+              role="group"
+              aria-label="Language Switcher"
+              className="inline-flex rounded-xl border border-[#1956b4]/30 bg-subcard p-1"
+            >
+              <button
+                type="button"
+                onClick={() => setLang("en")}
+                className={`cursor-pointer rounded-lg px-2.5 py-1 text-[11px] font-extrabold transition sm:text-xs ${
+                  !isHindi
+                    ? "bg-[#1956b4] text-white shadow-2xs"
+                    : "text-ink-soft hover:text-ink"
+                }`}
+              >
+                English
+              </button>
+              <button
+                type="button"
+                onClick={() => setLang("hi")}
+                className={`cursor-pointer rounded-lg px-2.5 py-1 text-[11px] font-extrabold transition sm:text-xs ${
+                  isHindi
+                    ? "bg-[#fc6203] text-white shadow-2xs"
+                    : "text-ink-soft hover:text-ink"
+                }`}
+              >
+                हिंदी
+              </button>
+            </div>
+
+            {/* Journey Mode Action Buttons */}
+            <div
+              role="group"
+              aria-label="Journey type"
+              className="grid grid-cols-3 gap-1 rounded-xl border border-line bg-subcard p-1 sm:inline-flex"
+            >
+              {(
+                [
+                  { id: "one-way", label: isHindi ? "एक तरफ (One-Way)" : "One-Way" },
+                  {
+                    id: "return-24h",
+                    label: isHindi ? "24h वापसी (-25%)" : "24h Return (-25%)",
+                  },
+                  {
+                    id: "round-trip",
+                    label: isHindi ? "राउंड ट्रिप" : "Round Trip",
+                  },
+                ] as const
+              ).map((tab) => {
+                const isSelected = tripMode === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => setTripMode(tab.id)}
+                    className={`cursor-pointer rounded-lg px-2.5 py-1.5 text-center text-[11px] font-extrabold transition sm:px-3 sm:text-xs ${
+                      isSelected
+                        ? "bg-[#1956b4] text-white shadow-xs"
+                        : "text-ink-soft hover:text-ink"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
 
@@ -939,7 +1007,9 @@ export default function HighwayTollCalculator({
               {/* Total Road Trip Cost */}
               <div className="rounded-2xl border border-[#1956b4]/30 bg-card p-4 shadow-xs sm:p-5">
                 <div className="flex items-center justify-between text-xs font-extrabold uppercase tracking-wider text-[#1956b4] dark:text-blue-300">
-                  <span>Total Road Trip Cost</span>
+                  <span>
+                    {isHindi ? "कुल ट्रिप खर्च (Total Cost)" : "Total Road Trip Cost"}
+                  </span>
                   <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
                     <RupeeBadgeIcon className="h-4 w-4" />
                   </span>
@@ -959,7 +1029,9 @@ export default function HighwayTollCalculator({
               {/* NHAI FASTag Toll Tax */}
               <div className="rounded-2xl border border-line bg-card p-4 shadow-xs sm:p-5">
                 <div className="flex items-center justify-between text-xs font-extrabold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">
-                  <span>NHAI FASTag Toll Tax</span>
+                  <span>
+                    {isHindi ? "NHAI FASTag टोल टैक्स" : "NHAI FASTag Toll Tax"}
+                  </span>
                   <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
                     <TicketIcon className="h-4 w-4" />
                   </span>
@@ -986,7 +1058,11 @@ export default function HighwayTollCalculator({
               {/* Fuel / EV Charging Cost */}
               <div className="rounded-2xl border border-line bg-card p-4 shadow-xs sm:p-5">
                 <div className="flex items-center justify-between text-xs font-extrabold uppercase tracking-wider text-[#fc6203]">
-                  <span>{plan.fuelType.toUpperCase()} Fuel Cost</span>
+                  <span>
+                    {isHindi
+                      ? `${plan.fuelType.toUpperCase()} ईंधन खर्च`
+                      : `${plan.fuelType.toUpperCase()} Fuel Cost`}
+                  </span>
                   <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-orange-50 text-[#fc6203] dark:bg-orange-500/15 dark:text-orange-300">
                     <ZapIcon className="h-4 w-4" />
                   </span>
@@ -1007,7 +1083,9 @@ export default function HighwayTollCalculator({
               {/* Per-Passenger Carpool Split */}
               <div className="rounded-2xl border border-line bg-card p-4 shadow-xs sm:p-5">
                 <div className="flex items-center justify-between text-xs font-extrabold uppercase tracking-wider text-indigo-700 dark:text-indigo-300">
-                  <span>Cost Per Passenger</span>
+                  <span>
+                    {isHindi ? "प्रति यात्री खर्च (Per Pax)" : "Cost Per Passenger"}
+                  </span>
                   <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 text-indigo-700 dark:bg-indigo-500/15 dark:text-indigo-300">
                     <CalculatorIcon className="h-4 w-4" />
                   </span>
@@ -1086,24 +1164,44 @@ export default function HighwayTollCalculator({
                   </span>
                 </Link>
 
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-3 gap-1.5">
                   <button
                     type="button"
                     onClick={handleCopyDynamicLink}
-                    className="cursor-pointer inline-flex items-center justify-center gap-1.5 rounded-lg border border-line bg-subcard px-2.5 py-2 text-[11px] font-extrabold text-ink transition hover:border-[#1956b4] hover:text-[#1956b4] dark:hover:text-blue-300"
+                    className="cursor-pointer inline-flex items-center justify-center gap-1 rounded-lg border border-line bg-subcard px-2 py-2 text-[11px] font-extrabold text-ink transition hover:border-[#1956b4] hover:text-[#1956b4] dark:hover:text-blue-300"
                   >
-                    <CopyIcon className="h-3.5 w-3.5" />
-                    <span>{copiedUrl ? "Link Copied!" : "Copy Route URL"}</span>
+                    <CopyIcon className="h-3.5 w-3.5 shrink-0" />
+                    <span className="truncate">
+                      {copiedUrl
+                        ? isHindi
+                          ? "कॉपी हुआ!"
+                          : "Copied!"
+                        : isHindi
+                        ? "लिंक कॉपी"
+                        : "Copy URL"}
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleWhatsAppShare}
+                    className="cursor-pointer inline-flex items-center justify-center gap-1 rounded-lg bg-emerald-600 px-2 py-2 text-[11px] font-extrabold text-white transition hover:bg-emerald-700"
+                  >
+                    <span>💬</span>
+                    <span className="truncate">
+                      {isHindi ? "WhatsApp" : "WhatsApp"}
+                    </span>
                   </button>
                   <button
                     type="button"
                     onClick={() =>
                       typeof window !== "undefined" && window.print()
                     }
-                    className="cursor-pointer inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#1956b4] px-2.5 py-2 text-[11px] font-extrabold text-white transition hover:bg-[#144696]"
+                    className="cursor-pointer inline-flex items-center justify-center gap-1 rounded-lg bg-[#1956b4] px-2 py-2 text-[11px] font-extrabold text-white transition hover:bg-[#144696]"
                   >
-                    <PrinterIcon className="h-3.5 w-3.5" />
-                    <span>Print Toll Pass</span>
+                    <PrinterIcon className="h-3.5 w-3.5 shrink-0" />
+                    <span className="truncate">
+                      {isHindi ? "प्रिंट पास" : "Print Pass"}
+                    </span>
                   </button>
                 </div>
               </div>
