@@ -11,6 +11,18 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL("https://traveladda.in"),
   applicationName: "TravelAdda",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "48x48", type: "image/x-icon" },
+      { url: "/favicon-48x48.png", sizes: "48x48", type: "image/png" },
+      { url: "/assets/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/assets/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    shortcut: [{ url: "/favicon.ico", sizes: "48x48", type: "image/x-icon" }],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
   title: {
     default:
       "TravelAdda | Live Flight Status, Train Running Status, PNR & Travel Tools",
@@ -121,10 +133,11 @@ const GLOBAL_AI_SITE_JSON_LD = {
       url: "https://traveladda.in",
       logo: {
         "@type": "ImageObject",
-        url: "https://traveladda.in/assets/TravelAdda-travel-logo.png",
-        width: 2056,
-        height: 765,
+        url: "https://traveladda.in/assets/icon-512.png",
+        width: 512,
+        height: 512,
       },
+      image: "https://traveladda.in/assets/TravelAdda-travel-logo.png",
       description:
         "Indian real-time transit and travel intelligence platform covering Delhi NCR Metro (12 lines, 262 stations), Indian Railways Live Train Running Status, 10-Digit IRCTC PNR Status, Reservation Chart Preparation Times, and Live Flight Tracking.",
     },

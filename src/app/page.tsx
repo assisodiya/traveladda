@@ -96,10 +96,11 @@ export default async function Home() {
         url: "https://traveladda.in",
         logo: {
           "@type": "ImageObject",
-          url: "https://traveladda.in/assets/TravelAdda-travel-logo.png",
-          width: 2056,
-          height: 765,
+          url: "https://traveladda.in/assets/icon-512.png",
+          width: 512,
+          height: 512,
         },
+        image: "https://traveladda.in/assets/TravelAdda-travel-logo.png",
       },
     ],
   };
