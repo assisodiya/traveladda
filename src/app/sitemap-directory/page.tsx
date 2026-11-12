@@ -255,7 +255,7 @@ export default async function HtmlSitemapDirectoryPage() {
               >
                 <ArrowRightIcon className="h-3 w-3 shrink-0 text-ink-muted" />
                 <span className="truncate">
-                  {airline.name} ({airline.iataCode}) Delay &amp; Refund
+                  {airline.name} ({airline.code}) Delay &amp; Refund
                 </span>
               </Link>
             ))}

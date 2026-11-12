@@ -37,6 +37,7 @@ export type BaggageIssueType =
   | "international-loss-damage";
 
 export interface AirlineCompensationProfile {
+  iataCode?: string;
   code: string;
   name: string;
   slug: string;
@@ -250,7 +251,7 @@ export function calculateDgcaCompensation(
 
     const refundPerPax =
       input.deniedBoardingWindow === "alt-over-24h-or-refund" &&
-      !input.alternateFlightProvided
+        !input.alternateFlightProvided
         ? totalPaid
         : 0;
     const totalCash = cashPerPax * pax;
