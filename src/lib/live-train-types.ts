@@ -298,7 +298,7 @@ export const POPULAR_LIVE_TRAINS: TrainSearchItem[] = [
   },
   {
     trainNumber: "12986",
-    trainName: "Delhi Sarai Rohilla - Jaipur AC Double Decker Express",
+    trainName: "Delhi Sarai Rohilla - Jaipur Double Decker Express",
     sourceCode: "DEE",
     sourceName: "Delhi Sarai Rohilla",
     destinationCode: "JP",
@@ -309,7 +309,7 @@ export const POPULAR_LIVE_TRAINS: TrainSearchItem[] = [
   },
   {
     trainNumber: "12985",
-    trainName: "Jaipur - Delhi Sarai Rohilla AC Double Decker Express",
+    trainName: "Jaipur - Delhi Sarai Rohilla Double Decker Express",
     sourceCode: "JP",
     sourceName: "Jaipur Jn",
     destinationCode: "DEE",
@@ -608,6 +608,7 @@ export function findCatalogTrain(
 
 export function slugifyTrainName(name: string): string {
   return (name || "")
+    .replace(/\([^)]*\)/g, " ")
     .toLowerCase()
     .replace(/&/g, " and ")
     .replace(/[^a-z0-9]+/g, "-")
@@ -645,11 +646,14 @@ export function buildTrainSeoSlug(
 ): string {
   const cleanNum = extractTrainNumberFromParam(trainNumber);
   if (!cleanNum) return "";
+  const catalogName = ALL_CATALOG_TRAINS.find(
+    (t) => t.trainNumber === cleanNum
+  )?.trainName;
   const resolvedName =
+    catalogName ||
     (trainName &&
       !trainName.startsWith("Indian Railways Express #") &&
       trainName) ||
-    ALL_CATALOG_TRAINS.find((t) => t.trainNumber === cleanNum)?.trainName ||
     "";
   const nameSlug = slugifyTrainName(resolvedName);
   if (!nameSlug || nameSlug === cleanNum) {

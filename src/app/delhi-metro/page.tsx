@@ -275,6 +275,51 @@ export default async function MetroHubPage() {
                             </Link>
                         ))}
                     </div>
+
+                    {/* Expandable Hub-to-Hub Metro Route Combinations Directory for Crawling */}
+                    <details className="group mt-5 border-t border-line pt-4">
+                        <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-xs font-extrabold text-[#1956b4] [&::-webkit-details-marker]:hidden sm:text-sm dark:text-blue-300">
+                            <span>
+                                Browse All Major Hub-to-Hub Delhi NCR Metro Route Combinations
+                                (Fare, Stops &amp; Interchanges)
+                            </span>
+                            <span className="shrink-0 rounded-lg border border-line bg-subcard px-2.5 py-1 text-[11px] font-bold group-open:bg-[#1956b4] group-open:text-white">
+                                View Routes ▼
+                            </span>
+                        </summary>
+                        <div className="mt-3 grid grid-cols-1 gap-1.5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                            {[
+                                { slug: "rajiv-chowk", name: "Rajiv Chowk" },
+                                { slug: "new-delhi", name: "New Delhi" },
+                                { slug: "kashmere-gate", name: "Kashmere Gate" },
+                                { slug: "anand-vihar", name: "Anand Vihar ISBT" },
+                                { slug: "huda-city-centre", name: "Huda City Centre" },
+                                { slug: "mg-road", name: "MG Road" },
+                                { slug: "igi-airport", name: "IGI Airport T3" },
+                                { slug: "noida-electronic-city", name: "Noida Electronic City" },
+                                { slug: "botanical-garden", name: "Botanical Garden" },
+                                { slug: "hauz-khas", name: "Hauz Khas" },
+                                { slug: "lajpat-nagar", name: "Lajpat Nagar" },
+                                { slug: "dwarka-sector-21", name: "Dwarka Sector 21" },
+                                { slug: "central-secretariat", name: "Central Secretariat" },
+                                { slug: "mandi-house", name: "Mandi House" },
+                                { slug: "sikanderpur", name: "Sikanderpur" },
+                                { slug: "vaishali", name: "Vaishali" },
+                            ].flatMap((fromHub, _, hubs) =>
+                                hubs
+                                    .filter((toHub) => toHub.slug !== fromHub.slug)
+                                    .map((toHub) => (
+                                        <Link
+                                            key={`hub-${fromHub.slug}-to-${toHub.slug}`}
+                                            href={buildMetroRoutePath(fromHub.slug, toHub.slug)}
+                                            className="truncate rounded-lg border border-line/70 bg-subcard/30 px-2.5 py-1.5 text-[11px] font-semibold text-ink-soft transition hover:border-[#1956b4] hover:text-[#1956b4]"
+                                        >
+                                            {fromHub.name} → {toHub.name} Metro
+                                        </Link>
+                                    )),
+                            )}
+                        </div>
+                    </details>
                 </section>
 
                 {/* All 12 Delhi NCR Metro Lines Directory */}

@@ -199,6 +199,7 @@ export const POPULAR_CHART_TRAINS: PopularChartTrainItem[] = [
 
 function slugifyChartToken(input: string): string {
   return (input || "")
+    .replace(/\([^)]*\)/g, " ")
     .toLowerCase()
     .replace(/&/g, " and ")
     .replace(/[^a-z0-9]+/g, "-")
@@ -242,13 +243,6 @@ export function buildChartTimeSlug(
   upstreamSlug?: string | null
 ): string {
   const cleanNum = extractTrainNumberFromChartSlug(trainNumber);
-  if (upstreamSlug && upstreamSlug.trim()) {
-    const s = slugifyChartToken(upstreamSlug);
-    if (s.startsWith(cleanNum)) {
-      return s.endsWith("-chart-times") ? s : `${s}-chart-times`;
-    }
-  }
-
   const catalogMatch = POPULAR_CHART_TRAINS.find(
     (t) => t.trainNumber === cleanNum
   );
@@ -256,11 +250,30 @@ export function buildChartTimeSlug(
     return catalogMatch.slug;
   }
 
+  const allCatalogMatch = ALL_CATALOG_TRAINS.find(
+    (t) => t.trainNumber === cleanNum
+  );
+  if (allCatalogMatch) {
+    const catPart = slugifyChartToken(allCatalogMatch.trainName);
+    const strippedCat = catPart.startsWith(`${cleanNum}-`)
+      ? catPart.slice(cleanNum.length + 1)
+      : catPart.replace(/-chart-times?$/, "");
+    if (strippedCat) {
+      return `${cleanNum}-${strippedCat}-chart-times`;
+    }
+  }
+
+  if (upstreamSlug && upstreamSlug.trim()) {
+    const s = slugifyChartToken(upstreamSlug);
+    if (s.startsWith(cleanNum)) {
+      return s.endsWith("-chart-times") ? s : `${s}-chart-times`;
+    }
+  }
+
   const resolvedName =
     (trainName &&
       !trainName.startsWith("Indian Railways Express #") &&
       trainName) ||
-    ALL_CATALOG_TRAINS.find((t) => t.trainNumber === cleanNum)?.trainName ||
     "";
 
   const namePart = slugifyChartToken(resolvedName);
