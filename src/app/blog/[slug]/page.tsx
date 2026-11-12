@@ -100,6 +100,7 @@ async function BlogArticleContent({
   const isAirPost = post.domain === "air";
   const isHotelPost = post.domain === "hotel";
   const isMetroPost = post.domain === "metro";
+  const isRoadPost = post.domain === "road";
   const sameDomainPosts = ALL_BLOG_POSTS.filter(
     (p) => p.domain === post.domain && p.slug !== post.slug
   ).slice(0, 5);
@@ -123,14 +124,18 @@ async function BlogArticleContent({
       ? "Hotels & Stays"
       : isMetroPost
         ? "Delhi NCR Metro"
-        : "Rail Tools";
+        : isRoadPost
+          ? "NHAI Toll & Fuel Calculator"
+          : "Rail Tools";
   const domainBreadcrumbHref = isAirPost
     ? "/air/flight-status"
     : isHotelPost
       ? "/tools/hotel"
       : isMetroPost
         ? "/delhi-metro"
-        : "/rail/live-status";
+        : isRoadPost
+          ? "/toll-calculator"
+          : "/rail/live-status";
 
   const jsonLdGraph: Record<string, unknown>[] = [
     {

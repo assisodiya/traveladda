@@ -568,25 +568,26 @@ export function getPopularTollRoutes(limit = 30): PopularTollRouteSummary[] {
   return results;
 }
 
-export function getAllIndexableTollRouteSlugs(): {
+export interface IndexableTollRouteItem {
   fromSlug: string;
   toSlug: string;
   fromName: string;
   toName: string;
+  fromState: string;
+  toState: string;
   routeSlug: string;
   routePath: string;
   isPrimaryCorridor: boolean;
-}[] {
+}
+
+export interface CityOriginRouteGroup {
+  originCity: TollCity;
+  routes: IndexableTollRouteItem[];
+}
+
+export function getAllIndexableTollRouteSlugs(): IndexableTollRouteItem[] {
   const seen = new Set<string>();
-  const items: {
-    fromSlug: string;
-    toSlug: string;
-    fromName: string;
-    toName: string;
-    routeSlug: string;
-    routePath: string;
-    isPrimaryCorridor: boolean;
-  }[] = [];
+  const items: IndexableTollRouteItem[] = [];
 
   // 1. All 30 curated corridors in BOTH directions (60 top-intent highway routes)
   for (const c of getAllCuratedCorridors()) {
@@ -602,6 +603,8 @@ export function getAllIndexableTollRouteSlugs(): {
         toSlug: toCity.slug,
         fromName: fromCity.name,
         toName: toCity.name,
+        fromState: fromCity.state,
+        toState: toCity.state,
         routeSlug: fwdSlug,
         routePath: `/toll-calculator/${fwdSlug}`,
         isPrimaryCorridor: true,
@@ -616,6 +619,8 @@ export function getAllIndexableTollRouteSlugs(): {
         toSlug: fromCity.slug,
         fromName: toCity.name,
         toName: fromCity.name,
+        fromState: toCity.state,
+        toState: fromCity.state,
         routeSlug: revSlug,
         routePath: `/toll-calculator/${revSlug}`,
         isPrimaryCorridor: true,
@@ -623,7 +628,7 @@ export function getAllIndexableTollRouteSlugs(): {
     }
   }
 
-  // 2. Additional high-search regional highway combinations across top hubs
+  // 2. Additional high-search regional highway combinations across top hubs (marked primary)
   const highVolumePairs: [string, string][] = [
     ["jaipur", "udaipur"],
     ["jaipur", "ajmer"],
@@ -693,6 +698,31 @@ export function getAllIndexableTollRouteSlugs(): {
           toSlug: dest.slug,
           fromName: origin.name,
           toName: dest.name,
+          fromState: origin.state,
+          toState: dest.state,
+          routeSlug: slug,
+          routePath: `/toll-calculator/${slug}`,
+          isPrimaryCorridor: true,
+        });
+      }
+    }
+  }
+
+  // 3. Complete All-to-All City Combinations (40 Origin Cities x 39 Destination Cities = 1,560 Total Routes)
+  const allCities = getAllTollCities();
+  for (const origin of allCities) {
+    for (const dest of allCities) {
+      if (origin.slug === dest.slug) continue;
+      const slug = buildTollRouteSlug(origin.slug, dest.slug);
+      if (!seen.has(slug)) {
+        seen.add(slug);
+        items.push({
+          fromSlug: origin.slug,
+          toSlug: dest.slug,
+          fromName: origin.name,
+          toName: dest.name,
+          fromState: origin.state,
+          toState: dest.state,
           routeSlug: slug,
           routePath: `/toll-calculator/${slug}`,
           isPrimaryCorridor: false,
@@ -702,5 +732,33 @@ export function getAllIndexableTollRouteSlugs(): {
   }
 
   return items;
+}
+
+export function getAllCityCombinationGroups(): CityOriginRouteGroup[] {
+  const allCities = getAllTollCities();
+  const allRoutes = getAllIndexableTollRouteSlugs();
+  const byOrigin = new Map<string, IndexableTollRouteItem[]>();
+
+  for (const route of allRoutes) {
+    const list = byOrigin.get(route.fromSlug);
+    if (list) {
+      list.push(route);
+    } else {
+      byOrigin.set(route.fromSlug, [route]);
+    }
+  }
+
+  return allCities.map((originCity) => {
+    const routes = (byOrigin.get(originCity.slug) ?? []).sort((a, b) => {
+      if (a.isPrimaryCorridor !== b.isPrimaryCorridor) {
+        return a.isPrimaryCorridor ? -1 : 1;
+      }
+      return a.toName.localeCompare(b.toName);
+    });
+    return {
+      originCity,
+      routes,
+    };
+  });
 }
 

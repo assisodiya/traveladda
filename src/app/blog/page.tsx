@@ -10,11 +10,13 @@ import {
 } from "@/components/Icons";
 import {
   ALL_BLOG_POSTS,
+  DGCA_BLOG_POSTS,
   FEATURED_SEO_BLOG_POSTS,
   FLIGHT_BLOG_POSTS,
   HOTEL_BLOG_POSTS,
   METRO_BLOG_POSTS,
   RAIL_BLOG_POSTS,
+  TOLL_BLOG_POSTS,
 } from "@/lib/blog-data";
 
 export const metadata: Metadata = {
@@ -423,7 +425,7 @@ export default async function BlogIndexPage() {
         </div>
 
         <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {FLIGHT_BLOG_POSTS.map((post) => (
+          {[...DGCA_BLOG_POSTS, ...FLIGHT_BLOG_POSTS].map((post) => (
             <article
               key={post.slug}
               className="group flex flex-col justify-between rounded-xl border border-line bg-card p-5 transition hover:border-[#1956b4] hover:shadow-sm"
@@ -455,6 +457,66 @@ export default async function BlogIndexPage() {
                   className="inline-flex items-center gap-1 font-bold text-[#1956b4] dark:text-blue-400"
                 >
                   <span>Read Guide</span>
+                  <ArrowRightIcon className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      {/* NHAI HIGHWAY TOLL, FASTAG & ROAD TRIP GUIDES */}
+      <section
+        id="highway-toll-guides"
+        className="mx-auto mt-12 max-w-6xl px-4 sm:mt-16 sm:px-6 lg:px-8"
+      >
+        <div className="flex flex-wrap items-end justify-between gap-2">
+          <div>
+            <h2 className="text-lg font-extrabold text-ink sm:text-xl">
+              NHAI FASTag, Expressway Toll &amp; Road Trip Cost Guides
+            </h2>
+            <p className="mt-0.5 text-xs text-ink-soft sm:text-sm">
+              Plaza-by-plaza NHAI toll rates, 24-hour FASTag return rules, NPCI
+              KYV verification, and Petrol vs Diesel vs CNG vs EV running costs.
+            </p>
+          </div>
+          <Link
+            href="/toll-calculator"
+            className="inline-flex items-center gap-1 text-xs font-bold text-[#1956b4] hover:underline dark:text-blue-400"
+          >
+            <span>Open NHAI Toll Calculator</span>
+            <ArrowRightIcon className="h-3.5 w-3.5" />
+          </Link>
+        </div>
+
+        <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {TOLL_BLOG_POSTS.map((post) => (
+            <article
+              key={post.slug}
+              className="group flex flex-col justify-between rounded-xl border border-line bg-card p-4 transition hover:border-[#1956b4] hover:shadow-sm sm:p-5"
+            >
+              <div>
+                <div className="flex items-center justify-between gap-2 text-xs">
+                  <span className="rounded bg-amber-50 px-2 py-0.5 font-bold text-amber-700 dark:bg-amber-500/15 dark:text-amber-300">
+                    {post.category}
+                  </span>
+                  <span className="text-ink-muted">{post.readTime}</span>
+                </div>
+                <h3 className="mt-3 text-sm font-bold leading-snug text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-400 sm:text-base">
+                  <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+                </h3>
+                <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-ink-soft">
+                  {post.excerpt}
+                </p>
+              </div>
+
+              <div className="mt-4 flex items-center justify-between border-t border-line pt-3 text-xs">
+                <span className="text-ink-muted">{post.author.name}</span>
+                <Link
+                  href={`/blog/${post.slug}`}
+                  className="inline-flex items-center gap-1 font-bold text-[#1956b4] dark:text-blue-400"
+                >
+                  <span>Read</span>
                   <ArrowRightIcon className="h-3.5 w-3.5" />
                 </Link>
               </div>

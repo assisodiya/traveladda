@@ -5,13 +5,16 @@ import { cacheLife } from "next/cache";
 import {
   AlertCircleIcon,
   ArrowRightIcon,
+  ClockIcon,
   MapPinIcon,
   ShieldCheckIcon,
   TicketIcon,
 } from "@/components/Icons";
 import HighwayTollCalculator from "@/components/HighwayTollCalculator";
+import { TOLL_BLOG_POSTS } from "@/lib/blog-data";
 import {
   computeHighwayTollPlan,
+  getAllCityCombinationGroups,
   getAllIndexableTollRouteSlugs,
   getAllTollCities,
   getPopularTollRoutes,
@@ -88,6 +91,7 @@ export default async function TollCalculatorHubPage() {
   });
   const popularRoutes = getPopularTollRoutes(30);
   const allIndexableRoutes = getAllIndexableTollRouteSlugs();
+  const cityCombinationGroups = getAllCityCombinationGroups();
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -99,7 +103,7 @@ export default async function TollCalculatorHubPage() {
         applicationCategory: "TravelApplication",
         operatingSystem: "All",
         description:
-          "Plaza-by-plaza NHAI FASTag highway toll tax, 24-hour return discount, and Petrol, Diesel, CNG & EV road trip fuel cost calculator across India.",
+          "Plaza-by-plaza NHAI FASTag highway toll tax, 24-hour return discount, and Petrol, Diesel, CNG & EV road trip fuel cost calculator across 1,560 Indian city combinations.",
         offers: {
           "@type": "Offer",
           price: "0",
@@ -173,7 +177,7 @@ export default async function TollCalculatorHubPage() {
 
             <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-0.5 text-[11px] font-bold text-emerald-300">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-              40+ Cities • 52+ NHAI Toll Plazas • 158 Routes
+              40 Cities • 52+ NHAI Toll Plazas • {allIndexableRoutes.length.toLocaleString("en-IN")} City Combinations
             </span>
           </div>
 
@@ -208,10 +212,16 @@ export default async function TollCalculatorHubPage() {
                 Popular Expressways
               </a>
               <a
+                href="#highway-toll-blogs"
+                className="rounded-xl border border-white/20 bg-white/10 px-3 py-2 font-bold text-white transition hover:bg-white/20"
+              >
+                FASTag &amp; Road Guides
+              </a>
+              <a
                 href="#all-toll-routes-directory"
                 className="rounded-xl border border-white/20 bg-white/10 px-3 py-2 font-bold text-white transition hover:bg-white/20"
               >
-                158 Route Directory
+                1,560 City Routes
               </a>
               <a
                 href="#fastag-toll-faqs"
@@ -251,7 +261,7 @@ export default async function TollCalculatorHubPage() {
               </h2>
             </div>
             <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-extrabold text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
-              {allIndexableRoutes.length} Indexed Highway Corridors
+              {allIndexableRoutes.length.toLocaleString("en-IN")} Indexed City Combinations
             </span>
           </div>
 
@@ -314,40 +324,70 @@ export default async function TollCalculatorHubPage() {
           </div>
         </section>
 
-        {/* Complete SEO Directory of All City-to-City Toll Routes */}
-        <section id="all-toll-routes-directory">
-          <details className="group rounded-2xl border border-line bg-card p-4 shadow-xs sm:p-6">
-            <summary className="flex cursor-pointer list-none items-center justify-between gap-4">
-              <div>
-                <h2 className="flex items-center gap-2 text-base font-extrabold text-ink sm:text-lg">
-                  <MapPinIcon className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-                  Complete A–Z City-to-City NHAI Toll &amp; Fuel Cost Directory ({allIndexableRoutes.length} Routes)
-                </h2>
-                <p className="mt-1 text-xs text-ink-muted">
-                  Direct links to every forward and reverse intercity highway toll &amp; fuel
-                  cost page across India.
-                </p>
-              </div>
-              <span className="shrink-0 rounded-lg border border-line bg-subcard px-3 py-1.5 text-xs font-extrabold text-[#1956b4] dark:text-blue-300">
-                View All Routes
+        {/* Authority Blog Guides on NHAI FASTag, Expressways & Fuel Economy */}
+        <section
+          id="highway-toll-blogs"
+          className="rounded-2xl border border-line bg-card p-4 shadow-xs sm:p-6"
+        >
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-line pb-3">
+            <div>
+              <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#1956b4] dark:text-blue-300">
+                NHAI FASTag &amp; Indian Expressway Knowledge Hub
               </span>
-            </summary>
-
-            <div className="mt-5 grid grid-cols-1 gap-2 border-t border-line pt-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              {allIndexableRoutes.map((item) => (
-                <Link
-                  key={item.routeSlug}
-                  href={item.routePath}
-                  className="flex items-center gap-1.5 truncate py-1 text-xs font-medium text-ink-soft hover:text-[#1956b4] hover:underline dark:hover:text-blue-300"
-                >
-                  <ArrowRightIcon className="h-3 w-3 shrink-0 text-ink-muted" />
-                  <span className="truncate">
-                    {item.fromName} to {item.toName} Toll &amp; Fuel
-                  </span>
-                </Link>
-              ))}
+              <h2 className="mt-0.5 text-base font-extrabold text-ink sm:text-xl">
+                Highway Toll Rules, FASTag KYV &amp; Road Trip Cost Guides
+              </h2>
             </div>
-          </details>
+            <Link
+              href="/blog#highway-toll-guides"
+              className="inline-flex items-center gap-1 text-xs font-extrabold text-[#1956b4] hover:underline dark:text-blue-300"
+            >
+              <span>View All Travel Guides</span>
+              <ArrowRightIcon className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {TOLL_BLOG_POSTS.map((post) => (
+              <article
+                key={post.slug}
+                className="group flex flex-col justify-between rounded-xl border border-line bg-subcard/40 p-4 transition hover:border-[#1956b4] hover:bg-card hover:shadow-sm"
+              >
+                <div>
+                  <div className="flex items-center justify-between gap-2 text-[11px]">
+                    <span className="rounded bg-blue-50 px-2 py-0.5 font-extrabold text-[#1956b4] dark:bg-blue-950/60 dark:text-blue-300">
+                      {post.category}
+                    </span>
+                    <span className="inline-flex items-center gap-1 text-ink-muted">
+                      <ClockIcon className="h-3 w-3" />
+                      {post.readTime}
+                    </span>
+                  </div>
+
+                  <h3 className="mt-2.5 text-sm font-extrabold leading-snug text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-300">
+                    <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+                  </h3>
+
+                  <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-ink-muted">
+                    {post.excerpt}
+                  </p>
+                </div>
+
+                <div className="mt-3.5 flex items-center justify-between border-t border-line pt-2.5 text-xs">
+                  <span className="text-[11px] font-medium text-ink-muted">
+                    {post.publishedDate}
+                  </span>
+                  <Link
+                    href={`/blog/${post.slug}`}
+                    className="inline-flex items-center gap-1 font-extrabold text-[#1956b4] dark:text-blue-300"
+                  >
+                    <span>Read Guide</span>
+                    <ArrowRightIcon className="h-3.5 w-3.5" />
+                  </Link>
+                </div>
+              </article>
+            ))}
+          </div>
         </section>
 
         {/* FAQ Section */}
@@ -379,6 +419,151 @@ export default async function TollCalculatorHubPage() {
                 </p>
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* Complete 40 Cities x 39 Destinations = 1,560 Combinations SEO Directory */}
+        <section
+          id="all-toll-routes-directory"
+          className="rounded-2xl border border-line bg-card p-4 shadow-xs sm:p-6"
+        >
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-line pb-3">
+            <div>
+              <span className="text-[11px] font-extrabold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">
+                Complete Pan-India Highway Matrix (40 Origin Hubs × 39 Destinations)
+              </span>
+              <h2 className="mt-0.5 flex items-center gap-2 text-base font-extrabold text-ink sm:text-xl">
+                <MapPinIcon className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                All {allIndexableRoutes.length.toLocaleString("en-IN")} City-to-City NHAI Toll &amp; Fuel Cost Routes
+              </h2>
+              <p className="mt-1 text-xs text-ink-muted">
+                Browse every single origin-to-destination highway combination across India. Click any origin city hub below to view all 39 outbound FASTag toll &amp; fuel route calculators.
+              </p>
+            </div>
+            <span className="rounded-lg border border-line bg-subcard px-3 py-1.5 text-xs font-extrabold text-[#1956b4] dark:text-blue-300">
+              40 Cities • 1,560 Direct Route Links
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+            {cityCombinationGroups.map((group, groupIdx) => (
+              <details
+                key={group.originCity.slug}
+                open={groupIdx < 6}
+                className="group rounded-xl border border-line bg-subcard/35 p-3.5 transition open:border-[#1956b4]/40 open:bg-card"
+              >
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-[#1956b4]/10 text-[11px] font-extrabold text-[#1956b4] dark:bg-blue-500/20 dark:text-blue-300">
+                      {groupIdx + 1}
+                    </span>
+                    <div>
+                      <h3 className="text-xs font-extrabold text-ink sm:text-sm">
+                        {group.originCity.name} Highway Toll &amp; Fuel Routes
+                      </h3>
+                      <span className="text-[11px] text-ink-muted">
+                        {group.originCity.state} • Petrol ₹{group.originCity.petrolInr}/L • Diesel ₹{group.originCity.dieselInr}/L • {group.routes.length} Destinations
+                      </span>
+                    </div>
+                  </div>
+                  <span className="rounded-md border border-line bg-card px-2 py-1 text-[10px] font-bold text-[#1956b4] dark:text-blue-300">
+                    {group.routes.length} Routes
+                  </span>
+                </summary>
+
+                <div className="mt-3 grid grid-cols-1 gap-1.5 border-t border-line pt-3 sm:grid-cols-2">
+                  {group.routes.map((route) => (
+                    <Link
+                      key={route.routeSlug}
+                      href={route.routePath}
+                      className="flex items-center gap-1.5 truncate rounded px-1.5 py-1 text-[11px] font-medium text-ink-soft transition hover:bg-subcard hover:text-[#1956b4] hover:underline dark:hover:text-blue-300"
+                    >
+                      <ArrowRightIcon className="h-2.5 w-2.5 shrink-0 text-ink-muted" />
+                      <span className="truncate">
+                        {route.fromName} to {route.toName} Toll Tax
+                      </span>
+                    </Link>
+                  ))}
+                </div>
+              </details>
+            ))}
+          </div>
+        </section>
+
+        {/* Bottom SEO Combination Keywords & Popular Highway Search Queries Matrix */}
+        <section
+          aria-label="Popular Highway Toll & Fuel Search Keywords"
+          className="rounded-2xl border border-line bg-card p-4 shadow-xs sm:p-6"
+        >
+          <div className="mb-3 border-b border-line pb-2.5">
+            <span className="text-[10px] font-extrabold uppercase tracking-wider text-ink-muted">
+              Popular NHAI FASTag, Expressway &amp; Intercity Combination Searches
+            </span>
+            <h2 className="mt-0.5 text-sm font-extrabold text-ink sm:text-base">
+              All City Combination Toll Tax, FASTag Plaza Rate &amp; Fuel Cost Keywords (2026)
+            </h2>
+          </div>
+
+          <div className="space-y-4 text-xs">
+            <div>
+              <h3 className="mb-2 text-[11px] font-extrabold uppercase tracking-wider text-[#1956b4] dark:text-blue-300">
+                High-Volume City-to-City Toll Tax &amp; Fuel Cost Searches
+              </h3>
+              <div className="flex flex-wrap gap-1.5">
+                {popularRoutes.map((route) => (
+                  <Link
+                    key={`kw-${route.routeSlug}`}
+                    href={route.routePath}
+                    className="rounded-md border border-line bg-subcard/60 px-2.5 py-1 text-[11px] font-medium text-ink-soft transition hover:border-[#1956b4] hover:text-[#1956b4] dark:hover:text-blue-300"
+                  >
+                    {route.fromName} to {route.toName} Toll Tax ₹{route.carSingleTollInr}
+                  </Link>
+                ))}
+                {popularRoutes.slice(0, 18).map((route) => (
+                  <Link
+                    key={`kw-fuel-${route.routeSlug}`}
+                    href={route.routePath}
+                    className="rounded-md border border-line bg-subcard/60 px-2.5 py-1 text-[11px] font-medium text-ink-soft transition hover:border-[#1956b4] hover:text-[#1956b4] dark:hover:text-blue-300"
+                  >
+                    {route.fromName} to {route.toName} Petrol Diesel CNG EV Cost
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="mb-2 text-[11px] font-extrabold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">
+                Expressway &amp; National Highway Corridor Toll Calculators
+              </h3>
+              <div className="flex flex-wrap gap-1.5">
+                {[
+                  { label: "Delhi Mumbai Expressway (NE-4) Toll Calculator", href: "/toll-calculator/delhi-to-jaipur-toll-tax-and-fuel-cost" },
+                  { label: "Yamuna Expressway Toll Tax 2026 (Greater Noida to Agra)", href: "/toll-calculator/delhi-to-agra-toll-tax-and-fuel-cost" },
+                  { label: "Agra Lucknow Expressway FASTag Toll Rate", href: "/toll-calculator/delhi-to-lucknow-toll-tax-and-fuel-cost" },
+                  { label: "Purvanchal & Varanasi Highway Toll Calculator", href: "/toll-calculator/delhi-to-varanasi-toll-tax-and-fuel-cost" },
+                  { label: "Mumbai Pune Expressway (MSRDC) Khalapur Talegaon Toll", href: "/toll-calculator/mumbai-to-pune-toll-tax-and-fuel-cost" },
+                  { label: "Samruddhi Mahamarg (ME-2) Mumbai Shirdi Nagpur Toll", href: "/toll-calculator/mumbai-to-nagpur-toll-tax-and-fuel-cost" },
+                  { label: "Bengaluru Mysuru Access-Controlled Expressway (NH-275) Toll", href: "/toll-calculator/bengaluru-to-mysuru-toll-tax-and-fuel-cost" },
+                  { label: "Delhi Meerut Expressway (NE-3) Kashi Plaza Toll", href: "/toll-calculator/delhi-to-haridwar-toll-tax-and-fuel-cost" },
+                  { label: "NH-44 Delhi Panipat Karnal Ambala Chandigarh Toll", href: "/toll-calculator/delhi-to-chandigarh-toll-tax-and-fuel-cost" },
+                  { label: "NH-48 Mumbai Surat Vadodara Ahmedabad Toll Plazas", href: "/toll-calculator/mumbai-to-ahmedabad-toll-tax-and-fuel-cost" },
+                  { label: "NH-65 Hyderabad Vijayawada Pantangi Korlaphad Toll", href: "/toll-calculator/hyderabad-to-vijayawada-toll-tax-and-fuel-cost" },
+                  { label: "NH-48 Bengaluru Krishnagiri Vellore Chennai Toll Rate", href: "/toll-calculator/bengaluru-to-chennai-toll-tax-and-fuel-cost" },
+                ].map((item) => (
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    className="rounded-md border border-line bg-subcard/60 px-2.5 py-1 text-[11px] font-medium text-ink-soft transition hover:border-[#1956b4] hover:text-[#1956b4] dark:hover:text-blue-300"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <p className="border-t border-line pt-3 text-[11px] leading-relaxed text-ink-muted">
+              <strong>Search Intent Index:</strong> NHAI FASTag Toll Calculator India 2026 • Plaza-by-Plaza Highway Toll Tax &amp; Distance Calculator • Car, Jeep, Van, SUV, LCV, Mini-Bus, 2-Axle Truck, 3-Axle Commercial &amp; Multi-Axle HCV Toll Tariff • 24-Hour Return Journey FASTag Concession Calculator • Petrol vs Diesel vs Factory CNG vs Electric Car (EV DC Fast Charger) Intercity Road Trip Cost Estimator across {cities.map((c) => c.name).join(", ")}.
+            </p>
           </div>
         </section>
       </div>

@@ -6,11 +6,13 @@ import { cacheLife } from "next/cache";
 import {
   AlertCircleIcon,
   ArrowRightIcon,
+  ClockIcon,
   MapPinIcon,
   ShieldCheckIcon,
   SwapIcon,
 } from "@/components/Icons";
 import HighwayTollCalculator from "@/components/HighwayTollCalculator";
+import { TOLL_BLOG_POSTS } from "@/lib/blog-data";
 import {
   buildTollRoutePath,
   computeHighwayTollPlan,
@@ -114,15 +116,30 @@ export default async function TollRouteDetailPage({ params }: RoutePageProps) {
     plan.fromCity.slug
   );
 
-  const relatedRoutes = getAllIndexableTollRouteSlugs()
-    .filter(
-      (r) =>
-        (r.fromSlug === plan.fromCity.slug ||
-          r.toSlug === plan.toCity.slug ||
-          r.fromSlug === plan.toCity.slug) &&
-        r.routeSlug !== plan.routeSlug
-    )
-    .slice(0, 12);
+  const allRoutes = getAllIndexableTollRouteSlugs();
+  const outboundFromOrigin = allRoutes.filter(
+    (r) => r.fromSlug === plan.fromCity.slug && r.routeSlug !== plan.routeSlug
+  );
+  const outboundFromDestination = allRoutes.filter(
+    (r) => r.fromSlug === plan.toCity.slug && r.routeSlug !== plan.routeSlug
+  );
+
+  const routeCombinationKeywords = [
+    `${plan.fromCity.name} to ${plan.toCity.name} toll tax 2026`,
+    `${plan.fromCity.name} to ${plan.toCity.name} FASTag toll rate`,
+    `${plan.fromCity.name} to ${plan.toCity.name} car toll ₹${plan.oneWayCarTollInr}`,
+    `${plan.fromCity.name} to ${plan.toCity.name} 24 hour return toll ₹${plan.return24hCarTollInr}`,
+    `${plan.fromCity.name} to ${plan.toCity.name} LCV bus truck toll tax`,
+    `${plan.fromCity.name} to ${plan.toCity.name} petrol cost`,
+    `${plan.fromCity.name} to ${plan.toCity.name} diesel cost`,
+    `${plan.fromCity.name} to ${plan.toCity.name} CNG cost`,
+    `${plan.fromCity.name} to ${plan.toCity.name} electric EV charging cost`,
+    `${plan.fromCity.name} to ${plan.toCity.name} ${plan.oneWayDistanceKm} km road trip budget`,
+    `${plan.toCity.name} to ${plan.fromCity.name} return toll tax`,
+    ...plan.plazas.map(
+      (s) => `${s.plaza.name} FASTag rate (₹${s.plaza.carSingle})`
+    ),
+  ];
 
   const dynamicFaqs = [
     {
@@ -317,30 +334,140 @@ export default async function TollRouteDetailPage({ params }: RoutePageProps) {
           </div>
         </section>
 
-        {/* Related Highway Routes */}
-        {relatedRoutes.length > 0 && (
-          <section className="rounded-2xl border border-line bg-card p-4 shadow-xs sm:p-6">
-            <h2 className="mb-4 flex items-center gap-2 text-base font-extrabold text-ink sm:text-lg">
+        {/* Authority Blog Guides */}
+        <section className="rounded-2xl border border-line bg-card p-4 shadow-xs sm:p-6">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-line pb-3">
+            <div>
+              <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#1956b4] dark:text-blue-300">
+                NHAI FASTag &amp; Indian Expressway Knowledge Hub
+              </span>
+              <h2 className="mt-0.5 text-base font-extrabold text-ink sm:text-xl">
+                Highway Toll Rules, FASTag KYV &amp; Road Trip Cost Guides
+              </h2>
+            </div>
+            <Link
+              href="/blog#highway-toll-guides"
+              className="inline-flex items-center gap-1 text-xs font-extrabold text-[#1956b4] hover:underline dark:text-blue-300"
+            >
+              <span>All Highway Guides</span>
+              <ArrowRightIcon className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {TOLL_BLOG_POSTS.map((post) => (
+              <article
+                key={post.slug}
+                className="group flex flex-col justify-between rounded-xl border border-line bg-subcard/40 p-4 transition hover:border-[#1956b4] hover:bg-card hover:shadow-sm"
+              >
+                <div>
+                  <div className="flex items-center justify-between gap-2 text-[11px]">
+                    <span className="rounded bg-blue-50 px-2 py-0.5 font-extrabold text-[#1956b4] dark:bg-blue-950/60 dark:text-blue-300">
+                      {post.category}
+                    </span>
+                    <span className="inline-flex items-center gap-1 text-ink-muted">
+                      <ClockIcon className="h-3 w-3" />
+                      {post.readTime}
+                    </span>
+                  </div>
+
+                  <h3 className="mt-2.5 text-sm font-extrabold leading-snug text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-300">
+                    <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+                  </h3>
+                </div>
+
+                <div className="mt-3 flex items-center justify-between border-t border-line pt-2.5 text-xs">
+                  <span className="text-[11px] text-ink-muted">
+                    {post.publishedDate}
+                  </span>
+                  <Link
+                    href={`/blog/${post.slug}`}
+                    className="inline-flex items-center gap-1 font-extrabold text-[#1956b4] dark:text-blue-300"
+                  >
+                    <span>Read</span>
+                    <ArrowRightIcon className="h-3.5 w-3.5" />
+                  </Link>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        {/* All Outbound Highway Corridors from Origin & Destination Cities */}
+        <section className="rounded-2xl border border-line bg-card p-4 shadow-xs sm:p-6">
+          <div className="mb-4 border-b border-line pb-3">
+            <span className="text-[11px] font-extrabold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">
+              Complete Intercity Highway Matrix
+            </span>
+            <h2 className="mt-0.5 flex items-center gap-2 text-base font-extrabold text-ink sm:text-lg">
               <MapPinIcon className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-              Related Highway Toll Corridors from {plan.fromCity.name} &amp;{" "}
+              All Highway Toll &amp; Fuel Routes from {plan.fromCity.name} &amp;{" "}
               {plan.toCity.name}
             </h2>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              {relatedRoutes.map((rel) => (
-                <Link
-                  key={rel.routeSlug}
-                  href={rel.routePath}
-                  className="flex items-center justify-between rounded-xl border border-line bg-subcard/40 p-3.5 text-xs font-extrabold text-ink transition hover:border-[#1956b4] hover:bg-card hover:text-[#1956b4] dark:hover:text-blue-300"
-                >
-                  <span className="truncate">
-                    {rel.fromName} → {rel.toName} Toll
-                  </span>
-                  <ArrowRightIcon className="h-3.5 w-3.5 shrink-0 text-ink-muted" />
-                </Link>
-              ))}
+          </div>
+
+          <div className="space-y-5">
+            <div>
+              <h3 className="mb-2.5 text-xs font-extrabold uppercase tracking-wider text-[#1956b4] dark:text-blue-300">
+                All {outboundFromOrigin.length} Highway Routes from {plan.fromCity.name} ({plan.fromCity.state})
+              </h3>
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                {outboundFromOrigin.map((rel) => (
+                  <Link
+                    key={rel.routeSlug}
+                    href={rel.routePath}
+                    className="flex items-center justify-between rounded-lg border border-line bg-subcard/40 px-3 py-2 text-xs font-semibold text-ink transition hover:border-[#1956b4] hover:bg-card hover:text-[#1956b4] dark:hover:text-blue-300"
+                  >
+                    <span className="truncate">
+                      {rel.fromName} to {rel.toName} Toll
+                    </span>
+                    <ArrowRightIcon className="h-3 w-3 shrink-0 text-ink-muted" />
+                  </Link>
+                ))}
+              </div>
             </div>
-          </section>
-        )}
+
+            <div className="border-t border-line pt-4">
+              <h3 className="mb-2.5 text-xs font-extrabold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">
+                All {outboundFromDestination.length} Onward &amp; Return Routes from {plan.toCity.name} ({plan.toCity.state})
+              </h3>
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                {outboundFromDestination.map((rel) => (
+                  <Link
+                    key={rel.routeSlug}
+                    href={rel.routePath}
+                    className="flex items-center justify-between rounded-lg border border-line bg-subcard/40 px-3 py-2 text-xs font-semibold text-ink transition hover:border-[#1956b4] hover:bg-card hover:text-[#1956b4] dark:hover:text-blue-300"
+                  >
+                    <span className="truncate">
+                      {rel.fromName} to {rel.toName} Toll
+                    </span>
+                    <ArrowRightIcon className="h-3 w-3 shrink-0 text-ink-muted" />
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Bottom Route Combination Keywords & Search Queries */}
+        <section
+          aria-label="Route Combination Search Keywords"
+          className="rounded-2xl border border-line bg-card p-4 shadow-xs sm:p-6"
+        >
+          <h2 className="mb-2.5 text-xs font-extrabold uppercase tracking-wider text-ink-muted">
+            {plan.fromCity.name} to {plan.toCity.name} Highway Toll &amp; Fuel Search Keywords
+          </h2>
+          <div className="flex flex-wrap gap-1.5">
+            {routeCombinationKeywords.map((kw) => (
+              <span
+                key={kw}
+                className="rounded-md border border-line bg-subcard/60 px-2.5 py-1 text-[11px] font-medium text-ink-soft"
+              >
+                {kw}
+              </span>
+            ))}
+          </div>
+        </section>
       </div>
     </main>
   );

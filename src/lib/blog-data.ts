@@ -41,11 +41,13 @@ export type BlogCategory =
   | "Metro Fare & Tickets"
   | "Metro Phase 4 Updates"
   | "Rail-to-Metro Transit"
-  | "NCR Commuter Guide";
+  | "NCR Commuter Guide"
+  | "Highway & FASTag Guide"
+  | "Road Trip & Fuel";
 
 export interface BlogPost {
   slug: string;
-  domain: "air" | "rail" | "hotel" | "metro";
+  domain: "air" | "rail" | "hotel" | "metro" | "road";
   title: string;
   excerpt: string;
   category: BlogCategory;
@@ -3755,8 +3757,500 @@ export const METRO_BLOG_POSTS: BlogPost[] = [
   },
 ];
 
+export const TOLL_BLOG_POSTS: BlogPost[] = [
+  {
+    slug: "nhai-fastag-rules-2026-kyv-blacklist-double-toll-penalty-24-hour-return-discount",
+    domain: "road",
+    title:
+      "NHAI FASTag Rules 2026: 24-Hour Return Discount, KYV Verification & Blacklist Double Toll Penalty Explained",
+    excerpt:
+      "Everything Indian highway drivers need to know about NHAI FASTag tolling in 2026: how the automatic 24-hour return concession saves 25%, NPCI KYV verification rules, One Vehicle One FASTag, and how to avoid the 200% cash penalty.",
+    category: "Highway & FASTag Guide",
+    readTime: "7 min read",
+    publishedDate: "November 2026",
+    publishedIso: "2026-11-12",
+    author: {
+      name: "Raghavendra Singhania",
+      role: "National Highway Infrastructure & Toll Systems Analyst",
+    },
+    accentColor: "from-blue-700 via-indigo-600 to-emerald-600",
+    heroTagline: "Official NHAI TIS & IHMCL Electronic Toll Collection Masterclass",
+    primaryKeyword: "NHAI FASTag rules 2026",
+    seoKeywords: [
+      "NHAI FASTag rules 2026",
+      "FASTag 24 hour return discount rule",
+      "NPCI KYV verification FASTag",
+      "One Vehicle One FASTag rule India",
+      "FASTag blacklist double toll penalty",
+      "NHAI toll calculator India",
+      "FASTag minimum balance requirement",
+    ],
+    keyTakeaways: [
+      "Crossing the same NHAI toll plaza on your return journey within 24 hours automatically triggers a ~1.5x return pass deduction instead of 2x single fares, saving roughly 25% on toll tax.",
+      "Under NPCI and IHMCL's 'One Vehicle, One FASTag' mandate, vehicles with multiple active tags or pending Know Your Vehicle (KYV) RC uploads face automatic tag hotlisting.",
+      "Entering a FASTag lane with a blacklisted, low-balance, or unregistered tag attracts a mandatory 200% (Double User Fee) penalty under the National Highways Fee Rules.",
+      "Closed-loop state expressways like the Mumbai–Pune Expressway (MSRDC) and Samruddhi Mahamarg have separate toll structures where standard 24-hour NHAI return concessions do not apply.",
+    ],
+    quickActionLinks: [
+      {
+        label: "NHAI Toll & Fuel Calculator",
+        sublabel: "Calculate Plaza-by-Plaza Toll & Fuel",
+        href: "/toll-calculator",
+      },
+      {
+        label: "Delhi to Jaipur Toll & Fuel",
+        sublabel: "NE-4 Expressway vs NH-48 Rates",
+        href: "/toll-calculator/delhi-to-jaipur-toll-tax-and-fuel-cost",
+      },
+      {
+        label: "Delhi to Agra Yamuna Expy Toll",
+        sublabel: "Jewar, Mathura & Agra Plaza Fares",
+        href: "/toll-calculator/delhi-to-agra-toll-tax-and-fuel-cost",
+      },
+      {
+        label: "Mumbai to Pune Expressway Toll",
+        sublabel: "Khalapur & Talegaon IRB Toll Rates",
+        href: "/toll-calculator/mumbai-to-pune-toll-tax-and-fuel-cost",
+      },
+    ],
+    sections: [
+      {
+        heading: "1. How the Automatic NHAI 24-Hour FASTag Return Concession Works",
+        paragraphs: [
+          "One of the most frequently misunderstood features of electronic toll collection on Indian National Highways is the 24-hour return discount. You do not need to pre-book a return pass on an app before starting your drive. When you cross an NHAI-operated toll plaza (such as Kherki Daula on NH-48, Gharaunda on NH-44, or Devanahalli on NH-44), the overhead RFID reader logs your outward timestamp and deducts the standard Single Journey fare.",
+          "If your vehicle crosses that exact same toll plaza in the opposite direction within 24 hours (1,440 minutes) of the outward scan, the National Electronic Toll Collection (NETC) central clearinghouse automatically recognizes the return trip and deducts only the differential balance needed to match the 24-Hour Return Tariff—typically saving 25% compared to paying two single fares.",
+        ],
+        bullets: [
+          {
+            label: "NHAI Open-System Plazas (25% Return Savings)",
+            detail:
+              "Applies across almost all NHAI-operated National Highway plazas on NH-44, NH-48, NH-19, NH-27, NH-16, and NH-65 when returning within 24 hours.",
+          },
+          {
+            label: "Closed-Loop Expressways (Entry-Exit Distance Tolling)",
+            detail:
+              "On access-controlled expressways where toll is calculated from your entry ramp to your exit ramp (such as Mumbai–Pune Expressway or Samruddhi Mahamarg), each direction is billed at the published point-to-point tariff.",
+          },
+        ],
+        callout: {
+          title: "Pro Tip: Check Single vs 24h Return Savings Before You Depart",
+          text: "Use TravelAdda's NHAI Toll Calculator and toggle between 'One-Way', 'Return Within 24h', and 'Round Trip (>24h)' to see your exact plaza-by-plaza FASTag deduction and net rupee savings.",
+        },
+      },
+      {
+        heading: "2. One Vehicle, One FASTag & NPCI Know Your Vehicle (KYV) Rules",
+        paragraphs: [
+          "To eliminate toll leakage where commercial vehicles or multi-car households swapped tags across vehicles, IHMCL and NPCI strictly enforce the 'One Vehicle, One FASTag' policy alongside mandatory Know Your Vehicle (KYV) verification.",
+          "Issuer banks require clear photographs of the vehicle's Registration Certificate (RC), front windshield showing the affixed FASTag, and side profile. If a tag remains unverified or is linked to a chassis number without a updated Vahan registration number, the issuer bank places the tag on the NETC Low-Balance / Hotlist file.",
+        ],
+        bullets: [
+          {
+            label: "30-Minute Blacklist Cooling Window",
+            detail:
+              "Recharging a hotlisted or low-balance FASTag right at the toll plaza boom barrier will NOT work immediately—NPCI plaza sync takes 15 to 30 minutes across highway servers. Always recharge at least 45 minutes before reaching the first toll plaza.",
+          },
+          {
+            label: "200% Double Toll Cash Penalty",
+            detail:
+              "If your tag is blacklisted at the time of scanning, the plaza lane terminal legally charges 2x the applicable vehicle category fee for cash/UPI settlement.",
+          },
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "Do I have to apply separately for the 24-hour return discount on FASTag?",
+        answer:
+          "No. On NHAI toll plazas that offer a 24-hour return rate, the discount is applied automatically by the NETC system when your vehicle scans at the same toll plaza on the return journey within 24 hours.",
+      },
+      {
+        question: "How long before reaching a toll plaza should I recharge my FASTag?",
+        answer:
+          "Always recharge your FASTag wallet at least 30 to 45 minutes before approaching a toll plaza so the updated status syncs from your issuer bank to the NPCI NETC plaza whitelist.",
+      },
+    ],
+  },
+  {
+    slug: "delhi-to-jaipur-agra-lucknow-manali-expressway-toll-tax-and-fuel-cost-guide",
+    domain: "road",
+    title:
+      "North India Expressway Toll & Fuel Guide (2026): Delhi–Mumbai Expy (NE-4), Yamuna Expy, NH-44 & Delhi–Meerut",
+    excerpt:
+      "Complete 2026 plaza-by-plaza FASTag toll tax and Petrol, Diesel, CNG & EV cost breakdown for road trips from Delhi NCR to Jaipur, Agra, Lucknow, Varanasi, Chandigarh, Manali, Shimla, Haridwar, and Katra.",
+    category: "Highway & FASTag Guide",
+    readTime: "8 min read",
+    publishedDate: "November 2026",
+    publishedIso: "2026-11-12",
+    author: {
+      name: "Raghavendra Singhania",
+      role: "National Highway Infrastructure & Toll Systems Analyst",
+    },
+    accentColor: "from-indigo-700 via-blue-600 to-cyan-600",
+    heroTagline: "Plaza-by-Plaza North India Highway & Expressway Tariff Breakdown",
+    primaryKeyword: "Delhi to Jaipur Agra Lucknow toll tax 2026",
+    seoKeywords: [
+      "Delhi to Jaipur toll tax 2026",
+      "Delhi Mumbai Expressway NE-4 toll rate",
+      "Delhi to Agra Yamuna Expressway toll tax",
+      "Delhi to Lucknow Expressway toll cost",
+      "Delhi to Chandigarh NH-44 toll plazas",
+      "Delhi to Manali road trip toll and fuel cost",
+      "Delhi to Haridwar Rishikesh toll rate",
+    ],
+    keyTakeaways: [
+      "Driving from Delhi NCR (Sohna) to Jaipur via the Delhi–Mumbai Expressway (NE-4) up to Dausa (Barkheda) cuts travel time to ~4 hours with a ₹555 one-way car toll across Hilalpur, Barkheda, and Raja Dhok.",
+      "The 628 km Delhi to Lucknow expressway corridor combines the 165 km Yamuna Expressway (₹495 car toll across Jewar, Mathura & Agra) and the 302 km Agra–Lucknow Expressway (₹655 car toll).",
+      "Heading north on NH-44 from Delhi to Chandigarh (248 km) crosses Murthal (Bhalgarh), Panipat Elevated, Gharaunda (Karnal), and Ghaggar (Ambala) for ₹375 one-way car toll.",
+    ],
+    quickActionLinks: [
+      {
+        label: "Delhi → Jaipur Toll & Fuel",
+        sublabel: "278 km • NE-4 + NH-21 • ₹555 Car Toll",
+        href: "/toll-calculator/delhi-to-jaipur-toll-tax-and-fuel-cost",
+      },
+      {
+        label: "Delhi → Agra Yamuna Expy",
+        sublabel: "231 km • Jewar, Mathura, Agra • ₹495 Toll",
+        href: "/toll-calculator/delhi-to-agra-toll-tax-and-fuel-cost",
+      },
+      {
+        label: "Delhi → Lucknow Expy Corridor",
+        sublabel: "534 km • Yamuna + Agra–Lucknow • ₹1,150 Toll",
+        href: "/toll-calculator/delhi-to-lucknow-toll-tax-and-fuel-cost",
+      },
+      {
+        label: "Delhi → Chandigarh NH-44",
+        sublabel: "248 km • Murthal, Karnal, Ambala • ₹375 Toll",
+        href: "/toll-calculator/delhi-to-chandigarh-toll-tax-and-fuel-cost",
+      },
+      {
+        label: "Delhi → Manali Highway",
+        sublabel: "538 km • NH-44 + NH-205 + NH-3 • ₹530 Toll",
+        href: "/toll-calculator/delhi-to-manali-toll-tax-and-fuel-cost",
+      },
+      {
+        label: "Delhi → Haridwar (NE-3)",
+        sublabel: "222 km • Kashi, Chhapar, Bahadrabad • ₹365 Toll",
+        href: "/toll-calculator/delhi-to-haridwar-toll-tax-and-fuel-cost",
+      },
+    ],
+    sections: [
+      {
+        heading: "1. Delhi NCR to Jaipur: NE-4 Delhi–Mumbai Expressway vs Old NH-48",
+        paragraphs: [
+          "Travellers heading from Delhi, Gurugram, or Noida to Jaipur now have two distinct highway choices: the access-controlled 8-lane Delhi–Mumbai Expressway (NE-4) starting from Sohna (Hilalpur Toll Plaza) to Dausa (Barkheda exit) followed by NH-21 into Jaipur, or the classic NH-48 via Kherki Daula, Shahjahanpur, Manoharpur, and Daulatpura.",
+          "While NE-4 carries a slightly higher distance-based toll from Hilalpur to Barkheda (₹460) plus ₹95 at Raja Dhok (NH-21), the consistent 120 km/h cruising speed improves highway fuel economy by 12–15% and avoids industrial truck bottlenecks at Dharuhera and Kotputli.",
+        ],
+        bullets: [
+          {
+            label: "Delhi to Jaipur via NE-4 (278 km)",
+            detail:
+              "Car One-Way Toll: ₹555 | 24h Return: ₹830 | Estimated Petrol Cost (16 km/l): ~₹1,646.",
+          },
+          {
+            label: "Gurugram to Jaipur via NH-48 (242 km)",
+            detail:
+              "Car One-Way Toll: ₹395 across Kherki Daula (₹85), Shahjahanpur (₹165), Manoharpur (₹80) & Daulatpura (₹65).",
+          },
+        ],
+      },
+      {
+        heading: "2. Yamuna Expressway, Agra–Lucknow & Purvanchal Expressway Corridor",
+        paragraphs: [
+          "Uttar Pradesh's contiguous access-controlled expressway spine allows drivers to travel from Greater Noida (Pari Chowk) all the way to Agra, Lucknow, Ayodhya, and Varanasi without encountering a single traffic signal.",
+          "On the 165 km Yamuna Expressway (YEIDA), car toll is collected across Jewar (₹170), Mathura (₹165), and Agra (₹160) totaling ₹495 one-way. Continuing onto the 302 km UPEIDA Agra–Lucknow Expressway adds ₹655 across Fatehabad and Kakori ramps.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "What is the car toll tax from Delhi to Jaipur on the Delhi–Mumbai Expressway?",
+        answer:
+          "Driving from Delhi NCR (Sohna) to Jaipur via NE-4 (Hilalpur to Barkheda Dausa) and NH-21 (Raja Dhok) costs ₹555 one-way for a Car/Jeep/SUV (₹830 if returning within 24 hours).",
+      },
+      {
+        question: "What is the Yamuna Expressway toll from Greater Noida to Agra in 2026?",
+        answer:
+          "For a light motor vehicle (Car/Jeep/Van), the one-way Yamuna Expressway toll from Greater Noida to Agra across Jewar, Mathura, and Agra plazas is ₹495 (₹790 for a 24-hour return pass).",
+      },
+    ],
+  },
+  {
+    slug: "mumbai-pune-expressway-samruddhi-mahamarg-bengaluru-mysuru-toll-rates-guide",
+    domain: "road",
+    title:
+      "Mumbai–Pune Expressway, Samruddhi Mahamarg & Bengaluru–Mysuru Expressway Toll Rates (2026 Guide)",
+    excerpt:
+      "Updated 2026 FASTag toll rates, plaza locations, and EV/Petrol/Diesel trip budgets for Western and Southern India's busiest highways: Mumbai–Pune Expressway, Hinduhrudaysamrat Balasaheb Thackeray Maharashtra Samruddhi Mahamarg, and Bengaluru–Mysuru Access-Controlled Highway.",
+    category: "Highway & FASTag Guide",
+    readTime: "7 min read",
+    publishedDate: "November 2026",
+    publishedIso: "2026-11-12",
+    author: {
+      name: "Siddharth Deshmukh",
+      role: "Western & Southern Corridor Mobility Researcher",
+    },
+    accentColor: "from-emerald-700 via-teal-600 to-blue-700",
+    heroTagline: "Western & Southern India Access-Controlled Expressway Handbook",
+    primaryKeyword: "Mumbai Pune Expressway and Samruddhi Mahamarg toll rate 2026",
+    seoKeywords: [
+      "Mumbai Pune Expressway toll rate 2026",
+      "Samruddhi Mahamarg toll calculator",
+      "Mumbai to Shirdi Nagpur Samruddhi toll",
+      "Bengaluru to Mysuru Expressway toll tax",
+      "Kaniminike and Gananguru toll plaza rate",
+      "Khalapur and Talegaon toll plaza charges",
+      "Hyderabad to Vijayawada NH-65 toll tax",
+    ],
+    keyTakeaways: [
+      "The 94.5 km Mumbai–Pune Expressway (Yashwantrao Chavan Expressway) charges ₹320 one-way for Cars/SUVs (₹240 at Khalapur + ₹80 at Talegaon) with no 24-hour return discount (₹640 round trip).",
+      "The Hinduhrudaysamrat Balasaheb Thackeray Maharashtra Samruddhi Mahamarg (ME-2) connects Igatpuri/Ghoti, Shirdi (Kokamthan), Sambhajinagar, and Nagpur (Waifal) with distance-based closed-loop FASTag billing.",
+      "South India's 118 km Bengaluru–Mysuru Access-Controlled Highway (NH-275) collects ₹170 at Kaniminike (Kumbalgodu) and ₹160 at Gananguru (Srirangapatna) for a ₹330 one-way car toll.",
+    ],
+    quickActionLinks: [
+      {
+        label: "Mumbai → Pune Expressway Toll",
+        sublabel: "149 km • Khalapur & Talegaon • ₹320 Car Toll",
+        href: "/toll-calculator/mumbai-to-pune-toll-tax-and-fuel-cost",
+      },
+      {
+        label: "Mumbai → Shirdi (Samruddhi)",
+        sublabel: "248 km • NH-160 + Samruddhi ME-2 • ₹370 Toll",
+        href: "/toll-calculator/mumbai-to-shirdi-toll-tax-and-fuel-cost",
+      },
+      {
+        label: "Mumbai → Nagpur (Samruddhi)",
+        sublabel: "788 km • Full Samruddhi Mahamarg • ₹1,385 Toll",
+        href: "/toll-calculator/mumbai-to-nagpur-toll-tax-and-fuel-cost",
+      },
+      {
+        label: "Bengaluru → Mysuru Expy",
+        sublabel: "145 km • Kaniminike & Gananguru • ₹330 Toll",
+        href: "/toll-calculator/bengaluru-to-mysuru-toll-tax-and-fuel-cost",
+      },
+      {
+        label: "Bengaluru → Chennai NH-48",
+        sublabel: "348 km • 6 Plazas via Krishnagiri • ₹500 Toll",
+        href: "/toll-calculator/bengaluru-to-chennai-toll-tax-and-fuel-cost",
+      },
+      {
+        label: "Hyderabad → Vijayawada NH-65",
+        sublabel: "274 km • Pantangi, Korlaphad, Chillakallu • ₹355 Toll",
+        href: "/toll-calculator/hyderabad-to-vijayawada-toll-tax-and-fuel-cost",
+      },
+    ],
+    sections: [
+      {
+        heading: "1. Mumbai–Pune Expressway (MSRDC) Toll Structure",
+        paragraphs: [
+          "Operated under MSRDC, the 94.5 km Yashwantrao Chavan Mumbai–Pune Expressway collects user fees at two main plazas: Khalapur (near Khopoli before the Bhor Ghat section) and Talegaon (near Vadgaon Maval before Dehu Road).",
+          "For private cars, jeeps, and SUVs, the combined one-way tariff is ₹320 (₹240 at Khalapur + ₹80 at Talegaon). Unlike NHAI national highways, MSRDC does not offer a 1.5x 24-hour return concession, meaning a same-day Mumbai–Pune–Mumbai round trip costs ₹640 in FASTag toll.",
+        ],
+      },
+      {
+        heading: "2. Bengaluru–Mysuru Access-Controlled Highway (NH-275) & Southern Corridors",
+        paragraphs: [
+          "The 10-lane Bengaluru–Nidaghatta–Mysuru NH-275 corridor reduces travel time between Bengaluru and Mysuru to 90 minutes, bypassing Ramanagara, Channapatna, Maddur, and Mandya town traffic.",
+          "NHAI collects ₹170 one-way (₹255 24-hour return) at Kaniminike / Sheshagirihalli for the first phase and ₹160 one-way (₹240 24-hour return) at Gananguru near Srirangapatna for the second phase, totaling ₹330 one-way or ₹495 for a same-day return journey.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "What is the Mumbai to Pune Expressway toll for a car in 2026?",
+        answer:
+          "The one-way Mumbai–Pune Expressway toll for a Car/Jeep/SUV is ₹320 (₹240 at Khalapur Toll Plaza + ₹80 at Talegaon Toll Plaza). Round-trip toll is ₹640.",
+      },
+      {
+        question: "What is the Bengaluru to Mysuru Expressway toll tax?",
+        answer:
+          "For a Car/SUV, the total one-way NHAI FASTag toll on the Bengaluru–Mysuru Expressway (NH-275) is ₹330 (₹170 at Kaniminike + ₹160 at Gananguru), or ₹495 if returning within 24 hours.",
+      },
+    ],
+  },
+  {
+    slug: "petrol-vs-diesel-vs-cng-vs-electric-ev-highway-road-trip-cost-comparison-india",
+    domain: "road",
+    title:
+      "Petrol vs Diesel vs CNG vs Electric Car (EV): Real Highway Per-Km Running & Toll Cost in India (2026)",
+    excerpt:
+      "Data-backed 2026 comparison of real-world Indian highway road trip costs across Petrol, Diesel, Factory CNG, and Electric Vehicles (DC Fast Charging)—including per-km running cost and FASTag toll impact.",
+    category: "Road Trip & Fuel",
+    readTime: "6 min read",
+    publishedDate: "November 2026",
+    publishedIso: "2026-11-12",
+    author: {
+      name: "Siddharth Deshmukh",
+      role: "Western & Southern Corridor Mobility Researcher",
+    },
+    accentColor: "from-amber-600 via-orange-600 to-emerald-600",
+    heroTagline: "Real-World Indian Expressway Mileage & Powertrain Cost Benchmark",
+    primaryKeyword: "Petrol vs Diesel vs CNG vs EV highway cost India",
+    seoKeywords: [
+      "Petrol vs Diesel vs CNG vs EV highway cost",
+      "road trip fuel cost calculator India",
+      "per km running cost petrol diesel cng ev",
+      "DC fast charging cost on Indian highways",
+      "highway toll vs fuel cost ratio India",
+    ],
+    keyTakeaways: [
+      "On Indian expressways at 90–100 km/h, Petrol cars average ₹5.90–₹6.60/km in fuel alone, Diesel SUVs average ₹4.50–₹5.10/km, CNG cars average ₹3.20–₹3.60/km, and EVs using commercial highway DC fast chargers (₹18/kWh) average ₹2.55–₹2.80/km.",
+      "On access-controlled expressways (like Yamuna Expy, NE-4, or Mumbai–Pune Expy), NHAI/State FASTag tolls now account for 25% to 48% of the total out-of-pocket trip cost for CNG and Electric Vehicle owners.",
+      "Splitting a 4-passenger car trip across NHAI highways drops the combined Toll + Fuel cost to just ₹1.60–₹2.20 per passenger-km—often 60% cheaper than last-minute Tatkal train or air tickets.",
+    ],
+    quickActionLinks: [
+      {
+        label: "Compare All 4 Fuels on Any Route",
+        sublabel: "Interactive NHAI Toll + Fuel Calculator",
+        href: "/toll-calculator",
+      },
+      {
+        label: "Delhi → Jaipur Fuel & Toll Split",
+        sublabel: "Compare Petrol, Diesel, CNG & EV",
+        href: "/toll-calculator/delhi-to-jaipur-toll-tax-and-fuel-cost",
+      },
+      {
+        label: "Mumbai → Goa NH-66 Road Trip Cost",
+        sublabel: "588 km Coastal & Highway Fuel Budget",
+        href: "/toll-calculator/mumbai-to-goa-toll-tax-and-fuel-cost",
+      },
+    ],
+    sections: [
+      {
+        heading: "1. Real-World 2026 Highway Running Cost: Petrol vs Diesel vs CNG vs EV",
+        paragraphs: [
+          "When planning an intercity drive across India, most motorists underestimate how much highway tolls add to fuel expenditure—or overestimate EV savings by using home AC charging rates (₹7/kWh) instead of commercial highway DC fast-charger tariffs (₹17–₹21/kWh plus GST).",
+          "Using 2026 retail fuel prices across major metro hubs (Delhi Petrol ₹94.72/L, Mumbai Petrol ₹104.21/L, Bengaluru Petrol ₹102.86/L) and realistic highway cruising efficiency, TravelAdda's calculator computes side-by-side powertrain budgets for every single city pair.",
+        ],
+        bullets: [
+          {
+            label: "Petrol (15–17 km/l on Highway)",
+            detail:
+              "Costs ₹5.90 to ₹6.60 per km in fuel alone. Adding ₹1.60–₹2.10/km in expressway tolls brings total running cost to ~₹7.80–₹8.50/km.",
+          },
+          {
+            label: "Diesel (19–21 km/l on Highway)",
+            detail:
+              "Costs ₹4.40 to ₹4.90 per km in fuel, making it the preferred long-range cruiser for 600+ km single-day drives.",
+          },
+          {
+            label: "CNG (24–26 km/kg on Highway)",
+            detail:
+              "Costs just ₹3.15 to ₹3.55 per km in fuel, cutting fuel expenditure nearly in half compared to Petrol.",
+          },
+          {
+            label: "Electric EV (6.5–7.0 km/kWh at 95 km/h on DC Fast Chargers)",
+            detail:
+              "At ₹18/kWh on highway CCS2 fast chargers, energy cost is ~₹2.65/km—making FASTag tolls the single largest variable expense on expressway EV trips.",
+          },
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "Are Electric Vehicles (EVs) exempt from NHAI FASTag toll across all of India?",
+        answer:
+          "While select state-operated routes in Maharashtra (such as Mumbai–Pune Expressway, Samruddhi Mahamarg, and Atal Setu) have announced state-level EV toll waivers/notifications subject to FASTag EV category mapping, standard NHAI National Highway plazas continue to levy Light Motor Vehicle (Car/Jeep/Van) FASTag user fees unless specifically exempted by a central MoRTH gazette notification.",
+      },
+    ],
+  },
+];
+
+export const DGCA_BLOG_POSTS: BlogPost[] = [
+  {
+    slug: "dgca-flight-delay-cancellation-denied-boarding-compensation-rules-india-claim-guide",
+    domain: "air",
+    title:
+      "DGCA Flight Delay, Cancellation & Denied Boarding Compensation Rules (2026): How to Claim Up to ₹20,000",
+    excerpt:
+      "Complete legal guide to India's DGCA Civil Aviation Requirements (CAR Section 3, Series M, Part IV): exact ₹5,000–₹20,000 compensation slabs, free hotel & meal rules, Force Majeure exemptions, and how to escalate to Airline Nodal Officers & AirSewa.",
+    category: "Flyer Rights & Rules",
+    readTime: "8 min read",
+    publishedDate: "November 2026",
+    publishedIso: "2026-11-12",
+    author: {
+      name: "Capt. Vikramaditya Rao",
+      role: "Aviation Operations & Airspace Analyst",
+    },
+    accentColor: "from-rose-600 via-orange-600 to-amber-500",
+    heroTagline: "Official DGCA Passenger Charter & Legal Claim Escalation Handbook",
+    primaryKeyword: "DGCA flight delay cancellation compensation rules India",
+    seoKeywords: [
+      "DGCA flight delay compensation rules",
+      "DGCA flight cancellation compensation ₹10000",
+      "denied boarding overbooking compensation India",
+      "airline nodal officer and appellate authority email list",
+      "how to file AirSewa complaint against airline",
+      "IndiGo Air India flight cancellation refund rules",
+    ],
+    keyTakeaways: [
+      "For Denied Boarding due to overbooking, DGCA mandates 200% of one-way basic fare + airline fuel charge (up to ₹10,000) if an alternate flight departs within 24 hours, and 400% (up to ₹20,000) if delayed beyond 24 hours.",
+      "For Flight Cancellations notified less than 2 weeks and up to 24 hours before departure (or missed connections on the same ticket), passengers are entitled to ₹5,000–₹10,000 statutory compensation depending on flight block time.",
+      "For Tarmac & Terminal Delays, airlines must provide free meals/refreshments once the delay exceeds 2–4 hours (based on block time) and a free hotel stay + airport transfers for delays exceeding 6 hours or overnight (20:00–03:00).",
+    ],
+    quickActionLinks: [
+      {
+        label: "DGCA Compensation Calculator",
+        sublabel: "Check Eligibility & Generate Legal Claim",
+        href: "/air/flight-compensation",
+      },
+      {
+        label: "IndiGo (6E) Nodal Officer Claim",
+        sublabel: "nodalofficer@goindigo.in Escalation",
+        href: "/air/flight-compensation/indigo-flight-delay-cancellation-compensation",
+      },
+      {
+        label: "Air India (AI) Nodal Officer Claim",
+        sublabel: "nodalofficer@airindia.com Escalation",
+        href: "/air/flight-compensation/air-india-flight-delay-cancellation-compensation",
+      },
+      {
+        label: "Check Live Flight Delay Status",
+        sublabel: "Verify Scheduled vs Actual Departure",
+        href: "/air/flight-status",
+      },
+    ],
+    sections: [
+      {
+        heading: "1. Statutory Cash Compensation Slabs Under DGCA CAR Section 3, Series M, Part IV",
+        paragraphs: [
+          "The Directorate General of Civil Aviation (DGCA) enforces binding statutory protections for every passenger flying on an Indian carrier or departing from an Indian airport under Civil Aviation Requirements (CAR) Section 3 — Air Transport, Series M, Part IV.",
+          "While airlines frequently offer small ₹1,000–₹2,000 travel vouchers when flights are cancelled or overbooked, passengers have the right to demand statutory monetary compensation via bank transfer (NEFT/UPI) alongside a 100% full refund when the disruption is within the airline's operational control.",
+        ],
+        bullets: [
+          {
+            label: "Flight Cancellation (Block Time ≤ 1 Hour)",
+            detail: "₹5,000 or booked one-way basic fare + airline fuel charge, whichever is lower.",
+          },
+          {
+            label: "Flight Cancellation (Block Time > 1 Hour to ≤ 2 Hours)",
+            detail: "₹7,500 or booked one-way basic fare + airline fuel charge, whichever is lower.",
+          },
+          {
+            label: "Flight Cancellation (Block Time > 2 Hours)",
+            detail: "₹10,000 or booked one-way basic fare + airline fuel charge, whichever is lower.",
+          },
+          {
+            label: "Denied Boarding / Overbooking (> 1 Hour Delay)",
+            detail: "Up to ₹10,000 (200% of fare) if alternate flight is within 24 hours; up to ₹20,000 (400% of fare) if beyond 24 hours.",
+          },
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "When is an airline exempt from paying DGCA cash compensation?",
+        answer:
+          "Under Clause 1.4 and 1.5 of DGCA CAR Section 3 Series M Part IV, airlines are exempt from paying the ₹5,000–₹20,000 cash compensation ONLY when the delay or cancellation is caused by extraordinary Force Majeure circumstances beyond the airline's control (such as dense CAT-III fog/visibility closures, ATC airspace restrictions, bird strikes, or security alerts). However, the right to a 100% ticket refund or free rescheduling still applies.",
+      },
+    ],
+  },
+];
+
 export const ALL_BLOG_POSTS: BlogPost[] = [
   ...FEATURED_SEO_BLOG_POSTS,
+  ...TOLL_BLOG_POSTS,
+  ...DGCA_BLOG_POSTS,
   ...METRO_BLOG_POSTS,
   ...FLIGHT_BLOG_POSTS,
   ...RAIL_BLOG_POSTS,
