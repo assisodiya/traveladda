@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useDeferredValue,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -265,16 +271,19 @@ export default function HighwayTollCalculator({
     return scored.map((s) => s.city);
   };
 
+  const deferredFromSearch = useDeferredValue(fromSearchText);
+  const deferredToSearch = useDeferredValue(toSearchText);
+
   const filteredFromCities = useMemo(
-    () => filterCities(fromSearchText, toSlug),
+    () => filterCities(deferredFromSearch, toSlug),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [fromSearchText, toSlug, cities, fromSlug]
+    [deferredFromSearch, toSlug, cities, fromSlug]
   );
 
   const filteredToCities = useMemo(
-    () => filterCities(toSearchText, fromSlug),
+    () => filterCities(deferredToSearch, fromSlug),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [toSearchText, fromSlug, cities, toSlug]
+    [deferredToSearch, fromSlug, cities, toSlug]
   );
 
   const resolveCityFromInput = (

@@ -378,6 +378,24 @@ export default async function Home() {
           </Link>
 
           <Link
+            href="/rail/refund-calculator"
+            className="flex items-center justify-between rounded-xl border border-line bg-card p-5 transition hover:border-[#1956b4]"
+          >
+            <div className="space-y-1">
+              <span className="text-xs font-bold text-[#fc6203]">
+                PRS + GAZETTE • NEW
+              </span>
+              <h3 className="text-base font-bold text-ink">
+                IRCTC Ticket Refund Calculator
+              </h3>
+              <p className="text-xs text-ink-muted">
+                Exact CNF, RAC, WL, Tatkal &amp; Vande Bharat Sleeper refund
+              </p>
+            </div>
+            <TicketIcon className="h-7 w-7 shrink-0 text-[#1956b4]" />
+          </Link>
+
+          <Link
             href="/delhi-metro"
             className="flex items-center justify-between rounded-xl border border-line bg-card p-5 transition hover:border-[#1956b4]"
           >

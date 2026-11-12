@@ -2,7 +2,13 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  useDeferredValue,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   buildMetroRoutePath,
   buildMetroStationPath,
@@ -187,15 +193,18 @@ export function MetroRouteFinder({
     return scored.slice(0, 20).map((x) => x.st);
   };
 
+  const deferredFromQuery = useDeferredValue(fromQuery);
+  const deferredToQuery = useDeferredValue(toQuery);
+
   const filteredFrom = useMemo(
-    () => filterStations(fromQuery, toSlug),
+    () => filterStations(deferredFromQuery, toSlug),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [fromQuery, toSlug, stations],
+    [deferredFromQuery, toSlug, stations],
   );
   const filteredTo = useMemo(
-    () => filterStations(toQuery, fromSlug),
+    () => filterStations(deferredToQuery, fromSlug),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [toQuery, fromSlug, stations],
+    [deferredToQuery, fromSlug, stations],
   );
 
   function navigateToRouteDetails(
