@@ -1519,7 +1519,7 @@ export default function RailRefundCalculator({
             </div>
 
             {/* Receipt Body */}
-            <div className="space-y-4 p-4 text-xs sm:p-5">
+            <div className="space-y-4 p-4 text-[13.5px] sm:p-5 sm:text-xs">
               {/* Box 1: Grand Total Reverse Breakdown */}
               <div className="space-y-2 rounded-2xl border border-line bg-subcard/50 p-3.5">
                 <div className="flex items-center justify-between border-b border-line pb-1.5 font-extrabold text-ink">

@@ -913,7 +913,7 @@ ${passengerName.trim() || "[Your Name]"}
             />
           </div>
 
-          <pre className="mt-3 max-h-64 overflow-y-auto whitespace-pre-wrap rounded-xl border border-line bg-subcard/60 p-3.5 font-mono text-[11px] leading-relaxed text-ink-soft">
+          <pre className="mt-3 max-h-64 overflow-y-auto whitespace-pre-wrap rounded-xl border border-line bg-subcard/60 p-3.5 font-mono text-xs leading-relaxed text-ink-soft">
             {claimEmailBody}
           </pre>
         </div>
