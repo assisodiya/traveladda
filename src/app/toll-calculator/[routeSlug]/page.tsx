@@ -64,6 +64,20 @@ export async function generateMetadata({
   const title = `${plan.fromCity.name} to ${plan.toCity.name} Toll Tax (₹${plan.oneWayCarTollInr}), FASTag Plaza List & Fuel Cost (2026)`;
   const description = `Driving from ${plan.fromCity.name} to ${plan.toCity.name} (${plan.oneWayDistanceKm} km via ${plan.highwaySummary})? One-way Car FASTag toll is ₹${plan.oneWayCarTollInr} (24h Return: ₹${plan.return24hCarTollInr}) across ${plan.plazaCount || "NHAI"} toll plazas. Check Petrol, Diesel, CNG & EV trip cost.`;
 
+  const ogImageUrl = `/api/og?badge=${encodeURIComponent(
+    `${plan.oneWayDistanceKm} km • ${plan.durationFormatted}`
+  )}&title=${encodeURIComponent(
+    `${plan.fromCity.name} to ${plan.toCity.name} Toll Tax & Fuel Cost`
+  )}&subtitle=${encodeURIComponent(
+    `${plan.highwaySummary} • Plaza-by-Plaza NHAI FASTag Rates (2026)`
+  )}&s1l=${encodeURIComponent("Car One-Way Toll")}&s1v=${encodeURIComponent(
+    `₹${plan.oneWayCarTollInr}`
+  )}&s2l=${encodeURIComponent("24h Return Pass")}&s2v=${encodeURIComponent(
+    `₹${plan.return24hCarTollInr}`
+  )}&s3l=${encodeURIComponent("Petrol Est.")}&s3v=${encodeURIComponent(
+    `₹${plan.fuelCostInr}`
+  )}`;
+
   return {
     title,
     description,
@@ -83,6 +97,20 @@ export async function generateMetadata({
       description,
       url: canonicalUrl,
       type: "website",
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [ogImageUrl],
     },
   };
 }

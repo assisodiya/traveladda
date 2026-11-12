@@ -46,6 +46,14 @@ export const metadata: Metadata = {
       "Check plaza-by-plaza NHAI FASTag toll rates, 24-hour return savings, and Petrol/Diesel/CNG/EV fuel cost across India's National Highways & Expressways.",
     url: "https://traveladda.in/toll-calculator",
     type: "website",
+    images: [
+      {
+        url: "/api/og?badge=NHAI+FASTag+2026+Verified&title=NHAI+FASTag+Highway+Toll+%26+Fuel+Cost+Calculator&subtitle=Plaza-by-Plaza+Toll+Rates%2C+24h+Return+Savings+%26+Petrol%2FDiesel%2FCNG%2FEV+Costs&s1l=City+Combinations&s1v=1%2C560+Routes&s2l=24h+Return+Pass&s2v=Save+Up+to+25%25&s3l=Fuels+Compared&s3v=Petrol%2FDiesel%2FCNG%2FEV",
+        width: 1200,
+        height: 630,
+        alt: "NHAI FASTag Highway Toll & Fuel Calculator",
+      },
+    ],
   },
 };
 

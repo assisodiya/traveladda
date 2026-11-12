@@ -47,6 +47,23 @@ export async function generateMetadata({
     scenario.slug
   )}`;
 
+  const sampleResult = computeRailRefund({
+    ...DEFAULT_REFUND_STATE,
+    ...scenario.presetState,
+  });
+
+  const ogImageUrl = `/api/og?badge=${encodeURIComponent(
+    scenario.category
+  )}&title=${encodeURIComponent(scenario.h1)}&subtitle=${encodeURIComponent(
+    scenario.heroBadge
+  )}&s1l=${encodeURIComponent("Sample Bank Refund")}&s1v=${encodeURIComponent(
+    formatINR(sampleResult.totalNetRefund)
+  )}&s2l=${encodeURIComponent("PRS Deduction")}&s2v=${encodeURIComponent(
+    `-${formatINR(sampleResult.finalRailwayCut)}`
+  )}&s3l=${encodeURIComponent("Class & Status")}&s3v=${encodeURIComponent(
+    `${sampleResult.classConfig.code} • ${sampleResult.state.ticketStatus}`
+  )}`;
+
   return {
     title: scenario.title,
     description: scenario.metaDescription,
@@ -59,6 +76,20 @@ export async function generateMetadata({
       description: scenario.metaDescription,
       url: canonicalUrl,
       type: "website",
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: scenario.h1,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: scenario.title,
+      description: scenario.metaDescription,
+      images: [ogImageUrl],
     },
   };
 }

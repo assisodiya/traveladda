@@ -46,6 +46,14 @@ export const metadata: Metadata = {
       "Calculate exact Indian Railways refund for Confirmed, RAC, Waitlist (WL), Tatkal, Agent RSP tickets, Vande Bharat CC & Vande Bharat Sleeper (Gazette G.S.R. 41(E)).",
     url: "https://traveladda.in/rail/refund-calculator",
     type: "website",
+    images: [
+      {
+        url: "/api/og?badge=100%25+Verified+PRS+%2B+Gazette+G.S.R.+41(E)&title=IRCTC+Ticket+Cancellation+%26+Refund+Calculator&subtitle=Exact+Bank+Refund+for+CNF%2C+RAC%2C+WL%2C+Tatkal+%26+Vande+Bharat+with+Double+%E2%82%B95+Rounding&s1l=Regular+Trains&s1v=48h+%2F+12h+%2F+4h&s2l=VB+Sleeper+Gazette&s2v=72h+%2F+8h+Rules&s3l=WL+%26+RAC+Cut&s3v=%E2%82%B965+%2F+%E2%82%B960+Only",
+        width: 1200,
+        height: 630,
+        alt: "IRCTC Train Ticket Cancellation & Refund Calculator",
+      },
+    ],
   },
 };
 

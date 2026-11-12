@@ -136,7 +136,7 @@ export function Footer() {
                   href="/blog"
                   className="text-xs font-bold text-[#1956b4] hover:underline dark:text-blue-300"
                 >
-                  View all 19 guides →
+                  View all 36 guides →
                 </Link>
               </li>
             </ul>
@@ -182,10 +182,18 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/sitemap.xml"
+                  href="/sitemap-directory"
+                  className="font-medium text-ink-soft transition hover:text-[#1956b4] dark:hover:text-blue-300"
+                >
+                  HTML Sitemap Directory
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/sitemaps/index.xml"
                   className="text-ink-muted transition hover:text-[#1956b4] dark:hover:text-blue-300"
                 >
-                  XML Sitemap
+                  Segmented XML Sitemaps
                 </Link>
               </li>
             </ul>
@@ -200,6 +208,9 @@ export function Footer() {
           <div className="flex flex-wrap items-center gap-4">
             <Link href="/tools" className="hover:text-ink">
               All Tools
+            </Link>
+            <Link href="/sitemap-directory" className="hover:text-ink">
+              HTML Sitemap
             </Link>
             <Link href="/about" className="hover:text-ink">
               About Us
