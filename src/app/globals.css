@@ -178,7 +178,8 @@ html.dark .ta-cta-banner {
 
 /* ixigo / Goibibo Solid Vibrant Orange Search CTA Button */
 .ta-btn-primary,
-.ta-btn-orange {
+.ta-btn-orange,
+.ta-btn-accent {
   background-color: #fc6203;
   color: #ffffff !important;
   box-shadow: 0 2px 8px rgba(252, 98, 3, 0.28);
@@ -189,7 +190,8 @@ html.dark .ta-cta-banner {
 }
 
 .ta-btn-primary:hover,
-.ta-btn-orange:hover {
+.ta-btn-orange:hover,
+.ta-btn-accent:hover {
   background-color: #e55600;
   box-shadow: 0 4px 12px rgba(252, 98, 3, 0.35);
 }

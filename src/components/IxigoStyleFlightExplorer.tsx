@@ -740,13 +740,13 @@ export function IxigoStyleFlightExplorer({
             <button
               type="submit"
               disabled={loading}
-              className="ta-btn-accent flex min-h-[56px] w-full flex-col items-center justify-center gap-1 rounded-2xl px-4 py-3 text-base font-extrabold shadow-sm transition hover:opacity-95 disabled:opacity-60"
+              className="ta-btn-primary flex min-h-[58px] w-full cursor-pointer flex-col items-center justify-center gap-1 rounded-2xl bg-[#fc6203] px-4 py-3 text-base font-extrabold text-white shadow-md transition hover:bg-[#e55600] disabled:opacity-60"
             >
-              <div className="flex items-center gap-1.5">
-                <SearchIcon className="h-4 w-4" />
+              <div className="flex items-center gap-1.5 text-white">
+                <SearchIcon className="h-4 w-4 text-white" />
                 <span>{lang === "hi" ? "खोजें" : "SEARCH"}</span>
               </div>
-              <span className="text-[11px] font-semibold opacity-90">
+              <span className="text-[11px] font-bold text-white/95">
                 {originPlace.iata} → {destPlace.iata}
               </span>
             </button>
@@ -1078,14 +1078,14 @@ export function IxigoStyleFlightExplorer({
                     <button
                       type="button"
                       onClick={() => setSelectedBookingOffer(offer)}
-                      className="ta-btn-accent inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-xl px-5 py-2.5 text-xs font-extrabold shadow-xs transition sm:text-sm"
+                      className="ta-btn-primary inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-xl bg-[#fc6203] px-5 py-2.5 text-xs font-extrabold text-white shadow-md transition hover:bg-[#e55600] sm:text-sm"
                     >
-                      <span>
+                      <span className="text-white">
                         {lang === "hi"
                           ? "फ्लाइट और किराया देखें (Book)"
                           : "Book Now"}
                       </span>
-                      <ArrowRightIcon className="h-3.5 w-3.5" />
+                      <ArrowRightIcon className="h-3.5 w-3.5 text-white" />
                     </button>
                     <span className="mt-1 text-[10px] font-semibold text-emerald-700 dark:text-emerald-400">
                       Review Itinerary &amp; Fare Breakdown →
@@ -1484,14 +1484,14 @@ export function IxigoStyleFlightExplorer({
                     href={checkoutAffiliateUrl}
                     target="_blank"
                     rel="noopener noreferrer sponsored"
-                    className="ta-btn-accent inline-flex flex-1 items-center justify-center gap-2 rounded-xl px-6 py-3.5 text-sm font-extrabold shadow-md transition hover:opacity-95"
+                    className="ta-btn-primary inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#fc6203] px-6 py-3.5 text-sm font-extrabold text-white shadow-md transition hover:bg-[#e55600]"
                   >
-                    <span>
+                    <span className="text-white">
                       {lang === "hi"
                         ? `पार्टनर चेकआउट पर जाएं (${formatFlightPrice(totalPayable, currency)})`
                         : `Proceed to Partner Checkout (${formatFlightPrice(totalPayable, currency)})`}
                     </span>
-                    <ArrowRightIcon className="h-4 w-4" />
+                    <ArrowRightIcon className="h-4 w-4 text-white" />
                   </a>
                 </div>
 

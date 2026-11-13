@@ -46,10 +46,6 @@ export interface FlightScheduleOffer {
   isFastest: boolean;
   bookingUrls: {
     primaryAffiliate: string;
-    ixigo: string;
-    makemytrip: string;
-    goibibo: string;
-    skyscanner: string;
   };
 }
 

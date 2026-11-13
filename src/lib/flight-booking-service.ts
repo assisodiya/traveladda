@@ -99,15 +99,10 @@ export function buildOtaBookingLinks(
   destIata: string,
   departureDate: string,
   rawAviasalesLink: string | null | undefined,
-  currency: SupportedFlightCurrency,
-  isIntl: boolean
+  currency: SupportedFlightCurrency
 ): FlightScheduleOffer["bookingUrls"] {
   const marker = TRAVELPAYOUTS_SERVER_CONFIG.partnerMarker;
-  const [yyyy, mm, dd] = (departureDate || "2026-11-15").split("-");
-  const ddMmYyyy = `${dd}${mm}${yyyy}`;
-  const ddSlashMmSlashYyyy = `${dd}/${mm}/${yyyy}`;
-  const yyyyMmDdCompact = `${yyyy}${mm}${dd}`;
-  const yyMmDd = `${(yyyy || "2026").slice(-2)}${mm}${dd}`;
+  const [, mm, dd] = (departureDate || "2026-11-15").split("-");
 
   const defaultSearchPath = `/search/${originIata}${dd}${mm}${destIata}1`;
   const cleanLink =
@@ -120,10 +115,6 @@ export function buildOtaBookingLinks(
 
   return {
     primaryAffiliate,
-    ixigo: `https://www.ixigo.com/search/result/flight?from=${originIata}&to=${destIata}&date=${ddMmYyyy}&adults=1&children=0&infants=0&class=e`,
-    makemytrip: `https://www.makemytrip.com/flight/search?itinerary=${originIata}-${destIata}-${ddSlashMmSlashYyyy}&tripType=O&paxType=A-1_C-0_I-0&intl=${isIntl ? "true" : "false"}&cabinClass=E`,
-    goibibo: `https://www.goibibo.com/flights/air-${originIata}-${destIata}-${yyyyMmDdCompact}--1-0-0-E-D/`,
-    skyscanner: `https://www.skyscanner.co.in/transport/flights/${originIata.toLowerCase()}/${destIata.toLowerCase()}/${yyMmDd}/?currency=${currency.toUpperCase()}`,
   };
 }
 
@@ -400,8 +391,7 @@ export async function fetchFlightRoutePageData(
         destination.iata,
         departureDate,
         item.link || bestTicketLink,
-        currency,
-        isIntl
+        currency
       ),
     });
   }
@@ -489,8 +479,7 @@ export async function fetchFlightRoutePageData(
         destination.iata,
         departureDate,
         bestTicketLink,
-        currency,
-        isIntl
+        currency
       ),
     });
   }

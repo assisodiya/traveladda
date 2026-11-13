@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   title:
     "Flight Tickets, Schedule & Cheapest Airfare Finder (INR, USD, AED) — Compare IndiGo, Air India, Akasa",
   description:
-    "Compare live domestic and international flight schedules, non-stop durations, departure terminals (T1/T2/T3), 14-day lowest airfare calendar in INR/USD/AED, and book directly on Aviasales, ixigo, MakeMyTrip & Goibibo.",
+    "Compare live domestic and international flight schedules, non-stop durations, departure terminals (T1/T2/T3), 14-day lowest airfare calendar in INR/USD/AED, and instant flight ticket booking.",
   keywords: [
     "flight booking",
     "cheap flights India",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     "Bengaluru to Delhi flights",
     "IndiGo flight schedule",
     "Air India flight timings",
-    "compare flight prices ixigo MakeMyTrip",
+    "compare flight prices India",
     "domestic flight timetable India",
   ],
   alternates: {
@@ -70,7 +70,7 @@ const FLIGHT_HUB_FAQS = [
   },
   {
     q: "How does flight booking work on TravelAdda?",
-    a: "TravelAdda is an independent flight schedule and airfare comparison engine. When you click 'Book Flight' or choose ixigo, MakeMyTrip, or Goibibo, we redirect you directly to the verified booking checkout with your origin, destination, and travel date pre-filled.",
+    a: "When you click 'Book Now' on any flight card, an instant on-site Itinerary & Fare Breakdown Drawer opens showing your departure/arrival terminals, baggage allowance, and base fare + tax split. Clicking 'Proceed to Partner Checkout' takes you directly to our verified partner checkout with your flight and passenger count pre-selected.",
   },
   {
     q: "सस्ती फ्लाइट टिकट और टर्मिनल (T1/T2/T3) कैसे चेक करें?",
