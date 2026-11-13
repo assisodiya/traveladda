@@ -230,6 +230,22 @@ export default function RootLayout({
           }}
         />
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+        <script
+          data-noptimize="1"
+          data-cfasync="false"
+          data-wpfc-render="false"
+          data-no-defer="1"
+          data-cmp-ab="2"
+          dangerouslySetInnerHTML={{
+            __html: `(function () {
+  var script = document.createElement("script");
+  script.async = 1;
+  script.setAttribute("data-cmp-ab", "2");
+  script.src = 'https://tp-em.com/NjAwMjQy.js?t=600242';
+  document.head.appendChild(script);
+})();`,
+          }}
+        />
       </head>
       <body className="flex min-h-screen flex-col bg-canvas text-ink antialiased">
         <Navbar />
