@@ -366,7 +366,7 @@ export default async function HtmlSitemapDirectoryPage() {
                 </span>
               </Link>
             ))}
-            {POPULAR_LIVE_TRAINS.map((t) => (
+            {POPULAR_LIVE_TRAINS.slice(0, 32).map((t) => (
               <Link
                 key={`live-${t.trainNumber}`}
                 href={buildTrainLiveStatusPath(t.trainNumber, t.trainName)}

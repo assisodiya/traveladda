@@ -67,7 +67,7 @@ export const SITEMAP_SEGMENTS: {
     filename: "trains.xml",
     title: "Indian Railways Live Status, Chart Time & Refund Pages",
     description:
-      "252+ live train running status pages, reservation chart preparation times, and 30 IRCTC ticket refund calculators.",
+      "10,169+ live train running status pages, 10,169+ reservation chart preparation times, and 30 IRCTC ticket refund calculators.",
   },
   {
     key: "toll-routes",
@@ -242,14 +242,15 @@ export function buildSegmentedSitemaps(): Record<
     })
   );
 
-  // Trains: Live Status + Chart Times + Refund Scenarios
-  const popularTrainSet = new Set(
-    POPULAR_LIVE_TRAINS.map((t) => t.trainNumber)
+  // Trains: Live Status + Chart Times + Refund Scenarios (All non-zero NTES trains)
+  const flagshipTrainSet = new Set(
+    POPULAR_LIVE_TRAINS.slice(0, 50).map((t) => t.trainNumber)
   );
   const trainUrlSet = new Set<string>();
   const trainStatusRoutes: MetadataRoute.Sitemap = [];
 
-  for (const train of ALL_CATALOG_TRAINS) {
+  for (const train of POPULAR_LIVE_TRAINS) {
+    if (train.trainNumber.startsWith("0")) continue;
     const url = `${SITE_BASE_URL}${buildTrainLiveStatusPath(
       train.trainNumber,
       train.trainName
@@ -260,12 +261,13 @@ export function buildSegmentedSitemaps(): Record<
         url,
         lastModified: SITEMAP_LAST_MODIFIED,
         changeFrequency: "always",
-        priority: popularTrainSet.has(train.trainNumber) ? 0.92 : 0.86,
+        priority: flagshipTrainSet.has(train.trainNumber) ? 0.92 : 0.86,
       });
     }
   }
 
-  for (const train of POPULAR_LIVE_TRAINS) {
+  for (const train of ALL_CATALOG_TRAINS) {
+    if (train.trainNumber.startsWith("0")) continue;
     const url = `${SITE_BASE_URL}${buildTrainLiveStatusPath(
       train.trainNumber,
       train.trainName
@@ -276,7 +278,7 @@ export function buildSegmentedSitemaps(): Record<
         url,
         lastModified: SITEMAP_LAST_MODIFIED,
         changeFrequency: "always",
-        priority: 0.92,
+        priority: flagshipTrainSet.has(train.trainNumber) ? 0.92 : 0.86,
       });
     }
   }
@@ -288,6 +290,7 @@ export function buildSegmentedSitemaps(): Record<
   const chartTimeRoutes: MetadataRoute.Sitemap = [];
 
   for (const train of POPULAR_CHART_TRAINS) {
+    if (train.trainNumber.startsWith("0")) continue;
     const url = `${SITE_BASE_URL}/chart-times/${train.slug}`;
     if (!chartUrlSet.has(url)) {
       chartUrlSet.add(url);
@@ -300,7 +303,25 @@ export function buildSegmentedSitemaps(): Record<
     }
   }
 
+  for (const train of POPULAR_LIVE_TRAINS) {
+    if (train.trainNumber.startsWith("0")) continue;
+    const url = `${SITE_BASE_URL}${buildChartTimePath(
+      train.trainNumber,
+      train.trainName
+    )}`;
+    if (!chartUrlSet.has(url) && !popularChartSet.has(train.trainNumber)) {
+      chartUrlSet.add(url);
+      chartTimeRoutes.push({
+        url,
+        lastModified: SITEMAP_LAST_MODIFIED,
+        changeFrequency: "weekly",
+        priority: flagshipTrainSet.has(train.trainNumber) ? 0.88 : 0.84,
+      });
+    }
+  }
+
   for (const train of ALL_CATALOG_TRAINS) {
+    if (train.trainNumber.startsWith("0")) continue;
     const url = `${SITE_BASE_URL}${buildChartTimePath(
       train.trainNumber,
       train.trainName

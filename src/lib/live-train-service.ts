@@ -909,12 +909,13 @@ export async function searchOwnedTrains(
   const cleanQuery = (rawQuery || "").trim();
 
   if (cleanQuery.length < 2) {
+    const topTrains = POPULAR_LIVE_TRAINS.slice(0, 28);
     return {
       success: true,
       provider: "TravelAdda Owned Rail API v2",
       query: cleanQuery,
-      count: POPULAR_LIVE_TRAINS.length,
-      data: POPULAR_LIVE_TRAINS,
+      count: topTrains.length,
+      data: topTrains,
       meta: {
         fetchedAt: new Date().toISOString(),
         responseTimeMs: Date.now() - startedAt,

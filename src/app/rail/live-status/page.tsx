@@ -347,7 +347,7 @@ export default async function LiveTrainStatusPage() {
         </div>
 
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {POPULAR_LIVE_TRAINS.map((train) => (
+          {POPULAR_LIVE_TRAINS.slice(0, 28).map((train) => (
             <Link
               key={train.trainNumber}
               href={buildTrainLiveStatusPath(
@@ -397,7 +397,7 @@ export default async function LiveTrainStatusPage() {
             time table, platform numbers, and 1st/2nd reservation chart timings:
           </p>
           <div className="mt-4 grid grid-cols-1 gap-2 border-t border-line pt-4 sm:grid-cols-2 lg:grid-cols-3">
-            {ALL_CATALOG_TRAINS.map((train) => (
+            {ALL_CATALOG_TRAINS.slice(0, 252).map((train) => (
               <div
                 key={`dir-${train.trainNumber}`}
                 className="flex items-center justify-between gap-2 rounded-lg border border-line/70 bg-subcard/40 px-3 py-2 text-xs transition hover:border-[#1956b4]"

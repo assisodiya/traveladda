@@ -1,4 +1,4 @@
-import { ALL_CATALOG_TRAINS } from "./live-train-types";
+import { ALL_CATALOG_TRAINS, CATALOG_TRAIN_MAP } from "./live-train-types";
 
 export interface UpstreamChartStation {
   stationCode: string;
@@ -250,9 +250,7 @@ export function buildChartTimeSlug(
     return catalogMatch.slug;
   }
 
-  const allCatalogMatch = ALL_CATALOG_TRAINS.find(
-    (t) => t.trainNumber === cleanNum
-  );
+  const allCatalogMatch = CATALOG_TRAIN_MAP.get(cleanNum);
   if (allCatalogMatch) {
     const catPart = slugifyChartToken(allCatalogMatch.trainName);
     const strippedCat = catPart.startsWith(`${cleanNum}-`)

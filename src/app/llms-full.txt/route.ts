@@ -67,8 +67,8 @@ export async function GET() {
     `- **10-Digit IRCTC PNR Status Checker**: ${BASE_URL}/rail/pnr-status`,
     `- **Train Reservation Chart Preparation Time Hub**: ${BASE_URL}/rail/chart-time`,
     "",
-    "### Complete Indian Railways Live Train Status & Chart Time Directory",
-    ...ALL_CATALOG_TRAINS.map(
+    "### Complete Indian Railways Live Train Status & Chart Time Directory (10,169+ Trains Indexed in /sitemaps/trains.xml)",
+    ...ALL_CATALOG_TRAINS.slice(0, 252).map(
       (t) =>
         `- **${t.trainNumber} ${t.trainName}** (${t.sourceCode} → ${t.destinationCode} | ${t.type}) — [Live Running Status](${BASE_URL}${buildTrainLiveStatusPath(t.trainNumber, t.trainName)}) | [1st & 2nd Chart Time](${BASE_URL}${buildChartTimePath(t.trainNumber, t.trainName)})`,
     ),
