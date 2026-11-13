@@ -63,6 +63,7 @@ const TOP_MENU_TABS: {
     label: "Flights",
     icon: (props) => <PlaneIcon {...props} />,
     isActivePath: (p) =>
+      p.startsWith("/flights") ||
       p.startsWith("/air/") ||
       p.startsWith("/flight-status") ||
       p === "/tools/air",

@@ -25,6 +25,14 @@ export function Footer() {
             <ul className="mt-3 space-y-2 text-xs sm:text-sm">
               <li>
                 <Link
+                  href="/flights"
+                  className="font-medium text-ink-soft transition hover:text-[#1956b4] dark:hover:text-blue-300"
+                >
+                  Flight Schedule &amp; Cheapest Fares
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/air/flight-status"
                   className="font-medium text-ink-soft transition hover:text-[#1956b4] dark:hover:text-blue-300"
                 >

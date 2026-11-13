@@ -27,6 +27,16 @@ export const TOOL_CATEGORIES: ToolCategoryGroup[] = [
       "bg-blue-50 text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300",
     items: [
       {
+        id: "flight-schedule-fares",
+        title: "Flight Schedule, Terminals & Cheapest Fares",
+        shortTitle: "Search Flights",
+        description:
+          "Compare 1,496+ routes, non-stop timings, T1/T2/T3 terminals & 14-day lowest fares (INR/USD/AED)",
+        href: "/flights",
+        badge: "NEW",
+        iconKey: "plane",
+      },
+      {
         id: "live-flight-status",
         title: "Live Flight Status Tracker",
         shortTitle: "Flight Status",

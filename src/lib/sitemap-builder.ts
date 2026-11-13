@@ -8,6 +8,7 @@ import {
   buildAirlineCompensationPath,
   DGCA_AIRLINE_PROFILES,
 } from "@/lib/dgca-compensation-types";
+import { getAllIndexableFlightRouteSlugs } from "@/lib/flight-booking-types";
 import {
   buildFlightStatusPath,
   POPULAR_LIVE_FLIGHTS,
@@ -37,6 +38,7 @@ export const INDEXNOW_KEY = "traveladda2026indexnow88a9b7c6d5";
 export type SitemapSegmentKey =
   | "core"
   | "flights"
+  | "flight-routes"
   | "trains"
   | "train-live-status"
   | "train-chart-times"
@@ -60,9 +62,16 @@ export const SITEMAP_SEGMENTS: {
   {
     key: "flights",
     filename: "flights.xml",
-    title: "Flights & DGCA Compensation Pages",
+    title: "Flights, Route Schedules & DGCA Compensation Pages",
     description:
-      "Live flight status tracking pages and 14 airline-specific DGCA delay/cancellation compensation pages.",
+      "Live flight status tracking pages, 1,496 airport-to-airport flight schedule & fare routes, and 14 airline DGCA compensation pages.",
+  },
+  {
+    key: "flight-routes",
+    filename: "flight-routes.xml",
+    title: "Domestic & International Flight Schedule & Fare Routes (1,496 Combinations)",
+    description:
+      "All 1,496 airport-to-airport flight schedules, non-stop durations, T1/T2/T3 terminals, and 14-day lowest fare calendars.",
   },
   {
     key: "train-live-status",
@@ -118,6 +127,12 @@ export function buildSegmentedSitemaps(): Record<
       lastModified: SITEMAP_LAST_MODIFIED,
       changeFrequency: "daily",
       priority: 1.0,
+    },
+    {
+      url: `${SITE_BASE_URL}/flights`,
+      lastModified: SITEMAP_LAST_MODIFIED,
+      changeFrequency: "daily",
+      priority: 0.98,
     },
     {
       url: `${SITE_BASE_URL}/air/flight-status`,
@@ -257,6 +272,14 @@ export function buildSegmentedSitemaps(): Record<
       priority: 0.91,
     })
   );
+
+  const flightRouteScheduleUrls: MetadataRoute.Sitemap =
+    getAllIndexableFlightRouteSlugs().map((r) => ({
+      url: `${SITE_BASE_URL}${r.routePath}`,
+      lastModified: SITEMAP_LAST_MODIFIED,
+      changeFrequency: "daily",
+      priority: r.isPrimaryCorridor ? 0.94 : 0.88,
+    }));
 
   // Trains: Live Status + Chart Times + Refund Scenarios (All non-zero NTES trains)
   const flagshipTrainSet = new Set(
@@ -476,7 +499,12 @@ export function buildSegmentedSitemaps(): Record<
 
   return {
     core: coreRoutes,
-    flights: [...flightStatusRoutes, ...dgcaAirlineRoutes],
+    flights: [
+      ...flightStatusRoutes,
+      ...dgcaAirlineRoutes,
+      ...flightRouteScheduleUrls,
+    ],
+    "flight-routes": flightRouteScheduleUrls,
     "train-live-status": trainStatusRoutes,
     "train-chart-times": [...chartTimeRoutes, ...railRefundRoutes],
     trains: [...trainStatusRoutes, ...chartTimeRoutes, ...railRefundRoutes],

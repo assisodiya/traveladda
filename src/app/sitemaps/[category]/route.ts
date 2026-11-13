@@ -49,6 +49,7 @@ export async function GET(
   const validKeys: SitemapSegmentKey[] = [
     "core",
     "flights",
+    "flight-routes",
     "trains",
     "train-live-status",
     "train-chart-times",

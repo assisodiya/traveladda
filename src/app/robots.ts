@@ -2,6 +2,8 @@ import type { MetadataRoute } from "next";
 
 const PUBLIC_ALLOW_PATHS = [
   "/",
+  "/flights",
+  "/flights/",
   "/delhi-metro",
   "/delhi-metro/",
   "/toll-calculator",
@@ -20,6 +22,7 @@ const PUBLIC_ALLOW_PATHS = [
   "/llms-full.txt",
   "/api/metro/route",
   "/api/metro/stations",
+  "/api/flights/fares",
   "/api/og",
   "/favicon.ico",
   "/favicon-48x48.png",
@@ -94,6 +97,7 @@ export default function robots(): MetadataRoute.Robots {
       "https://traveladda.in/sitemaps/index.xml",
       "https://traveladda.in/sitemaps/core.xml",
       "https://traveladda.in/sitemaps/flights.xml",
+      "https://traveladda.in/sitemaps/flight-routes.xml",
       "https://traveladda.in/sitemaps/train-live-status.xml",
       "https://traveladda.in/sitemaps/train-chart-times.xml",
       "https://traveladda.in/sitemaps/trains.xml",
