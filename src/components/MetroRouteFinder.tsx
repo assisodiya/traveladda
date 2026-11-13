@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   useDeferredValue,
   useEffect,
   useMemo,
   useRef,
   useState,
+  useTransition,
 } from "react";
 import {
   buildMetroRoutePath,
@@ -76,6 +77,8 @@ export function MetroRouteFinder({
   initialResult = null,
 }: MetroRouteFinderProps) {
   const router = useRouter();
+  const pathname = usePathname();
+  const [isRoutePending, startRouteTransition] = useTransition();
 
   const linesMap = useMemo(() => {
     const map = new Map<string, MetroLine>();
@@ -108,8 +111,45 @@ export function MetroRouteFinder({
   const [expandedSegments, setExpandedSegments] = useState<
     Record<number, boolean>
   >({});
-  const [navigating, setNavigating] = useState<boolean>(false);
+  const [manualNavigating, setManualNavigating] = useState<boolean>(false);
+  const navigating = isRoutePending || manualNavigating;
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!isRoutePending) {
+      setManualNavigating(false);
+    }
+  }, [isRoutePending]);
+
+  // Reset button loading state & sync station inputs whenever route results / URL update
+  useEffect(() => {
+    setManualNavigating(false);
+    setFromOpen(false);
+    setToOpen(false);
+    setFromSlug(initialFromSlug);
+    setToSlug(initialToSlug);
+    setFromQuery(
+      stationsBySlug.get(initialFromSlug)?.name || initialFromSlug,
+    );
+    setToQuery(stationsBySlug.get(initialToSlug)?.name || initialToSlug);
+    setExpandedSegments({});
+
+    if (initialResult) {
+      const matchIdx = initialResult.alternatives.findIndex(
+        (o) => o.preference === preference,
+      );
+      setActiveOptionIndex(matchIdx !== -1 ? matchIdx : 0);
+    } else {
+      setActiveOptionIndex(0);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    pathname,
+    initialFromSlug,
+    initialToSlug,
+    initialResult?.routeSlug,
+    stationsBySlug,
+  ]);
 
   const fromBoxRef = useRef<HTMLDivElement>(null);
   const toBoxRef = useRef<HTMLDivElement>(null);
@@ -224,11 +264,26 @@ export function MetroRouteFinder({
     }
 
     setError(null);
-    setNavigating(true);
+    setFromOpen(false);
+    setToOpen(false);
     const targetPath = buildMetroRoutePath(nextFromSlug, nextToSlug);
-    const urlWithPref =
-      nextPref !== "fastest" ? `${targetPath}?mode=${nextPref}` : targetPath;
-    router.push(urlWithPref);
+
+    // If user submits the exact route already open on screen, update preference immediately without getting stuck
+    if (pathname === targetPath) {
+      setManualNavigating(false);
+      if (initialResult) {
+        const matchIdx = initialResult.alternatives.findIndex(
+          (o) => o.preference === nextPref,
+        );
+        setActiveOptionIndex(matchIdx !== -1 ? matchIdx : 0);
+      }
+      return;
+    }
+
+    setManualNavigating(true);
+    startRouteTransition(() => {
+      router.push(targetPath);
+    });
   }
 
   function handleSelectFromStation(st: MetroStation) {
