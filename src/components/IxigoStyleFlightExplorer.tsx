@@ -1010,7 +1010,7 @@ export function IxigoStyleFlightExplorer({
                     </div>
                   </div>
 
-                  <div className="flex flex-col gap-1.5">
+                  <div className="flex flex-col items-stretch sm:items-end">
                     <a
                       href={offer.bookingUrls.primaryAffiliate}
                       target="_blank"
@@ -1022,41 +1022,9 @@ export function IxigoStyleFlightExplorer({
                       </span>
                       <ArrowRightIcon className="h-3.5 w-3.5" />
                     </a>
-
-                    <div className="flex items-center justify-end gap-1 text-[10px] font-bold">
-                      <a
-                        href={offer.bookingUrls.ixigo}
-                        target="_blank"
-                        rel="noopener noreferrer nofollow"
-                        className="rounded border border-line bg-subcard px-1.5 py-0.5 text-ink-soft hover:border-[#1956b4] hover:text-[#1956b4]"
-                      >
-                        ixigo
-                      </a>
-                      <a
-                        href={offer.bookingUrls.makemytrip}
-                        target="_blank"
-                        rel="noopener noreferrer nofollow"
-                        className="rounded border border-line bg-subcard px-1.5 py-0.5 text-ink-soft hover:border-[#1956b4] hover:text-[#1956b4]"
-                      >
-                        MMT
-                      </a>
-                      <a
-                        href={offer.bookingUrls.goibibo}
-                        target="_blank"
-                        rel="noopener noreferrer nofollow"
-                        className="rounded border border-line bg-subcard px-1.5 py-0.5 text-ink-soft hover:border-[#1956b4] hover:text-[#1956b4]"
-                      >
-                        Goibibo
-                      </a>
-                      <a
-                        href={offer.bookingUrls.skyscanner}
-                        target="_blank"
-                        rel="noopener noreferrer nofollow"
-                        className="rounded border border-line bg-subcard px-1.5 py-0.5 text-ink-soft hover:border-[#1956b4] hover:text-[#1956b4]"
-                      >
-                        Skyscanner
-                      </a>
-                    </div>
+                    <span className="mt-1 text-[10px] font-semibold text-emerald-700 dark:text-emerald-400">
+                      Instant Fare Lock · Zero Convenience Fee
+                    </span>
                   </div>
                 </div>
               </div>
