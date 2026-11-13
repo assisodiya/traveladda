@@ -120,9 +120,9 @@ export default async function FlightsHubPage() {
         }}
       />
 
-      {/* Clean Hero Header */}
-      <section className="border-b border-line bg-linear-to-b from-[#0a223d] to-[#10325a] py-7 text-white sm:py-10">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      {/* Clean Hero Header (Home Page ta-navy-hero style) */}
+      <section className="ta-navy-hero pt-7 pb-14 text-white sm:pt-10 sm:pb-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <div className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-blue-200">
@@ -134,7 +134,7 @@ export default async function FlightsHubPage() {
               <h1 className="mt-2.5 text-2xl font-extrabold tracking-tight sm:text-3xl lg:text-4xl">
                 Flight Schedule, Terminals &amp; Cheapest Airfare Finder
               </h1>
-              <p className="mt-1.5 max-w-3xl text-xs text-slate-200 sm:text-sm">
+              <p className="mt-1.5 max-w-3xl text-xs text-blue-100/85 sm:text-sm">
                 Compare daily non-stop flight timings, airport terminals (T1,
                 T2, T3), 14-day lowest fare calendar in INR / USD / AED / EUR,
                 and instant booking links for IndiGo, Air India, Akasa Air &amp;
@@ -162,10 +162,10 @@ export default async function FlightsHubPage() {
         </div>
       </section>
 
-      {/* Main Interactive Ixigo-Style Flight Explorer */}
+      {/* Main Interactive Ixigo/MMT-Style Flight Explorer (Overlapping Search Card + Left Sidebar) */}
       <section
         aria-label="Flight Search and Schedule Explorer"
-        className="mx-auto -mt-4 max-w-6xl px-4 sm:px-6 lg:px-8"
+        className="mx-auto -mt-9 max-w-7xl px-3.5 sm:-mt-12 sm:px-6 lg:px-8"
       >
         <IxigoStyleFlightExplorer initialData={initialData} />
       </section>

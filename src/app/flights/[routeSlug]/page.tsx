@@ -199,8 +199,8 @@ export default async function FlightRouteSeoPage({
       />
 
       {/* Route Hero Banner */}
-      <section className="border-b border-line bg-linear-to-b from-[#0a223d] to-[#10325a] py-6 text-white sm:py-9">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <section className="ta-navy-hero pt-6 pb-14 text-white sm:pt-9 sm:pb-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* Breadcrumbs */}
           <nav
             aria-label="Breadcrumb"
@@ -312,10 +312,10 @@ export default async function FlightRouteSeoPage({
         </div>
       </section>
 
-      {/* Interactive Ixigo-Style Flight Explorer */}
+      {/* Interactive Ixigo/MMT-Style Flight Explorer (Overlapping Search Card + Left Sidebar) */}
       <section
         aria-label={`${origin.city} to ${destination.city} Flight Search and Fares`}
-        className="mx-auto mt-5 max-w-6xl px-4 sm:px-6 lg:px-8"
+        className="mx-auto -mt-8 max-w-7xl px-3.5 sm:-mt-11 sm:px-6 lg:px-8"
       >
         <IxigoStyleFlightExplorer initialData={routeData} />
       </section>
