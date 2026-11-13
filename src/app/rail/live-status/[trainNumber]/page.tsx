@@ -25,6 +25,7 @@ import {
   extractTrainNumberFromParam,
   format24HourTime,
   formatIstTime,
+  getRelatedCatalogTrains,
   POPULAR_LIVE_TRAINS,
 } from "@/lib/live-train-types";
 
@@ -963,42 +964,60 @@ export default async function TrainLiveStatusByNumberPage({
         </div>
 
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {POPULAR_LIVE_TRAINS.filter((t) => t.trainNumber !== cleanTrain)
-            .slice(0, 12)
-            .map((train) => (
+          {getRelatedCatalogTrains(cleanTrain, 16).map((train) => (
+            <div
+              key={train.trainNumber}
+              className="group flex flex-col justify-between rounded-xl border border-line bg-card p-3.5 transition hover:border-[#1956b4] hover:shadow-sm"
+            >
               <Link
-                key={train.trainNumber}
                 href={buildTrainLiveStatusPath(
                   train.trainNumber,
                   train.trainName
                 )}
-                className="group flex flex-col justify-between rounded-xl border border-line bg-card p-3.5 transition hover:border-[#1956b4] hover:shadow-sm"
+                className="block"
               >
-                <div>
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="rounded bg-blue-50 px-2 py-0.5 font-mono text-xs font-bold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
-                      #{train.trainNumber}
-                    </span>
-                    <span className="text-[11px] font-medium text-ink-muted">
-                      {train.type}
-                    </span>
-                  </div>
-                  <h3 className="mt-2 line-clamp-1 text-sm font-bold text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-400">
-                    {train.trainName}
-                  </h3>
-                </div>
-
-                <div className="mt-3 flex items-center justify-between border-t border-line pt-2 text-xs">
-                  <span className="font-mono font-semibold text-ink-soft">
-                    {train.sourceCode} → {train.destinationCode}
+                <div className="flex items-center justify-between gap-2">
+                  <span className="rounded bg-blue-50 px-2 py-0.5 font-mono text-xs font-bold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
+                    #{train.trainNumber}
                   </span>
-                  <span className="inline-flex items-center gap-1 font-bold text-[#1956b4] dark:text-blue-400">
-                    <span>Schedule</span>
-                    <ArrowRightIcon className="h-3.5 w-3.5" />
+                  <span className="text-[11px] font-medium text-ink-muted">
+                    {train.type}
                   </span>
                 </div>
+                <h3 className="mt-2 line-clamp-1 text-sm font-bold text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-400">
+                  {train.trainName}
+                </h3>
               </Link>
-            ))}
+
+              <div className="mt-3 flex items-center justify-between border-t border-line pt-2 text-xs">
+                <span className="font-mono font-semibold text-ink-soft">
+                  {train.sourceCode} → {train.destinationCode}
+                </span>
+                <div className="flex items-center gap-2">
+                  <Link
+                    href={buildChartTimePath(
+                      train.trainNumber,
+                      train.trainName
+                    )}
+                    className="rounded bg-subcard px-1.5 py-0.5 text-[10px] font-bold text-ink-soft hover:text-[#1956b4] dark:hover:text-blue-300"
+                    title={`${train.trainNumber} Chart Preparation Time`}
+                  >
+                    Chart
+                  </Link>
+                  <Link
+                    href={buildTrainLiveStatusPath(
+                      train.trainNumber,
+                      train.trainName
+                    )}
+                    className="inline-flex items-center gap-1 font-bold text-[#1956b4] dark:text-blue-400"
+                  >
+                    <span>Spot</span>
+                    <ArrowRightIcon className="h-3.5 w-3.5" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
     </main>

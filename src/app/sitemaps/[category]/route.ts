@@ -50,6 +50,8 @@ export async function GET(
     "core",
     "flights",
     "trains",
+    "train-live-status",
+    "train-chart-times",
     "toll-routes",
     "delhi-metro",
     "blogs",

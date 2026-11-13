@@ -20,7 +20,10 @@ import {
   extractTrainNumberFromChartSlug,
   POPULAR_CHART_TRAINS,
 } from "@/lib/chart-time-types";
-import { buildTrainLiveStatusPath } from "@/lib/live-train-types";
+import {
+  buildTrainLiveStatusPath,
+  getRelatedCatalogTrains,
+} from "@/lib/live-train-types";
 
 interface ChartTimeSlugPageProps {
   params: Promise<{ slug: string }>;
@@ -685,42 +688,51 @@ export default async function ChartTimeByTrainSlugPage({
         </div>
 
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {POPULAR_CHART_TRAINS.filter(
-            (t) => t.trainNumber !== chartData.trainNumber
-          )
-            .slice(0, 12)
-            .map((train) => (
+          {getRelatedCatalogTrains(chartData.trainNumber, 16).map((train) => (
+            <div
+              key={train.trainNumber}
+              className="group flex flex-col justify-between rounded-xl border border-line bg-card p-3.5 transition hover:border-[#1956b4] hover:shadow-sm"
+            >
               <Link
-                key={train.trainNumber}
-                href={`/chart-times/${train.slug}`}
-                className="group flex flex-col justify-between rounded-xl border border-line bg-card p-3.5 transition hover:border-[#1956b4] hover:shadow-sm"
+                href={buildChartTimePath(train.trainNumber, train.trainName)}
+                className="block"
               >
-                <div>
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="rounded bg-blue-50 px-2 py-0.5 font-mono text-xs font-bold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
-                      #{train.trainNumber}
-                    </span>
-                    <span className="font-mono text-[11px] font-semibold text-ink-muted">
-                      {train.route}
-                    </span>
-                  </div>
-                  <h3 className="mt-2 line-clamp-1 text-sm font-bold text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-400">
-                    {train.trainName}
-                  </h3>
-                  <p className="mt-1 text-[11px] text-ink-muted">
-                    Origin 1st Chart: {train.firstChart}
-                  </p>
-                </div>
-
-                <div className="mt-3 flex items-center justify-between border-t border-line pt-2 text-xs">
-                  <span className="text-ink-muted">Chart Schedule</span>
-                  <span className="inline-flex items-center gap-1 font-bold text-[#1956b4] dark:text-blue-400">
-                    <span>View</span>
-                    <ArrowRightIcon className="h-3.5 w-3.5" />
+                <div className="flex items-center justify-between gap-2">
+                  <span className="rounded bg-blue-50 px-2 py-0.5 font-mono text-xs font-bold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
+                    #{train.trainNumber}
+                  </span>
+                  <span className="font-mono text-[11px] font-semibold text-ink-muted">
+                    {train.sourceCode} → {train.destinationCode}
                   </span>
                 </div>
+                <h3 className="mt-2 line-clamp-1 text-sm font-bold text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-400">
+                  {train.trainName}
+                </h3>
+                <p className="mt-1 text-[11px] text-ink-muted">
+                  {train.type} · 1st &amp; 2nd Chart Schedule
+                </p>
               </Link>
-            ))}
+
+              <div className="mt-3 flex items-center justify-between border-t border-line pt-2 text-xs">
+                <Link
+                  href={buildTrainLiveStatusPath(
+                    train.trainNumber,
+                    train.trainName
+                  )}
+                  className="rounded bg-emerald-50 px-1.5 py-0.5 text-[10px] font-bold text-emerald-700 hover:underline dark:bg-emerald-500/15 dark:text-emerald-300"
+                >
+                  Live Status
+                </Link>
+                <Link
+                  href={buildChartTimePath(train.trainNumber, train.trainName)}
+                  className="inline-flex items-center gap-1 font-bold text-[#1956b4] dark:text-blue-400"
+                >
+                  <span>Chart Time</span>
+                  <ArrowRightIcon className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+            </div>
+          ))}
         </div>
 
         <div className="mt-6 flex items-center justify-between rounded-xl border border-line bg-card px-4 py-3 text-xs text-ink-soft">

@@ -10427,11 +10427,70 @@ export const CATALOG_TRAIN_MAP: Map<string, TrainSearchItem> = (() => {
   return map;
 })();
 
+export const CATALOG_TRAIN_INDEX_MAP: Map<string, number> = (() => {
+  const map = new Map<string, number>();
+  ALL_CATALOG_TRAINS.forEach((t, idx) => {
+    map.set(t.trainNumber, idx);
+  });
+  return map;
+})();
+
 export function findCatalogTrain(
   trainNumber: string
 ): TrainSearchItem | undefined {
   const clean = extractTrainNumberFromParam(trainNumber);
   return CATALOG_TRAIN_MAP.get(clean);
+}
+
+/**
+ * Returns a deterministic connected mesh of related trains for internal SEO linking:
+ * - Paired / return train number (±1)
+ * - Adjacent ring-buffer trains in ALL_CATALOG_TRAINS so all 10,169+ trains form a 100% connected crawl graph
+ * - Top flagship trains as hub anchors
+ */
+export function getRelatedCatalogTrains(
+  trainNumber: string,
+  limit = 16
+): TrainSearchItem[] {
+  const clean = extractTrainNumberFromParam(trainNumber);
+  const total = ALL_CATALOG_TRAINS.length;
+  if (total === 0) return [];
+
+  const result: TrainSearchItem[] = [];
+  const seen = new Set<string>([clean]);
+
+  const pushTrain = (t: TrainSearchItem | undefined) => {
+    if (t && !seen.has(t.trainNumber)) {
+      seen.add(t.trainNumber);
+      result.push(t);
+    }
+  };
+
+  // 1. Return / paired train number (±1)
+  const numVal = Number(clean);
+  if (Number.isFinite(numVal) && numVal > 0) {
+    const pairA = String(numVal % 2 === 0 ? numVal - 1 : numVal + 1);
+    const pairB = String(numVal % 2 === 0 ? numVal + 1 : numVal - 1);
+    pushTrain(CATALOG_TRAIN_MAP.get(pairA));
+    pushTrain(CATALOG_TRAIN_MAP.get(pairB));
+  }
+
+  // 2. Ring-buffer neighbors around this train's index in ALL_CATALOG_TRAINS
+  const startIdx =
+    CATALOG_TRAIN_INDEX_MAP.get(clean) ??
+    (Number.isFinite(numVal) ? numVal % total : 0);
+
+  for (let offset = 1; offset <= limit + 8 && result.length < limit - 4; offset++) {
+    const nextIdx = (startIdx + offset) % total;
+    pushTrain(ALL_CATALOG_TRAINS[nextIdx]);
+  }
+
+  // 3. Anchor with top flagship trains
+  for (let i = 0; i < POPULAR_LIVE_TRAINS.length && result.length < limit; i++) {
+    pushTrain(POPULAR_LIVE_TRAINS[i]);
+  }
+
+  return result.slice(0, limit);
 }
 
 export function slugifyTrainName(name: string): string {

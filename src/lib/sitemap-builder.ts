@@ -38,6 +38,8 @@ export type SitemapSegmentKey =
   | "core"
   | "flights"
   | "trains"
+  | "train-live-status"
+  | "train-chart-times"
   | "toll-routes"
   | "delhi-metro"
   | "blogs";
@@ -63,11 +65,25 @@ export const SITEMAP_SEGMENTS: {
       "Live flight status tracking pages and 14 airline-specific DGCA delay/cancellation compensation pages.",
   },
   {
+    key: "train-live-status",
+    filename: "train-live-status.xml",
+    title: "Indian Railways Live Train Running Status Pages (10,173 Trains)",
+    description:
+      "All 10,173 non-zero NTES Indian Railways trains mapped to dedicated live running status, coach position & platform URLs.",
+  },
+  {
+    key: "train-chart-times",
+    filename: "train-chart-times.xml",
+    title: "Indian Railways Reservation Chart Preparation Time Pages (10,173 Trains)",
+    description:
+      "All 10,173 non-zero NTES Indian Railways trains mapped to station-wise 1st & 2nd chart preparation time and remote charting hub URLs.",
+  },
+  {
     key: "trains",
     filename: "trains.xml",
-    title: "Indian Railways Live Status, Chart Time & Refund Pages",
+    title: "Combined Indian Railways Live Status, Chart Time & Refund Pages",
     description:
-      "10,169+ live train running status pages, 10,169+ reservation chart preparation times, and 30 IRCTC ticket refund calculators.",
+      "10,173 live train running status pages, 10,173 reservation chart preparation times, and 30 IRCTC ticket refund calculators.",
   },
   {
     key: "toll-routes",
@@ -461,6 +477,8 @@ export function buildSegmentedSitemaps(): Record<
   return {
     core: coreRoutes,
     flights: [...flightStatusRoutes, ...dgcaAirlineRoutes],
+    "train-live-status": trainStatusRoutes,
+    "train-chart-times": [...chartTimeRoutes, ...railRefundRoutes],
     trains: [...trainStatusRoutes, ...chartTimeRoutes, ...railRefundRoutes],
     "toll-routes": tollRoutes,
     "delhi-metro": [

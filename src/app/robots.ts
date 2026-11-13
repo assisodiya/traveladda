@@ -94,6 +94,8 @@ export default function robots(): MetadataRoute.Robots {
       "https://traveladda.in/sitemaps/index.xml",
       "https://traveladda.in/sitemaps/core.xml",
       "https://traveladda.in/sitemaps/flights.xml",
+      "https://traveladda.in/sitemaps/train-live-status.xml",
+      "https://traveladda.in/sitemaps/train-chart-times.xml",
       "https://traveladda.in/sitemaps/trains.xml",
       "https://traveladda.in/sitemaps/toll-routes.xml",
       "https://traveladda.in/sitemaps/delhi-metro.xml",
