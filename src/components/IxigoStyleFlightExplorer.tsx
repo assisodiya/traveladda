@@ -23,10 +23,12 @@ import {
   buildFlightRoutePath,
   MAJOR_AIRPORT_HUBS,
   type FlightRoutePageData,
+  type FlightScheduleOffer,
 } from "@/lib/flight-booking-types";
 import { buildFlightStatusPath } from "@/lib/flight-types";
 import {
   FLIGHT_CURRENCIES,
+  formatFlightPrice,
   type SupportedFlightCurrency,
 } from "@/lib/travelpayouts-config";
 
@@ -36,6 +38,24 @@ interface IxigoStyleFlightExplorerProps {
 
 type SortMode = "cheapest" | "fastest" | "earliest";
 type TimeSlotFilter = "all" | "morning" | "afternoon" | "evening";
+type CabinClassType = "Economy" | "Premium Economy" | "Business";
+
+const CABIN_CLASS_MULTIPLIER: Record<CabinClassType, number> = {
+  Economy: 1,
+  "Premium Economy": 1.35,
+  Business: 2.15,
+};
+
+function buildAffiliateUrlWithPax(
+  baseUrl: string,
+  passengersCount: number
+): string {
+  const pax = Math.min(9, Math.max(1, passengersCount));
+  return baseUrl.replace(
+    /(\/search\/[A-Z]{3}\d{4}[A-Z]{3})\d+/i,
+    `$1${pax}`
+  );
+}
 
 const INITIAL_POPULAR_PLACES: AutocompletePlaceItem[] = MAJOR_AIRPORT_HUBS.slice(
   0,
@@ -133,6 +153,24 @@ export function IxigoStyleFlightExplorer({
   const [timeSlot, setTimeSlot] = useState<TimeSlotFilter>("all");
   const [sortBy, setSortBy] = useState<SortMode>("cheapest");
   const [lang, setLang] = useState<"en" | "hi">("en");
+
+  // Booking Review & Fare Breakdown Modal state
+  const [selectedBookingOffer, setSelectedBookingOffer] =
+    useState<FlightScheduleOffer | null>(null);
+  const [passengersCount, setPassengersCount] = useState<number>(1);
+  const [cabinClass, setCabinClass] = useState<CabinClassType>("Economy");
+
+  // Close Booking Review modal on Escape key
+  useEffect(() => {
+    if (!selectedBookingOffer) return;
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        setSelectedBookingOffer(null);
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedBookingOffer]);
 
   // Close airport popover on outside click
   useEffect(() => {
@@ -500,9 +538,35 @@ export function IxigoStyleFlightExplorer({
               <PlaneIcon className="h-3.5 w-3.5" />
               <span>{lang === "hi" ? "वन-वे फ्लाइट (One Way)" : "One Way"}</span>
             </span>
-            <span className="rounded-full border border-line bg-subcard px-3 py-1 text-xs font-bold text-ink-soft">
-              1 Adult · Economy
-            </span>
+
+            {/* Interactive Passenger Counter Pill */}
+            <div className="inline-flex items-center gap-1 rounded-full border border-line bg-subcard px-2 py-0.5 text-xs font-bold text-ink">
+              <button
+                type="button"
+                onClick={() =>
+                  setPassengersCount((prev) => Math.max(1, prev - 1))
+                }
+                className="flex h-5 w-5 items-center justify-center rounded-full bg-card text-ink-soft hover:text-[#1956b4]"
+                title="Remove 1 Adult"
+              >
+                −
+              </button>
+              <span className="px-1.5">
+                {passengersCount} {passengersCount === 1 ? "Adult" : "Adults"} ·{" "}
+                {cabinClass}
+              </span>
+              <button
+                type="button"
+                onClick={() =>
+                  setPassengersCount((prev) => Math.min(9, prev + 1))
+                }
+                className="flex h-5 w-5 items-center justify-center rounded-full bg-card text-ink-soft hover:text-[#1956b4]"
+                title="Add 1 Adult"
+              >
+                +
+              </button>
+            </div>
+
             <button
               type="button"
               onClick={() => setNonStopOnly(!nonStopOnly)}
@@ -1011,19 +1075,20 @@ export function IxigoStyleFlightExplorer({
                   </div>
 
                   <div className="flex flex-col items-stretch sm:items-end">
-                    <a
-                      href={offer.bookingUrls.primaryAffiliate}
-                      target="_blank"
-                      rel="noopener noreferrer sponsored"
-                      className="ta-btn-accent inline-flex items-center justify-center gap-1.5 rounded-xl px-5 py-2.5 text-xs font-extrabold shadow-xs transition sm:text-sm"
+                    <button
+                      type="button"
+                      onClick={() => setSelectedBookingOffer(offer)}
+                      className="ta-btn-accent inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-xl px-5 py-2.5 text-xs font-extrabold shadow-xs transition sm:text-sm"
                     >
                       <span>
-                        {lang === "hi" ? "बुक करें (Book)" : "Book Now"}
+                        {lang === "hi"
+                          ? "फ्लाइट और किराया देखें (Book)"
+                          : "Book Now"}
                       </span>
                       <ArrowRightIcon className="h-3.5 w-3.5" />
-                    </a>
+                    </button>
                     <span className="mt-1 text-[10px] font-semibold text-emerald-700 dark:text-emerald-400">
-                      Instant Fare Lock · Zero Convenience Fee
+                      Review Itinerary &amp; Fare Breakdown →
                     </span>
                   </div>
                 </div>
@@ -1039,9 +1104,13 @@ export function IxigoStyleFlightExplorer({
                     </span>
                   </span>
                   <span className="hidden sm:inline">•</span>
-                  <span className="hidden font-medium text-emerald-700 sm:inline dark:text-emerald-400">
-                    Instant Partner Checkout ({currency.toUpperCase()})
-                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedBookingOffer(offer)}
+                    className="hidden cursor-pointer font-semibold text-emerald-700 hover:underline sm:inline dark:text-emerald-400"
+                  >
+                    View Fare Breakup &amp; Baggage ({currency.toUpperCase()})
+                  </button>
                 </div>
 
                 <Link
@@ -1073,6 +1142,371 @@ export function IxigoStyleFlightExplorer({
           Flight Delayed or Cancelled? Check ₹10,000–₹20,000 DGCA Claim →
         </Link>
       </div>
+
+      {/* 6. ON-SITE FLIGHT BOOKING & FARE REVIEW MODAL / DRAWER */}
+      {selectedBookingOffer && (() => {
+        const classMult = CABIN_CLASS_MULTIPLIER[cabinClass] || 1;
+        const perAdultTotal = Math.max(
+          1,
+          Math.round(selectedBookingOffer.price * classMult)
+        );
+        const totalPayable = perAdultTotal * passengersCount;
+        const baseFareAmount = Math.max(1, Math.round(totalPayable * 0.82));
+        const taxesAndFeesAmount = Math.max(
+          0,
+          totalPayable - baseFareAmount
+        );
+        const checkoutAffiliateUrl = buildAffiliateUrlWithPax(
+          selectedBookingOffer.bookingUrls.primaryAffiliate,
+          passengersCount
+        );
+        const modalLiveTrackerPath = buildFlightStatusPath(
+          selectedBookingOffer.airlineCode,
+          selectedBookingOffer.flightNumber,
+          selectedBookingOffer.airlineName
+        );
+
+        return (
+          <div
+            className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-0 backdrop-blur-xs sm:items-center sm:p-4"
+            onClick={() => setSelectedBookingOffer(null)}
+          >
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="booking-review-modal-title"
+              onClick={(e) => e.stopPropagation()}
+              className="max-h-[92vh] w-full max-w-2xl overflow-y-auto rounded-t-3xl border border-line bg-card shadow-2xl sm:rounded-3xl"
+            >
+              {/* Modal Sticky Header */}
+              <div className="sticky top-0 z-10 flex items-center justify-between border-b border-line bg-card/95 px-5 py-4 backdrop-blur-md">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/15 px-2.5 py-0.5 text-[11px] font-extrabold text-emerald-700 dark:text-emerald-300">
+                      <CheckCircleIcon className="h-3.5 w-3.5" />
+                      <span>STEP 1 OF 2 · ITINERARY &amp; FARE REVIEW</span>
+                    </span>
+                  </div>
+                  <h3
+                    id="booking-review-modal-title"
+                    className="mt-1 text-base font-extrabold text-ink sm:text-lg"
+                  >
+                    {lang === "hi"
+                      ? `${selectedBookingOffer.originCity} → ${selectedBookingOffer.destinationCity} फ्लाइट और किराया विवरण`
+                      : `Review Your Flight: ${selectedBookingOffer.originCity} (${selectedBookingOffer.originIata}) → ${selectedBookingOffer.destinationCity} (${selectedBookingOffer.destinationIata})`}
+                  </h3>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setSelectedBookingOffer(null)}
+                  className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full border border-line bg-subcard text-sm font-extrabold text-ink-soft transition hover:border-[#1956b4] hover:text-ink"
+                  aria-label="Close booking review"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Modal Body */}
+              <div className="space-y-4 p-5">
+                {/* A. Complete Flight Segment Card */}
+                <div className="rounded-2xl border border-line bg-subcard/60 p-4">
+                  {/* Airline & Aircraft Header */}
+                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line pb-3">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-line bg-white p-1.5 shadow-2xs">
+                        <Image
+                          src={`/api/flights/icon/${selectedBookingOffer.airlineCode}`}
+                          alt={selectedBookingOffer.airlineName}
+                          width={34}
+                          height={34}
+                          className="h-7 w-7 object-contain"
+                          unoptimized
+                        />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-extrabold text-ink sm:text-base">
+                            {selectedBookingOffer.airlineName}
+                          </span>
+                          <span className="rounded bg-blue-50 px-2 py-0.5 font-mono text-xs font-extrabold text-[#1956b4] dark:bg-blue-500/20 dark:text-blue-300">
+                            {selectedBookingOffer.fullFlightCode}
+                          </span>
+                        </div>
+                        <p className="text-xs font-medium text-ink-soft">
+                          {selectedBookingOffer.aircraft} · {cabinClass} Class
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={`rounded-full px-2.5 py-1 text-xs font-extrabold ${
+                          selectedBookingOffer.transfers === 0
+                            ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300"
+                            : "bg-amber-50 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300"
+                        }`}
+                      >
+                        {selectedBookingOffer.stopsLabel}
+                      </span>
+                      <span className="rounded-full border border-line bg-card px-2.5 py-1 font-mono text-xs font-bold text-ink">
+                        {formattedSelectedDate.dayMonth}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Departure -> Duration -> Arrival Timeline */}
+                  <div className="mt-3.5 grid grid-cols-1 gap-3 sm:grid-cols-11 sm:items-center">
+                    {/* Origin Details */}
+                    <div className="sm:col-span-4">
+                      <div className="font-mono text-2xl font-extrabold text-ink">
+                        {selectedBookingOffer.departureTime24}
+                      </div>
+                      <div className="mt-0.5 text-sm font-extrabold text-ink">
+                        {selectedBookingOffer.originCity} (
+                        {selectedBookingOffer.originIata})
+                      </div>
+                      <div className="truncate text-xs text-ink-soft">
+                        {routeData.origin.airportName}
+                      </div>
+                      <div className="mt-1.5 inline-flex items-center gap-1 rounded-md bg-blue-50 px-2 py-0.5 text-[11px] font-extrabold text-[#1956b4] dark:bg-blue-500/20 dark:text-blue-300">
+                        Departure Terminal {selectedBookingOffer.originTerminal}
+                      </div>
+                    </div>
+
+                    {/* Duration Visual */}
+                    <div className="flex flex-col items-center justify-center py-1 text-center sm:col-span-3">
+                      <span className="font-mono text-xs font-extrabold text-ink-soft">
+                        {selectedBookingOffer.durationFormatted}
+                      </span>
+                      <div className="my-1.5 flex w-full items-center">
+                        <span className="h-2.5 w-2.5 rounded-full border-2 border-[#1956b4] bg-card" />
+                        <span className="h-0.5 flex-1 bg-line" />
+                        <PlaneIcon className="mx-1.5 h-4 w-4 text-[#1956b4] dark:text-blue-400" />
+                        <span className="h-0.5 flex-1 bg-line" />
+                        <span className="h-2.5 w-2.5 rounded-full bg-emerald-600" />
+                      </div>
+                      <span className="text-[11px] font-semibold text-ink-muted">
+                        {routeData.aerialDistanceKm} km Aerial
+                      </span>
+                    </div>
+
+                    {/* Destination Details */}
+                    <div className="sm:col-span-4 sm:text-right">
+                      <div className="font-mono text-2xl font-extrabold text-ink">
+                        {selectedBookingOffer.arrivalTime24}
+                      </div>
+                      <div className="mt-0.5 text-sm font-extrabold text-ink">
+                        {selectedBookingOffer.destinationCity} (
+                        {selectedBookingOffer.destinationIata})
+                      </div>
+                      <div className="truncate text-xs text-ink-soft">
+                        {routeData.destination.airportName}
+                      </div>
+                      <div className="mt-1.5 inline-flex items-center gap-1 rounded-md bg-emerald-50 px-2 py-0.5 text-[11px] font-extrabold text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300">
+                        Arrival Terminal{" "}
+                        {selectedBookingOffer.destinationTerminal}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* B. Baggage Allowance & DGCA Rules Grid */}
+                <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-3">
+                  <div className="rounded-xl border border-line bg-subcard/50 p-3">
+                    <div className="flex items-center gap-1.5 text-xs font-extrabold text-ink">
+                      <LuggageIcon className="h-3.5 w-3.5 text-[#1956b4] dark:text-blue-400" />
+                      <span>Cabin Baggage</span>
+                    </div>
+                    <p className="mt-1 text-xs font-bold text-emerald-700 dark:text-emerald-400">
+                      {selectedBookingOffer.cabinBaggage} Included
+                    </p>
+                    <p className="text-[11px] text-ink-muted">
+                      1 Hand bag + 1 Laptop bag per adult
+                    </p>
+                  </div>
+
+                  <div className="rounded-xl border border-line bg-subcard/50 p-3">
+                    <div className="flex items-center gap-1.5 text-xs font-extrabold text-ink">
+                      <LuggageIcon className="h-3.5 w-3.5 text-[#1956b4] dark:text-blue-400" />
+                      <span>Check-In Baggage</span>
+                    </div>
+                    <p className="mt-1 text-xs font-bold text-emerald-700 dark:text-emerald-400">
+                      {selectedBookingOffer.checkInBaggage} Included
+                    </p>
+                    <p className="text-[11px] text-ink-muted">
+                      Standard airline check-in allowance
+                    </p>
+                  </div>
+
+                  <div className="rounded-xl border border-line bg-subcard/50 p-3">
+                    <div className="flex items-center gap-1.5 text-xs font-extrabold text-ink">
+                      <ShieldCheckIcon className="h-3.5 w-3.5 text-emerald-600" />
+                      <span>DGCA Protection</span>
+                    </div>
+                    <p className="mt-1 text-xs font-bold text-emerald-700 dark:text-emerald-400">
+                      24-Hr Free Lock-In
+                    </p>
+                    <p className="text-[11px] text-ink-muted">
+                      For flights &gt;7 days before departure
+                    </p>
+                  </div>
+                </div>
+
+                {/* C. Travellers & Cabin Class Customizer */}
+                <div className="grid grid-cols-1 gap-3 rounded-2xl border border-line bg-card p-3.5 sm:grid-cols-2">
+                  <div>
+                    <span className="block text-[11px] font-extrabold tracking-wider text-ink-muted uppercase">
+                      Number of Travellers (Adults 12+ Yrs)
+                    </span>
+                    <div className="mt-2 flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setPassengersCount((p) => Math.max(1, p - 1))
+                        }
+                        className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-line bg-subcard text-sm font-extrabold text-ink hover:border-[#1956b4]"
+                      >
+                        −
+                      </button>
+                      <span className="min-w-[90px] text-center font-mono text-sm font-extrabold text-ink">
+                        {passengersCount}{" "}
+                        {passengersCount === 1 ? "Traveller" : "Travellers"}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setPassengersCount((p) => Math.min(9, p + 1))
+                        }
+                        className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-line bg-subcard text-sm font-extrabold text-ink hover:border-[#1956b4]"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <span className="block text-[11px] font-extrabold tracking-wider text-ink-muted uppercase">
+                      Select Cabin Class
+                    </span>
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {(
+                        [
+                          "Economy",
+                          "Premium Economy",
+                          "Business",
+                        ] as CabinClassType[]
+                      ).map((cls) => (
+                        <button
+                          key={cls}
+                          type="button"
+                          onClick={() => setCabinClass(cls)}
+                          className={`cursor-pointer rounded-lg border px-2.5 py-1.5 text-xs font-extrabold transition ${
+                            cabinClass === cls
+                              ? "border-[#1956b4] bg-[#1956b4] text-white"
+                              : "border-line bg-subcard text-ink-soft hover:text-ink"
+                          }`}
+                        >
+                          {cls}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* D. Transparent Base Fare + Taxes Breakdown */}
+                <div className="rounded-2xl border border-blue-200/80 bg-blue-50/40 p-4 dark:border-blue-500/25 dark:bg-blue-500/10">
+                  <div className="mb-2.5 flex items-center justify-between">
+                    <span className="text-xs font-extrabold tracking-wider text-ink uppercase">
+                      Fare Summary ({currency.toUpperCase()})
+                    </span>
+                    <span className="rounded-full bg-emerald-500/15 px-2.5 py-0.5 text-[10px] font-extrabold text-emerald-700 dark:text-emerald-300">
+                      ZERO CONVENIENCE FEE
+                    </span>
+                  </div>
+
+                  <div className="space-y-1.5 text-xs">
+                    <div className="flex items-center justify-between text-ink-soft">
+                      <span>
+                        Base Airfare ({passengersCount}{" "}
+                        {passengersCount === 1 ? "Adult" : "Adults"} ×{" "}
+                        {cabinClass})
+                      </span>
+                      <span className="font-mono font-bold text-ink">
+                        {formatFlightPrice(baseFareAmount, currency)}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between text-ink-soft">
+                      <span>
+                        Airport UDF, PSF, Cute Fee &amp; Aviation GST
+                      </span>
+                      <span className="font-mono font-bold text-ink">
+                        {formatFlightPrice(taxesAndFeesAmount, currency)}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between text-ink-soft">
+                      <span>Portal Booking / Convenience Fee</span>
+                      <span className="font-mono font-extrabold text-emerald-700 dark:text-emerald-400">
+                        FREE (0)
+                      </span>
+                    </div>
+
+                    <div className="my-2 border-t border-line pt-2.5 flex items-center justify-between">
+                      <div>
+                        <span className="text-sm font-extrabold text-ink">
+                          Total Payable Fare
+                        </span>
+                        <p className="text-[11px] text-ink-muted">
+                          Inclusive of all airport taxes for {passengersCount}{" "}
+                          {passengersCount === 1 ? "traveller" : "travellers"}
+                        </p>
+                      </div>
+                      <span className="font-mono text-2xl font-extrabold text-[#1956b4] dark:text-blue-300">
+                        {formatFlightPrice(totalPayable, currency)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* E. Primary Partner Checkout CTA */}
+                <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
+                  <Link
+                    href={modalLiveTrackerPath}
+                    className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-line bg-subcard px-4 py-3 text-xs font-extrabold text-ink hover:border-[#1956b4]"
+                  >
+                    <span>
+                      Track {selectedBookingOffer.fullFlightCode} Live Radar
+                    </span>
+                    <ArrowRightIcon className="h-3.5 w-3.5" />
+                  </Link>
+
+                  <a
+                    href={checkoutAffiliateUrl}
+                    target="_blank"
+                    rel="noopener noreferrer sponsored"
+                    className="ta-btn-accent inline-flex flex-1 items-center justify-center gap-2 rounded-xl px-6 py-3.5 text-sm font-extrabold shadow-md transition hover:opacity-95"
+                  >
+                    <span>
+                      {lang === "hi"
+                        ? `पार्टनर चेकआउट पर जाएं (${formatFlightPrice(totalPayable, currency)})`
+                        : `Proceed to Partner Checkout (${formatFlightPrice(totalPayable, currency)})`}
+                    </span>
+                    <ArrowRightIcon className="h-4 w-4" />
+                  </a>
+                </div>
+
+                <p className="text-center text-[11px] text-ink-muted">
+                  You will be securely redirected to our verified partner to
+                  enter passenger names &amp; complete payment for{" "}
+                  <strong>{selectedBookingOffer.fullFlightCode}</strong> (
+                  {selectedBookingOffer.originIata} →{" "}
+                  {selectedBookingOffer.destinationIata}).
+                </p>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 }

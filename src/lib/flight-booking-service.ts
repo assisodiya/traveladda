@@ -317,6 +317,15 @@ export async function fetchFlightRoutePageData(
     ...(monthRes?.data || []),
   ];
 
+  const bestTicketLink =
+    rawApiFlights.find(
+      (f) => typeof f.link === "string" && f.link.includes("t=")
+    )?.link ||
+    rawApiFlights.find(
+      (f) => typeof f.link === "string" && f.link.startsWith("/search/")
+    )?.link ||
+    null;
+
   const offers: FlightScheduleOffer[] = [];
   const seenFlightKeys = new Set<string>();
 
@@ -390,7 +399,7 @@ export async function fetchFlightRoutePageData(
         origin.iata,
         destination.iata,
         departureDate,
-        item.link,
+        item.link || bestTicketLink,
         currency,
         isIntl
       ),
@@ -479,7 +488,7 @@ export async function fetchFlightRoutePageData(
         origin.iata,
         destination.iata,
         departureDate,
-        null,
+        bestTicketLink,
         currency,
         isIntl
       ),
