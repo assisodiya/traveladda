@@ -23,6 +23,7 @@ const PUBLIC_ALLOW_PATHS = [
   "/api/metro/route",
   "/api/metro/stations",
   "/api/flights/fares",
+  "/api/flights/places",
   "/api/og",
   "/favicon.ico",
   "/favicon-48x48.png",

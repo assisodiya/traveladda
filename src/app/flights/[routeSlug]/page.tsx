@@ -17,7 +17,6 @@ import {
   buildFlightRoutePath,
   buildFlightRouteSlug,
   getRelatedFlightRoutes,
-  parseFlightRouteSlug,
   POPULAR_FLIGHT_CORRIDORS,
 } from "@/lib/flight-booking-types";
 import { buildFlightStatusPath } from "@/lib/flight-types";
@@ -46,13 +45,6 @@ export async function generateMetadata({
   cacheLife("hours");
 
   const { routeSlug } = await params;
-  const parsed = parseFlightRouteSlug(routeSlug);
-  if (!parsed) {
-    return {
-      title: "Flight Route Not Found",
-    };
-  }
-
   const data = await fetchCachedSeoFlightRouteData(routeSlug);
   if (!data) {
     return {

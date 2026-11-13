@@ -169,27 +169,107 @@ function deterministicSeed(str: string): number {
   return Math.abs(h);
 }
 
+interface RawPlaces2LookupItem {
+  code?: string;
+  name?: string;
+  city_name?: string | null;
+  country_code?: string;
+  country_name?: string;
+  main_airport_name?: string | null;
+  type?: string;
+  coordinates?: {
+    lat?: number;
+    lon?: number;
+  };
+}
+
+async function resolveAirportHubServerSide(
+  input: string,
+  fallbackHub: AirportHub
+): Promise<AirportHub> {
+  const clean = (input || "").trim();
+  if (!clean) return fallbackHub;
+
+  const staticMatch =
+    AIRPORT_BY_IATA_MAP.get(clean.toUpperCase()) ||
+    MAJOR_AIRPORT_HUBS.find(
+      (a) => a.citySlug === clean.toLowerCase().replace(/\s+/g, "-")
+    );
+  if (staticMatch) return staticMatch;
+
+  try {
+    const url = `https://autocomplete.travelpayouts.com/places2?term=${encodeURIComponent(
+      clean.replace(/-/g, " ")
+    )}&locale=en&types[]=airport&types[]=city`;
+    const res = await fetch(url, {
+      headers: { Accept: "application/json" },
+      next: { revalidate: 86400 },
+      signal: AbortSignal.timeout(4000),
+    });
+    if (res.ok) {
+      const list = (await res.json()) as RawPlaces2LookupItem[];
+      if (Array.isArray(list) && list.length > 0) {
+        const exact =
+          list.find(
+            (i) => String(i.code || "").toUpperCase() === clean.toUpperCase()
+          ) || list[0];
+        const iata = String(exact.code || "DEL").toUpperCase();
+        const city = String(exact.city_name || exact.name || iata).trim();
+        const countryCode = String(exact.country_code || "IN").toUpperCase();
+        const countryName = String(exact.country_name || "India").trim();
+        const airportName = exact.main_airport_name
+          ? `${exact.main_airport_name} Airport`
+          : `${exact.name || city} Airport`;
+        const citySlug = city
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-+|-+$/g, "");
+
+        return {
+          iata,
+          city,
+          cityHindi: city,
+          citySlug: citySlug || iata.toLowerCase(),
+          stateOrCountry: countryName,
+          airportName: airportName.replace(/\s+Airport\s+Airport$/i, " Airport"),
+          terminals: "T1",
+          domesticTerminal: "T1",
+          intlTerminal: "T1",
+          lat:
+            typeof exact.coordinates?.lat === "number"
+              ? exact.coordinates.lat
+              : 28.5562,
+          lng:
+            typeof exact.coordinates?.lon === "number"
+              ? exact.coordinates.lon
+              : 77.1,
+          isInternationalHub: countryCode !== "IN",
+          isTier1: false,
+        };
+      }
+    }
+  } catch {
+    // Fallback below
+  }
+
+  return fallbackHub;
+}
+
 export async function fetchFlightRoutePageData(
   originIataOrSlug: string,
   destIataOrSlug: string,
   requestedDate?: string | null,
   requestedCurrency?: string | null
 ): Promise<FlightRoutePageData> {
-  const origin =
-    AIRPORT_BY_IATA_MAP.get((originIataOrSlug || "").toUpperCase()) ||
-    MAJOR_AIRPORT_HUBS.find(
-      (a) => a.citySlug === (originIataOrSlug || "").toLowerCase()
-    ) ||
-    MAJOR_AIRPORT_HUBS[0];
+  const origin = await resolveAirportHubServerSide(
+    originIataOrSlug,
+    MAJOR_AIRPORT_HUBS[0]
+  );
 
-  const destination =
-    AIRPORT_BY_IATA_MAP.get((destIataOrSlug || "").toUpperCase()) ||
-    MAJOR_AIRPORT_HUBS.find(
-      (a) =>
-        a.citySlug === (destIataOrSlug || "").toLowerCase() &&
-        a.iata !== origin.iata
-    ) ||
-    (origin.iata === "DEL" ? MAJOR_AIRPORT_HUBS[1] : MAJOR_AIRPORT_HUBS[0]);
+  const destination = await resolveAirportHubServerSide(
+    destIataOrSlug,
+    origin.iata === "DEL" ? MAJOR_AIRPORT_HUBS[1] : MAJOR_AIRPORT_HUBS[0]
+  );
 
   const todayIst = getTodayIstDateString();
   const defaultTomorrow = shiftDateString(todayIst, 1);
@@ -557,13 +637,26 @@ export async function fetchCachedSeoFlightRouteData(
   cacheLife("hours");
 
   const parsed = parseFlightRouteSlug(routeSlug);
-  if (!parsed) return null;
+  if (parsed) {
+    return fetchFlightRoutePageData(
+      parsed.origin.iata,
+      parsed.destination.iata,
+      null,
+      "inr"
+    );
+  }
 
-  return fetchFlightRoutePageData(
-    parsed.origin.iata,
-    parsed.destination.iata,
-    null,
-    "inr"
-  );
+  const clean = decodeURIComponent(routeSlug || "")
+    .trim()
+    .toLowerCase()
+    .replace(/-flights?-schedule$/, "")
+    .replace(/-cheap-flights?$/, "")
+    .replace(/-flights?$/, "");
+  const parts = clean.split("-to-");
+  if (parts.length !== 2 || !parts[0] || !parts[1] || parts[0] === parts[1]) {
+    return null;
+  }
+
+  return fetchFlightRoutePageData(parts[0].trim(), parts[1].trim(), null, "inr");
 }
 
