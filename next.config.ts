@@ -25,6 +25,15 @@ const nextConfig: NextConfig = {
         ],
       },
       {
+        source: "/:file(favicon\\.ico|favicon-48x48\\.png|favicon-96x96\\.png|apple-touch-icon\\.png|manifest\\.webmanifest)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=604800, stale-while-revalidate=2592000",
+          },
+        ],
+      },
+      {
         source: "/assets/:path*",
         headers: [
           {

@@ -23,13 +23,8 @@ const PUBLIC_ALLOW_PATHS = [
   "/api/og",
   "/favicon.ico",
   "/favicon-48x48.png",
+  "/favicon-96x96.png",
   "/apple-touch-icon.png",
-  "/icon1",
-  "/icon1.png",
-  "/icon2",
-  "/icon2.png",
-  "/apple-icon",
-  "/apple-icon.png",
   "/manifest.webmanifest",
   "/assets/",
   "/airlines/",
@@ -78,6 +73,10 @@ const AI_AND_SEARCH_AGENTS = [
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
+      {
+        userAgent: ["Google-Favicon", "Googlebot-Image"],
+        allow: "/",
+      },
       {
         userAgent: "*",
         allow: PUBLIC_ALLOW_PATHS,
