@@ -333,7 +333,7 @@ export async function fetchSeoChartTimePageData(
   rawSlugOrTrain: string
 ): Promise<EnrichedChartTimeData | null> {
   "use cache";
-  cacheLife("hours");
+  cacheLife("days");
 
   const cleanTrainNumber = extractTrainNumberFromChartSlug(
     rawSlugOrTrain || ""

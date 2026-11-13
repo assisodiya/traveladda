@@ -16,6 +16,8 @@ import {
 import {
   ALL_CATALOG_TRAINS,
   buildTrainLiveStatusPath,
+  isReservedChartEligibleTrain,
+  isSuburbanLocalEmuTrain,
   POPULAR_LIVE_TRAINS,
 } from "@/lib/live-train-types";
 import { getAllMetroLines, getAllMetroStations } from "@/lib/metro-service";
@@ -32,71 +34,112 @@ import {
 import { getAllIndexableTollRouteSlugs } from "@/lib/toll-service";
 
 export const SITE_BASE_URL = "https://traveladda.in";
-export const SITEMAP_LAST_MODIFIED = "2026-11-12T06:00:00.000Z";
 export const INDEXNOW_KEY = "traveladda2026indexnow88a9b7c6d5";
 
 export type SitemapSegmentKey =
   | "core"
   | "flights"
   | "flight-routes"
-  | "trains"
   | "train-live-status"
+  | "train-regional-status"
   | "train-chart-times"
   | "toll-routes"
   | "delhi-metro"
   | "blogs";
 
+const LATEST_BLOG_PUBLISHED_ISO =
+  ALL_BLOG_POSTS.reduce(
+    (latest, post) =>
+      post.publishedIso && post.publishedIso > latest
+        ? post.publishedIso
+        : latest,
+    "2026-11-10T06:00:00.000Z"
+  ) || "2026-11-10T06:00:00.000Z";
+
+/**
+ * Independent per-segment lastModified timestamps so Googlebot ONLY re-crawls
+ * the specific section that actually changed (preserving crawl budget and
+ * leaving already-indexed segments like Delhi Metro & Toll Routes untouched).
+ */
+export const SITEMAP_SEGMENT_LAST_MODIFIED: Record<SitemapSegmentKey, string> =
+  {
+    core: "2026-11-13T06:00:00.000Z",
+    flights: "2026-11-13T06:00:00.000Z",
+    "flight-routes": "2026-11-13T06:00:00.000Z",
+    "train-live-status": "2026-11-13T06:00:00.000Z",
+    "train-regional-status": "2026-11-12T06:00:00.000Z",
+    "train-chart-times": "2026-11-13T06:00:00.000Z",
+    "toll-routes": "2026-11-11T06:00:00.000Z",
+    "delhi-metro": "2026-11-10T06:00:00.000Z",
+    blogs: LATEST_BLOG_PUBLISHED_ISO,
+  };
+
+export const SITEMAP_LAST_MODIFIED = SITEMAP_SEGMENT_LAST_MODIFIED.core;
+
+/**
+ * Strictly mutually exclusive (0% URL overlap) XML sitemap segments.
+ */
 export const SITEMAP_SEGMENTS: {
   key: SitemapSegmentKey;
   filename: string;
+  lastModified: string;
   title: string;
   description: string;
 }[] = [
   {
     key: "core",
     filename: "core.xml",
+    lastModified: SITEMAP_SEGMENT_LAST_MODIFIED.core,
     title: "Core Tools & Hub Pages",
     description:
-      "Primary TravelAdda tool hubs, static pages, HTML sitemap directory, and AI index files (llms.txt).",
+      "Primary TravelAdda interactive tool hubs, static pages, and HTML sitemap directory.",
   },
   {
     key: "flights",
     filename: "flights.xml",
-    title: "Flights, Route Schedules & DGCA Compensation Pages",
+    lastModified: SITEMAP_SEGMENT_LAST_MODIFIED.flights,
+    title: "Live Flight Status & DGCA Airline Compensation Pages",
     description:
-      "Live flight status tracking pages, 1,496 airport-to-airport flight schedule & fare routes, and 14 airline DGCA compensation pages.",
+      "Dedicated live flight status tracking pages and 14 airline DGCA delay/cancellation compensation calculators (zero overlap with flight-routes.xml).",
   },
   {
     key: "flight-routes",
     filename: "flight-routes.xml",
-    title: "Domestic & International Flight Schedule & Fare Routes (1,496 Combinations)",
+    lastModified: SITEMAP_SEGMENT_LAST_MODIFIED["flight-routes"],
+    title:
+      "Domestic & International Flight Schedule & Fare Routes (1,496 Combinations)",
     description:
       "All 1,496 airport-to-airport flight schedules, non-stop durations, T1/T2/T3 terminals, and 14-day lowest fare calendars.",
   },
   {
     key: "train-live-status",
     filename: "train-live-status.xml",
-    title: "Indian Railways Live Train Running Status Pages (10,173 Trains)",
+    lastModified: SITEMAP_SEGMENT_LAST_MODIFIED["train-live-status"],
+    title: "Indian Railways Reserved Mail/Express Live Running Status Pages",
     description:
-      "All 10,173 non-zero NTES Indian Railways trains mapped to dedicated live running status, coach position & platform URLs.",
+      "All ~4,000 reserved Mail/Express, Superfast, Vande Bharat, Rajdhani, Shatabdi & Intercity trains mapped to live running status, coach position & platform URLs.",
+  },
+  {
+    key: "train-regional-status",
+    filename: "train-regional-status.xml",
+    lastModified: SITEMAP_SEGMENT_LAST_MODIFIED["train-regional-status"],
+    title: "Indian Railways Regional Passenger, MEMU & DEMU Live Status Pages",
+    description:
+      "Regional Passenger, MEMU & DEMU train schedules and live running status pages (excludes unindexed city Suburban/EMU local trains).",
   },
   {
     key: "train-chart-times",
     filename: "train-chart-times.xml",
-    title: "Indian Railways Reservation Chart Preparation Time Pages (10,173 Trains)",
+    lastModified: SITEMAP_SEGMENT_LAST_MODIFIED["train-chart-times"],
+    title:
+      "Indian Railways Reservation Chart Preparation Time & IRCTC Refund Pages",
     description:
-      "All 10,173 non-zero NTES Indian Railways trains mapped to station-wise 1st & 2nd chart preparation time and remote charting hub URLs.",
-  },
-  {
-    key: "trains",
-    filename: "trains.xml",
-    title: "Combined Indian Railways Live Status, Chart Time & Refund Pages",
-    description:
-      "10,173 live train running status pages, 10,173 reservation chart preparation times, and 30 IRCTC ticket refund calculators.",
+      "Reserved Indian Railways trains mapped to station-wise 1st & 2nd reservation chart preparation times, remote charting hubs, and IRCTC ticket refund calculators.",
   },
   {
     key: "toll-routes",
     filename: "toll-routes.xml",
+    lastModified: SITEMAP_SEGMENT_LAST_MODIFIED["toll-routes"],
     title: "NHAI FASTag Highway Toll & Fuel Route Pages (1,560 Combinations)",
     description:
       "All 40 × 39 = 1,560 city-to-city Indian National Highway & Expressway toll and fuel cost calculators.",
@@ -104,6 +147,7 @@ export const SITEMAP_SEGMENTS: {
   {
     key: "delhi-metro",
     filename: "delhi-metro.xml",
+    lastModified: SITEMAP_SEGMENT_LAST_MODIFIED["delhi-metro"],
     title: "Delhi NCR Metro Lines, Stations & Route Pages",
     description:
       "All 12 Delhi NCR Metro lines, 262 station pages, and 6,600+ station-to-station fare & interchange routes.",
@@ -111,217 +155,257 @@ export const SITEMAP_SEGMENTS: {
   {
     key: "blogs",
     filename: "blogs.xml",
+    lastModified: SITEMAP_SEGMENT_LAST_MODIFIED.blogs,
     title: "Editorial Travel, Aviation, Rail, Metro & Highway Blog Guides",
     description:
       "Long-form 2026–27 travel guides, FASTag rules, PRS refund rules, and Delhi Metro commuter handbooks.",
   },
 ];
 
+function escapeXmlValue(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
+}
+
+export function buildSitemapIndexXml(
+  segments: { filename: string; lastModified: string }[] = SITEMAP_SEGMENTS
+): string {
+  return [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    ...segments.map(
+      (seg) =>
+        `  <sitemap>\n    <loc>${escapeXmlValue(
+          `${SITE_BASE_URL}/sitemaps/${seg.filename}`
+        )}</loc>\n    <lastmod>${escapeXmlValue(
+          seg.lastModified
+        )}</lastmod>\n  </sitemap>`
+    ),
+    "</sitemapindex>",
+  ].join("\n");
+}
+
 export function buildSegmentedSitemaps(): Record<
   SitemapSegmentKey,
   MetadataRoute.Sitemap
 > {
+  const coreLastMod = SITEMAP_SEGMENT_LAST_MODIFIED.core;
+  const flightsLastMod = SITEMAP_SEGMENT_LAST_MODIFIED.flights;
+  const flightRoutesLastMod = SITEMAP_SEGMENT_LAST_MODIFIED["flight-routes"];
+  const trainStatusLastMod = SITEMAP_SEGMENT_LAST_MODIFIED["train-live-status"];
+  const trainRegionalLastMod =
+    SITEMAP_SEGMENT_LAST_MODIFIED["train-regional-status"];
+  const trainChartLastMod = SITEMAP_SEGMENT_LAST_MODIFIED["train-chart-times"];
+  const tollLastMod = SITEMAP_SEGMENT_LAST_MODIFIED["toll-routes"];
+  const metroLastMod = SITEMAP_SEGMENT_LAST_MODIFIED["delhi-metro"];
+
   const coreRoutes: MetadataRoute.Sitemap = [
     {
       url: `${SITE_BASE_URL}/`,
-      lastModified: SITEMAP_LAST_MODIFIED,
+      lastModified: coreLastMod,
       changeFrequency: "daily",
       priority: 1.0,
     },
     {
       url: `${SITE_BASE_URL}/flights`,
-      lastModified: SITEMAP_LAST_MODIFIED,
+      lastModified: coreLastMod,
       changeFrequency: "daily",
       priority: 0.98,
     },
     {
       url: `${SITE_BASE_URL}/air/flight-status`,
-      lastModified: SITEMAP_LAST_MODIFIED,
-      changeFrequency: "always",
+      lastModified: coreLastMod,
+      changeFrequency: "daily",
       priority: 0.98,
     },
     {
       url: `${SITE_BASE_URL}/rail/live-status`,
-      lastModified: SITEMAP_LAST_MODIFIED,
-      changeFrequency: "always",
+      lastModified: coreLastMod,
+      changeFrequency: "daily",
       priority: 0.98,
     },
     {
       url: `${SITE_BASE_URL}/rail/pnr-status`,
-      lastModified: SITEMAP_LAST_MODIFIED,
-      changeFrequency: "always",
+      lastModified: coreLastMod,
+      changeFrequency: "daily",
       priority: 0.95,
     },
     {
       url: `${SITE_BASE_URL}/rail/chart-time`,
-      lastModified: SITEMAP_LAST_MODIFIED,
+      lastModified: coreLastMod,
       changeFrequency: "daily",
       priority: 0.94,
     },
     {
       url: `${SITE_BASE_URL}/rail/refund-calculator`,
-      lastModified: SITEMAP_LAST_MODIFIED,
-      changeFrequency: "daily",
+      lastModified: coreLastMod,
+      changeFrequency: "weekly",
       priority: 0.96,
     },
     {
       url: `${SITE_BASE_URL}/delhi-metro`,
-      lastModified: SITEMAP_LAST_MODIFIED,
-      changeFrequency: "daily",
+      lastModified: metroLastMod,
+      changeFrequency: "weekly",
       priority: 0.96,
     },
     {
       url: `${SITE_BASE_URL}/air/flight-compensation`,
-      lastModified: SITEMAP_LAST_MODIFIED,
-      changeFrequency: "daily",
+      lastModified: coreLastMod,
+      changeFrequency: "weekly",
       priority: 0.96,
     },
     {
       url: `${SITE_BASE_URL}/toll-calculator`,
-      lastModified: SITEMAP_LAST_MODIFIED,
-      changeFrequency: "daily",
+      lastModified: tollLastMod,
+      changeFrequency: "weekly",
       priority: 0.96,
     },
     {
       url: `${SITE_BASE_URL}/blog`,
-      lastModified: SITEMAP_LAST_MODIFIED,
+      lastModified: SITEMAP_SEGMENT_LAST_MODIFIED.blogs,
       changeFrequency: "weekly",
       priority: 0.88,
     },
     {
       url: `${SITE_BASE_URL}/tools`,
-      lastModified: SITEMAP_LAST_MODIFIED,
+      lastModified: coreLastMod,
       changeFrequency: "weekly",
       priority: 0.9,
     },
     {
       url: `${SITE_BASE_URL}/tools/air`,
-      lastModified: SITEMAP_LAST_MODIFIED,
+      lastModified: coreLastMod,
       changeFrequency: "weekly",
       priority: 0.82,
     },
     {
       url: `${SITE_BASE_URL}/tools/hotel`,
-      lastModified: SITEMAP_LAST_MODIFIED,
+      lastModified: coreLastMod,
       changeFrequency: "weekly",
       priority: 0.8,
     },
     {
       url: `${SITE_BASE_URL}/sitemap-directory`,
-      lastModified: SITEMAP_LAST_MODIFIED,
-      changeFrequency: "daily",
-      priority: 0.92,
+      lastModified: coreLastMod,
+      changeFrequency: "weekly",
+      priority: 0.9,
     },
     {
       url: `${SITE_BASE_URL}/about`,
-      lastModified: SITEMAP_LAST_MODIFIED,
+      lastModified: coreLastMod,
       changeFrequency: "monthly",
       priority: 0.72,
     },
     {
       url: `${SITE_BASE_URL}/privacy-policy`,
-      lastModified: SITEMAP_LAST_MODIFIED,
+      lastModified: coreLastMod,
       changeFrequency: "monthly",
       priority: 0.68,
     },
     {
       url: `${SITE_BASE_URL}/terms`,
-      lastModified: SITEMAP_LAST_MODIFIED,
+      lastModified: coreLastMod,
       changeFrequency: "monthly",
       priority: 0.65,
     },
     {
       url: `${SITE_BASE_URL}/contact`,
-      lastModified: SITEMAP_LAST_MODIFIED,
+      lastModified: coreLastMod,
       changeFrequency: "monthly",
       priority: 0.7,
     },
-    {
-      url: `${SITE_BASE_URL}/llms.txt`,
-      lastModified: SITEMAP_LAST_MODIFIED,
-      changeFrequency: "daily",
-      priority: 0.9,
-    },
-    {
-      url: `${SITE_BASE_URL}/llms-full.txt`,
-      lastModified: SITEMAP_LAST_MODIFIED,
-      changeFrequency: "daily",
-      priority: 0.88,
-    },
   ];
 
-  // Flights + DGCA Airline Compensation
-  const flightStatusRoutes: MetadataRoute.Sitemap = POPULAR_LIVE_FLIGHTS.map(
-    (flight) => ({
-      url: `${SITE_BASE_URL}${buildFlightStatusPath(
-        flight.airlineCode,
-        flight.flightNumber,
-        flight.airlineName
-      )}`,
-      lastModified: SITEMAP_LAST_MODIFIED,
-      changeFrequency: "always",
-      priority: 0.93,
-    })
-  );
+  // Flights (Live Flight Status + DGCA Airline Compensation ONLY — no overlap with flight-routes)
+  const flightUrlSet = new Set<string>();
+  const flightStatusRoutes: MetadataRoute.Sitemap = [];
+  for (const flight of POPULAR_LIVE_FLIGHTS) {
+    const url = `${SITE_BASE_URL}${buildFlightStatusPath(
+      flight.airlineCode,
+      flight.flightNumber,
+      flight.airlineName
+    )}`;
+    if (!flightUrlSet.has(url)) {
+      flightUrlSet.add(url);
+      flightStatusRoutes.push({
+        url,
+        lastModified: flightsLastMod,
+        changeFrequency: "daily",
+        priority: 0.93,
+      });
+    }
+  }
 
   const dgcaAirlineRoutes: MetadataRoute.Sitemap = DGCA_AIRLINE_PROFILES.map(
     (airline) => ({
       url: `${SITE_BASE_URL}${buildAirlineCompensationPath(airline.slug)}`,
-      lastModified: SITEMAP_LAST_MODIFIED,
+      lastModified: flightsLastMod,
       changeFrequency: "weekly",
       priority: 0.91,
     })
   );
 
+  // Flight Schedule & Fare Routes (1,496 unique combinations)
   const flightRouteScheduleUrls: MetadataRoute.Sitemap =
     getAllIndexableFlightRouteSlugs().map((r) => ({
       url: `${SITE_BASE_URL}${r.routePath}`,
-      lastModified: SITEMAP_LAST_MODIFIED,
+      lastModified: flightRoutesLastMod,
       changeFrequency: "daily",
       priority: r.isPrimaryCorridor ? 0.94 : 0.88,
     }));
 
-  // Trains: Live Status + Chart Times + Refund Scenarios (All non-zero NTES trains)
+  // Trains: Split into Reserved Mail/Express Live Status vs Regional Passenger/MEMU/DEMU (excluding local Suburban EMUs)
   const flagshipTrainSet = new Set(
     POPULAR_LIVE_TRAINS.slice(0, 50).map((t) => t.trainNumber)
   );
   const trainUrlSet = new Set<string>();
-  const trainStatusRoutes: MetadataRoute.Sitemap = [];
+  const reservedTrainStatusRoutes: MetadataRoute.Sitemap = [];
+  const regionalTrainStatusRoutes: MetadataRoute.Sitemap = [];
+
+  const pushTrainLiveStatusEntry = (train: {
+    trainNumber: string;
+    trainName: string;
+    type?: string | null;
+  }) => {
+    if (!train.trainNumber || train.trainNumber.startsWith("0")) return;
+    if (isSuburbanLocalEmuTrain(train)) return;
+
+    const url = `${SITE_BASE_URL}${buildTrainLiveStatusPath(
+      train.trainNumber,
+      train.trainName
+    )}`;
+    if (trainUrlSet.has(url)) return;
+    trainUrlSet.add(url);
+
+    if (isReservedChartEligibleTrain(train)) {
+      reservedTrainStatusRoutes.push({
+        url,
+        lastModified: trainStatusLastMod,
+        changeFrequency: "daily",
+        priority: flagshipTrainSet.has(train.trainNumber) ? 0.92 : 0.86,
+      });
+    } else {
+      regionalTrainStatusRoutes.push({
+        url,
+        lastModified: trainRegionalLastMod,
+        changeFrequency: "weekly",
+        priority: 0.78,
+      });
+    }
+  };
 
   for (const train of POPULAR_LIVE_TRAINS) {
-    if (train.trainNumber.startsWith("0")) continue;
-    const url = `${SITE_BASE_URL}${buildTrainLiveStatusPath(
-      train.trainNumber,
-      train.trainName
-    )}`;
-    if (!trainUrlSet.has(url)) {
-      trainUrlSet.add(url);
-      trainStatusRoutes.push({
-        url,
-        lastModified: SITEMAP_LAST_MODIFIED,
-        changeFrequency: "always",
-        priority: flagshipTrainSet.has(train.trainNumber) ? 0.92 : 0.86,
-      });
-    }
+    pushTrainLiveStatusEntry(train);
   }
-
   for (const train of ALL_CATALOG_TRAINS) {
-    if (train.trainNumber.startsWith("0")) continue;
-    const url = `${SITE_BASE_URL}${buildTrainLiveStatusPath(
-      train.trainNumber,
-      train.trainName
-    )}`;
-    if (!trainUrlSet.has(url)) {
-      trainUrlSet.add(url);
-      trainStatusRoutes.push({
-        url,
-        lastModified: SITEMAP_LAST_MODIFIED,
-        changeFrequency: "always",
-        priority: flagshipTrainSet.has(train.trainNumber) ? 0.92 : 0.86,
-      });
-    }
+    pushTrainLiveStatusEntry(train);
   }
 
+  // Train Reservation Chart Times (Strictly Reserved chart-eligible trains ONLY)
   const popularChartSet = new Set(
     POPULAR_CHART_TRAINS.map((t) => t.trainNumber)
   );
@@ -335,15 +419,15 @@ export function buildSegmentedSitemaps(): Record<
       chartUrlSet.add(url);
       chartTimeRoutes.push({
         url,
-        lastModified: SITEMAP_LAST_MODIFIED,
-        changeFrequency: "daily",
+        lastModified: trainChartLastMod,
+        changeFrequency: "weekly",
         priority: 0.9,
       });
     }
   }
 
   for (const train of POPULAR_LIVE_TRAINS) {
-    if (train.trainNumber.startsWith("0")) continue;
+    if (!isReservedChartEligibleTrain(train)) continue;
     const url = `${SITE_BASE_URL}${buildChartTimePath(
       train.trainNumber,
       train.trainName
@@ -352,7 +436,7 @@ export function buildSegmentedSitemaps(): Record<
       chartUrlSet.add(url);
       chartTimeRoutes.push({
         url,
-        lastModified: SITEMAP_LAST_MODIFIED,
+        lastModified: trainChartLastMod,
         changeFrequency: "weekly",
         priority: flagshipTrainSet.has(train.trainNumber) ? 0.88 : 0.84,
       });
@@ -360,7 +444,7 @@ export function buildSegmentedSitemaps(): Record<
   }
 
   for (const train of ALL_CATALOG_TRAINS) {
-    if (train.trainNumber.startsWith("0")) continue;
+    if (!isReservedChartEligibleTrain(train)) continue;
     const url = `${SITE_BASE_URL}${buildChartTimePath(
       train.trainNumber,
       train.trainName
@@ -369,7 +453,7 @@ export function buildSegmentedSitemaps(): Record<
       chartUrlSet.add(url);
       chartTimeRoutes.push({
         url,
-        lastModified: SITEMAP_LAST_MODIFIED,
+        lastModified: trainChartLastMod,
         changeFrequency: "weekly",
         priority: 0.84,
       });
@@ -379,41 +463,49 @@ export function buildSegmentedSitemaps(): Record<
   const railRefundRoutes: MetadataRoute.Sitemap = REFUND_SEO_SCENARIOS.map(
     (scenario) => ({
       url: `${SITE_BASE_URL}${buildRefundScenarioPath(scenario.slug)}`,
-      lastModified: SITEMAP_LAST_MODIFIED,
-      changeFrequency: "weekly",
+      lastModified: trainChartLastMod,
+      changeFrequency: "monthly",
       priority: 0.91,
     })
   );
 
-  // Toll Routes (All 1,560 combinations)
+  // Toll Routes (All 1,560 combinations — stable independent lastModified)
   const tollRoutes: MetadataRoute.Sitemap = getAllIndexableTollRouteSlugs().map(
     (route) => ({
       url: `${SITE_BASE_URL}${route.routePath}`,
-      lastModified: SITEMAP_LAST_MODIFIED,
+      lastModified: tollLastMod,
       changeFrequency: "weekly",
       priority: route.isPrimaryCorridor ? 0.92 : 0.86,
     })
   );
 
-  // Delhi Metro
-  const metroLines = getAllMetroLines();
-  const metroLineRoutes: MetadataRoute.Sitemap = metroLines.map((line) => ({
-    url: `${SITE_BASE_URL}${buildMetroLinePath(line.slug)}`,
-    lastModified: SITEMAP_LAST_MODIFIED,
-    changeFrequency: "weekly",
-    priority: 0.91,
-  }));
+  // Delhi Metro (Untouched URLs & untouched lastModified to protect already-indexed pages)
+  const metroSeenUrls = new Set<string>();
+  const metroEntries: MetadataRoute.Sitemap = [];
+
+  const pushMetroEntry = (url: string, priority: number) => {
+    if (!metroSeenUrls.has(url)) {
+      metroSeenUrls.add(url);
+      metroEntries.push({
+        url,
+        lastModified: metroLastMod,
+        changeFrequency: "weekly",
+        priority,
+      });
+    }
+  };
+
+  for (const line of getAllMetroLines()) {
+    pushMetroEntry(`${SITE_BASE_URL}${buildMetroLinePath(line.slug)}`, 0.91);
+  }
 
   const metroStations = getAllMetroStations();
-  const metroStationRoutes: MetadataRoute.Sitemap = metroStations.map((st) => ({
-    url: `${SITE_BASE_URL}${buildMetroStationPath(st.slug)}`,
-    lastModified: SITEMAP_LAST_MODIFIED,
-    changeFrequency: "weekly",
-    priority: st.isInterchange ? 0.89 : 0.84,
-  }));
-
-  const metroRouteUrlSet = new Set<string>();
-  const metroPairRoutes: MetadataRoute.Sitemap = [];
+  for (const st of metroStations) {
+    pushMetroEntry(
+      `${SITE_BASE_URL}${buildMetroStationPath(st.slug)}`,
+      st.isInterchange ? 0.89 : 0.84
+    );
+  }
 
   const addMetroRouteUrl = (
     fromSlug: string,
@@ -421,16 +513,10 @@ export function buildSegmentedSitemaps(): Record<
     priority: number
   ) => {
     if (!fromSlug || !toSlug || fromSlug === toSlug) return;
-    const url = `${SITE_BASE_URL}${buildMetroRoutePath(fromSlug, toSlug)}`;
-    if (!metroRouteUrlSet.has(url)) {
-      metroRouteUrlSet.add(url);
-      metroPairRoutes.push({
-        url,
-        lastModified: SITEMAP_LAST_MODIFIED,
-        changeFrequency: "weekly",
-        priority,
-      });
-    }
+    pushMetroEntry(
+      `${SITE_BASE_URL}${buildMetroRoutePath(fromSlug, toSlug)}`,
+      priority
+    );
   };
 
   for (const item of POPULAR_METRO_ROUTES) {
@@ -489,7 +575,7 @@ export function buildSegmentedSitemaps(): Record<
     }
   }
 
-  // Blogs
+  // Blogs (Individual per-post publishedIso lastModified)
   const blogRoutes: MetadataRoute.Sitemap = ALL_BLOG_POSTS.map((post) => ({
     url: `${SITE_BASE_URL}/blog/${post.slug}`,
     lastModified: post.publishedIso,
@@ -499,34 +585,30 @@ export function buildSegmentedSitemaps(): Record<
 
   return {
     core: coreRoutes,
-    flights: [
-      ...flightStatusRoutes,
-      ...dgcaAirlineRoutes,
-      ...flightRouteScheduleUrls,
-    ],
+    flights: [...flightStatusRoutes, ...dgcaAirlineRoutes],
     "flight-routes": flightRouteScheduleUrls,
-    "train-live-status": trainStatusRoutes,
+    "train-live-status": reservedTrainStatusRoutes,
+    "train-regional-status": regionalTrainStatusRoutes,
     "train-chart-times": [...chartTimeRoutes, ...railRefundRoutes],
-    trains: [...trainStatusRoutes, ...chartTimeRoutes, ...railRefundRoutes],
     "toll-routes": tollRoutes,
-    "delhi-metro": [
-      ...metroLineRoutes,
-      ...metroStationRoutes,
-      ...metroPairRoutes,
-    ],
+    "delhi-metro": metroEntries,
     blogs: blogRoutes,
   };
 }
 
 export function buildAllSitemapEntries(): MetadataRoute.Sitemap {
   const segments = buildSegmentedSitemaps();
-  return [
-    ...segments.core,
-    ...segments.flights,
-    ...segments.trains,
-    ...segments["toll-routes"],
-    ...segments["delhi-metro"],
-    ...segments.blogs,
-  ];
-}
+  const seen = new Set<string>();
+  const combined: MetadataRoute.Sitemap = [];
 
+  for (const seg of SITEMAP_SEGMENTS) {
+    for (const entry of segments[seg.key]) {
+      if (!seen.has(entry.url)) {
+        seen.add(entry.url);
+        combined.push(entry);
+      }
+    }
+  }
+
+  return combined;
+}

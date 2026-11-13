@@ -632,7 +632,7 @@ export async function fetchCachedSeoFlightRouteData(
   routeSlug: string
 ): Promise<FlightRoutePageData | null> {
   "use cache";
-  cacheLife("hours");
+  cacheLife("days");
 
   const parsed = parseFlightRouteSlug(routeSlug);
   if (parsed) {

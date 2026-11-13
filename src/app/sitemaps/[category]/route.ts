@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import {
   buildSegmentedSitemaps,
-  SITE_BASE_URL,
-  SITEMAP_LAST_MODIFIED,
+  buildSitemapIndexXml,
+  SITEMAP_SEGMENT_LAST_MODIFIED,
   SITEMAP_SEGMENTS,
   type SitemapSegmentKey,
 } from "@/lib/sitemap-builder";
@@ -23,19 +23,9 @@ export async function GET(
   const { category } = await params;
   const cleanName = category.replace(/\.xml$/i, "").toLowerCase();
 
-  // 1. Sitemap Index (/sitemaps/index.xml)
+  // 1. Primary Sitemap Index (/sitemaps/index.xml) — emits independent per-segment <lastmod>
   if (cleanName === "index") {
-    const indexXml = [
-      '<?xml version="1.0" encoding="UTF-8"?>',
-      '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-      ...SITEMAP_SEGMENTS.map(
-        (seg) =>
-          `  <sitemap>\n    <loc>${SITE_BASE_URL}/sitemaps/${seg.filename}</loc>\n    <lastmod>${SITEMAP_LAST_MODIFIED}</lastmod>\n  </sitemap>`
-      ),
-      "</sitemapindex>",
-    ].join("\n");
-
-    return new NextResponse(indexXml, {
+    return new NextResponse(buildSitemapIndexXml(SITEMAP_SEGMENTS), {
       status: 200,
       headers: {
         "Content-Type": "application/xml; charset=utf-8",
@@ -44,25 +34,34 @@ export async function GET(
     });
   }
 
-  // 2. Individual Category Sitemaps (/sitemaps/core.xml, /sitemaps/trains.xml, etc.)
-  const segments = buildSegmentedSitemaps();
-  const validKeys: SitemapSegmentKey[] = [
-    "core",
-    "flights",
-    "flight-routes",
-    "trains",
-    "train-live-status",
-    "train-chart-times",
-    "toll-routes",
-    "delhi-metro",
-    "blogs",
-  ];
+  // 2. Retired legacy bundle (/sitemaps/trains.xml) — serve clean train-only sitemap index (zero duplicate <url> dump)
+  if (cleanName === "trains") {
+    const trainSegments = SITEMAP_SEGMENTS.filter(
+      (s) =>
+        s.key === "train-live-status" ||
+        s.key === "train-regional-status" ||
+        s.key === "train-chart-times"
+    );
+    return new NextResponse(buildSitemapIndexXml(trainSegments), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/xml; charset=utf-8",
+        "Cache-Control": "public, max-age=3600, s-maxage=86400",
+      },
+    });
+  }
 
-  if (!validKeys.includes(cleanName as SitemapSegmentKey)) {
+  // 3. Individual mutually-exclusive Category Sitemaps
+  const matchedSegment = SITEMAP_SEGMENTS.find((s) => s.key === cleanName);
+  if (!matchedSegment) {
     return new NextResponse("Sitemap category not found", { status: 404 });
   }
 
-  const entries = segments[cleanName as SitemapSegmentKey];
+  const segmentKey = matchedSegment.key as SitemapSegmentKey;
+  const segments = buildSegmentedSitemaps();
+  const entries = segments[segmentKey];
+  const segmentFallbackLastMod = SITEMAP_SEGMENT_LAST_MODIFIED[segmentKey];
+
   const xmlLines = [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
@@ -70,7 +69,7 @@ export async function GET(
       const lastMod =
         entry.lastModified instanceof Date
           ? entry.lastModified.toISOString()
-          : entry.lastModified || SITEMAP_LAST_MODIFIED;
+          : entry.lastModified || segmentFallbackLastMod;
       const changeFreq = entry.changeFrequency || "weekly";
       const priority =
         typeof entry.priority === "number" ? entry.priority.toFixed(2) : "0.80";
@@ -91,4 +90,3 @@ export async function GET(
     },
   });
 }
-

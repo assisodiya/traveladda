@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { cacheLife } from "next/cache";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { Suspense } from "react";
 import {
   ArrowRightIcon,
@@ -23,9 +23,12 @@ import {
   buildTrainSeoSlug,
   deriveTrainClasses,
   extractTrainNumberFromParam,
+  findCatalogTrain,
   format24HourTime,
   formatIstTime,
   getRelatedCatalogTrains,
+  isReservedChartEligibleTrain,
+  isSuburbanLocalEmuTrain,
   POPULAR_LIVE_TRAINS,
 } from "@/lib/live-train-types";
 
@@ -55,11 +58,21 @@ export async function generateMetadata({
         robots: { index: false, follow: false },
       };
     }
+    const fallbackCatalog = findCatalogTrain(fallbackDigits);
+    const isSuburbanFallback = fallbackCatalog
+      ? isSuburbanLocalEmuTrain(fallbackCatalog)
+      : fallbackDigits.startsWith("0");
     return {
       title: `${fallbackDigits} Live Train Running Status & Time Table`,
       alternates: { canonical: buildTrainLiveStatusPath(fallbackDigits) },
+      robots: isSuburbanFallback ? { index: false, follow: true } : undefined,
     };
   }
+
+  const catalogTrain = findCatalogTrain(data.trainNumber);
+  const shouldNoindexLiveStatus = catalogTrain
+    ? isSuburbanLocalEmuTrain(catalogTrain)
+    : data.trainNumber.startsWith("0");
 
   const canonicalPath = buildTrainLiveStatusPath(
     data.trainNumber,
@@ -104,6 +117,9 @@ export async function generateMetadata({
       `spot train ${data.trainNumber}`,
       `where is train ${data.trainNumber}`,
     ],
+    robots: shouldNoindexLiveStatus
+      ? { index: false, follow: true }
+      : undefined,
     alternates: {
       canonical: canonicalPath,
     },
@@ -157,6 +173,20 @@ export default async function TrainLiveStatusByNumberPage({
     trainData.trainNumber,
     trainData.trainName
   );
+  const incomingPath = `/rail/live-status/${decodeURIComponent(rawParam || "")
+    .trim()
+    .toLowerCase()}`;
+  if (
+    canonicalPath.startsWith("/rail/live-status/") &&
+    incomingPath !== canonicalPath
+  ) {
+    permanentRedirect(canonicalPath);
+  }
+  const currentCatalogTrain = findCatalogTrain(cleanTrain);
+  const showChartTimeLink = isReservedChartEligibleTrain({
+    trainNumber: cleanTrain,
+    type: currentCatalogTrain?.type || trainData.train.type,
+  });
 
   const haltStops = trainData.route.filter((s) => s.isHalt);
   const scheduleStops = haltStops.length >= 2 ? haltStops : trainData.route;
@@ -444,16 +474,20 @@ export default async function TrainLiveStatusByNumberPage({
             >
               FAQs
             </a>
-            <span className="text-line-strong">·</span>
-            <Link
-              href={buildChartTimePath(
-                trainData.trainNumber,
-                trainData.trainName
-              )}
-              className="font-bold text-[#fc6203] hover:underline"
-            >
-              {trainData.trainNumber} Chart Preparation Time →
-            </Link>
+            {showChartTimeLink && (
+              <>
+                <span className="text-line-strong">·</span>
+                <Link
+                  href={buildChartTimePath(
+                    trainData.trainNumber,
+                    trainData.trainName
+                  )}
+                  className="font-bold text-[#fc6203] hover:underline"
+                >
+                  {trainData.trainNumber} Chart Preparation Time →
+                </Link>
+              </>
+            )}
             <span className="text-line-strong">·</span>
             <Link
               href="/rail/refund-calculator"
@@ -964,7 +998,9 @@ export default async function TrainLiveStatusByNumberPage({
         </div>
 
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {getRelatedCatalogTrains(cleanTrain, 16).map((train) => (
+          {getRelatedCatalogTrains(cleanTrain, 16, {
+            excludeSuburban: true,
+          }).map((train) => (
             <div
               key={train.trainNumber}
               className="group flex flex-col justify-between rounded-xl border border-line bg-card p-3.5 transition hover:border-[#1956b4] hover:shadow-sm"
@@ -994,16 +1030,18 @@ export default async function TrainLiveStatusByNumberPage({
                   {train.sourceCode} → {train.destinationCode}
                 </span>
                 <div className="flex items-center gap-2">
-                  <Link
-                    href={buildChartTimePath(
-                      train.trainNumber,
-                      train.trainName
-                    )}
-                    className="rounded bg-subcard px-1.5 py-0.5 text-[10px] font-bold text-ink-soft hover:text-[#1956b4] dark:hover:text-blue-300"
-                    title={`${train.trainNumber} Chart Preparation Time`}
-                  >
-                    Chart
-                  </Link>
+                  {isReservedChartEligibleTrain(train) && (
+                    <Link
+                      href={buildChartTimePath(
+                        train.trainNumber,
+                        train.trainName
+                      )}
+                      className="rounded bg-subcard px-1.5 py-0.5 text-[10px] font-bold text-ink-soft hover:text-[#1956b4] dark:hover:text-blue-300"
+                      title={`${train.trainNumber} Chart Preparation Time`}
+                    >
+                      Chart
+                    </Link>
+                  )}
                   <Link
                     href={buildTrainLiveStatusPath(
                       train.trainNumber,

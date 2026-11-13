@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { cacheLife } from "next/cache";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import {
   ArrowRightIcon,
   ChevronDownIcon,
@@ -42,13 +42,14 @@ export async function generateMetadata({
   params,
 }: FlightRoutePageProps): Promise<Metadata> {
   "use cache";
-  cacheLife("hours");
+  cacheLife("days");
 
   const { routeSlug } = await params;
   const data = await fetchCachedSeoFlightRouteData(routeSlug);
   if (!data) {
     return {
       title: "Flight Route Not Found",
+      robots: { index: false, follow: false },
     };
   }
 
@@ -84,11 +85,11 @@ export async function generateMetadata({
           url: `/api/og?type=flight&title=${encodeURIComponent(
             `${origin.city} (${origin.iata}) to ${destination.city} (${destination.iata}) Flights`
           )}&subtitle=${encodeURIComponent(
-            `Fares from ${data.formattedLowestFare} • Fastest ${data.minDurationFormatted} • ${data.directFlightsCount} Non-Stop Flights`
+            `Fastest ${data.minDurationFormatted} • ${data.directFlightsCount} Non-Stop Flights • ${origin.domesticTerminal} to ${destination.domesticTerminal}`
           )}&badge=${encodeURIComponent(`${origin.iata} → ${destination.iata}`)}`,
           width: 1200,
           height: 630,
-          alt: `${origin.city} to ${destination.city} Flights Schedule & Fares`,
+          alt: `${origin.city} to ${destination.city} Flights Schedule & Terminals`,
         },
       ],
     },
@@ -99,12 +100,19 @@ export default async function FlightRouteSeoPage({
   params,
 }: FlightRoutePageProps) {
   "use cache";
-  cacheLife("hours");
+  cacheLife("days");
 
   const { routeSlug } = await params;
   const routeData = await fetchCachedSeoFlightRouteData(routeSlug);
   if (!routeData) {
     notFound();
+  }
+
+  const normalizedIncomingSlug = decodeURIComponent(routeSlug || "")
+    .trim()
+    .toLowerCase();
+  if (normalizedIncomingSlug !== routeData.routeSlug) {
+    permanentRedirect(routeData.routePath);
   }
 
   const { origin, destination } = routeData;
@@ -401,7 +409,11 @@ export default async function FlightRouteSeoPage({
                           href={offer.bookingUrls.primaryAffiliate}
                           target="_blank"
                           rel="noopener noreferrer sponsored"
-                          className="ta-btn-primary rounded-lg px-2.5 py-1 text-xs font-bold"
+                          style={{
+                            backgroundColor: "#fc6203",
+                            color: "#ffffff",
+                          }}
+                          className="ta-btn-primary rounded-lg bg-[#fc6203] px-3 py-1 text-xs font-extrabold text-white shadow-2xs hover:bg-[#e55600]"
                         >
                           Book
                         </a>

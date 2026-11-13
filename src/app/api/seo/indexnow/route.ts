@@ -21,18 +21,18 @@ export async function GET() {
     keyLocation: KEY_LOCATION,
     totalUrls: allEntries.length,
     sitemaps: {
-      master: `${SITE_BASE_URL}/sitemap.xml`,
       index: `${SITE_BASE_URL}/sitemaps/index.xml`,
       segments: SITEMAP_SEGMENTS.map((seg) => ({
         category: seg.key,
         url: `${SITE_BASE_URL}/sitemaps/${seg.filename}`,
+        lastModified: seg.lastModified,
         count: segments[seg.key].length,
       })),
     },
     usage: {
       submitAll: "POST /api/seo/indexnow with body { category: 'all' }",
       submitCategory:
-        "POST /api/seo/indexnow with body { category: 'core' | 'flights' | 'trains' | 'toll-routes' | 'delhi-metro' | 'blogs' }",
+        "POST /api/seo/indexnow with body { category: 'core' | 'flights' | 'flight-routes' | 'train-live-status' | 'train-regional-status' | 'train-chart-times' | 'toll-routes' | 'delhi-metro' | 'blogs' }",
     },
   });
 }
@@ -94,4 +94,3 @@ export async function POST(req: Request) {
     );
   }
 }
-

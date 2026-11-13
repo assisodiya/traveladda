@@ -130,12 +130,6 @@ export default async function HtmlSitemapDirectoryPage() {
                 Sitemap Index (/sitemaps/index.xml)
               </a>
               <a
-                href="/sitemap.xml"
-                className="rounded-lg border border-line bg-subcard px-3 py-1.5 font-bold text-ink hover:border-[#1956b4]"
-              >
-                Master Sitemap (/sitemap.xml)
-              </a>
-              <a
                 href="/api/seo/indexnow"
                 className="rounded-lg border border-emerald-500/40 bg-emerald-50 px-3 py-1.5 font-bold text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300"
               >
@@ -165,6 +159,9 @@ export default async function HtmlSitemapDirectoryPage() {
                   </h3>
                   <p className="mt-1 text-[11px] text-ink-muted">
                     {seg.description}
+                  </p>
+                  <p className="mt-2 font-mono text-[10px] text-ink-soft">
+                    lastmod: {seg.lastModified.slice(0, 10)}
                   </p>
                 </div>
               </a>

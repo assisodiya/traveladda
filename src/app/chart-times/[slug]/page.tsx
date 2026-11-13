@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { cacheLife } from "next/cache";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { Suspense } from "react";
 import {
   ArrowRightIcon,
@@ -22,7 +22,9 @@ import {
 } from "@/lib/chart-time-types";
 import {
   buildTrainLiveStatusPath,
+  findCatalogTrain,
   getRelatedCatalogTrains,
+  isReservedChartEligibleTrain,
 } from "@/lib/live-train-types";
 
 interface ChartTimeSlugPageProps {
@@ -39,7 +41,7 @@ export async function generateMetadata({
   params,
 }: ChartTimeSlugPageProps): Promise<Metadata> {
   "use cache";
-  cacheLife("hours");
+  cacheLife("days");
 
   const { slug: rawSlug } = await params;
   const data = await fetchSeoChartTimePageData(rawSlug);
@@ -51,11 +53,23 @@ export async function generateMetadata({
         robots: { index: false, follow: false },
       };
     }
+    const fallbackCatalog = findCatalogTrain(fallbackDigits);
+    const shouldIndexFallback = fallbackCatalog
+      ? isReservedChartEligibleTrain(fallbackCatalog)
+      : false;
     return {
       title: `${fallbackDigits} Train Chart Preparation Time (1st & 2nd Chart)`,
       alternates: { canonical: buildChartTimePath(fallbackDigits) },
+      robots: shouldIndexFallback
+        ? undefined
+        : { index: false, follow: true },
     };
   }
+
+  const catalogTrain = findCatalogTrain(data.trainNumber);
+  const isChartIndexable = catalogTrain
+    ? isReservedChartEligibleTrain(catalogTrain)
+    : !data.trainNumber.startsWith("0");
 
   const canonicalPath = buildChartTimePath(
     data.trainNumber,
@@ -83,6 +97,7 @@ export async function generateMetadata({
       `when is chart prepared for ${data.trainNumber}`,
       `${data.originStation} to ${data.destinationStation} ${data.trainNumber} chart time`,
     ],
+    robots: isChartIndexable ? undefined : { index: false, follow: true },
     alternates: {
       canonical: canonicalPath,
     },
@@ -114,7 +129,7 @@ export default async function ChartTimeByTrainSlugPage({
   params,
 }: ChartTimeSlugPageProps) {
   "use cache";
-  cacheLife("hours");
+  cacheLife("days");
 
   const { slug: rawSlug } = await params;
   const chartData = await fetchSeoChartTimePageData(rawSlug);
@@ -127,6 +142,12 @@ export default async function ChartTimeByTrainSlugPage({
     chartData.trainName,
     chartData.slug
   );
+  const incomingPath = `/chart-times/${decodeURIComponent(rawSlug || "")
+    .trim()
+    .toLowerCase()}`;
+  if (canonicalPath.startsWith("/chart-times/") && incomingPath !== canonicalPath) {
+    permanentRedirect(canonicalPath);
+  }
   const canonicalUrl = `https://traveladda.in${canonicalPath}`;
   const liveStatusPath = buildTrainLiveStatusPath(
     chartData.trainNumber,
@@ -688,7 +709,9 @@ export default async function ChartTimeByTrainSlugPage({
         </div>
 
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {getRelatedCatalogTrains(chartData.trainNumber, 16).map((train) => (
+          {getRelatedCatalogTrains(chartData.trainNumber, 16, {
+            reservedOnly: true,
+          }).map((train) => (
             <div
               key={train.trainNumber}
               className="group flex flex-col justify-between rounded-xl border border-line bg-card p-3.5 transition hover:border-[#1956b4] hover:shadow-sm"

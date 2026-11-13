@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { cacheLife } from "next/cache";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { Suspense } from "react";
 import { AirlineLogo } from "@/components/AirlineLogo";
 import {
@@ -38,7 +38,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   "use cache";
-  cacheLife("minutes");
+  cacheLife("hours");
 
   const { slug } = await params;
   const parsed = parseFlightStatusSlug(slug);
@@ -48,6 +48,7 @@ export async function generateMetadata({
       title: "Live Flight Status Tracker | TravelAdda",
       description:
         "Check live domestic and international flight status, terminal, boarding gate, baggage belt, and arrival/departure time by airline and flight number.",
+      robots: { index: false, follow: false },
     };
   }
 
@@ -138,7 +139,7 @@ export default async function FlightStatusSeoDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   "use cache";
-  cacheLife("minutes");
+  cacheLife("hours");
 
   const { slug } = await params;
   const parsed = parseFlightStatusSlug(slug);
@@ -148,6 +149,12 @@ export default async function FlightStatusSeoDetailPage({
   }
 
   const { airlineCode, flightNumber, airlineName, canonicalSlug } = parsed;
+  const normalizedIncomingSlug = decodeURIComponent(slug || "")
+    .trim()
+    .toLowerCase();
+  if (normalizedIncomingSlug !== canonicalSlug) {
+    permanentRedirect(`/flight-status/${canonicalSlug}`);
+  }
   const flightCode = `${airlineCode} ${flightNumber}`;
 
   const flightData = await fetchCachedFlightStatusForSeo(
