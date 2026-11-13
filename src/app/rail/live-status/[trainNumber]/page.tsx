@@ -214,8 +214,8 @@ export default async function TrainLiveStatusByNumberPage({
   const runDaysReadable = trainData.train.isDaily
     ? "Daily (Monday to Sunday)"
     : ALL_WEEK_DAYS.filter((d) => trainData.train.runDays.includes(d.key))
-        .map((d) => d.label)
-        .join(", ") || "As per railway schedule";
+      .map((d) => d.label)
+      .join(", ") || "As per railway schedule";
 
   const intermediateHalts = scheduleStops.slice(1, -1);
   const majorHaltNames = intermediateHalts
@@ -584,11 +584,10 @@ export default async function TrainLiveStatusByNumberPage({
                           <span
                             key={d.key}
                             title={d.label}
-                            className={`inline-flex h-6 w-6 items-center justify-center rounded font-mono text-xs font-extrabold ${
-                              active
-                                ? "bg-blue-50 text-[#1956b4] ring-1 ring-[#1956b4]/30 dark:bg-blue-500/20 dark:text-blue-300"
-                                : "bg-subcard text-ink-muted opacity-40"
-                            }`}
+                            className={`inline-flex h-6 w-6 items-center justify-center rounded font-mono text-xs font-extrabold ${active
+                              ? "bg-blue-50 text-[#1956b4] ring-1 ring-[#1956b4]/30 dark:bg-blue-500/20 dark:text-blue-300"
+                              : "bg-subcard text-ink-muted opacity-40"
+                              }`}
                           >
                             {d.short}
                           </span>
@@ -794,13 +793,13 @@ export default async function TrainLiveStatusByNumberPage({
                   const arrTime = isOrigin
                     ? "--"
                     : format24HourTime(
-                        stop.scheduledArrival ?? stop.actualArrival
-                      );
+                      stop.scheduledArrival ?? stop.actualArrival
+                    );
                   const depTime = isDest
                     ? "--"
                     : format24HourTime(
-                        stop.scheduledDeparture ?? stop.actualDeparture
-                      );
+                      stop.scheduledDeparture ?? stop.actualDeparture
+                    );
                   const haltFormatted =
                     isOrigin || isDest
                       ? "--"
@@ -811,11 +810,10 @@ export default async function TrainLiveStatusByNumberPage({
                   return (
                     <tr
                       key={`${stop.stationCode}-${stop.sequence}`}
-                      className={`transition hover:bg-subcard/50 ${
-                        stop.stopState === "current"
-                          ? "bg-emerald-50/70 dark:bg-emerald-500/10"
-                          : ""
-                      }`}
+                      className={`transition hover:bg-subcard/50 ${stop.stopState === "current"
+                        ? "bg-emerald-50/70 dark:bg-emerald-500/10"
+                        : ""
+                        }`}
                     >
                       <td className="px-4 py-3.5 font-mono text-xs font-bold text-ink-muted sm:px-5">
                         {idx + 1}
@@ -913,11 +911,10 @@ export default async function TrainLiveStatusByNumberPage({
                 return (
                   <div
                     key={`${coach.code}-${coach.index}`}
-                    className={`flex min-w-[68px] flex-col items-center rounded-xl border px-2.5 py-2 text-center ${
-                      isEngine
-                        ? "border-emerald-500/40 bg-emerald-50 text-emerald-900 dark:bg-emerald-500/15 dark:text-emerald-200"
-                        : "border-line bg-subcard/70 text-ink"
-                    }`}
+                    className={`flex min-w-[68px] flex-col items-center rounded-xl border px-2.5 py-2 text-center ${isEngine
+                      ? "border-emerald-500/40 bg-emerald-50 text-emerald-900 dark:bg-emerald-500/15 dark:text-emerald-200"
+                      : "border-line bg-subcard/70 text-ink"
+                      }`}
                   >
                     <span className="font-mono text-[10px] font-bold text-ink-muted">
                       {isEngine ? "LOCO" : `#${coach.coachOrderFromEngine}`}

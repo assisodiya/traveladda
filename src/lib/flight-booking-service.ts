@@ -346,8 +346,8 @@ export async function fetchFlightRoutePageData(
       typeof item.price === "number" && item.price > 0
         ? Math.round(item.price)
         : Math.round(
-            (2950 + aerialDistanceKm * 2.4) * currencyCfg.fallbackRateFromInr
-          );
+          (2950 + aerialDistanceKm * 2.4) * currencyCfg.fallbackRateFromInr
+        );
 
     offers.push({
       id: uniqueKey,
@@ -404,23 +404,23 @@ export async function fetchFlightRoutePageData(
 
   const slotTemplates = isIntl
     ? [
-        { airline: "6E", dep: "04:15", numOffset: 101, mult: 1.0, stops: 0 },
-        { airline: "AI", dep: "08:40", numOffset: 302, mult: 1.12, stops: 0 },
-        { airline: "IX", dep: "13:20", numOffset: 412, mult: 1.04, stops: 0 },
-        { airline: "6E", dep: "18:50", numOffset: 145, mult: 1.08, stops: 0 },
-        { airline: "AI", dep: "22:15", numOffset: 915, mult: 1.16, stops: 0 },
-      ]
+      { airline: "6E", dep: "04:15", numOffset: 101, mult: 1.0, stops: 0 },
+      { airline: "AI", dep: "08:40", numOffset: 302, mult: 1.12, stops: 0 },
+      { airline: "IX", dep: "13:20", numOffset: 412, mult: 1.04, stops: 0 },
+      { airline: "6E", dep: "18:50", numOffset: 145, mult: 1.08, stops: 0 },
+      { airline: "AI", dep: "22:15", numOffset: 915, mult: 1.16, stops: 0 },
+    ]
     : [
-        { airline: "6E", dep: "05:45", numOffset: 2012, mult: 0.98, stops: 0 },
-        { airline: "AI", dep: "07:10", numOffset: 803, mult: 1.09, stops: 0 },
-        { airline: "QP", dep: "09:25", numOffset: 1104, mult: 1.01, stops: 0 },
-        { airline: "6E", dep: "11:40", numOffset: 5122, mult: 1.05, stops: 0 },
-        { airline: "IX", dep: "14:15", numOffset: 1521, mult: 1.03, stops: 0 },
-        { airline: "SG", dep: "16:35", numOffset: 8142, mult: 1.02, stops: 0 },
-        { airline: "AI", dep: "18:50", numOffset: 865, mult: 1.14, stops: 0 },
-        { airline: "6E", dep: "20:30", numOffset: 6218, mult: 1.07, stops: 0 },
-        { airline: "QP", dep: "22:10", numOffset: 1348, mult: 1.0, stops: 0 },
-      ];
+      { airline: "6E", dep: "05:45", numOffset: 2012, mult: 0.98, stops: 0 },
+      { airline: "AI", dep: "07:10", numOffset: 803, mult: 1.09, stops: 0 },
+      { airline: "QP", dep: "09:25", numOffset: 1104, mult: 1.01, stops: 0 },
+      { airline: "6E", dep: "11:40", numOffset: 5122, mult: 1.05, stops: 0 },
+      { airline: "IX", dep: "14:15", numOffset: 1521, mult: 1.03, stops: 0 },
+      { airline: "SG", dep: "16:35", numOffset: 8142, mult: 1.02, stops: 0 },
+      { airline: "AI", dep: "18:50", numOffset: 865, mult: 1.14, stops: 0 },
+      { airline: "6E", dep: "20:30", numOffset: 6218, mult: 1.07, stops: 0 },
+      { airline: "QP", dep: "22:10", numOffset: 1348, mult: 1.0, stops: 0 },
+    ];
 
   const routeSeed = deterministicSeed(`${origin.iata}-${destination.iata}`);
 
@@ -562,8 +562,8 @@ export async function fetchFlightRoutePageData(
   const averageFare =
     offers.length > 0
       ? Math.round(
-          offers.reduce((acc, o) => acc + o.price, 0) / offers.length
-        )
+        offers.reduce((acc, o) => acc + o.price, 0) / offers.length
+      )
       : lowestBasePrice;
   const minDurationMinutes =
     offers.length > 0

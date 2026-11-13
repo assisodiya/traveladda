@@ -96,9 +96,9 @@ export async function generateMetadata({
       `${flightCode.toLowerCase()} departure time`,
       ...(primary
         ? [
-            `${primary.departure.airportCity.toLowerCase()} to ${primary.arrival.airportCity.toLowerCase()} ${flightCode.toLowerCase()} status`,
-            `${primary.departure.airportCode.toLowerCase()} to ${primary.arrival.airportCode.toLowerCase()} flight ${flightCode.toLowerCase()}`,
-          ]
+          `${primary.departure.airportCity.toLowerCase()} to ${primary.arrival.airportCity.toLowerCase()} ${flightCode.toLowerCase()} status`,
+          `${primary.departure.airportCode.toLowerCase()} to ${primary.arrival.airportCode.toLowerCase()} flight ${flightCode.toLowerCase()}`,
+        ]
         : []),
     ],
     alternates: {
