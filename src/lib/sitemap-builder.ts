@@ -63,12 +63,12 @@ const LATEST_BLOG_PUBLISHED_ISO =
  */
 export const SITEMAP_SEGMENT_LAST_MODIFIED: Record<SitemapSegmentKey, string> =
   {
-    core: "2026-11-13T06:00:00.000Z",
+    core: "2026-11-14T08:30:00.000Z",
     flights: "2026-11-13T06:00:00.000Z",
     "flight-routes": "2026-11-13T06:00:00.000Z",
-    "train-live-status": "2026-11-13T06:00:00.000Z",
+    "train-live-status": "2026-11-14T08:45:00.000Z",
     "train-regional-status": "2026-11-12T06:00:00.000Z",
-    "train-chart-times": "2026-11-13T06:00:00.000Z",
+    "train-chart-times": "2026-11-14T08:30:00.000Z",
     "toll-routes": "2026-11-11T06:00:00.000Z",
     "delhi-metro": "2026-11-10T06:00:00.000Z",
     blogs: LATEST_BLOG_PUBLISHED_ISO,

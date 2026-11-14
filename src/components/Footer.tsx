@@ -198,10 +198,10 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/sitemaps/index.xml"
+                  href="/sitemap.xml"
                   className="text-ink-muted transition hover:text-[#1956b4] dark:hover:text-blue-300"
                 >
-                  Segmented XML Sitemaps
+                  XML Sitemap Index
                 </Link>
               </li>
             </ul>

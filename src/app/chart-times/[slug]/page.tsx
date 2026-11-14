@@ -17,6 +17,7 @@ import { TrainChartTimeChecker } from "@/components/TrainChartTimeChecker";
 import { fetchSeoChartTimePageData } from "@/lib/chart-time-service";
 import {
   buildChartTimePath,
+  buildChartTimeSlug,
   extractTrainNumberFromChartSlug,
   POPULAR_CHART_TRAINS,
 } from "@/lib/chart-time-types";
@@ -25,6 +26,7 @@ import {
   findCatalogTrain,
   getRelatedCatalogTrains,
   isReservedChartEligibleTrain,
+  POPULAR_LIVE_TRAINS,
 } from "@/lib/live-train-types";
 
 interface ChartTimeSlugPageProps {
@@ -32,9 +34,26 @@ interface ChartTimeSlugPageProps {
 }
 
 export function generateStaticParams() {
-  return POPULAR_CHART_TRAINS.slice(0, 8).map((train) => ({
-    slug: train.slug,
-  }));
+  const slugSet = new Set<string>();
+  const params: { slug: string }[] = [];
+
+  for (const train of POPULAR_CHART_TRAINS) {
+    if (!slugSet.has(train.slug)) {
+      slugSet.add(train.slug);
+      params.push({ slug: train.slug });
+    }
+  }
+
+  for (const train of POPULAR_LIVE_TRAINS.slice(0, 40)) {
+    if (!isReservedChartEligibleTrain(train)) continue;
+    const slug = buildChartTimeSlug(train.trainNumber, train.trainName);
+    if (slug && !slugSet.has(slug)) {
+      slugSet.add(slug);
+      params.push({ slug });
+    }
+  }
+
+  return params;
 }
 
 export async function generateMetadata({
@@ -681,82 +700,138 @@ export default async function ChartTimeByTrainSlugPage({
         </div>
       </section>
 
-      {/* SSR SECTION 4: Directory of Other Popular Train Chart Preparation Pages */}
+      {/* SSR SECTION 4: Directory of Other Popular & Connected Train Chart Preparation Pages */}
       <section
         aria-labelledby="other-chart-trains-heading"
         className="mx-auto mt-12 max-w-6xl px-4 sm:mt-16 sm:px-6 lg:px-8"
       >
-        <div className="flex flex-wrap items-end justify-between gap-2">
-          <div>
-            <h2
-              id="other-chart-trains-heading"
-              className="text-lg font-extrabold text-ink sm:text-xl"
-            >
-              Other Popular Trains — 1st &amp; 2nd Chart Preparation Times
-            </h2>
-            <p className="mt-0.5 text-xs text-ink-soft sm:text-sm">
-              Check station-by-station reservation chart timings and remote
-              charting hubs for major Indian Railways trains.
-            </p>
-          </div>
-          <Link
-            href="/rail/chart-time"
-            className="inline-flex items-center gap-1 text-xs font-bold text-[#1956b4] hover:underline dark:text-blue-400"
-          >
-            <ClockIcon className="h-3.5 w-3.5" />
-            <span>Search Any Train Chart Time</span>
-          </Link>
-        </div>
+        {(() => {
+          const relatedTrains = getRelatedCatalogTrains(
+            chartData.trainNumber,
+            40,
+            { reservedOnly: true }
+          );
+          const featuredRelated = relatedTrains.slice(0, 16);
+          const quickJumpRelated = relatedTrains.slice(16, 40);
 
-        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {getRelatedCatalogTrains(chartData.trainNumber, 16, {
-            reservedOnly: true,
-          }).map((train) => (
-            <div
-              key={train.trainNumber}
-              className="group flex flex-col justify-between rounded-xl border border-line bg-card p-3.5 transition hover:border-[#1956b4] hover:shadow-sm"
-            >
-              <Link
-                href={buildChartTimePath(train.trainNumber, train.trainName)}
-                className="block"
-              >
-                <div className="flex items-center justify-between gap-2">
-                  <span className="rounded bg-blue-50 px-2 py-0.5 font-mono text-xs font-bold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
-                    #{train.trainNumber}
-                  </span>
-                  <span className="font-mono text-[11px] font-semibold text-ink-muted">
-                    {train.sourceCode} → {train.destinationCode}
-                  </span>
+          return (
+            <>
+              <div className="flex flex-wrap items-end justify-between gap-2">
+                <div>
+                  <h2
+                    id="other-chart-trains-heading"
+                    className="text-lg font-extrabold text-ink sm:text-xl"
+                  >
+                    Other Popular Trains — 1st &amp; 2nd Chart Preparation Times
+                  </h2>
+                  <p className="mt-0.5 text-xs text-ink-soft sm:text-sm">
+                    Check station-by-station reservation chart timings and
+                    remote charting hubs for major Indian Railways trains.
+                  </p>
                 </div>
-                <h3 className="mt-2 line-clamp-1 text-sm font-bold text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-400">
-                  {train.trainName}
-                </h3>
-                <p className="mt-1 text-[11px] text-ink-muted">
-                  {train.type} · 1st &amp; 2nd Chart Schedule
-                </p>
-              </Link>
-
-              <div className="mt-3 flex items-center justify-between border-t border-line pt-2 text-xs">
                 <Link
-                  href={buildTrainLiveStatusPath(
-                    train.trainNumber,
-                    train.trainName
-                  )}
-                  className="rounded bg-emerald-50 px-1.5 py-0.5 text-[10px] font-bold text-emerald-700 hover:underline dark:bg-emerald-500/15 dark:text-emerald-300"
+                  href="/rail/chart-time#all-chart-trains"
+                  className="inline-flex items-center gap-1 text-xs font-bold text-[#1956b4] hover:underline dark:text-blue-400"
                 >
-                  Live Status
-                </Link>
-                <Link
-                  href={buildChartTimePath(train.trainNumber, train.trainName)}
-                  className="inline-flex items-center gap-1 font-bold text-[#1956b4] dark:text-blue-400"
-                >
-                  <span>Chart Time</span>
-                  <ArrowRightIcon className="h-3.5 w-3.5" />
+                  <ClockIcon className="h-3.5 w-3.5" />
+                  <span>Browse All Train Chart Times →</span>
                 </Link>
               </div>
-            </div>
-          ))}
-        </div>
+
+              <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                {featuredRelated.map((train) => (
+                  <div
+                    key={train.trainNumber}
+                    className="group flex flex-col justify-between rounded-xl border border-line bg-card p-3.5 transition hover:border-[#1956b4] hover:shadow-sm"
+                  >
+                    <Link
+                      href={buildChartTimePath(
+                        train.trainNumber,
+                        train.trainName
+                      )}
+                      className="block"
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="rounded bg-blue-50 px-2 py-0.5 font-mono text-xs font-bold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
+                          #{train.trainNumber}
+                        </span>
+                        <span className="font-mono text-[11px] font-semibold text-ink-muted">
+                          {train.sourceCode} → {train.destinationCode}
+                        </span>
+                      </div>
+                      <h3 className="mt-2 line-clamp-1 text-sm font-bold text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-400">
+                        {train.trainName}
+                      </h3>
+                      <p className="mt-1 text-[11px] text-ink-muted">
+                        {train.type} · 1st &amp; 2nd Chart Schedule
+                      </p>
+                    </Link>
+
+                    <div className="mt-3 flex items-center justify-between border-t border-line pt-2 text-xs">
+                      <Link
+                        href={buildTrainLiveStatusPath(
+                          train.trainNumber,
+                          train.trainName
+                        )}
+                        className="rounded bg-emerald-50 px-1.5 py-0.5 text-[10px] font-bold text-emerald-700 hover:underline dark:bg-emerald-500/15 dark:text-emerald-300"
+                      >
+                        Live Status
+                      </Link>
+                      <Link
+                        href={buildChartTimePath(
+                          train.trainNumber,
+                          train.trainName
+                        )}
+                        className="inline-flex items-center gap-1 font-bold text-[#1956b4] dark:text-blue-400"
+                      >
+                        <span>Chart Time</span>
+                        <ArrowRightIcon className="h-3.5 w-3.5" />
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {quickJumpRelated.length > 0 && (
+                <div className="mt-5 rounded-2xl border border-line bg-card p-4 sm:p-5">
+                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line pb-2.5">
+                    <h3 className="text-xs font-extrabold tracking-wider text-ink uppercase sm:text-sm">
+                      More Reserved Trains — Direct 1st &amp; 2nd Chart Links
+                    </h3>
+                    <Link
+                      href="/rail/chart-time#all-chart-trains"
+                      className="text-xs font-bold text-[#1956b4] hover:underline dark:text-blue-400"
+                    >
+                      Full Train Chart Directory →
+                    </Link>
+                  </div>
+                  <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                    {quickJumpRelated.map((train) => (
+                      <Link
+                        key={`jump-${train.trainNumber}`}
+                        href={buildChartTimePath(
+                          train.trainNumber,
+                          train.trainName
+                        )}
+                        className="flex items-center justify-between gap-2 rounded-lg border border-line/70 bg-subcard/40 px-3 py-2 text-xs font-semibold text-ink transition hover:border-[#1956b4] hover:text-[#1956b4] dark:hover:text-blue-300"
+                      >
+                        <span className="truncate">
+                          <span className="mr-1.5 font-mono font-bold text-[#1956b4] dark:text-blue-400">
+                            {train.trainNumber}
+                          </span>
+                          {train.trainName} Chart Time
+                        </span>
+                        <span className="shrink-0 font-mono text-[10px] text-ink-muted">
+                          {train.sourceCode}→{train.destinationCode}
+                        </span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </>
+          );
+        })()}
 
         <div className="mt-6 flex items-center justify-between rounded-xl border border-line bg-card px-4 py-3 text-xs text-ink-soft">
           <span className="inline-flex items-center gap-1.5 font-semibold text-emerald-700 dark:text-emerald-400">

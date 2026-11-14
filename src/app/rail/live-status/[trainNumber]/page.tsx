@@ -37,9 +37,19 @@ interface TrainPageProps {
 }
 
 export function generateStaticParams() {
-  return POPULAR_LIVE_TRAINS.slice(0, 8).map((train) => ({
-    trainNumber: buildTrainSeoSlug(train.trainNumber, train.trainName),
-  }));
+  const seen = new Set<string>();
+  const params: { trainNumber: string }[] = [];
+
+  for (const train of POPULAR_LIVE_TRAINS.slice(0, 48)) {
+    if (isSuburbanLocalEmuTrain(train)) continue;
+    const slug = buildTrainSeoSlug(train.trainNumber, train.trainName);
+    if (slug && !seen.has(slug)) {
+      seen.add(slug);
+      params.push({ trainNumber: slug });
+    }
+  }
+
+  return params;
 }
 
 export async function generateMetadata({
@@ -967,93 +977,142 @@ export default async function TrainLiveStatusByNumberPage({
         </div>
       </section>
 
-      {/* SECTION 5: Directory of Other Popular Indian Railways Trains (Internal Linking for Crawlability) */}
+      {/* SECTION 5: Directory of Other Popular & Connected Indian Railways Trains (Internal Linking Spiderweb) */}
       <section
         aria-labelledby="other-trains-heading"
         className="mx-auto mt-12 max-w-6xl px-4 sm:mt-16 sm:px-6 lg:px-8"
       >
-        <div className="flex flex-wrap items-end justify-between gap-2">
-          <div>
-            <h2
-              id="other-trains-heading"
-              className="text-lg font-extrabold text-ink sm:text-xl"
-            >
-              Other Popular Trains — Live Running Status &amp; Time Table
-            </h2>
-            <p className="mt-0.5 text-xs text-ink-soft sm:text-sm">
-              Explore live station schedules, platform numbers, and coach
-              positions for major Indian Railways trains.
-            </p>
-          </div>
-          <Link
-            href="/rail/live-status"
-            className="inline-flex items-center gap-1 text-xs font-bold text-[#1956b4] hover:underline dark:text-blue-400"
-          >
-            <TrainIcon className="h-3.5 w-3.5" />
-            <span>Search Any Train Number</span>
-          </Link>
-        </div>
-
-        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {getRelatedCatalogTrains(cleanTrain, 16, {
+        {(() => {
+          const relatedTrains = getRelatedCatalogTrains(cleanTrain, 40, {
             excludeSuburban: true,
-          }).map((train) => (
-            <div
-              key={train.trainNumber}
-              className="group flex flex-col justify-between rounded-xl border border-line bg-card p-3.5 transition hover:border-[#1956b4] hover:shadow-sm"
-            >
-              <Link
-                href={buildTrainLiveStatusPath(
-                  train.trainNumber,
-                  train.trainName
-                )}
-                className="block"
-              >
-                <div className="flex items-center justify-between gap-2">
-                  <span className="rounded bg-blue-50 px-2 py-0.5 font-mono text-xs font-bold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
-                    #{train.trainNumber}
-                  </span>
-                  <span className="text-[11px] font-medium text-ink-muted">
-                    {train.type}
-                  </span>
-                </div>
-                <h3 className="mt-2 line-clamp-1 text-sm font-bold text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-400">
-                  {train.trainName}
-                </h3>
-              </Link>
+          });
+          const featuredRelated = relatedTrains.slice(0, 16);
+          const quickJumpRelated = relatedTrains.slice(16, 40);
 
-              <div className="mt-3 flex items-center justify-between border-t border-line pt-2 text-xs">
-                <span className="font-mono font-semibold text-ink-soft">
-                  {train.sourceCode} → {train.destinationCode}
-                </span>
-                <div className="flex items-center gap-2">
-                  {isReservedChartEligibleTrain(train) && (
+          return (
+            <>
+              <div className="flex flex-wrap items-end justify-between gap-2">
+                <div>
+                  <h2
+                    id="other-trains-heading"
+                    className="text-lg font-extrabold text-ink sm:text-xl"
+                  >
+                    Other Popular Trains — Live Running Status &amp; Time Table
+                  </h2>
+                  <p className="mt-0.5 text-xs text-ink-soft sm:text-sm">
+                    Explore live station schedules, platform numbers, and coach
+                    positions for major Indian Railways trains.
+                  </p>
+                </div>
+                <Link
+                  href="/rail/live-status#all-live-trains"
+                  className="inline-flex items-center gap-1 text-xs font-bold text-[#1956b4] hover:underline dark:text-blue-400"
+                >
+                  <TrainIcon className="h-3.5 w-3.5" />
+                  <span>Browse All Live Trains →</span>
+                </Link>
+              </div>
+
+              <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                {featuredRelated.map((train) => (
+                  <div
+                    key={train.trainNumber}
+                    className="group flex flex-col justify-between rounded-xl border border-line bg-card p-3.5 transition hover:border-[#1956b4] hover:shadow-sm"
+                  >
                     <Link
-                      href={buildChartTimePath(
+                      href={buildTrainLiveStatusPath(
                         train.trainNumber,
                         train.trainName
                       )}
-                      className="rounded bg-subcard px-1.5 py-0.5 text-[10px] font-bold text-ink-soft hover:text-[#1956b4] dark:hover:text-blue-300"
-                      title={`${train.trainNumber} Chart Preparation Time`}
+                      className="block"
                     >
-                      Chart
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="rounded bg-blue-50 px-2 py-0.5 font-mono text-xs font-bold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
+                          #{train.trainNumber}
+                        </span>
+                        <span className="text-[11px] font-medium text-ink-muted">
+                          {train.type}
+                        </span>
+                      </div>
+                      <h3 className="mt-2 line-clamp-1 text-sm font-bold text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-400">
+                        {train.trainName}
+                      </h3>
                     </Link>
-                  )}
-                  <Link
-                    href={buildTrainLiveStatusPath(
-                      train.trainNumber,
-                      train.trainName
-                    )}
-                    className="inline-flex items-center gap-1 font-bold text-[#1956b4] dark:text-blue-400"
-                  >
-                    <span>Spot</span>
-                    <ArrowRightIcon className="h-3.5 w-3.5" />
-                  </Link>
-                </div>
+
+                    <div className="mt-3 flex items-center justify-between border-t border-line pt-2 text-xs">
+                      <span className="font-mono font-semibold text-ink-soft">
+                        {train.sourceCode} → {train.destinationCode}
+                      </span>
+                      <div className="flex items-center gap-2">
+                        {isReservedChartEligibleTrain(train) && (
+                          <Link
+                            href={buildChartTimePath(
+                              train.trainNumber,
+                              train.trainName
+                            )}
+                            className="rounded bg-subcard px-1.5 py-0.5 text-[10px] font-bold text-ink-soft hover:text-[#1956b4] dark:hover:text-blue-300"
+                            title={`${train.trainNumber} Chart Preparation Time`}
+                          >
+                            Chart
+                          </Link>
+                        )}
+                        <Link
+                          href={buildTrainLiveStatusPath(
+                            train.trainNumber,
+                            train.trainName
+                          )}
+                          className="inline-flex items-center gap-1 font-bold text-[#1956b4] dark:text-blue-400"
+                        >
+                          <span>Spot</span>
+                          <ArrowRightIcon className="h-3.5 w-3.5" />
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
-            </div>
-          ))}
-        </div>
+
+              {quickJumpRelated.length > 0 && (
+                <div className="mt-5 rounded-2xl border border-line bg-card p-4 sm:p-5">
+                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line pb-2.5">
+                    <h3 className="text-xs font-extrabold tracking-wider text-ink uppercase sm:text-sm">
+                      More Express &amp; Superfast Trains — Direct Live Status
+                      Links
+                    </h3>
+                    <Link
+                      href="/rail/live-status#all-live-trains"
+                      className="text-xs font-bold text-[#1956b4] hover:underline dark:text-blue-400"
+                    >
+                      Full Indian Railways Directory →
+                    </Link>
+                  </div>
+                  <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                    {quickJumpRelated.map((train) => (
+                      <Link
+                        key={`live-jump-${train.trainNumber}`}
+                        href={buildTrainLiveStatusPath(
+                          train.trainNumber,
+                          train.trainName
+                        )}
+                        className="flex items-center justify-between gap-2 rounded-lg border border-line/70 bg-subcard/40 px-3 py-2 text-xs font-semibold text-ink transition hover:border-[#1956b4] hover:text-[#1956b4] dark:hover:text-blue-300"
+                      >
+                        <span className="truncate">
+                          <span className="mr-1.5 font-mono font-bold text-[#1956b4] dark:text-blue-400">
+                            {train.trainNumber}
+                          </span>
+                          {train.trainName} Live Status
+                        </span>
+                        <span className="shrink-0 font-mono text-[10px] text-ink-muted">
+                          {train.sourceCode}→{train.destinationCode}
+                        </span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </>
+          );
+        })()}
       </section>
     </main>
   );

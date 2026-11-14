@@ -10512,21 +10512,38 @@ export function getRelatedCatalogTrains(
     pushTrain(CATALOG_TRAIN_MAP.get(pairB));
   }
 
-  // 2. Ring-buffer neighbors around this train's index in ALL_CATALOG_TRAINS
+  // 2. Ring-buffer immediate neighbors around this train's index in ALL_CATALOG_TRAINS
   const startIdx =
     CATALOG_TRAIN_INDEX_MAP.get(clean) ??
     (Number.isFinite(numVal) ? numVal % total : 0);
 
+  const immediateQuota = Math.max(6, Math.floor(limit * 0.55));
   for (
     let offset = 1;
-    offset <= Math.min(total, limit * 8) && result.length < limit - 4;
+    offset <= Math.min(total, immediateQuota * 6) &&
+    result.length < immediateQuota;
     offset++
   ) {
     const nextIdx = (startIdx + offset) % total;
     pushTrain(ALL_CATALOG_TRAINS[nextIdx]);
   }
 
-  // 3. Anchor with top flagship trains
+  // 3. Small-world multi-stride jumps across the catalog so all ~4,000 trains sit within 2–3 crawl hops
+  const strideOffsets = [
+    19, 43, 89, 157, 271, 419, 631, 911, 1277, 1699, 2203, 2801, 3407,
+  ];
+  for (const baseStride of strideOffsets) {
+    if (result.length >= limit - 3) break;
+    for (let probe = 0; probe < 8; probe++) {
+      const candidate = ALL_CATALOG_TRAINS[(startIdx + baseStride + probe) % total];
+      if (isAllowed(candidate) && !seen.has(candidate.trainNumber)) {
+        pushTrain(candidate);
+        break;
+      }
+    }
+  }
+
+  // 4. Anchor with top flagship trains
   for (let i = 0; i < POPULAR_LIVE_TRAINS.length && result.length < limit; i++) {
     pushTrain(POPULAR_LIVE_TRAINS[i]);
   }

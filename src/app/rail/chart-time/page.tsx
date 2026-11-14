@@ -22,6 +22,8 @@ import { buildChartTimePath, POPULAR_CHART_TRAINS } from "@/lib/chart-time-types
 import {
   ALL_CATALOG_TRAINS,
   buildTrainLiveStatusPath,
+  isReservedChartEligibleTrain,
+  POPULAR_LIVE_TRAINS,
 } from "@/lib/live-train-types";
 
 export const metadata: Metadata = {
@@ -390,50 +392,103 @@ export default async function TrainChartTimePage() {
           ))}
         </div>
 
-        {/* Complete Indian Railways Train Chart Time Directory */}
-        <details className="group mt-6 rounded-2xl border border-line bg-card p-4 sm:p-5">
-          <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-sm font-extrabold text-ink sm:text-base">
-            <span>
-              Browse All {ALL_CATALOG_TRAINS.length} Trains — Station-Wise 1st
-              &amp; 2nd Chart Time Directory
-            </span>
-            <ChevronDownIcon className="h-4 w-4 shrink-0 text-ink-muted transition group-open:rotate-180" />
-          </summary>
-          <p className="mt-1.5 text-xs text-ink-soft">
-            Select any train below to check its 1st reservation chart time, 2nd
-            vacancy chart time, and remote charting station (
-            <code className="font-mono">chartRemoteStation</code>) for every
-            halt:
-          </p>
-          <div className="mt-4 grid grid-cols-1 gap-2 border-t border-line pt-4 sm:grid-cols-2 lg:grid-cols-3">
-            {ALL_CATALOG_TRAINS.slice(0, 252).map((train) => (
-              <div
-                key={`chart-dir-${train.trainNumber}`}
-                className="flex items-center justify-between gap-2 rounded-lg border border-line/70 bg-subcard/40 px-3 py-2 text-xs transition hover:border-[#1956b4]"
-              >
-                <Link
-                  href={buildChartTimePath(train.trainNumber, train.trainName)}
-                  className="min-w-0 flex-1 truncate font-semibold text-ink hover:text-[#1956b4] dark:hover:text-blue-400"
-                >
-                  <span className="mr-1.5 font-mono font-bold text-[#1956b4] dark:text-blue-400">
-                    {train.trainNumber}
-                  </span>
-                  <span>{train.trainName}</span>
-                </Link>
-                <Link
-                  href={buildTrainLiveStatusPath(
-                    train.trainNumber,
-                    train.trainName
-                  )}
-                  className="shrink-0 rounded bg-emerald-50 px-1.5 py-0.5 text-[10px] font-bold text-emerald-700 hover:underline dark:bg-emerald-500/15 dark:text-emerald-300"
-                  title={`${train.trainNumber} Live Train Running Status`}
-                >
-                  Live Status
-                </Link>
+        {/* Open Crawlable Directory Across All Reserved Train Series */}
+        {(() => {
+          const allReserved = ALL_CATALOG_TRAINS.filter((t) =>
+            isReservedChartEligibleTrain(t)
+          );
+          const hubDirectorySet = new Set<string>();
+          const hubDirectoryTrains: typeof allReserved = [];
+
+          // 1. Include all flagship popular reserved trains first
+          for (const t of POPULAR_LIVE_TRAINS) {
+            if (
+              isReservedChartEligibleTrain(t) &&
+              !hubDirectorySet.has(t.trainNumber)
+            ) {
+              hubDirectorySet.add(t.trainNumber);
+              hubDirectoryTrains.push(t);
+            }
+          }
+
+          // 2. Evenly sample across the entire reserved catalog (10xxx through 22xxx)
+          // so every zone/number block sits within 1–2 crawl hops of this hub
+          const targetTotal = 264;
+          const remainingSlots = Math.max(
+            0,
+            targetTotal - hubDirectoryTrains.length
+          );
+          const step = Math.max(
+            1,
+            Math.floor(allReserved.length / Math.max(1, remainingSlots))
+          );
+          for (
+            let idx = 0;
+            idx < allReserved.length && hubDirectoryTrains.length < targetTotal;
+            idx += step
+          ) {
+            const candidate = allReserved[idx];
+            if (candidate && !hubDirectorySet.has(candidate.trainNumber)) {
+              hubDirectorySet.add(candidate.trainNumber);
+              hubDirectoryTrains.push(candidate);
+            }
+          }
+
+          return (
+            <div
+              id="all-chart-trains"
+              className="mt-6 scroll-mt-24 rounded-2xl border border-line bg-card p-4 sm:p-5"
+            >
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <h3 className="text-sm font-extrabold text-ink sm:text-base">
+                  All-India Reserved Trains — Station-Wise 1st &amp; 2nd Chart
+                  Time Directory ({allReserved.length.toLocaleString("en-IN")}+
+                  Trains)
+                </h3>
+                <span className="rounded-full bg-blue-50 px-2.5 py-0.5 text-[11px] font-bold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
+                  Zone-Wide Index
+                </span>
               </div>
-            ))}
-          </div>
-        </details>
+              <p className="mt-1 text-xs text-ink-soft">
+                Select any Rajdhani, Vande Bharat, Shatabdi, Superfast, or
+                Mail/Express train below to inspect its 1st reservation chart
+                time, 2nd vacancy chart time, and remote charting station (
+                <code className="font-mono">chartRemoteStation</code>):
+              </p>
+              <div className="mt-4 grid grid-cols-1 gap-2 border-t border-line pt-4 sm:grid-cols-2 lg:grid-cols-3">
+                {hubDirectoryTrains.map((train) => (
+                  <div
+                    key={`chart-dir-${train.trainNumber}`}
+                    className="flex items-center justify-between gap-2 rounded-lg border border-line/70 bg-subcard/40 px-3 py-2 text-xs transition hover:border-[#1956b4]"
+                  >
+                    <Link
+                      href={buildChartTimePath(
+                        train.trainNumber,
+                        train.trainName
+                      )}
+                      className="min-w-0 flex-1 truncate font-semibold text-ink hover:text-[#1956b4] dark:hover:text-blue-400"
+                    >
+                      <span className="mr-1.5 font-mono font-bold text-[#1956b4] dark:text-blue-400">
+                        {train.trainNumber}
+                      </span>
+                      <span>{train.trainName}</span>
+                    </Link>
+                    <Link
+                      href={buildTrainLiveStatusPath(
+                        train.trainNumber,
+                        train.trainName
+                      )}
+                      className="shrink-0 rounded bg-emerald-50 px-1.5 py-0.5 text-[10px] font-bold text-emerald-700 hover:underline dark:bg-emerald-500/15 dark:text-emerald-300"
+                      title={`${train.trainNumber} Live Train Running Status`}
+                    >
+                      Live Status
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
       </section>
 
       {/* 3-Step How It Works */}

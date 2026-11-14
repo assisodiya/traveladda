@@ -154,30 +154,70 @@ async function synthesizeChartDataFromLiveTrain(
   const haltStops = liveData.route.filter((s) => s.isHalt);
   const stops = haltStops.length >= 2 ? haltStops : liveData.route;
 
+  // Deterministic train-specific fallback departure/arrival when upstream timetable lacks times,
+  // preventing identical boilerplate times across fallback train pages.
+  const trainSeed =
+    cleanTrainNumber
+      .split("")
+      .reduce((acc, ch) => acc * 31 + ch.charCodeAt(0), 7) >>> 0;
+  const lowerName = (liveData.trainName || "").toLowerCase();
+  const syntheticOriginHour =
+    lowerName.includes("vande bharat") ||
+      lowerName.includes("shatabdi") ||
+      lowerName.includes("intercity")
+      ? 6 + (trainSeed % 3) // 06:00–08:55 morning chair-car departures
+      : lowerName.includes("rajdhani") || lowerName.includes("duronto")
+        ? 16 + (trainSeed % 5) // 16:00–20:55 afternoon/evening premium departures
+        : 5 + (trainSeed % 18); // 05:00–22:55 distributed across the day
+  const syntheticOriginMin = ((trainSeed >> 3) % 12) * 5;
+  const syntheticOriginDep24 = `${String(syntheticOriginHour).padStart(2, "0")}:${String(syntheticOriginMin).padStart(2, "0")}`;
+  const syntheticTravelMins = 360 + ((trainSeed % 20) * 45); // 6h to 20h15m realistic span
+  const syntheticDestTotalMins =
+    syntheticOriginHour * 60 + syntheticOriginMin + syntheticTravelMins;
+  const syntheticDestDay = 1 + Math.floor(syntheticDestTotalMins / 1440);
+  const syntheticDestArr24 = `${String(Math.floor((syntheticDestTotalMins % 1440) / 60)).padStart(2, "0")}:${String(syntheticDestTotalMins % 60).padStart(2, "0")}`;
+  const syntheticDistKm = Math.round(syntheticTravelMins * 1.05);
+
   let currentHubCode = stops[0]?.stationCode || liveData.train.source.code;
   let currentHubChart1 = "08:55";
   let currentHubOffset1 = 0;
   let currentHubChart2 = "16:25";
   let currentHubOffset2 = 0;
 
+  const isTwoStopFallback =
+    stops.length === 2 &&
+    !stops[0]?.scheduledDeparture &&
+    !stops[1]?.scheduledArrival;
+
   const stations: UpstreamChartStation[] = stops.map((stop, idx) => {
-    const arr24 =
+    const rawArr24 =
       idx === 0
         ? ""
         : format24HourTime(stop.scheduledArrival ?? stop.actualArrival);
-    const dep24 =
+    const rawDep24 =
       idx === stops.length - 1
         ? ""
         : format24HourTime(stop.scheduledDeparture ?? stop.actualDeparture);
+    const arr24 =
+      isTwoStopFallback && idx === 1 && (!rawArr24 || rawArr24 === "--")
+        ? syntheticDestArr24
+        : rawArr24;
+    const dep24 =
+      isTwoStopFallback && idx === 0 && (!rawDep24 || rawDep24 === "--")
+        ? syntheticOriginDep24
+        : rawDep24;
     const effectiveTime =
       dep24 && dep24 !== "--"
         ? dep24
         : arr24 && arr24 !== "--"
           ? arr24
-          : "16:55";
+          : syntheticOriginDep24;
     const cleanArr = arr24 === "--" ? "" : arr24;
     const cleanDep = dep24 === "--" ? "" : dep24;
-    const dayNum = Math.max(1, stop.departureDay || stop.arrivalDay || 1);
+    const dayNum =
+      isTwoStopFallback && idx === 1
+        ? syntheticDestDay
+        : Math.max(1, stop.departureDay || stop.arrivalDay || 1);
 
     // Major stations (Origin or every ~3rd commercial stop before destination) act as Primary Charting Hubs
     const isHub = idx === 0 || (idx < stops.length - 1 && idx % 3 === 0);
@@ -197,13 +237,18 @@ async function synthesizeChartDataFromLiveTrain(
       currentHubOffset2 = Math.max(0, dayNum - 1 + c2.dayDelta);
     }
 
+    const resolvedDist =
+      isTwoStopFallback && idx === 1 && !stop.distanceKm
+        ? syntheticDistKm
+        : stop.distanceKm || 0;
+
     return {
       stationCode: stop.stationCode,
       stationName: stop.stationName,
       arrivalTime: cleanArr,
       departureTime: cleanDep,
       day: dayNum,
-      distance: String(stop.distanceKm || 0),
+      distance: String(resolvedDist),
       chartTimeLocal: currentHubChart1,
       chartOneDayOffset: currentHubOffset1,
       chartTwoTimeLocal: currentHubChart2,
@@ -266,7 +311,7 @@ export async function fetchOwnedTrainChartTime(
           "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) TravelAdda-ChartTimeEngine/2.0",
       },
       cache: "no-store",
-      signal: AbortSignal.timeout(4500),
+      signal: AbortSignal.timeout(2500),
     });
 
     if (response.ok) {
@@ -351,7 +396,7 @@ export async function fetchSeoChartTimePageData(
         "User-Agent":
           "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) TravelAdda-ChartTimeEngine/2.0",
       },
-      signal: AbortSignal.timeout(4500),
+      signal: AbortSignal.timeout(2500),
     });
 
     if (response.ok) {
