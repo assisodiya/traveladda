@@ -23,13 +23,16 @@ import {
 import {
   ArrowRightIcon,
   CheckCircleIcon,
+  ChevronDownIcon,
   ClockIcon,
   CloseIcon,
   CompassIcon,
   MapPinIcon,
   RefreshIcon,
   SearchIcon,
+  ShieldCheckIcon,
   SparklesIcon,
+  SwapArrowsIcon,
   SwapIcon,
   TicketIcon,
   TrainIcon,
@@ -106,6 +109,9 @@ export function MetroRouteFinder({
 
   const [fromOpen, setFromOpen] = useState(false);
   const [toOpen, setToOpen] = useState(false);
+  const [mobileFormExpanded, setMobileFormExpanded] = useState<boolean>(
+    () => mode !== "details",
+  );
 
   const [activeOptionIndex, setActiveOptionIndex] = useState<number>(0);
   const [expandedSegments, setExpandedSegments] = useState<
@@ -121,11 +127,14 @@ export function MetroRouteFinder({
     }
   }, [isRoutePending]);
 
-  // Reset button loading state & sync station inputs whenever route results / URL update
+  // Reset button loading state, collapse mobile form on result arrival & sync station inputs
   useEffect(() => {
     setManualNavigating(false);
     setFromOpen(false);
     setToOpen(false);
+    if (mode === "details") {
+      setMobileFormExpanded(false);
+    }
     setFromSlug(initialFromSlug);
     setToSlug(initialToSlug);
     setFromQuery(
@@ -268,9 +277,12 @@ export function MetroRouteFinder({
     setToOpen(false);
     const targetPath = buildMetroRoutePath(nextFromSlug, nextToSlug);
 
-    // If user submits the exact route already open on screen, update preference immediately without getting stuck
+    // If user submits the exact route already open on screen, update preference & collapse mobile form immediately
     if (pathname === targetPath) {
       setManualNavigating(false);
+      if (mode === "details") {
+        setMobileFormExpanded(false);
+      }
       if (initialResult) {
         const matchIdx = initialResult.alternatives.findIndex(
           (o) => o.preference === nextPref,
@@ -292,9 +304,7 @@ export function MetroRouteFinder({
     setFromOpen(false);
     setError(null);
 
-    if (mode === "details" && toSlug && st.slug !== toSlug) {
-      navigateToRouteDetails(st.slug, toSlug, preference);
-    } else if (mode === "search-only" && !toSlug) {
+    if (!toSlug) {
       setToOpen(true);
     }
   }
@@ -304,10 +314,6 @@ export function MetroRouteFinder({
     setToQuery(st.name);
     setToOpen(false);
     setError(null);
-
-    if (mode === "details" && fromSlug && fromSlug !== st.slug) {
-      navigateToRouteDetails(fromSlug, st.slug, preference);
-    }
   }
 
   function handleSwapStations() {
@@ -359,364 +365,589 @@ export function MetroRouteFinder({
     }));
   };
 
+  const selectedFromStation = stationsBySlug.get(fromSlug);
+  const selectedToStation = stationsBySlug.get(toSlug);
+
+  const getStationSubtitle = (st: MetroStation | undefined, fallback: string) => {
+    if (!st) return fallback;
+    const lineNames = st.routeIds
+      .map((rid) => linesMap.get(rid)?.shortName)
+      .filter(Boolean)
+      .slice(0, 2)
+      .join(" • ");
+    if (st.isInterchange && lineNames) {
+      return `⇄ Interchange • ${lineNames}`;
+    }
+    return lineNames || fallback;
+  };
+
   return (
-    <div className="space-y-5 sm:space-y-6">
-      {/* Main Mobile-First Search Card */}
-      <div className="rounded-2xl border border-line bg-card p-3.5 shadow-lg sm:p-6">
-        {/* Card Header + Route Choice Pills */}
-        <div className="mb-3.5 flex flex-col gap-2.5 border-b border-line pb-3 sm:mb-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-2.5">
-            <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#1956b4] text-white shadow-xs">
-              <TrainIcon className="h-4.5 w-4.5" />
-            </span>
-            <div className="min-w-0">
-              <h2 className="truncate text-sm font-extrabold text-ink sm:text-base">
-                {mode === "search-only"
-                  ? "Search Delhi NCR Metro Route & Fare"
-                  : "Modify Metro Stations or Route Preference"}
-              </h2>
-              <p className="truncate text-[11px] text-ink-muted sm:text-xs">
-                12 Lines • 262 Stations • DMRC, Airport Express, Noida Aqua
-                &amp; Rapid Metro
-              </p>
-            </div>
-          </div>
-
-          {/* Route Choice / Preference Toggle (Scrollable on tiny screens) */}
-          <div
-            role="group"
-            aria-label="Route preference"
-            className="grid grid-cols-3 gap-1 rounded-xl border border-line bg-subcard p-1 sm:inline-flex"
-          >
-            {(
-              [
-                { id: "fastest", label: "Fastest" },
-                { id: "min-interchange", label: "Min Change" },
-                { id: "min-stops", label: "Min Stops" },
-              ] as const
-            ).map((tab) => {
-              const isSelected = preference === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => handlePreferenceChange(tab.id)}
-                  className={`rounded-lg px-2 py-1.5 text-center text-[11px] font-extrabold transition sm:px-3 sm:text-xs ${
-                    isSelected
-                      ? "bg-[#1956b4] text-white shadow-xs"
-                      : "text-ink-soft hover:text-ink"
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Origin / Swap / Destination Form — Mobile App Style Stacked Card + Desktop Row */}
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            navigateToRouteDetails(fromSlug, toSlug, preference);
-          }}
-        >
-          <div className="relative grid gap-2.5 lg:grid-cols-[1fr_auto_1fr_auto] lg:items-end lg:gap-3">
-            {/* Origin Station Input */}
-            <div ref={fromBoxRef} className="relative">
-              <label
-                htmlFor="metro-origin-input"
-                className="mb-1 block text-[10px] font-extrabold uppercase tracking-wider text-ink-muted sm:text-[11px]"
-              >
-                From (Origin Metro Station)
-              </label>
-              <div className="relative">
-                <span className="pointer-events-none absolute top-1/2 left-3 inline-flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
-                  <MapPinIcon className="h-3.5 w-3.5" />
-                </span>
-                <input
-                  id="metro-origin-input"
-                  type="text"
-                  value={fromQuery}
-                  onFocus={() => {
-                    setFromOpen(true);
-                    setToOpen(false);
-                  }}
-                  onChange={(e) => {
-                    setFromQuery(e.target.value);
-                    setFromOpen(true);
-                  }}
-                  placeholder="Enter Origin Station (e.g. MG Road)"
-                  className="ta-search-box h-12 w-full rounded-xl border border-line-strong bg-input pr-16 pl-10 text-sm font-extrabold text-ink outline-none focus:border-[#1956b4] sm:pr-9"
-                  autoComplete="off"
-                />
-                {fromQuery && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setFromQuery("");
-                      setFromOpen(true);
-                    }}
-                    aria-label="Clear origin station"
-                    className="absolute top-1/2 right-11 -translate-y-1/2 inline-flex h-7 w-7 items-center justify-center rounded-md text-ink-muted hover:bg-subcard hover:text-ink lg:right-2.5"
-                  >
-                    <CloseIcon className="h-4 w-4" />
-                  </button>
-                )}
+    <div className="space-y-4 sm:space-y-6">
+      {/* MOBILE COMPACT SUMMARY + EDIT BAR (Shown on < md screens after route search / on route result pages) */}
+      {mode === "details" && !mobileFormExpanded && (
+        <div className="rounded-2xl border border-line bg-card p-3.5 shadow-lg shadow-slate-900/10 md:hidden dark:shadow-black/35">
+          <div className="flex items-start justify-between gap-2.5">
+            <button
+              type="button"
+              onClick={() => setMobileFormExpanded(true)}
+              className="min-w-0 flex-1 text-left"
+            >
+              <div className="flex items-center gap-1.5 text-[10px] font-extrabold tracking-wider text-[#1956b4] uppercase dark:text-blue-300">
+                <TrainIcon className="h-3.5 w-3.5 shrink-0 text-[#fc6203]" />
+                <span>Delhi NCR Metro Route</span>
               </div>
 
-              {/* Origin Station Dropdown */}
-              {fromOpen && (
-                <div className="absolute top-full right-0 left-0 z-50 mt-1.5 max-h-72 overflow-y-auto rounded-2xl border border-line bg-card p-1.5 shadow-2xl ring-1 ring-black/10">
-                  <div className="sticky top-0 z-10 flex items-center justify-between bg-card/95 px-2.5 py-1.5 text-[10px] font-extrabold uppercase tracking-wider text-ink-muted backdrop-blur-xs">
-                    <span>
-                      {fromQuery.trim()
-                        ? `Matching Stations`
-                        : "Popular Origin Stations"}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => setFromOpen(false)}
-                      className="rounded px-1.5 py-0.5 text-[10px] font-bold text-[#1956b4] lg:hidden"
-                    >
-                      Close
-                    </button>
-                  </div>
-                  {filteredFrom.length === 0 ? (
-                    <p className="px-3 py-4 text-center text-xs text-ink-muted">
-                      No station found matching &ldquo;{fromQuery}&rdquo;
-                    </p>
-                  ) : (
-                    filteredFrom.map((st) => (
-                      <button
-                        key={st.id}
-                        type="button"
-                        onClick={() => handleSelectFromStation(st)}
-                        className={`flex min-h-[44px] w-full items-center justify-between gap-2 rounded-xl px-3 py-2 text-left text-xs transition hover:bg-subcard active:bg-blue-50 ${
-                          st.slug === fromSlug
-                            ? "bg-blue-50/90 font-extrabold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300"
-                            : "font-bold text-ink"
-                        }`}
-                      >
-                        <div className="min-w-0">
-                          <span className="block truncate text-xs sm:text-sm">
-                            {st.name}
-                          </span>
-                          {st.isInterchange && (
-                            <span className="text-[10px] font-semibold text-ink-muted">
-                              ⇄ Interchange Station
-                            </span>
-                          )}
-                        </div>
-                        <div className="flex shrink-0 flex-wrap items-center gap-1">
-                          {st.routeIds.map((rid) => {
-                            const ln = linesMap.get(rid);
-                            if (!ln) return null;
-                            return (
-                              <span
-                                key={rid}
-                                style={{
-                                  backgroundColor: ln.color,
-                                  color: ln.textColor,
-                                }}
-                                className="rounded px-1.5 py-0.5 text-[9px] font-extrabold uppercase shadow-2xs"
-                              >
-                                {ln.shortCode}
-                              </span>
-                            );
-                          })}
-                        </div>
-                      </button>
-                    ))
-                  )}
+              <div className="mt-1 flex flex-wrap items-center gap-1.5 text-sm font-extrabold text-ink">
+                <span className="truncate">
+                  {selectedFromStation?.name || fromQuery}
+                </span>
+                <ArrowRightIcon className="h-3.5 w-3.5 shrink-0 text-[#fc6203]" />
+                <span className="truncate">
+                  {selectedToStation?.name || toQuery}
+                </span>
+              </div>
+
+              {activeRoute && (
+                <div className="mt-1.5 flex flex-wrap items-center gap-1.5 text-[11px] font-bold text-ink-soft">
+                  <span className="rounded-md bg-emerald-500/15 px-1.5 py-0.5 font-extrabold text-emerald-700 dark:text-emerald-300">
+                    ₹{activeRoute.fare.tokenFareInr} Token
+                  </span>
+                  <span>•</span>
+                  <span>{activeRoute.totalDurationMin} Mins</span>
+                  <span>•</span>
+                  <span>{activeRoute.totalStops} Stops</span>
+                  <span>•</span>
+                  <span>
+                    {activeRoute.interchangeCount === 0
+                      ? "Direct"
+                      : `${activeRoute.interchangeCount} Change`}
+                  </span>
                 </div>
               )}
-            </div>
+            </button>
 
-            {/* Swap Button — Floating on right edge on Mobile, Centered on Desktop */}
-            <div className="absolute top-[52px] right-2 z-20 lg:static lg:flex lg:justify-center lg:pb-0.5">
+            <div className="flex shrink-0 items-center gap-1.5">
               <button
                 type="button"
                 onClick={handleSwapStations}
-                title="Swap Origin & Destination Stations"
-                aria-label="Swap Origin and Destination Stations"
-                className="inline-flex h-9 w-9 items-center justify-center rounded-full border-2 border-line bg-card text-[#1956b4] shadow-md transition hover:border-[#1956b4] hover:bg-blue-50 active:scale-95 lg:h-11 lg:w-11 lg:rounded-xl lg:border lg:bg-subcard lg:shadow-none dark:text-blue-300 dark:hover:bg-blue-950/40"
+                disabled={navigating}
+                title="Reverse Metro Route"
+                aria-label="Reverse Metro Route"
+                className="inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl border border-line bg-subcard text-[#1956b4] transition hover:border-[#1956b4] active:scale-95 disabled:opacity-60 dark:text-blue-300"
               >
-                <SwapIcon className="h-4 w-4" />
+                {navigating ? (
+                  <RefreshIcon className="h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  <SwapArrowsIcon className="h-3.5 w-3.5" />
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setMobileFormExpanded(true)}
+                className="inline-flex h-9 cursor-pointer items-center gap-1 rounded-xl border border-[#1956b4]/30 bg-blue-50/90 px-3 text-xs font-extrabold text-[#1956b4] shadow-2xs transition hover:bg-[#1956b4] hover:text-white active:scale-95 dark:border-blue-400/30 dark:bg-blue-500/15 dark:text-blue-300"
+              >
+                <span>Edit</span>
+                <ChevronDownIcon className="h-3.5 w-3.5" />
               </button>
             </div>
+          </div>
+        </div>
+      )}
 
-            {/* Destination Station Input */}
-            <div ref={toBoxRef} className="relative">
-              <label
-                htmlFor="metro-dest-input"
-                className="mb-1 block text-[10px] font-extrabold uppercase tracking-wider text-ink-muted sm:text-[11px]"
-              >
-                To (Destination Metro Station)
-              </label>
-              <div className="relative">
-                <span className="pointer-events-none absolute top-1/2 left-3 inline-flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full bg-orange-500/15 text-[#fc6203]">
-                  <CompassIcon className="h-3.5 w-3.5" />
-                </span>
-                <input
-                  id="metro-dest-input"
-                  type="text"
-                  value={toQuery}
-                  onFocus={() => {
-                    setToOpen(true);
-                    setFromOpen(false);
-                  }}
-                  onChange={(e) => {
-                    setToQuery(e.target.value);
-                    setToOpen(true);
-                  }}
-                  placeholder="Enter Destination (e.g. Anand Vihar)"
-                  className="ta-search-box h-12 w-full rounded-xl border border-line-strong bg-input pr-16 pl-10 text-sm font-extrabold text-ink outline-none focus:border-[#1956b4] sm:pr-9"
-                  autoComplete="off"
-                />
-                {toQuery && (
+      {/* UNIFIED FLIGHT / HOME-PAGE STYLE METRO SEARCH CARD */}
+      <div
+        className={`w-full max-w-full rounded-2xl border border-line bg-card shadow-xl shadow-slate-900/10 dark:shadow-black/40 ${
+          mode === "details" && !mobileFormExpanded ? "hidden md:block" : "block"
+        }`}
+      >
+        {/* Top OTA Service Tab Bar (Matches Flight & Home HeroSearchWidget) */}
+        <div className="flex flex-wrap items-center justify-between gap-2 rounded-t-2xl border-b border-line px-3.5 pt-2.5 pb-2 sm:px-6 sm:pt-3 sm:pb-0">
+          <div className="flex flex-wrap items-center gap-1 sm:gap-2">
+            <span className="relative inline-flex items-center gap-1.5 rounded-xl bg-blue-50/90 px-3 py-2 text-xs font-bold text-[#1956b4] sm:rounded-none sm:bg-transparent sm:px-4 sm:py-3 sm:text-sm dark:bg-blue-500/15 dark:text-blue-400 sm:dark:bg-transparent">
+              <TrainIcon className="h-4 w-4" />
+              <span>Metro Route &amp; Fare</span>
+              <span className="hidden sm:absolute sm:right-0 sm:bottom-0 sm:left-0 sm:block sm:h-[3px] sm:rounded-t-full sm:bg-[#fc6203]" />
+            </span>
+
+            <Link
+              href="/rail/live-status"
+              className="hidden items-center gap-1.5 rounded-xl px-3.5 py-3 text-sm font-bold text-ink-muted transition hover:text-ink sm:inline-flex"
+            >
+              <ClockIcon className="h-4 w-4" />
+              <span>Live Train Status</span>
+            </Link>
+
+            <Link
+              href="/rail/pnr-status"
+              className="hidden items-center gap-1.5 rounded-xl px-3.5 py-3 text-sm font-bold text-ink-muted transition hover:text-ink md:inline-flex"
+            >
+              <TicketIcon className="h-4 w-4" />
+              <span>10-Digit PNR</span>
+            </Link>
+          </div>
+
+          {/* Right Strip: Route Preference Pills + Mobile Close Button */}
+          <div className="flex items-center gap-1.5 sm:pb-2">
+            <div
+              role="group"
+              aria-label="Route preference"
+              className="inline-flex items-center gap-0.5 rounded-xl border border-line bg-subcard p-0.5"
+            >
+              {(
+                [
+                  { id: "fastest", label: "Fastest" },
+                  { id: "min-interchange", label: "Min Change" },
+                  { id: "min-stops", label: "Min Stops" },
+                ] as const
+              ).map((tab) => {
+                const isSelected = preference === tab.id;
+                return (
                   <button
+                    key={tab.id}
                     type="button"
-                    onClick={() => {
-                      setToQuery("");
-                      setToOpen(true);
-                    }}
-                    aria-label="Clear destination station"
-                    className="absolute top-1/2 right-11 -translate-y-1/2 inline-flex h-7 w-7 items-center justify-center rounded-md text-ink-muted hover:bg-subcard hover:text-ink lg:right-2.5"
+                    onClick={() => handlePreferenceChange(tab.id)}
+                    style={
+                      isSelected
+                        ? { backgroundColor: "#1956b4", color: "#ffffff" }
+                        : undefined
+                    }
+                    className={`cursor-pointer rounded-lg px-2 py-1 text-[11px] font-extrabold transition sm:px-2.5 ${
+                      isSelected
+                        ? "bg-[#1956b4] text-white shadow-2xs"
+                        : "text-ink-soft hover:text-ink"
+                    }`}
                   >
-                    <CloseIcon className="h-4 w-4" />
+                    {tab.label}
                   </button>
-                )}
-              </div>
-
-              {/* Destination Station Dropdown */}
-              {toOpen && (
-                <div className="absolute top-full right-0 left-0 z-50 mt-1.5 max-h-72 overflow-y-auto rounded-2xl border border-line bg-card p-1.5 shadow-2xl ring-1 ring-black/10">
-                  <div className="sticky top-0 z-10 flex items-center justify-between bg-card/95 px-2.5 py-1.5 text-[10px] font-extrabold uppercase tracking-wider text-ink-muted backdrop-blur-xs">
-                    <span>
-                      {toQuery.trim()
-                        ? `Matching Stations`
-                        : "Popular Destination Stations"}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => setToOpen(false)}
-                      className="rounded px-1.5 py-0.5 text-[10px] font-bold text-[#1956b4] lg:hidden"
-                    >
-                      Close
-                    </button>
-                  </div>
-                  {filteredTo.length === 0 ? (
-                    <p className="px-3 py-4 text-center text-xs text-ink-muted">
-                      No station found matching &ldquo;{toQuery}&rdquo;
-                    </p>
-                  ) : (
-                    filteredTo.map((st) => (
-                      <button
-                        key={st.id}
-                        type="button"
-                        onClick={() => handleSelectToStation(st)}
-                        className={`flex min-h-[44px] w-full items-center justify-between gap-2 rounded-xl px-3 py-2 text-left text-xs transition hover:bg-subcard active:bg-blue-50 ${
-                          st.slug === toSlug
-                            ? "bg-blue-50/90 font-extrabold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300"
-                            : "font-bold text-ink"
-                        }`}
-                      >
-                        <div className="min-w-0">
-                          <span className="block truncate text-xs sm:text-sm">
-                            {st.name}
-                          </span>
-                          {st.isInterchange && (
-                            <span className="text-[10px] font-semibold text-ink-muted">
-                              ⇄ Interchange Station
-                            </span>
-                          )}
-                        </div>
-                        <div className="flex shrink-0 flex-wrap items-center gap-1">
-                          {st.routeIds.map((rid) => {
-                            const ln = linesMap.get(rid);
-                            if (!ln) return null;
-                            return (
-                              <span
-                                key={rid}
-                                style={{
-                                  backgroundColor: ln.color,
-                                  color: ln.textColor,
-                                }}
-                                className="rounded px-1.5 py-0.5 text-[9px] font-extrabold uppercase shadow-2xs"
-                              >
-                                {ln.shortCode}
-                              </span>
-                            );
-                          })}
-                        </div>
-                      </button>
-                    ))
-                  )}
-                </div>
-              )}
+                );
+              })}
             </div>
 
-            {/* Search Submit Button */}
-            <button
-              type="submit"
-              disabled={navigating}
-              className="ta-btn-primary inline-flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#fc6203] px-6 text-sm font-extrabold text-white shadow-md transition hover:bg-[#e55600] active:scale-[0.99] disabled:opacity-60 lg:w-auto"
-            >
-              {navigating ? (
-                <>
-                  <RefreshIcon className="h-4 w-4 animate-spin" />
-                  <span>Loading Route...</span>
-                </>
-              ) : (
-                <>
-                  <SearchIcon className="h-4 w-4" />
-                  <span>
-                    {mode === "search-only"
-                      ? "Find Metro Route & Fare"
-                      : "Check Route"}
-                  </span>
-                </>
-              )}
-            </button>
-          </div>
-        </form>
-
-        {/* Popular Route Quick Chips (Horizontal swipe on mobile, wrap on desktop) */}
-        <div className="mt-3.5 border-t border-line pt-3">
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0">
-            <span className="shrink-0 text-[11px] font-extrabold text-ink-muted">
-              Quick Routes:
-            </span>
-            {POPULAR_METRO_ROUTES.slice(0, 6).map((item) => {
-              const isCurrent =
-                mode === "details" &&
-                fromSlug === item.fromSlug &&
-                toSlug === item.toSlug;
-              return (
-                <Link
-                  key={`${item.fromSlug}-${item.toSlug}`}
-                  href={buildMetroRoutePath(item.fromSlug, item.toSlug)}
-                  className={`inline-flex shrink-0 items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-bold transition ${
-                    isCurrent
-                      ? "border-[#1956b4] bg-[#1956b4] text-white"
-                      : "border-line bg-subcard text-ink-soft hover:border-[#1956b4] hover:text-[#1956b4]"
-                  }`}
-                >
-                  <span>{item.fromName.replace(/ \(.*\)/, "")}</span>
-                  <span>→</span>
-                  <span>{item.toName.replace(/ \(.*\)/, "")}</span>
-                </Link>
-              );
-            })}
+            {mode === "details" && mobileFormExpanded && (
+              <button
+                type="button"
+                onClick={() => {
+                  setFromOpen(false);
+                  setToOpen(false);
+                  setMobileFormExpanded(false);
+                }}
+                aria-label="Collapse search form"
+                className="inline-flex h-7 items-center gap-1 rounded-lg border border-line bg-subcard px-2 text-[11px] font-bold text-ink-soft hover:text-ink md:hidden"
+              >
+                <CloseIcon className="h-3.5 w-3.5" />
+                <span>Close</span>
+              </button>
+            )}
           </div>
         </div>
 
-        {error && (
-          <div className="mt-3 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-2.5 text-xs font-bold text-rose-700 dark:text-rose-300">
-            {error}
-          </div>
-        )}
+        {/* Search Body — Connected Divided Strip Like Flight Search & Home Widget */}
+        <div className="min-w-0 p-3.5 sm:p-6">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              navigateToRouteDetails(fromSlug, toSlug, preference);
+            }}
+            className="min-w-0 space-y-3.5"
+          >
+            <div className="grid min-w-0 divide-y divide-line rounded-xl border border-line-strong bg-input lg:grid-cols-[1.28fr_1.28fr_0.82fr_auto] lg:divide-x lg:divide-y-0">
+              {/* Cell 1: From (Origin Metro Station) */}
+              <div
+                ref={fromBoxRef}
+                className="relative min-w-0 px-3.5 py-2.5 lg:pr-6"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <label
+                    htmlFor="metro-origin-input"
+                    className="block text-[11px] font-semibold tracking-wide text-ink-muted uppercase"
+                  >
+                    From Station
+                  </label>
+                  {selectedFromStation && (
+                    <div className="flex shrink-0 items-center gap-1">
+                      {selectedFromStation.routeIds.slice(0, 3).map((rid) => {
+                        const ln = linesMap.get(rid);
+                        if (!ln) return null;
+                        return (
+                          <span
+                            key={`from-badge-${rid}`}
+                            style={{
+                              backgroundColor: ln.color,
+                              color: ln.textColor,
+                            }}
+                            className="rounded px-1.5 py-0.5 text-[9px] font-extrabold uppercase"
+                          >
+                            {ln.shortCode}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+
+                <div className="mt-1 flex items-center gap-2">
+                  <MapPinIcon className="h-4 w-4 shrink-0 text-[#1956b4] dark:text-blue-400" />
+                  <input
+                    id="metro-origin-input"
+                    type="text"
+                    value={fromQuery}
+                    onFocus={() => {
+                      setFromOpen(true);
+                      setToOpen(false);
+                    }}
+                    onChange={(e) => {
+                      setFromQuery(e.target.value);
+                      setFromOpen(true);
+                    }}
+                    placeholder="Origin Metro Station (e.g. Rajiv Chowk)"
+                    className="w-full min-w-0 bg-transparent text-sm font-bold text-ink placeholder:font-normal placeholder:text-ink-muted focus:outline-none sm:text-base"
+                    autoComplete="off"
+                  />
+                  {fromQuery && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setFromQuery("");
+                        setFromOpen(true);
+                      }}
+                      aria-label="Clear origin station"
+                      className="inline-flex h-6 w-6 shrink-0 cursor-pointer items-center justify-center rounded-md text-ink-muted hover:bg-subcard hover:text-ink"
+                    >
+                      <CloseIcon className="h-3.5 w-3.5" />
+                    </button>
+                  )}
+                </div>
+
+                <p className="mt-0.5 truncate text-[11px] text-ink-muted">
+                  {getStationSubtitle(
+                    selectedFromStation,
+                    "Select boarding metro station",
+                  )}
+                </p>
+
+                {/* Origin Station Dropdown */}
+                {fromOpen && (
+                  <div className="absolute top-full right-0 left-0 z-50 mt-1.5 max-h-72 overflow-y-auto rounded-2xl border border-line bg-card p-1.5 shadow-2xl ring-1 ring-black/10">
+                    <div className="sticky top-0 z-10 flex items-center justify-between bg-card/95 px-2.5 py-1.5 text-[10px] font-extrabold uppercase tracking-wider text-ink-muted backdrop-blur-xs">
+                      <span>
+                        {fromQuery.trim()
+                          ? "Matching Stations"
+                          : "Popular Origin Stations"}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setFromOpen(false)}
+                        className="rounded px-1.5 py-0.5 text-[10px] font-bold text-[#1956b4]"
+                      >
+                        Close
+                      </button>
+                    </div>
+                    {filteredFrom.length === 0 ? (
+                      <p className="px-3 py-4 text-center text-xs text-ink-muted">
+                        No station found matching &ldquo;{fromQuery}&rdquo;
+                      </p>
+                    ) : (
+                      filteredFrom.map((st) => (
+                        <button
+                          key={st.id}
+                          type="button"
+                          onClick={() => handleSelectFromStation(st)}
+                          className={`flex min-h-[44px] w-full cursor-pointer items-center justify-between gap-2 rounded-xl px-3 py-2 text-left text-xs transition hover:bg-subcard active:bg-blue-50 ${
+                            st.slug === fromSlug
+                              ? "bg-blue-50/90 font-extrabold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300"
+                              : "font-bold text-ink"
+                          }`}
+                        >
+                          <div className="min-w-0">
+                            <span className="block truncate text-xs sm:text-sm">
+                              {st.name}
+                            </span>
+                            {st.isInterchange && (
+                              <span className="text-[10px] font-semibold text-ink-muted">
+                                ⇄ Interchange Station
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex shrink-0 flex-wrap items-center gap-1">
+                            {st.routeIds.map((rid) => {
+                              const ln = linesMap.get(rid);
+                              if (!ln) return null;
+                              return (
+                                <span
+                                  key={rid}
+                                  style={{
+                                    backgroundColor: ln.color,
+                                    color: ln.textColor,
+                                  }}
+                                  className="rounded px-1.5 py-0.5 text-[9px] font-extrabold uppercase shadow-2xs"
+                                >
+                                  {ln.shortCode}
+                                </span>
+                              );
+                            })}
+                          </div>
+                        </button>
+                      ))
+                    )}
+                  </div>
+                )}
+
+                {/* Floating Swap Circle on Divider (Identical to Flight Search) */}
+                <button
+                  type="button"
+                  onClick={handleSwapStations}
+                  title="Swap Origin & Destination Stations"
+                  aria-label="Swap Origin and Destination Stations"
+                  className="absolute right-3 -bottom-3.5 z-30 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-line-strong bg-card text-[#1956b4] shadow-sm transition hover:scale-105 hover:border-[#1956b4] lg:top-1/2 lg:-right-3.5 lg:bottom-auto lg:-translate-y-1/2 dark:text-blue-300"
+                >
+                  <SwapArrowsIcon className="h-3.5 w-3.5" />
+                </button>
+              </div>
+
+              {/* Cell 2: To (Destination Metro Station) */}
+              <div
+                ref={toBoxRef}
+                className="relative min-w-0 px-3.5 py-2.5 lg:pl-6"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <label
+                    htmlFor="metro-dest-input"
+                    className="block text-[11px] font-semibold tracking-wide text-ink-muted uppercase"
+                  >
+                    To Station
+                  </label>
+                  {selectedToStation && (
+                    <div className="flex shrink-0 items-center gap-1">
+                      {selectedToStation.routeIds.slice(0, 3).map((rid) => {
+                        const ln = linesMap.get(rid);
+                        if (!ln) return null;
+                        return (
+                          <span
+                            key={`to-badge-${rid}`}
+                            style={{
+                              backgroundColor: ln.color,
+                              color: ln.textColor,
+                            }}
+                            className="rounded px-1.5 py-0.5 text-[9px] font-extrabold uppercase"
+                          >
+                            {ln.shortCode}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+
+                <div className="mt-1 flex items-center gap-2">
+                  <CompassIcon className="h-4 w-4 shrink-0 text-[#fc6203]" />
+                  <input
+                    id="metro-dest-input"
+                    type="text"
+                    value={toQuery}
+                    onFocus={() => {
+                      setToOpen(true);
+                      setFromOpen(false);
+                    }}
+                    onChange={(e) => {
+                      setToQuery(e.target.value);
+                      setToOpen(true);
+                    }}
+                    placeholder="Destination Station (e.g. Anand Vihar)"
+                    className="w-full min-w-0 bg-transparent text-sm font-bold text-ink placeholder:font-normal placeholder:text-ink-muted focus:outline-none sm:text-base"
+                    autoComplete="off"
+                  />
+                  {toQuery && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setToQuery("");
+                        setToOpen(true);
+                      }}
+                      aria-label="Clear destination station"
+                      className="inline-flex h-6 w-6 shrink-0 cursor-pointer items-center justify-center rounded-md text-ink-muted hover:bg-subcard hover:text-ink"
+                    >
+                      <CloseIcon className="h-3.5 w-3.5" />
+                    </button>
+                  )}
+                </div>
+
+                <p className="mt-0.5 truncate text-[11px] text-ink-muted">
+                  {getStationSubtitle(
+                    selectedToStation,
+                    "Select destination metro station",
+                  )}
+                </p>
+
+                {/* Destination Station Dropdown */}
+                {toOpen && (
+                  <div className="absolute top-full right-0 left-0 z-50 mt-1.5 max-h-72 overflow-y-auto rounded-2xl border border-line bg-card p-1.5 shadow-2xl ring-1 ring-black/10">
+                    <div className="sticky top-0 z-10 flex items-center justify-between bg-card/95 px-2.5 py-1.5 text-[10px] font-extrabold uppercase tracking-wider text-ink-muted backdrop-blur-xs">
+                      <span>
+                        {toQuery.trim()
+                          ? "Matching Stations"
+                          : "Popular Destination Stations"}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setToOpen(false)}
+                        className="rounded px-1.5 py-0.5 text-[10px] font-bold text-[#1956b4]"
+                      >
+                        Close
+                      </button>
+                    </div>
+                    {filteredTo.length === 0 ? (
+                      <p className="px-3 py-4 text-center text-xs text-ink-muted">
+                        No station found matching &ldquo;{toQuery}&rdquo;
+                      </p>
+                    ) : (
+                      filteredTo.map((st) => (
+                        <button
+                          key={st.id}
+                          type="button"
+                          onClick={() => handleSelectToStation(st)}
+                          className={`flex min-h-[44px] w-full cursor-pointer items-center justify-between gap-2 rounded-xl px-3 py-2 text-left text-xs transition hover:bg-subcard active:bg-blue-50 ${
+                            st.slug === toSlug
+                              ? "bg-blue-50/90 font-extrabold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300"
+                              : "font-bold text-ink"
+                          }`}
+                        >
+                          <div className="min-w-0">
+                            <span className="block truncate text-xs sm:text-sm">
+                              {st.name}
+                            </span>
+                            {st.isInterchange && (
+                              <span className="text-[10px] font-semibold text-ink-muted">
+                                ⇄ Interchange Station
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex shrink-0 flex-wrap items-center gap-1">
+                            {st.routeIds.map((rid) => {
+                              const ln = linesMap.get(rid);
+                              if (!ln) return null;
+                              return (
+                                <span
+                                  key={rid}
+                                  style={{
+                                    backgroundColor: ln.color,
+                                    color: ln.textColor,
+                                  }}
+                                  className="rounded px-1.5 py-0.5 text-[9px] font-extrabold uppercase shadow-2xs"
+                                >
+                                  {ln.shortCode}
+                                </span>
+                              );
+                            })}
+                          </div>
+                        </button>
+                      ))
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Cell 3: Route Preference Summary Cell (Desktop Strip Balance + 1-Tap Cycle) */}
+              <div className="hidden min-w-0 px-3.5 py-2.5 lg:block">
+                <span className="block text-[11px] font-semibold tracking-wide text-ink-muted uppercase">
+                  Route Priority
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const order: MetroRoutePreference[] = [
+                      "fastest",
+                      "min-interchange",
+                      "min-stops",
+                    ];
+                    const next =
+                      order[(order.indexOf(preference) + 1) % order.length];
+                    handlePreferenceChange(next);
+                  }}
+                  className="mt-1 flex w-full cursor-pointer items-center justify-between gap-1.5 text-left focus:outline-none"
+                >
+                  <span className="truncate text-sm font-bold text-ink sm:text-base">
+                    {preference === "fastest"
+                      ? "Fastest Route"
+                      : preference === "min-interchange"
+                        ? "Min Interchange"
+                        : "Minimum Stops"}
+                  </span>
+                  <ChevronDownIcon className="h-4 w-4 shrink-0 text-ink-muted" />
+                </button>
+                <p className="mt-0.5 truncate text-[11px] text-ink-muted">
+                  Token &amp; Smart Card Fare
+                </p>
+              </div>
+
+              {/* Cell 4: Vibrant Orange Search CTA */}
+              <div className="flex p-2 lg:p-1.5">
+                <button
+                  type="submit"
+                  disabled={navigating}
+                  className="ta-btn-primary inline-flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-lg px-6 text-sm font-extrabold tracking-wide whitespace-nowrap uppercase transition active:scale-[0.99] disabled:opacity-60 lg:h-full lg:min-w-[164px]"
+                >
+                  {navigating ? (
+                    <>
+                      <RefreshIcon className="h-4 w-4 animate-spin" />
+                      <span>Loading Route...</span>
+                    </>
+                  ) : (
+                    <>
+                      <SearchIcon className="h-4 w-4" />
+                      <span>
+                        {mode === "search-only"
+                          ? "Search Route"
+                          : "Update Route"}
+                      </span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Popular Route Quick Chips (Flight Search / Home Widget Style) */}
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 text-xs sm:flex-wrap sm:gap-2 sm:overflow-visible sm:pb-0">
+              <span className="shrink-0 font-medium text-ink-muted">
+                Popular Routes:
+              </span>
+              {POPULAR_METRO_ROUTES.slice(0, 6).map((item) => {
+                const isCurrent =
+                  mode === "details" &&
+                  fromSlug === item.fromSlug &&
+                  toSlug === item.toSlug;
+                return (
+                  <Link
+                    key={`${item.fromSlug}-${item.toSlug}`}
+                    href={buildMetroRoutePath(item.fromSlug, item.toSlug)}
+                    className={`inline-flex shrink-0 items-center gap-1 rounded-full border px-2.5 py-1 font-medium transition ${
+                      isCurrent
+                        ? "border-[#1956b4] bg-blue-50/90 text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300"
+                        : "border-line bg-subcard text-ink-soft hover:border-[#1956b4] hover:text-[#1956b4]"
+                    }`}
+                  >
+                    <TrainIcon className="h-3 w-3 text-[#1956b4] dark:text-blue-400" />
+                    <span className="font-semibold text-ink">
+                      {item.fromName.replace(/ \(.*\)/, "")} →{" "}
+                      {item.toName.replace(/ \(.*\)/, "")}
+                    </span>
+                  </Link>
+                );
+              })}
+
+              <span className="ml-auto hidden items-center gap-1 text-[11px] font-bold text-emerald-700 md:inline-flex dark:text-emerald-400">
+                <ShieldCheckIcon className="h-3.5 w-3.5" />
+                <span>Smart Card 10%–20% Off</span>
+              </span>
+            </div>
+
+            {error && (
+              <div className="rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-2.5 text-xs font-bold text-rose-700 dark:text-rose-300">
+                {error}
+              </div>
+            )}
+          </form>
+        </div>
       </div>
 
       {/* Active Route Result Dashboard (Rendered on Details Pages) */}
