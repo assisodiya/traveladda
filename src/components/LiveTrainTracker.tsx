@@ -11,6 +11,7 @@ import {
   useSyncExternalStore,
 } from "react";
 import {
+  ALL_CATALOG_TRAINS,
   ALL_WEEK_DAYS,
   buildTrainLiveStatusPath,
   formatDelayText,
@@ -30,6 +31,7 @@ import {
   AlertCircleIcon,
   ArrowRightIcon,
   CalendarIcon,
+  ChevronDownIcon,
   ClockIcon,
   CloseIcon,
   CoachTrainIcon,
@@ -37,13 +39,26 @@ import {
   CopyIcon,
   EngineTrainIcon,
   LiveTrainBeaconIcon,
+  MapPinIcon,
   PrinterIcon,
   RefreshIcon,
   SearchIcon,
+  ShieldCheckIcon,
   SwapArrowsIcon,
   TicketIcon,
   TrainIcon,
 } from "./Icons";
+import { WhatsAppIcon } from "./MetroCommuterToolkit";
+import {
+  buildTrainWhatsAppShareUrl,
+  MyStationLiveCard,
+  PinnedTrainsQuickBar,
+  readSavedStationForTrain,
+  saveStationForTrain,
+  TrainAddToHomeScreenCard,
+  TrainHeaderQuickActions,
+  usePinnedTrainJourneys,
+} from "./TrainPassengerToolkit";
 
 interface RecentLiveTrainItem {
   trainNumber: string;
@@ -551,6 +566,10 @@ export function LiveTrainTracker({
     );
   const [copied, setCopied] = useState(false);
   const [autoRefresh, setAutoRefresh] = useState(false);
+  const [mobileFormExpanded, setMobileFormExpanded] = useState<boolean>(
+    () => !initialData && initialQueryTrain.length < 3
+  );
+  const [myStationCode, setMyStationCode] = useState<string>("");
 
   // Train Name / Number Autocomplete state
   const [remoteSuggestions, setRemoteSuggestions] = useState<{
@@ -562,6 +581,7 @@ export function LiveTrainTracker({
   const searchBoxRef = useRef<HTMLDivElement>(null);
   const liveTrainRowRef = useRef<HTMLDivElement>(null);
 
+  // Instant 0ms offline-ready search across ALL 10,173 catalog trains (works even on slow 2G rail signal)
   const suggestions = useMemo(() => {
     const trimmed = searchQuery.trim();
     if (trimmed.length < 2) {
@@ -572,16 +592,28 @@ export function LiveTrainTracker({
       remoteSuggestions.query === trimmed &&
       remoteSuggestions.items.length > 0
     ) {
-      return remoteSuggestions.items;
+      return remoteSuggestions.items.slice(0, 8);
     }
     const lower = trimmed.toLowerCase();
-    return POPULAR_LIVE_TRAINS.filter(
-      (t) =>
-        t.trainNumber.includes(lower) ||
-        t.trainName.toLowerCase().includes(lower) ||
-        t.sourceCode.toLowerCase().includes(lower) ||
-        t.destinationCode.toLowerCase().includes(lower)
-    ).slice(0, 6);
+    const prefixMatches: TrainSearchItem[] = [];
+    const fuzzyMatches: TrainSearchItem[] = [];
+
+    for (const t of ALL_CATALOG_TRAINS) {
+      if (t.trainNumber.startsWith(lower)) {
+        prefixMatches.push(t);
+        if (prefixMatches.length >= 8) break;
+      } else if (
+        fuzzyMatches.length < 8 &&
+        (t.trainNumber.includes(lower) ||
+          t.trainName.toLowerCase().includes(lower) ||
+          t.sourceCode.toLowerCase() === lower ||
+          t.destinationCode.toLowerCase() === lower)
+      ) {
+        fuzzyMatches.push(t);
+      }
+    }
+
+    return [...prefixMatches, ...fuzzyMatches].slice(0, 8);
   }, [searchQuery, remoteSuggestions]);
 
   // Interactive Filters for Coach Rake & Route Stops
@@ -746,6 +778,7 @@ export function LiveTrainTracker({
         : todayIst || getTodayIstDateString();
 
       setDropdownOpen(false);
+      setMobileFormExpanded(false);
       setSearchQuery(digits);
       if (!useAutoDate) setDateInput(cleanDate);
       setIsAutoDate(useAutoDate);
@@ -810,6 +843,39 @@ export function LiveTrainTracker({
   }, [initialData, initialTrainNumber, searchParams, performLookup, todayIst]);
 
   const trainData = apiResponse?.success ? apiResponse.data : undefined;
+
+  const {
+    pinnedTrains,
+    isCurrentPinned,
+    togglePinCurrentTrain,
+    removePinnedTrain,
+  } = usePinnedTrainJourneys(trainData);
+
+  // Restore saved boarding/alighting station for the active train
+  useEffect(() => {
+    if (!trainData?.trainNumber) {
+      setMyStationCode("");
+      return;
+    }
+    setMyStationCode(readSavedStationForTrain(trainData.trainNumber));
+  }, [trainData?.trainNumber]);
+
+  const handleSelectMyStation = useCallback(
+    (code: string) => {
+      setMyStationCode(code);
+      if (trainData?.trainNumber) {
+        saveStationForTrain(trainData.trainNumber, code);
+      }
+    },
+    [trainData?.trainNumber]
+  );
+
+  const selectedMyStop = useMemo(() => {
+    if (!trainData || !myStationCode) return null;
+    return (
+      trainData.route.find((s) => s.stationCode === myStationCode) ?? null
+    );
+  }, [trainData, myStationCode]);
 
   useEffect(() => {
     if (!autoRefresh || !trainData) return;
@@ -912,9 +978,91 @@ export function LiveTrainTracker({
   }, [trainData, showAllStations, stationSearch]);
 
   return (
-    <div className="w-full space-y-5">
+    <div className="w-full space-y-4 sm:space-y-5">
+      {/* MOBILE COMPACT ACTIVE TRAIN BAR (Auto-collapses search form on < md once a train is loaded) */}
+      {trainData && !mobileFormExpanded && (
+        <div className="rounded-2xl border border-line bg-card p-3.5 shadow-md md:hidden">
+          <div className="flex items-start justify-between gap-2.5">
+            <button
+              type="button"
+              onClick={() => setMobileFormExpanded(true)}
+              className="min-w-0 flex-1 text-left"
+            >
+              <div className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-wider text-[#1956b4] dark:text-blue-300">
+                <TrainIcon className="h-3.5 w-3.5 shrink-0 text-[#fc6203]" />
+                <span>Train #{trainData.trainNumber} · {trainData.train.type}</span>
+              </div>
+
+              <p className="mt-1 truncate text-sm font-extrabold text-ink">
+                {trainData.trainName}
+              </p>
+
+              <div className="mt-1 flex flex-wrap items-center gap-1.5 text-[11px] font-semibold text-ink-soft">
+                <span className="font-mono font-bold text-ink">
+                  {trainData.train.source.code} → {trainData.train.destination.code}
+                </span>
+                <span>•</span>
+                <span>{formatReadableDate(trainData.startDate)}</span>
+              </div>
+            </button>
+
+            <div className="flex shrink-0 items-center gap-1.5">
+              <button
+                type="button"
+                disabled={loading}
+                onClick={() =>
+                  void performLookup(
+                    trainData.trainNumber,
+                    trainData.startDate,
+                    false
+                  )
+                }
+                title="Refresh Live Status"
+                aria-label="Refresh Live Status"
+                className="inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl border border-line bg-subcard text-[#1956b4] transition hover:border-[#1956b4] disabled:opacity-60 dark:text-blue-300"
+              >
+                <RefreshIcon
+                  className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`}
+                />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setMobileFormExpanded(true)}
+                className="inline-flex h-9 cursor-pointer items-center gap-1 rounded-xl border border-[#1956b4]/30 bg-blue-50/90 px-3 text-xs font-extrabold text-[#1956b4] transition hover:bg-[#1956b4] hover:text-white dark:border-blue-400/30 dark:bg-blue-500/15 dark:text-blue-300"
+              >
+                <span>Edit</span>
+                <ChevronDownIcon className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Clean Segmented ConfirmTkt / ixigo Search Box */}
-      <div className="rounded-2xl border border-line bg-card p-4 shadow-md sm:p-5">
+      <div
+        className={`rounded-2xl border border-line bg-card p-4 shadow-md sm:p-5 ${
+          trainData && !mobileFormExpanded ? "hidden md:block" : "block"
+        }`}
+      >
+        {trainData && mobileFormExpanded && (
+          <div className="mb-3 flex items-center justify-between border-b border-line pb-2.5 md:hidden">
+            <span className="text-xs font-extrabold uppercase tracking-wider text-ink-muted">
+              Search Another Train or Date
+            </span>
+            <button
+              type="button"
+              onClick={() => {
+                setDropdownOpen(false);
+                setMobileFormExpanded(false);
+              }}
+              className="inline-flex items-center gap-1 rounded-lg border border-line bg-subcard px-2.5 py-1 text-[11px] font-bold text-ink-soft hover:text-ink"
+            >
+              <CloseIcon className="h-3.5 w-3.5" />
+              <span>Close</span>
+            </button>
+          </div>
+        )}
         <form onSubmit={handleSubmit}>
           <div className="grid divide-y divide-line rounded-xl border border-line-strong bg-input md:grid-cols-[1.55fr_0.9fr_auto] md:divide-x md:divide-y-0">
             {/* Train Number or Name */}
@@ -1182,6 +1330,19 @@ export function LiveTrainTracker({
         )}
       </div>
 
+      {/* Pinned Active Train Journeys Quick Strip */}
+      <PinnedTrainsQuickBar
+        pinnedTrains={pinnedTrains}
+        activeTrainNumber={trainData?.trainNumber}
+        onSelectTrain={(num) =>
+          void checkLiveTrain(num, todayIst, {
+            syncUrl: true,
+            useAutoDate: true,
+          })
+        }
+        onRemoveTrain={removePinnedTrain}
+      />
+
       {/* Loading Skeleton */}
       {loading && !trainData && (
         <div className="animate-pulse overflow-hidden rounded-2xl border border-line bg-card p-6 shadow-sm">
@@ -1418,31 +1579,58 @@ export function LiveTrainTracker({
                   </p>
                 </div>
 
-                {/* Run Days */}
-                <div className="flex items-center gap-1.5">
-                  <span className="text-[11px] font-semibold text-ink-muted">
-                    {trainData.train.isDaily ? "Daily:" : "Runs:"}
-                  </span>
-                  <div className="flex items-center gap-1">
-                    {ALL_WEEK_DAYS.map((day) => {
-                      const runs = trainData.train.runDays.includes(day.key);
-                      return (
-                        <span
-                          key={day.key}
-                          title={day.label}
-                          className={`inline-flex h-6 w-6 items-center justify-center rounded font-mono text-[11px] font-bold ${runs
-                              ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-500/30 dark:bg-emerald-500/15 dark:text-emerald-300"
-                              : "bg-card/60 text-ink-muted opacity-45"
-                            }`}
-                        >
-                          {day.short}
-                        </span>
-                      );
-                    })}
+                {/* Run Days + Quick Actions (Pin, Chart Time, WhatsApp) */}
+                <div className="flex flex-wrap items-center gap-2.5">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[11px] font-semibold text-ink-muted">
+                      {trainData.train.isDaily ? "Daily:" : "Runs:"}
+                    </span>
+                    <div className="flex items-center gap-1">
+                      {ALL_WEEK_DAYS.map((day) => {
+                        const runs = trainData.train.runDays.includes(day.key);
+                        return (
+                          <span
+                            key={day.key}
+                            title={day.label}
+                            className={`inline-flex h-6 w-6 items-center justify-center rounded font-mono text-[11px] font-bold ${runs
+                                ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-500/30 dark:bg-emerald-500/15 dark:text-emerald-300"
+                                : "bg-card/60 text-ink-muted opacity-45"
+                              }`}
+                          >
+                            {day.short}
+                          </span>
+                        );
+                      })}
+                    </div>
                   </div>
+
+                  <TrainHeaderQuickActions
+                    data={trainData}
+                    myStop={selectedMyStop}
+                    isPinned={isCurrentPinned}
+                    onTogglePin={() => togglePinCurrentTrain(myStationCode)}
+                  />
                 </div>
               </div>
             </div>
+
+            {/* Automatic 3+ Hour Delay Full TDR Refund Alert */}
+            {trainData.delayMinutes >= 180 && (
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-amber-400/40 bg-amber-50/90 px-4 py-2.5 text-xs dark:bg-amber-950/30 sm:px-6">
+                <p className="font-bold text-amber-950 dark:text-amber-200">
+                  ⚠️ Train #{trainData.trainNumber} is running{" "}
+                  <strong>{formatDelayText(trainData.delayMinutes)}</strong> — if
+                  not boarding, file online TDR before departure for{" "}
+                  <strong>100% Full Refund (₹0 deduction)</strong>.
+                </p>
+                <Link
+                  href="/rail/refund-calculator/train-cancelled-delayed-3-hours-tdr-refund-calculator"
+                  className="shrink-0 rounded-lg bg-amber-600 px-3 py-1 font-extrabold text-white hover:bg-amber-700"
+                >
+                  Check 100% TDR Refund →
+                </Link>
+              </div>
+            )}
 
             {trainData.exceptions.length > 0 && (
               <div className="border-b border-line bg-rose-50 px-4 py-2.5 text-xs font-bold text-rose-700 dark:bg-rose-500/10 dark:text-rose-300 sm:px-6">
@@ -1527,10 +1715,17 @@ export function LiveTrainTracker({
             </div>
           </div>
 
-          {/* 2. STATION-BY-STATION VERTICAL TIMELINE (ConfirmTkt / ixigo Style) */}
-          <div className="overflow-hidden rounded-2xl border border-line bg-card shadow-sm">
+          {/* 1B. TRACK MY STATION CARD (Instant ETA, Distance Left & Platform) */}
+          <MyStationLiveCard
+            data={trainData}
+            selectedStationCode={myStationCode}
+            onSelectStation={handleSelectMyStation}
+          />
+
+          {/* 2. STATION-BY-STATION VERTICAL TIMELINE (Clean, Comfortable Transit Pointers) */}
+          <div className="overflow-hidden rounded-2xl border border-line bg-card shadow-xs">
             {/* Controls Header */}
-            <div className="flex flex-col justify-between gap-3 border-b border-line bg-subcard/60 px-4 py-3.5 sm:px-6 lg:flex-row lg:items-center">
+            <div className="flex flex-col justify-between gap-3 border-b border-line bg-card px-4 py-3.5 sm:px-6 lg:flex-row lg:items-center">
               <div>
                 <div className="flex items-center gap-2">
                   <h3 className="text-sm font-extrabold text-ink sm:text-base">
@@ -1545,17 +1740,19 @@ export function LiveTrainTracker({
                 </div>
                 <p className="text-xs text-ink-muted">
                   Showing {filteredRoute.length} of{" "}
-                  {trainData.train.totalRouteStations} stations
+                  {trainData.train.totalRouteStations} stations · Tap{" "}
+                  <strong className="text-ink-soft">📍</strong> on your stop to
+                  track ETA
                 </p>
               </div>
 
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-                <div className="grid grid-cols-2 rounded-lg border border-line bg-card p-0.5 sm:inline-flex">
+                <div className="grid grid-cols-2 rounded-xl border border-line bg-subcard p-0.5 sm:inline-flex">
                   <button
                     type="button"
                     onClick={() => setShowAllStations(false)}
-                    className={`cursor-pointer rounded-md px-3 py-1.5 text-xs font-bold transition ${!showAllStations
-                        ? "bg-[#1956b4] text-white"
+                    className={`cursor-pointer rounded-lg px-3 py-1.5 text-xs font-bold transition ${!showAllStations
+                        ? "bg-[#1956b4] text-white shadow-2xs"
                         : "text-ink-soft hover:text-ink"
                       }`}
                   >
@@ -1564,8 +1761,8 @@ export function LiveTrainTracker({
                   <button
                     type="button"
                     onClick={() => setShowAllStations(true)}
-                    className={`cursor-pointer rounded-md px-3 py-1.5 text-xs font-bold transition ${showAllStations
-                        ? "bg-[#1956b4] text-white"
+                    className={`cursor-pointer rounded-lg px-3 py-1.5 text-xs font-bold transition ${showAllStations
+                        ? "bg-[#1956b4] text-white shadow-2xs"
                         : "text-ink-soft hover:text-ink"
                       }`}
                   >
@@ -1580,8 +1777,8 @@ export function LiveTrainTracker({
                       type="text"
                       value={stationSearch}
                       onChange={(e) => setStationSearch(e.target.value)}
-                      placeholder="Search station..."
-                      className="w-full rounded-lg border border-line bg-card py-1.5 pl-8 pr-2.5 text-xs font-semibold text-ink placeholder:font-normal placeholder:text-ink-muted focus:border-[#1956b4] focus:outline-none"
+                      placeholder="Find station..."
+                      className="w-full rounded-xl border border-line bg-input py-1.5 pl-8 pr-2.5 text-xs font-semibold text-ink placeholder:font-normal placeholder:text-ink-muted focus:border-[#1956b4] focus:outline-none"
                     />
                   </div>
 
@@ -1589,7 +1786,7 @@ export function LiveTrainTracker({
                     <button
                       type="button"
                       onClick={scrollToLiveTrain}
-                      className="inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-lg border border-emerald-500/35 bg-emerald-50 px-2.5 py-1.5 text-xs font-bold text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-500/15 dark:text-emerald-300"
+                      className="inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-xl border border-emerald-500/35 bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-500/15 dark:text-emerald-300"
                     >
                       <span className="ta-led-blink h-2 w-2 rounded-full bg-emerald-500" />
                       <span>Locate</span>
@@ -1599,11 +1796,22 @@ export function LiveTrainTracker({
               </div>
             </div>
 
-            {/* Station Rows */}
+            {/* Clean Desktop Column Strip (Avoids repeating "Arrival"/"Departure" labels on every single row) */}
+            <div className="hidden border-b border-line bg-subcard/55 px-6 py-2 text-[11px] font-extrabold uppercase tracking-wider text-ink-muted md:grid md:grid-cols-[36px_1.55fr_0.95fr_0.95fr_1.05fr] md:gap-4">
+              <span className="text-center">Track</span>
+              <span>Station &amp; Distance</span>
+              <span>Arrival</span>
+              <span>Departure</span>
+              <span className="text-right">Platform &amp; Status</span>
+            </div>
+
+            {/* Comfortable, Smooth Station Rows */}
             <div>
               {filteredRoute.map((stop, idx) => {
                 const isCurrent = stop.stopState === "current";
                 const isDeparted = stop.stopState === "departed";
+                const isMyStation =
+                  Boolean(myStationCode) && stop.stationCode === myStationCode;
                 const isFirst = idx === 0;
                 const isLast = idx === filteredRoute.length - 1;
                 const injectMovingTrainAfter =
@@ -1626,69 +1834,77 @@ export function LiveTrainTracker({
                   <div key={`${stop.sequence}-${stop.stationCode}`}>
                     <div
                       ref={isCurrent ? liveTrainRowRef : undefined}
-                      className={`relative flex items-stretch gap-3 px-3.5 sm:gap-4 sm:px-6 ${isCurrent
-                          ? "bg-emerald-50/70 dark:bg-emerald-500/10"
-                          : stop.isHalt
-                            ? "bg-card hover:bg-subcard/45"
-                            : "bg-subcard/30 hover:bg-subcard/55"
-                        }`}
+                      className={`group relative flex items-stretch gap-3 px-3.5 transition sm:gap-4 sm:px-6 ${
+                        isCurrent
+                          ? "bg-emerald-50/75 dark:bg-emerald-500/12"
+                          : isMyStation
+                            ? "bg-blue-50/65 dark:bg-blue-500/12"
+                            : stop.isHalt
+                              ? "bg-card hover:bg-subcard/45"
+                              : "bg-subcard/25 hover:bg-subcard/50"
+                      }`}
                     >
-                      {/* Vertical Track Column */}
+                      {/* Smooth Continuous Railway Track Spine & Crisp Station Pointers */}
                       <div className="relative flex w-8 shrink-0 flex-col items-center sm:w-9">
                         <div
-                          className={`w-0.5 flex-1 ${isFirst
+                          className={`w-[4px] flex-1 rounded-t-full ${
+                            isFirst
                               ? "bg-transparent"
                               : isDeparted || isCurrent
                                 ? "bg-emerald-500"
-                                : "border-l-2 border-dashed border-line-strong"
-                            }`}
+                                : "bg-slate-200 dark:bg-slate-700"
+                          }`}
                         />
 
-                        <div className="relative z-10 my-1 flex items-center justify-center">
+                        <div className="relative z-10 flex items-center justify-center py-0.5">
                           {isCurrent ? (
                             <LiveTrainBeaconIcon size="sm" active />
-                          ) : (
-                            <span
-                              className={`inline-flex items-center justify-center rounded-full border-2 font-mono text-[10px] font-bold ${isDeparted
-                                  ? "h-5 w-5 border-emerald-500 bg-emerald-500 text-white"
-                                  : stop.isHalt
-                                    ? "h-5 w-5 border-[#1956b4] bg-card text-[#1956b4] dark:border-blue-400 dark:text-blue-300"
-                                    : "h-3 w-3 border-line-strong bg-subcard text-transparent"
-                                }`}
-                            >
-                              {isDeparted ? "✓" : ""}
+                          ) : isMyStation ? (
+                            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#fc6203] text-white shadow-xs ring-3 ring-orange-500/20">
+                              <MapPinIcon className="h-3.5 w-3.5" />
                             </span>
+                          ) : isDeparted ? (
+                            <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 text-[10px] font-black text-white shadow-2xs ring-2 ring-white dark:ring-slate-900">
+                              ✓
+                            </span>
+                          ) : stop.isHalt ? (
+                            <span className="h-4 w-4 rounded-full border-[3px] border-[#1956b4] bg-white shadow-2xs ring-2 ring-white transition group-hover:scale-110 dark:border-blue-400 dark:bg-slate-900 dark:ring-slate-900" />
+                          ) : (
+                            <span className="h-2.5 w-2.5 rounded-full border-2 border-slate-400 bg-card" />
                           )}
                         </div>
 
                         <div
-                          className={`w-0.5 flex-1 ${isLast && !injectMovingTrainAfter
+                          className={`w-[4px] flex-1 rounded-b-full ${
+                            isLast && !injectMovingTrainAfter
                               ? "bg-transparent"
                               : isDeparted
                                 ? "bg-emerald-500"
-                                : "border-l-2 border-dashed border-line-strong"
-                            }`}
+                                : "bg-slate-200 dark:bg-slate-700"
+                          }`}
                         />
                       </div>
 
                       {/* Station Content */}
-                      <div className="flex flex-1 flex-col justify-between gap-2 border-b border-line py-3 md:grid md:grid-cols-[1.5fr_1fr_1fr_auto] md:items-center md:gap-4 md:py-3.5">
+                      <div className="flex flex-1 flex-col justify-between gap-2 border-b border-line/80 py-3 md:grid md:grid-cols-[1.55fr_0.95fr_0.95fr_1.05fr] md:items-center md:gap-4 md:py-3">
                         <div className="flex items-start justify-between gap-2 md:block">
                           <div className="min-w-0">
                             <div className="flex flex-wrap items-center gap-1.5">
                               <span
-                                className={`rounded px-1.5 py-0.5 font-mono text-xs font-bold ${stop.isHalt
+                                className={`rounded-md px-1.5 py-0.5 font-mono text-[11px] font-extrabold ${
+                                  stop.isHalt
                                     ? "bg-blue-50 text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300"
                                     : "bg-subcard text-ink-muted"
-                                  }`}
+                                }`}
                               >
                                 {stop.stationCode}
                               </span>
                               <span
-                                className={`text-sm ${stop.isHalt
+                                className={`text-sm ${
+                                  stop.isHalt
                                     ? "font-bold text-ink"
                                     : "font-medium text-ink-soft"
-                                  }`}
+                                }`}
                               >
                                 {stop.stationName}
                               </span>
@@ -1696,6 +1912,11 @@ export function LiveTrainTracker({
                                 <span className="inline-flex items-center gap-1 rounded-full bg-emerald-600 px-2 py-0.5 text-[10px] font-bold uppercase text-white">
                                   <span className="ta-led-blink h-1.5 w-1.5 rounded-full bg-white" />
                                   <span>At Station</span>
+                                </span>
+                              )}
+                              {isMyStation && (
+                                <span className="rounded-full bg-[#fc6203]/15 px-2 py-0.5 text-[10px] font-extrabold uppercase text-[#fc6203]">
+                                  Your Stop
                                 </span>
                               )}
                             </div>
@@ -1714,19 +1935,20 @@ export function LiveTrainTracker({
                               ) : null}
                             </div>
 
-                            {/* Mobile PF + Status */}
+                            {/* Mobile PF + Status + Track Pin */}
                             <div className="mt-1.5 flex flex-wrap items-center gap-1.5 md:hidden">
                               {stop.platform && (
-                                <span className="rounded border border-line bg-subcard px-1.5 py-0.5 font-mono text-[10px] font-bold text-ink">
+                                <span className="rounded-md border border-line bg-subcard px-1.5 py-0.5 font-mono text-[10px] font-bold text-ink">
                                   PF #{stop.platform}
                                 </span>
                               )}
                               {stop.isHalt && (
                                 <span
-                                  className={`rounded px-1.5 py-0.5 text-[10px] font-bold ${effectiveDelay > 0
+                                  className={`rounded-md px-1.5 py-0.5 text-[10px] font-bold ${
+                                    effectiveDelay > 0
                                       ? "bg-rose-50 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300"
                                       : "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300"
-                                    }`}
+                                  }`}
                                 >
                                   {effectiveDelay > 0
                                     ? `+${effectiveDelay}m late`
@@ -1734,6 +1956,23 @@ export function LiveTrainTracker({
                                       ? `${Math.abs(effectiveDelay)}m early`
                                       : "On Time"}
                                 </span>
+                              )}
+                              {stop.isHalt && (
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    handleSelectMyStation(
+                                      isMyStation ? "" : stop.stationCode
+                                    )
+                                  }
+                                  className={`rounded-md border px-1.5 py-0.5 text-[10px] font-bold transition ${
+                                    isMyStation
+                                      ? "border-[#fc6203]/40 bg-[#fc6203]/15 text-[#fc6203]"
+                                      : "border-line bg-card text-ink-muted hover:text-[#1956b4]"
+                                  }`}
+                                >
+                                  {isMyStation ? "📍 Pinned" : "📍 Track"}
+                                </button>
                               )}
                             </div>
                           </div>
@@ -1746,11 +1985,12 @@ export function LiveTrainTracker({
                                   Arr
                                 </span>
                                 <span
-                                  className={`font-bold ${arrActualStr &&
-                                      arrActualStr !== arrScheduledStr
+                                  className={`font-bold ${
+                                    arrActualStr &&
+                                    arrActualStr !== arrScheduledStr
                                       ? "text-rose-600 dark:text-rose-400"
                                       : "text-ink"
-                                    }`}
+                                  }`}
                                 >
                                   {arrActualStr ?? arrScheduledStr}
                                 </span>
@@ -1758,44 +1998,44 @@ export function LiveTrainTracker({
                             )}
                             {!(
                               stop.sequence ===
-                              trainData.train.totalRouteStations &&
+                                trainData.train.totalRouteStations &&
                               !stop.scheduledDeparture
                             ) && (
-                                <div className="mt-0.5">
-                                  <span className="mr-1 font-sans text-[10px] text-ink-muted">
-                                    Dep
-                                  </span>
-                                  <span
-                                    className={`font-bold ${depActualStr &&
-                                        depActualStr !== depScheduledStr
-                                        ? "text-rose-600 dark:text-rose-400"
-                                        : "text-ink"
-                                      }`}
-                                  >
-                                    {depActualStr ?? depScheduledStr}
-                                  </span>
-                                </div>
-                              )}
+                              <div className="mt-0.5">
+                                <span className="mr-1 font-sans text-[10px] text-ink-muted">
+                                  Dep
+                                </span>
+                                <span
+                                  className={`font-bold ${
+                                    depActualStr &&
+                                    depActualStr !== depScheduledStr
+                                      ? "text-rose-600 dark:text-rose-400"
+                                      : "text-ink"
+                                  }`}
+                                >
+                                  {depActualStr ?? depScheduledStr}
+                                </span>
+                              </div>
+                            )}
                           </div>
                         </div>
 
                         {/* Desktop Arrival */}
                         <div className="hidden text-xs md:block">
-                          <span className="block text-[10px] font-semibold uppercase text-ink-muted">
-                            Arrival
-                          </span>
                           {stop.sequence === 1 && !stop.scheduledArrival ? (
-                            <span className="text-ink-muted">Source</span>
+                            <span className="rounded-md bg-emerald-500/10 px-2 py-0.5 text-[11px] font-bold text-emerald-700 dark:text-emerald-300">
+                              Origin
+                            </span>
                           ) : (
-                            <div className="mt-0.5 flex items-center gap-1.5 font-mono">
+                            <div className="flex flex-col font-mono">
                               {arrActualStr &&
-                                arrActualStr !== arrScheduledStr ? (
+                              arrActualStr !== arrScheduledStr ? (
                                 <>
-                                  <span className="text-ink-muted line-through">
-                                    {arrScheduledStr}
-                                  </span>
                                   <span className="text-sm font-bold text-rose-600 dark:text-rose-400">
                                     {arrActualStr}
+                                  </span>
+                                  <span className="text-[11px] text-ink-muted line-through">
+                                    {arrScheduledStr}
                                   </span>
                                 </>
                               ) : (
@@ -1809,23 +2049,22 @@ export function LiveTrainTracker({
 
                         {/* Desktop Departure */}
                         <div className="hidden text-xs md:block">
-                          <span className="block text-[10px] font-semibold uppercase text-ink-muted">
-                            Departure
-                          </span>
                           {stop.sequence ===
                             trainData.train.totalRouteStations &&
-                            !stop.scheduledDeparture ? (
-                            <span className="text-ink-muted">Destination</span>
+                          !stop.scheduledDeparture ? (
+                            <span className="rounded-md bg-[#1956b4]/10 px-2 py-0.5 text-[11px] font-bold text-[#1956b4] dark:text-blue-300">
+                              Destination
+                            </span>
                           ) : (
-                            <div className="mt-0.5 flex items-center gap-1.5 font-mono">
+                            <div className="flex flex-col font-mono">
                               {depActualStr &&
-                                depActualStr !== depScheduledStr ? (
+                              depActualStr !== depScheduledStr ? (
                                 <>
-                                  <span className="text-ink-muted line-through">
-                                    {depScheduledStr}
-                                  </span>
                                   <span className="text-sm font-bold text-rose-600 dark:text-rose-400">
                                     {depActualStr}
+                                  </span>
+                                  <span className="text-[11px] text-ink-muted line-through">
+                                    {depScheduledStr}
                                   </span>
                                 </>
                               ) : (
@@ -1837,19 +2076,20 @@ export function LiveTrainTracker({
                           )}
                         </div>
 
-                        {/* Desktop Platform & Status */}
-                        <div className="hidden items-center justify-end gap-2 md:flex">
+                        {/* Desktop Platform, Status & 1-Tap My Station Pin */}
+                        <div className="hidden items-center justify-end gap-1.5 md:flex">
                           {stop.platform && (
-                            <span className="rounded border border-line bg-subcard px-2 py-0.5 font-mono text-xs font-bold text-ink">
+                            <span className="rounded-md border border-line bg-subcard px-2 py-0.5 font-mono text-xs font-bold text-ink">
                               PF #{stop.platform}
                             </span>
                           )}
                           {stop.isHalt && (
                             <span
-                              className={`rounded-md px-2 py-0.5 text-[11px] font-bold ${effectiveDelay > 0
+                              className={`rounded-md px-2 py-0.5 text-[11px] font-bold ${
+                                effectiveDelay > 0
                                   ? "bg-rose-50 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300"
                                   : "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300"
-                                }`}
+                              }`}
                             >
                               {effectiveDelay > 0
                                 ? `+${effectiveDelay}m late`
@@ -1857,6 +2097,28 @@ export function LiveTrainTracker({
                                   ? `${Math.abs(effectiveDelay)}m early`
                                   : "On Time"}
                             </span>
+                          )}
+                          {stop.isHalt && (
+                            <button
+                              type="button"
+                              onClick={() =>
+                                handleSelectMyStation(
+                                  isMyStation ? "" : stop.stationCode
+                                )
+                              }
+                              title={
+                                isMyStation
+                                  ? "Unpin station"
+                                  : `Track ${stop.stationName}`
+                              }
+                              className={`cursor-pointer rounded-lg border px-2 py-1 text-[11px] font-bold transition ${
+                                isMyStation
+                                  ? "border-[#fc6203]/45 bg-[#fc6203]/15 text-[#fc6203]"
+                                  : "border-line bg-card text-ink-muted opacity-75 hover:border-[#1956b4] hover:text-[#1956b4] group-hover:opacity-100"
+                              }`}
+                            >
+                              {isMyStation ? "📍 Pinned" : "📍"}
+                            </button>
                           )}
                         </div>
                       </div>
@@ -1867,14 +2129,14 @@ export function LiveTrainTracker({
                       <div
                         ref={liveTrainRowRef}
                         id="live-train-anchor"
-                        className="relative flex items-stretch gap-3 bg-emerald-50/70 px-3.5 dark:bg-emerald-500/10 sm:gap-4 sm:px-6"
+                        className="relative flex items-stretch gap-3 bg-emerald-50/75 px-3.5 dark:bg-emerald-500/10 sm:gap-4 sm:px-6"
                       >
                         <div className="relative flex w-8 shrink-0 flex-col items-center sm:w-9">
-                          <div className="w-0.5 flex-1 bg-emerald-500" />
+                          <div className="w-[4px] flex-1 bg-emerald-500" />
                           <div className="my-2">
                             <LiveTrainBeaconIcon size="md" active />
                           </div>
-                          <div className="w-0.5 flex-1 border-l-2 border-dashed border-emerald-500" />
+                          <div className="w-[4px] flex-1 bg-slate-200 dark:bg-slate-700" />
                         </div>
 
                         <div className="my-2.5 flex-1 rounded-xl border border-emerald-500/35 bg-card p-3.5 shadow-xs">
@@ -1890,10 +2152,11 @@ export function LiveTrainTracker({
                                 </span>
                               )}
                               <span
-                                className={`rounded px-2 py-0.5 text-[10px] font-bold ${trainData.delayMinutes > 0
+                                className={`rounded px-2 py-0.5 text-[10px] font-bold ${
+                                  trainData.delayMinutes > 0
                                     ? "bg-rose-50 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300"
                                     : "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300"
-                                  }`}
+                                }`}
                               >
                                 {formatDelayText(trainData.delayMinutes)}
                               </span>
@@ -1913,7 +2176,7 @@ export function LiveTrainTracker({
                                 style={{
                                   width: `${Math.round(
                                     trainData.livePosition.haltSegmentProgress *
-                                    100
+                                      100
                                   )}%`,
                                 }}
                                 className="h-full rounded-full bg-emerald-500"
@@ -1929,8 +2192,18 @@ export function LiveTrainTracker({
             </div>
 
             {/* Footer Utility Bar */}
-            <div className="no-print flex flex-col justify-between gap-3 border-t border-line bg-subcard/60 px-4 py-3 sm:flex-row sm:items-center sm:px-6">
+            <div className="no-print flex flex-col justify-between gap-3 border-t border-line bg-subcard/50 px-4 py-3 sm:flex-row sm:items-center sm:px-6">
               <div className="flex flex-wrap items-center gap-2">
+                <a
+                  href={buildTrainWhatsAppShareUrl(trainData, selectedMyStop)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-[#1fa855] px-3.5 py-1.5 text-xs font-extrabold text-white shadow-2xs transition hover:bg-[#198c46]"
+                >
+                  <WhatsAppIcon className="h-3.5 w-3.5" />
+                  <span>Share Live Status on WhatsApp</span>
+                </a>
+
                 <button
                   type="button"
                   onClick={() =>
@@ -1941,7 +2214,7 @@ export function LiveTrainTracker({
                     )
                   }
                   disabled={loading}
-                  className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-line bg-card px-3 py-1.5 text-xs font-semibold text-ink hover:border-[#1956b4]"
+                  className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-line bg-card px-3 py-1.5 text-xs font-semibold text-ink hover:border-[#1956b4]"
                 >
                   <RefreshIcon className="h-3.5 w-3.5 text-[#1956b4] dark:text-blue-400" />
                   <span>Refresh</span>
@@ -1950,7 +2223,7 @@ export function LiveTrainTracker({
                 <button
                   type="button"
                   onClick={() => void handleCopySummary()}
-                  className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-line bg-card px-3 py-1.5 text-xs font-semibold text-ink hover:border-[#1956b4]"
+                  className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-line bg-card px-3 py-1.5 text-xs font-semibold text-ink hover:border-[#1956b4]"
                 >
                   <CopyIcon className="h-3.5 w-3.5 text-[#1956b4] dark:text-blue-400" />
                   <span>{copied ? "Copied!" : "Copy Status"}</span>
@@ -1959,7 +2232,7 @@ export function LiveTrainTracker({
                 <button
                   type="button"
                   onClick={() => window.print()}
-                  className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-line bg-card px-3 py-1.5 text-xs font-semibold text-ink hover:border-[#1956b4]"
+                  className="hidden cursor-pointer items-center gap-1.5 rounded-xl border border-line bg-card px-3 py-1.5 text-xs font-semibold text-ink hover:border-[#1956b4] sm:inline-flex"
                 >
                   <PrinterIcon className="h-3.5 w-3.5 text-[#1956b4] dark:text-blue-400" />
                   <span>Print</span>
@@ -2080,6 +2353,13 @@ export function LiveTrainTracker({
           )}
         </div>
       )}
+
+      {/* Calm, Trust-First "Add Live Train Tracker to Home Screen" Card */}
+      <TrainAddToHomeScreenCard
+        trainData={trainData}
+        isPinned={isCurrentPinned}
+        onTogglePin={() => togglePinCurrentTrain(myStationCode)}
+      />
     </div>
   );
 }

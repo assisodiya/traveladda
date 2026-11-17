@@ -4,6 +4,7 @@ const MAX_METRO_PAGES = 40;
 
 const PRECACHE_URLS = [
   "/delhi-metro",
+  "/rail/live-status",
   "/favicon.ico",
   "/favicon-96x96.png",
   "/apple-touch-icon.png",
@@ -78,8 +79,11 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Network-first with offline tunnel fallback for Delhi Metro pages
-  if (url.pathname.startsWith("/delhi-metro")) {
+  // Network-first with offline tunnel/highway fallback for Delhi Metro & Live Train pages
+  if (
+    url.pathname.startsWith("/delhi-metro") ||
+    url.pathname.startsWith("/rail/live-status")
+  ) {
     event.respondWith(
       fetch(request)
         .then((response) => {
@@ -95,7 +99,9 @@ self.addEventListener("fetch", (event) => {
         .catch(async () => {
           const cached = await caches.match(request);
           if (cached) return cached;
-          return caches.match("/delhi-metro");
+          return url.pathname.startsWith("/rail/live-status")
+            ? caches.match("/rail/live-status")
+            : caches.match("/delhi-metro");
         })
     );
   }

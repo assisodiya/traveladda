@@ -548,108 +548,118 @@ export default async function TrainLiveStatusByNumberPage({
         aria-labelledby="about-train-heading"
         className="mx-auto mt-10 max-w-6xl scroll-mt-24 px-4 sm:mt-14 sm:px-6 lg:px-8"
       >
-        <div className="overflow-hidden rounded-2xl border border-line bg-card shadow-sm">
-          <div className="border-b border-line bg-subcard px-4 py-4 sm:px-6">
-            <h2
-              id="about-train-heading"
-              className="text-lg font-extrabold text-ink sm:text-xl"
-            >
-              About {trainData.trainName} ({trainData.trainNumber})
-            </h2>
-            <p className="mt-0.5 text-xs text-ink-soft sm:text-sm">
-              Official route summary, running days, travel classes, distance,
-              and average duration for Train {trainData.trainNumber}.
-            </p>
+        <div className="overflow-hidden rounded-2xl border border-line bg-card shadow-xs">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line bg-card px-4 py-4 sm:px-6">
+            <div>
+              <h2
+                id="about-train-heading"
+                className="text-lg font-extrabold text-ink sm:text-xl"
+              >
+                About {trainData.trainName} ({trainData.trainNumber})
+              </h2>
+              <p className="mt-0.5 text-xs text-ink-soft sm:text-sm">
+                Official route summary, running days, travel classes, distance,
+                and average duration for Train {trainData.trainNumber}.
+              </p>
+            </div>
+
+            <span className="rounded-full bg-blue-50 px-3 py-1 font-mono text-xs font-extrabold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
+              #{trainData.trainNumber} · {trainData.train.type}
+            </span>
           </div>
 
-          {/* Horizontal Summary Table (EaseMyTrip / ConfirmTkt Style) */}
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[720px] border-collapse text-left text-xs sm:text-sm">
-              <thead>
-                <tr className="border-b border-line bg-subcard/60 text-[11px] font-bold uppercase tracking-wider text-ink-muted">
-                  <th className="px-4 py-3 sm:px-5">Train Name &amp; No.</th>
-                  <th className="px-4 py-3">Runs On</th>
-                  <th className="px-4 py-3">Origin</th>
-                  <th className="px-4 py-3">Destination</th>
-                  <th className="px-4 py-3">Classes</th>
-                  <th className="px-4 py-3">Distance</th>
-                  <th className="px-4 py-3 sm:px-5">Average Duration</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="border-b border-line bg-card align-middle">
-                  <td className="px-4 py-4 sm:px-5">
-                    <div className="font-extrabold text-ink">
-                      {trainData.trainName}
-                    </div>
-                    <div className="mt-0.5 font-mono text-xs font-bold text-[#1956b4] dark:text-blue-400">
-                      #{trainData.trainNumber} · {trainData.train.type}
-                    </div>
-                  </td>
-                  <td className="px-4 py-4">
-                    <div className="flex items-center gap-1">
-                      {SUNDAY_FIRST_DAYS.map((d) => {
-                        const active = trainData.train.runDays.includes(d.key);
-                        return (
-                          <span
-                            key={d.key}
-                            title={d.label}
-                            className={`inline-flex h-6 w-6 items-center justify-center rounded font-mono text-xs font-extrabold ${active
-                              ? "bg-blue-50 text-[#1956b4] ring-1 ring-[#1956b4]/30 dark:bg-blue-500/20 dark:text-blue-300"
-                              : "bg-subcard text-ink-muted opacity-40"
-                              }`}
-                          >
-                            {d.short}
-                          </span>
-                        );
-                      })}
-                    </div>
-                    <div className="mt-1 text-[11px] font-medium text-ink-muted">
-                      {trainData.train.isDaily ? "Runs Daily" : runDaysReadable}
-                    </div>
-                  </td>
-                  <td className="px-4 py-4">
-                    <div className="font-bold text-ink">
-                      {trainData.train.source.name}
-                    </div>
-                    <div className="font-mono text-xs font-semibold text-ink-muted">
-                      ({trainData.train.source.code}) · Dep {dep24}
-                    </div>
-                  </td>
-                  <td className="px-4 py-4">
-                    <div className="font-bold text-ink">
-                      {trainData.train.destination.name}
-                    </div>
-                    <div className="font-mono text-xs font-semibold text-ink-muted">
-                      ({trainData.train.destination.code}) · Arr {arr24}
-                    </div>
-                  </td>
-                  <td className="px-4 py-4">
-                    <div className="flex flex-wrap gap-1">
-                      {classesAvailable.map((cls) => (
-                        <span
-                          key={cls}
-                          className="rounded border border-line bg-subcard px-2 py-0.5 text-[11px] font-bold text-ink-soft"
-                        >
-                          {cls}
-                        </span>
-                      ))}
-                    </div>
-                  </td>
-                  <td className="px-4 py-4 font-mono font-bold text-ink">
-                    {trainData.train.distanceKm > 0
-                      ? `${trainData.train.distanceKm} KM`
-                      : "--"}
-                  </td>
-                  <td className="px-4 py-4 font-mono font-bold text-ink sm:px-5">
-                    <div>{trainData.train.durationFormatted}</div>
-                    <div className="mt-0.5 font-sans text-[11px] font-normal text-ink-muted">
-                      {trainData.train.totalHalts} Halts
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+          {/* Comfortable Responsive Route Overview Grid (No Horizontal Scroll Needed on Mobile!) */}
+          <div className="grid grid-cols-1 divide-y divide-line border-b border-line bg-subcard/25 sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-4">
+            {/* Origin & Destination */}
+            <div className="p-4 sm:p-5">
+              <span className="text-[11px] font-extrabold uppercase tracking-wider text-ink-muted">
+                Route &amp; Timings
+              </span>
+              <div className="mt-2 space-y-1.5 text-xs">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="truncate font-bold text-ink">
+                    {trainData.train.source.name} ({trainData.train.source.code})
+                  </span>
+                  <span className="shrink-0 rounded bg-emerald-500/12 px-2 py-0.5 font-mono font-bold text-emerald-700 dark:text-emerald-300">
+                    Dep {dep24}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="truncate font-bold text-ink">
+                    {trainData.train.destination.name} (
+                    {trainData.train.destination.code})
+                  </span>
+                  <span className="shrink-0 rounded bg-blue-500/12 px-2 py-0.5 font-mono font-bold text-[#1956b4] dark:text-blue-300">
+                    Arr {arr24}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Running Days */}
+            <div className="p-4 sm:p-5">
+              <span className="text-[11px] font-extrabold uppercase tracking-wider text-ink-muted">
+                Running Days
+              </span>
+              <div className="mt-2 flex items-center gap-1">
+                {SUNDAY_FIRST_DAYS.map((d) => {
+                  const active = trainData.train.runDays.includes(d.key);
+                  return (
+                    <span
+                      key={d.key}
+                      title={d.label}
+                      className={`inline-flex h-6 w-6 items-center justify-center rounded-md font-mono text-xs font-extrabold ${
+                        active
+                          ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-500/30 dark:bg-emerald-500/20 dark:text-emerald-300"
+                          : "bg-card text-ink-muted opacity-45"
+                      }`}
+                    >
+                      {d.short}
+                    </span>
+                  );
+                })}
+              </div>
+              <p className="mt-1.5 text-[11px] font-semibold text-ink-soft">
+                {trainData.train.isDaily ? "Runs Daily (All 7 Days)" : runDaysReadable}
+              </p>
+            </div>
+
+            {/* Distance & Duration */}
+            <div className="p-4 sm:p-5">
+              <span className="text-[11px] font-extrabold uppercase tracking-wider text-ink-muted">
+                Distance &amp; Duration
+              </span>
+              <div className="mt-2 flex items-baseline gap-2 font-mono">
+                <span className="text-lg font-black text-ink">
+                  {trainData.train.durationFormatted}
+                </span>
+                {trainData.train.distanceKm > 0 && (
+                  <span className="text-xs font-bold text-ink-soft">
+                    · {trainData.train.distanceKm.toLocaleString("en-IN")} km
+                  </span>
+                )}
+              </div>
+              <p className="mt-1 text-[11px] font-semibold text-ink-muted">
+                {trainData.train.totalHalts} commercial halts
+              </p>
+            </div>
+
+            {/* Travel Classes */}
+            <div className="p-4 sm:p-5">
+              <span className="text-[11px] font-extrabold uppercase tracking-wider text-ink-muted">
+                Coach Classes
+              </span>
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {classesAvailable.map((cls) => (
+                  <span
+                    key={cls}
+                    className="rounded-md border border-line bg-card px-2 py-0.5 text-[11px] font-bold text-ink-soft"
+                  >
+                    {cls}
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
 
           {/* Key Details Bullet Summary (Structured for Google AI Overview & Featured Snippets) */}
@@ -758,121 +768,216 @@ export default async function TrainLiveStatusByNumberPage({
         aria-labelledby="schedule-heading"
         className="mx-auto mt-10 max-w-6xl scroll-mt-24 px-4 sm:mt-14 sm:px-6 lg:px-8"
       >
-        <div className="overflow-hidden rounded-2xl border border-line bg-card shadow-sm">
-          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line bg-subcard px-4 py-4 sm:px-6">
+        <div className="overflow-hidden rounded-2xl border border-line bg-card shadow-xs">
+          {/* Calm, Clean Schedule Header with Single PNR / Chart Time Actions (Zero Row-by-Row Button Clutter) */}
+          <div className="flex flex-col justify-between gap-3 border-b border-line bg-card px-4 py-4 sm:flex-row sm:items-center sm:px-6">
             <div>
-              <h2
-                id="schedule-heading"
-                className="text-lg font-extrabold text-ink sm:text-xl"
-              >
-                {trainData.trainName} ({trainData.trainNumber}) Timings &amp;
-                Schedule
-              </h2>
+              <div className="flex flex-wrap items-center gap-2">
+                <h2
+                  id="schedule-heading"
+                  className="text-lg font-extrabold text-ink sm:text-xl"
+                >
+                  {trainData.trainName} ({trainData.trainNumber}) Timings &amp;
+                  Schedule
+                </h2>
+                <span className="rounded-full bg-subcard px-2.5 py-0.5 font-mono text-[11px] font-bold text-ink-soft ring-1 ring-line">
+                  {scheduleStops.length} Stops
+                </span>
+              </div>
               <p className="mt-0.5 text-xs text-ink-soft sm:text-sm">
-                Complete station-by-station time table from{" "}
+                Station-by-station official time table from{" "}
                 {trainData.train.source.name} ({trainData.train.source.code}) to{" "}
                 {trainData.train.destination.name} (
                 {trainData.train.destination.code}) with arrival, departure,
-                halt time, platform number, and distance.
+                halt duration, platform, and distance.
               </p>
             </div>
-            <span className="rounded-lg border border-line bg-card px-3 py-1 font-mono text-xs font-bold text-ink-soft">
-              {scheduleStops.length} Commercial Stops
-            </span>
+
+            <div className="flex shrink-0 flex-wrap items-center gap-2">
+              {showChartTimeLink && (
+                <Link
+                  href={buildChartTimePath(
+                    trainData.trainNumber,
+                    trainData.trainName
+                  )}
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-line bg-subcard/70 px-3 py-2 text-xs font-bold text-ink transition hover:border-[#1956b4] hover:text-[#1956b4]"
+                >
+                  <span>1st &amp; 2nd Chart Time</span>
+                </Link>
+              )}
+              <Link
+                href="/rail/pnr-status"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-[#1956b4] px-3.5 py-2 text-xs font-extrabold text-white transition hover:bg-[#144696]"
+              >
+                <TicketIcon className="h-3.5 w-3.5" />
+                <span>Check PNR Status</span>
+              </Link>
+            </div>
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[760px] border-collapse text-left text-xs sm:text-sm">
+            <table className="w-full min-w-[580px] border-collapse text-left text-xs sm:text-sm">
               <thead>
-                <tr className="border-b border-line bg-subcard/60 text-[11px] font-bold uppercase tracking-wider text-ink-muted">
-                  <th className="px-4 py-3 sm:px-5">#</th>
-                  <th className="px-4 py-3">Starting From / Station</th>
-                  <th className="px-4 py-3 text-center">Day</th>
-                  <th className="px-4 py-3">Arrival</th>
-                  <th className="px-4 py-3">Departure</th>
-                  <th className="px-4 py-3">Halt</th>
-                  <th className="px-4 py-3 text-center">Platform No.</th>
-                  <th className="px-4 py-3">Distance</th>
-                  <th className="px-4 py-3 text-right sm:px-5">Status</th>
+                <tr className="border-b border-line bg-subcard/55 text-[11px] font-extrabold uppercase tracking-wider text-ink-muted">
+                  <th className="w-12 px-3.5 py-3 sm:px-5">#</th>
+                  <th className="px-3.5 py-3">Station Name &amp; Code</th>
+                  <th className="px-3.5 py-3">Arrival</th>
+                  <th className="px-3.5 py-3">Departure</th>
+                  <th className="px-3.5 py-3 text-center">Halt</th>
+                  <th className="px-3.5 py-3 text-center">Day</th>
+                  <th className="px-3.5 py-3 text-center">Platform</th>
+                  <th className="px-3.5 py-3 text-right sm:px-5">Distance</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-line">
+              <tbody className="divide-y divide-line/80">
                 {scheduleStops.map((stop, idx) => {
                   const isOrigin = idx === 0;
                   const isDest = idx === scheduleStops.length - 1;
-                  const arrTime = isOrigin
-                    ? "--"
+                  const arr24Str = isOrigin
+                    ? null
                     : format24HourTime(
-                      stop.scheduledArrival ?? stop.actualArrival
-                    );
-                  const depTime = isDest
-                    ? "--"
+                        stop.scheduledArrival ?? stop.actualArrival
+                      );
+                  const arr12Str = isOrigin
+                    ? null
+                    : formatIstTime(
+                        stop.scheduledArrival ?? stop.actualArrival
+                      );
+                  const dep24Str = isDest
+                    ? null
                     : format24HourTime(
-                      stop.scheduledDeparture ?? stop.actualDeparture
-                    );
-                  const haltFormatted =
+                        stop.scheduledDeparture ?? stop.actualDeparture
+                      );
+                  const dep12Str = isDest
+                    ? null
+                    : formatIstTime(
+                        stop.scheduledDeparture ?? stop.actualDeparture
+                      );
+                  const haltMins =
                     isOrigin || isDest
-                      ? "--"
+                      ? null
                       : stop.haltMinutes && stop.haltMinutes > 0
-                        ? `${String(stop.haltMinutes).padStart(2, "0")}:00 min`
-                        : "02:00 min";
+                        ? stop.haltMinutes
+                        : 2;
+                  const dayNum = stop.departureDay || stop.arrivalDay || 1;
 
                   return (
                     <tr
                       key={`${stop.stationCode}-${stop.sequence}`}
-                      className={`transition hover:bg-subcard/50 ${stop.stopState === "current"
-                        ? "bg-emerald-50/70 dark:bg-emerald-500/10"
-                        : ""
-                        }`}
+                      className={`transition even:bg-subcard/20 hover:bg-blue-50/40 dark:hover:bg-blue-950/20 ${
+                        stop.stopState === "current"
+                          ? "bg-emerald-50/75 dark:bg-emerald-500/10"
+                          : ""
+                      }`}
                     >
-                      <td className="px-4 py-3.5 font-mono text-xs font-bold text-ink-muted sm:px-5">
-                        {idx + 1}
+                      <td className="px-3.5 py-3 font-mono text-xs font-semibold text-ink-muted sm:px-5">
+                        {String(idx + 1).padStart(2, "0")}
                       </td>
-                      <td className="px-4 py-3.5">
-                        <div className="flex flex-wrap items-center gap-1.5">
-                          <span className="font-extrabold uppercase text-ink">
-                            {stop.stationName}
-                          </span>
-                          <span className="rounded bg-blue-50 px-1.5 py-0.5 font-mono text-[11px] font-bold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
-                            {stop.stationCode}
-                          </span>
-                          {isOrigin && (
-                            <span className="rounded bg-emerald-50 px-1.5 py-0.5 text-[10px] font-bold uppercase text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
-                              Origin
+
+                      <td className="px-3.5 py-3">
+                        <div className="flex items-center gap-2.5">
+                          {/* Subtle Clean Station Node Dot */}
+                          <span
+                            className={`h-2.5 w-2.5 shrink-0 rounded-full ${
+                              isOrigin
+                                ? "bg-emerald-500 ring-3 ring-emerald-500/15"
+                                : isDest
+                                  ? "bg-[#fc6203] ring-3 ring-orange-500/15"
+                                  : "border-2 border-[#1956b4] bg-card dark:border-blue-400"
+                            }`}
+                          />
+                          <div className="flex flex-wrap items-center gap-1.5">
+                            <span className="font-bold text-ink">
+                              {stop.stationName}
                             </span>
-                          )}
-                          {isDest && (
-                            <span className="rounded bg-orange-50 px-1.5 py-0.5 text-[10px] font-bold uppercase text-[#e04812] dark:bg-orange-500/15 dark:text-orange-300">
-                              Destination
+                            <span className="rounded-md bg-blue-50 px-1.5 py-0.5 font-mono text-[11px] font-bold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
+                              {stop.stationCode}
                             </span>
-                          )}
+                            {isOrigin && (
+                              <span className="rounded-full bg-emerald-500/12 px-2 py-0.5 text-[10px] font-extrabold uppercase text-emerald-700 dark:text-emerald-300">
+                                Origin
+                              </span>
+                            )}
+                            {isDest && (
+                              <span className="rounded-full bg-[#fc6203]/15 px-2 py-0.5 text-[10px] font-extrabold uppercase text-[#fc6203]">
+                                Destination
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </td>
-                      <td className="px-4 py-3.5 text-center font-mono font-bold text-ink">
-                        {stop.departureDay || stop.arrivalDay || 1}
+
+                      <td className="px-3.5 py-3 font-mono">
+                        {isOrigin ? (
+                          <span className="rounded-md bg-emerald-500/10 px-2 py-0.5 font-sans text-[11px] font-bold text-emerald-700 dark:text-emerald-300">
+                            Starts
+                          </span>
+                        ) : (
+                          <div>
+                            <span className="font-bold text-ink">{arr24Str}</span>
+                            {arr12Str && arr12Str !== "--:--" && (
+                              <span className="block text-[10px] text-ink-muted">
+                                {arr12Str}
+                              </span>
+                            )}
+                          </div>
+                        )}
                       </td>
-                      <td className="px-4 py-3.5 font-mono font-bold text-ink">
-                        {arrTime}
+
+                      <td className="px-3.5 py-3 font-mono">
+                        {isDest ? (
+                          <span className="rounded-md bg-[#1956b4]/10 px-2 py-0.5 font-sans text-[11px] font-bold text-[#1956b4] dark:text-blue-300">
+                            Ends
+                          </span>
+                        ) : (
+                          <div>
+                            <span className="font-bold text-ink">{dep24Str}</span>
+                            {dep12Str && dep12Str !== "--:--" && (
+                              <span className="block text-[10px] text-ink-muted">
+                                {dep12Str}
+                              </span>
+                            )}
+                          </div>
+                        )}
                       </td>
-                      <td className="px-4 py-3.5 font-mono font-bold text-ink">
-                        {depTime}
+
+                      <td className="px-3.5 py-3 text-center">
+                        {haltMins === null ? (
+                          <span className="text-ink-muted">—</span>
+                        ) : (
+                          <span className="inline-block rounded-md bg-subcard px-2 py-0.5 font-mono text-[11px] font-semibold text-ink-soft">
+                            {haltMins}m
+                          </span>
+                        )}
                       </td>
-                      <td className="px-4 py-3.5 font-mono text-xs text-ink-soft">
-                        {haltFormatted}
-                      </td>
-                      <td className="px-4 py-3.5 text-center font-mono text-xs font-bold text-ink-soft">
-                        {stop.platform ? `PF #${stop.platform}` : "-"}
-                      </td>
-                      <td className="px-4 py-3.5 font-mono font-bold text-ink">
-                        {Math.round(stop.distanceKm)} KM
-                      </td>
-                      <td className="px-4 py-3.5 text-right sm:px-5">
-                        <Link
-                          href="/rail/pnr-status"
-                          className="ta-btn-primary inline-flex items-center justify-center rounded-md px-3 py-1.5 text-[11px] font-bold"
+
+                      <td className="px-3.5 py-3 text-center">
+                        <span
+                          className={`inline-block rounded-md px-2 py-0.5 font-mono text-[11px] font-bold ${
+                            dayNum > 1
+                              ? "bg-blue-50 text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300"
+                              : "text-ink-soft"
+                          }`}
                         >
-                          Check PNR
-                        </Link>
+                          Day {dayNum}
+                        </span>
+                      </td>
+
+                      <td className="px-3.5 py-3 text-center">
+                        {stop.platform ? (
+                          <span className="inline-block rounded-md border border-line bg-card px-2 py-0.5 font-mono text-[11px] font-bold text-ink">
+                            PF #{stop.platform}
+                          </span>
+                        ) : (
+                          <span className="text-ink-muted">—</span>
+                        )}
+                      </td>
+
+                      <td className="px-3.5 py-3 text-right font-mono font-bold text-ink sm:px-5">
+                        {Math.round(stop.distanceKm).toLocaleString("en-IN")}{" "}
+                        <span className="text-[11px] font-normal text-ink-muted">
+                          km
+                        </span>
                       </td>
                     </tr>
                   );
