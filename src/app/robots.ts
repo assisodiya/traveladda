@@ -27,6 +27,7 @@ const PUBLIC_ALLOW_PATHS = [
   "/favicon-96x96.png",
   "/apple-touch-icon.png",
   "/manifest.webmanifest",
+  "/sw.js",
   "/assets/",
   "/airlines/",
 ];

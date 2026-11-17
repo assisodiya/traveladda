@@ -25,6 +25,23 @@ const nextConfig: NextConfig = {
         ],
       },
       {
+        source: "/sw.js",
+        headers: [
+          {
+            key: "Content-Type",
+            value: "application/javascript; charset=utf-8",
+          },
+          {
+            key: "Cache-Control",
+            value: "no-cache, no-store, must-revalidate",
+          },
+          {
+            key: "Content-Security-Policy",
+            value: "default-src 'self'; script-src 'self'",
+          },
+        ],
+      },
+      {
         source: "/:file(favicon\\.ico|favicon-48x48\\.png|favicon-96x96\\.png|apple-touch-icon\\.png|manifest\\.webmanifest)",
         headers: [
           {

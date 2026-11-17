@@ -36,6 +36,12 @@ import {
   TicketIcon,
   TrainIcon,
 } from "./Icons";
+import {
+  MetroAddToHomeScreenCard,
+  MetroRouteActionButtons,
+  SavedDailyMetroRoutesStrip,
+  useMetroCommuterRoutes,
+} from "./MetroCommuterToolkit";
 
 interface MetroRouteFinderProps {
   stations: MetroStation[];
@@ -356,6 +362,14 @@ export function MetroRouteFinder({
       initialResult.recommended
     );
   }, [initialResult, activeOptionIndex]);
+
+  const {
+    savedRoutes,
+    recentRoutes,
+    isCurrentRouteSaved,
+    toggleSaveCurrentRoute,
+    removeSavedRoute,
+  } = useMetroCommuterRoutes(activeRoute);
 
   const toggleSegmentStops = (segmentIndex: number) => {
     setExpandedSegments((prev) => ({
@@ -949,6 +963,15 @@ export function MetroRouteFinder({
         </div>
       </div>
 
+      {/* Saved Daily Metro Routes & Recent Searches Strip (1-Tap Open + ⇄ Evening Return) */}
+      <SavedDailyMetroRoutesStrip
+        savedRoutes={savedRoutes}
+        recentRoutes={recentRoutes}
+        currentFromSlug={mode === "details" ? fromSlug : undefined}
+        currentToSlug={mode === "details" ? toSlug : undefined}
+        onRemoveSaved={removeSavedRoute}
+      />
+
       {/* Active Route Result Dashboard (Rendered on Details Pages) */}
       {mode === "details" && activeRoute && initialResult && (
         <div className="space-y-4 sm:space-y-5">
@@ -1146,16 +1169,24 @@ export function MetroRouteFinder({
                 </h3>
               </div>
 
-              <Link
-                href={buildMetroRoutePath(
-                  activeRoute.toStation.slug,
-                  activeRoute.fromStation.slug,
-                )}
-                className="inline-flex shrink-0 items-center justify-center gap-1.5 self-start rounded-xl border border-line bg-subcard/70 px-3 py-2 text-xs font-bold text-ink transition hover:border-[#1956b4] hover:text-[#1956b4] sm:self-center"
-              >
-                <SwapIcon className="h-3.5 w-3.5 text-[#fc6203]" />
-                <span>Reverse Route</span>
-              </Link>
+              <div className="flex flex-wrap items-center gap-2 self-start sm:self-center">
+                <MetroRouteActionButtons
+                  route={activeRoute}
+                  isSaved={isCurrentRouteSaved}
+                  onToggleSave={toggleSaveCurrentRoute}
+                />
+
+                <Link
+                  href={buildMetroRoutePath(
+                    activeRoute.toStation.slug,
+                    activeRoute.fromStation.slug,
+                  )}
+                  className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-xl border border-line bg-subcard/70 px-3 py-2 text-xs font-bold text-ink transition hover:border-[#1956b4] hover:text-[#1956b4]"
+                >
+                  <SwapIcon className="h-3.5 w-3.5 text-[#fc6203]" />
+                  <span>Reverse</span>
+                </Link>
+              </div>
             </div>
 
             {/* Compact Single-Line Journey Pointer Strip */}
@@ -1612,6 +1643,13 @@ export function MetroRouteFinder({
           </div>
         </div>
       )}
+
+      {/* Attractive, Trust-First "Add Metro App to Home Screen" Banner (100% Ad-Free, Zero Spam, Safe) */}
+      <MetroAddToHomeScreenCard
+        activeRoute={activeRoute}
+        isCurrentRouteSaved={isCurrentRouteSaved}
+        onToggleSaveRoute={toggleSaveCurrentRoute}
+      />
     </div>
   );
 }
