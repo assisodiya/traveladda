@@ -1,10 +1,8 @@
-const STATIC_CACHE = "ta-metro-static-v1";
-const METRO_PAGES_CACHE = "ta-metro-pages-v1";
-const MAX_METRO_PAGES = 40;
+const STATIC_CACHE = "ta-pwa-static-v2";
+const PAGES_CACHE = "ta-pwa-pages-v2";
+const MAX_CACHED_PAGES = 35;
 
 const PRECACHE_URLS = [
-  "/delhi-metro",
-  "/rail/live-status",
   "/favicon.ico",
   "/favicon-96x96.png",
   "/apple-touch-icon.png",
@@ -28,7 +26,7 @@ self.addEventListener("activate", (event) => {
       .then((keys) =>
         Promise.all(
           keys
-            .filter((k) => k !== STATIC_CACHE && k !== METRO_PAGES_CACHE)
+            .filter((k) => k !== STATIC_CACHE && k !== PAGES_CACHE)
             .map((k) => caches.delete(k))
         )
       )
@@ -53,10 +51,17 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
 
-  // Never cache live API responses
-  if (url.pathname.startsWith("/api/")) return;
+  // NEVER intercept API calls or Next.js client-side RSC router / prefetch requests!
+  if (
+    url.pathname.startsWith("/api/") ||
+    url.searchParams.has("_rsc") ||
+    request.headers.get("RSC") === "1" ||
+    request.headers.get("Next-Router-Prefetch") === "1"
+  ) {
+    return;
+  }
 
-  // Cache-first for immutable static assets & icons
+  // Cache-first ONLY for immutable hashed assets & icons
   if (
     url.pathname.startsWith("/_next/static/") ||
     url.pathname.startsWith("/assets/") ||
@@ -79,19 +84,20 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Network-first with offline tunnel/highway fallback for Delhi Metro & Live Train pages
+  // Network-first ONLY for full HTML document navigations (offline tunnel fallback)
   if (
-    url.pathname.startsWith("/delhi-metro") ||
-    url.pathname.startsWith("/rail/live-status")
+    request.mode === "navigate" &&
+    (url.pathname.startsWith("/delhi-metro") ||
+      url.pathname.startsWith("/rail/live-status"))
   ) {
     event.respondWith(
       fetch(request)
         .then((response) => {
           if (response && response.status === 200) {
             const clone = response.clone();
-            caches.open(METRO_PAGES_CACHE).then((cache) => {
+            caches.open(PAGES_CACHE).then((cache) => {
               cache.put(request, clone);
-              trimCache(METRO_PAGES_CACHE, MAX_METRO_PAGES);
+              trimCache(PAGES_CACHE, MAX_CACHED_PAGES);
             });
           }
           return response;
@@ -99,9 +105,7 @@ self.addEventListener("fetch", (event) => {
         .catch(async () => {
           const cached = await caches.match(request);
           if (cached) return cached;
-          return url.pathname.startsWith("/rail/live-status")
-            ? caches.match("/rail/live-status")
-            : caches.match("/delhi-metro");
+          return Response.error();
         })
     );
   }

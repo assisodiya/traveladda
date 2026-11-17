@@ -2,13 +2,15 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { buildChartTimePath } from "@/lib/chart-time-types";
 import {
-  buildTrainLiveStatusPath,
+  buildClientChartTimePath as buildChartTimePath,
+  buildClientTrainLiveStatusPath as buildTrainLiveStatusPath,
   formatIstTime,
-  isReservedChartEligibleTrain,
-  type NormalizedLiveTrainData,
-  type NormalizedRouteStop,
+  isReservedChartEligibleClient as isReservedChartEligibleTrain,
+} from "@/lib/live-train-client";
+import type {
+  NormalizedLiveTrainData,
+  NormalizedRouteStop,
 } from "@/lib/live-train-types";
 import {
   ArrowRightIcon,

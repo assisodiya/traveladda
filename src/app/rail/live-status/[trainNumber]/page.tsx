@@ -1125,6 +1125,7 @@ export default async function TrainLiveStatusByNumberPage({
                     className="group flex flex-col justify-between rounded-xl border border-line bg-card p-3.5 transition hover:border-[#1956b4] hover:shadow-sm"
                   >
                     <Link
+                      prefetch={false}
                       href={buildTrainLiveStatusPath(
                         train.trainNumber,
                         train.trainName
@@ -1151,6 +1152,7 @@ export default async function TrainLiveStatusByNumberPage({
                       <div className="flex items-center gap-2">
                         {isReservedChartEligibleTrain(train) && (
                           <Link
+                            prefetch={false}
                             href={buildChartTimePath(
                               train.trainNumber,
                               train.trainName
@@ -1162,6 +1164,7 @@ export default async function TrainLiveStatusByNumberPage({
                           </Link>
                         )}
                         <Link
+                          prefetch={false}
                           href={buildTrainLiveStatusPath(
                             train.trainNumber,
                             train.trainName
@@ -1194,6 +1197,7 @@ export default async function TrainLiveStatusByNumberPage({
                   <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
                     {quickJumpRelated.map((train) => (
                       <Link
+                        prefetch={false}
                         key={`live-jump-${train.trainNumber}`}
                         href={buildTrainLiveStatusPath(
                           train.trainNumber,

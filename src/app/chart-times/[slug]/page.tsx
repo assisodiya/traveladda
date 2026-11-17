@@ -745,6 +745,7 @@ export default async function ChartTimeByTrainSlugPage({
                     className="group flex flex-col justify-between rounded-xl border border-line bg-card p-3.5 transition hover:border-[#1956b4] hover:shadow-sm"
                   >
                     <Link
+                      prefetch={false}
                       href={buildChartTimePath(
                         train.trainNumber,
                         train.trainName
@@ -769,6 +770,7 @@ export default async function ChartTimeByTrainSlugPage({
 
                     <div className="mt-3 flex items-center justify-between border-t border-line pt-2 text-xs">
                       <Link
+                        prefetch={false}
                         href={buildTrainLiveStatusPath(
                           train.trainNumber,
                           train.trainName
@@ -778,6 +780,7 @@ export default async function ChartTimeByTrainSlugPage({
                         Live Status
                       </Link>
                       <Link
+                        prefetch={false}
                         href={buildChartTimePath(
                           train.trainNumber,
                           train.trainName
@@ -808,6 +811,7 @@ export default async function ChartTimeByTrainSlugPage({
                   <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
                     {quickJumpRelated.map((train) => (
                       <Link
+                        prefetch={false}
                         key={`jump-${train.trainNumber}`}
                         href={buildChartTimePath(
                           train.trainNumber,

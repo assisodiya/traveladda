@@ -11,21 +11,22 @@ import {
   useSyncExternalStore,
 } from "react";
 import {
-  ALL_CATALOG_TRAINS,
   ALL_WEEK_DAYS,
-  buildTrainLiveStatusPath,
+  buildClientTrainLiveStatusPath as buildTrainLiveStatusPath,
+  CLIENT_POPULAR_TRAINS as POPULAR_LIVE_TRAINS,
   formatDelayText,
   formatIstTime,
   formatReadableDate,
   getTodayIstDateString,
-  POPULAR_LIVE_TRAINS,
   shiftDateString,
-  type CoachRole,
-  type NormalizedLiveTrainData,
-  type NormalizedRouteStop,
-  type OwnedLiveTrainApiResponse,
-  type OwnedTrainSearchApiResponse,
-  type TrainSearchItem,
+} from "@/lib/live-train-client";
+import type {
+  CoachRole,
+  NormalizedLiveTrainData,
+  NormalizedRouteStop,
+  OwnedLiveTrainApiResponse,
+  OwnedTrainSearchApiResponse,
+  TrainSearchItem,
 } from "@/lib/live-train-types";
 import {
   AlertCircleIcon,
@@ -581,7 +582,7 @@ export function LiveTrainTracker({
   const searchBoxRef = useRef<HTMLDivElement>(null);
   const liveTrainRowRef = useRef<HTMLDivElement>(null);
 
-  // Instant 0ms offline-ready search across ALL 10,173 catalog trains (works even on slow 2G rail signal)
+  // Instant 0ms flagship train matching + fast /api/trains/search across all 10,173 trains
   const suggestions = useMemo(() => {
     const trimmed = searchQuery.trim();
     if (trimmed.length < 2) {
@@ -595,25 +596,13 @@ export function LiveTrainTracker({
       return remoteSuggestions.items.slice(0, 8);
     }
     const lower = trimmed.toLowerCase();
-    const prefixMatches: TrainSearchItem[] = [];
-    const fuzzyMatches: TrainSearchItem[] = [];
-
-    for (const t of ALL_CATALOG_TRAINS) {
-      if (t.trainNumber.startsWith(lower)) {
-        prefixMatches.push(t);
-        if (prefixMatches.length >= 8) break;
-      } else if (
-        fuzzyMatches.length < 8 &&
-        (t.trainNumber.includes(lower) ||
-          t.trainName.toLowerCase().includes(lower) ||
-          t.sourceCode.toLowerCase() === lower ||
-          t.destinationCode.toLowerCase() === lower)
-      ) {
-        fuzzyMatches.push(t);
-      }
-    }
-
-    return [...prefixMatches, ...fuzzyMatches].slice(0, 8);
+    return POPULAR_LIVE_TRAINS.filter(
+      (t) =>
+        t.trainNumber.includes(lower) ||
+        t.trainName.toLowerCase().includes(lower) ||
+        t.sourceCode.toLowerCase().includes(lower) ||
+        t.destinationCode.toLowerCase().includes(lower)
+    ).slice(0, 8);
   }, [searchQuery, remoteSuggestions]);
 
   // Interactive Filters for Coach Rake & Route Stops
@@ -830,10 +819,17 @@ export function LiveTrainTracker({
         Boolean(initialData) &&
         initialData?.trainNumber === qTrain &&
         !hasExplicit;
+      const ssrAgeMs =
+        hasSsrMatch && initialData?.lastUpdatedAt
+          ? Date.now() - new Date(initialData.lastUpdatedAt).getTime()
+          : Infinity;
+      const isFreshSsr = hasSsrMatch && ssrAgeMs >= 0 && ssrAgeMs < 90_000;
+
       void Promise.resolve().then(() => {
         setSearchQuery(qTrain);
         setIsAutoDate(!hasExplicit);
         if (hasExplicit) setDateInput(qDate);
+        if (isFreshSsr) return;
         if (!hasSsrMatch) {
           setLoading(true);
         }

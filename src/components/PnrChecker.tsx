@@ -9,7 +9,7 @@ import {
   useState,
   useSyncExternalStore,
 } from "react";
-import { buildTrainLiveStatusPath } from "@/lib/live-train-types";
+import { buildClientTrainLiveStatusPath as buildTrainLiveStatusPath } from "@/lib/live-train-client";
 import type {
   NormalizedPnrData,
   OwnedPnrApiResponse,

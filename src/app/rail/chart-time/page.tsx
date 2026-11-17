@@ -462,6 +462,7 @@ export default async function TrainChartTimePage() {
                     className="flex items-center justify-between gap-2 rounded-lg border border-line/70 bg-subcard/40 px-3 py-2 text-xs transition hover:border-[#1956b4]"
                   >
                     <Link
+                      prefetch={false}
                       href={buildChartTimePath(
                         train.trainNumber,
                         train.trainName
@@ -474,6 +475,7 @@ export default async function TrainChartTimePage() {
                       <span>{train.trainName}</span>
                     </Link>
                     <Link
+                      prefetch={false}
                       href={buildTrainLiveStatusPath(
                         train.trainNumber,
                         train.trainName

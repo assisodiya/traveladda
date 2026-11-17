@@ -551,6 +551,7 @@ export default async function MetroHubPage() {
                     <div className="grid gap-2.5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                         {majorInterchanges.map((st) => (
                             <Link
+                                prefetch={false}
                                 key={st.id}
                                 href={buildMetroStationPath(st.slug)}
                                 className="flex items-center justify-between gap-2 rounded-xl border border-line bg-subcard/40 px-3.5 py-2.5 text-xs transition hover:border-[#1956b4] hover:bg-card"
@@ -606,6 +607,7 @@ export default async function MetroHubPage() {
                                 .sort((a, b) => a.name.localeCompare(b.name))
                                 .map((st) => (
                                     <Link
+                                        prefetch={false}
                                         key={st.id}
                                         href={buildMetroStationPath(st.slug)}
                                         className="truncate rounded-lg border border-line/70 bg-subcard/30 px-2.5 py-1.5 text-xs font-semibold text-ink-soft transition hover:border-[#1956b4] hover:text-[#1956b4]"

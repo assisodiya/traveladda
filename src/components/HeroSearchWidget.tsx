@@ -11,11 +11,13 @@ import {
   parseFlightInput,
 } from "@/lib/flight-types";
 import {
-  buildTrainLiveStatusPath,
+  buildClientTrainLiveStatusPath as buildTrainLiveStatusPath,
+  CLIENT_POPULAR_TRAINS as POPULAR_LIVE_TRAINS,
   getTodayIstDateString,
-  POPULAR_LIVE_TRAINS,
-  type OwnedTrainSearchApiResponse,
-  type TrainSearchItem,
+} from "@/lib/live-train-client";
+import type {
+  OwnedTrainSearchApiResponse,
+  TrainSearchItem,
 } from "@/lib/live-train-types";
 import { AirlineLogo } from "./AirlineLogo";
 import {

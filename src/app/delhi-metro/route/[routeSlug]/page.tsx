@@ -663,6 +663,7 @@ export default async function MetroDynamicSeoPage({
                   .sort((a, b) => a.name.localeCompare(b.name))
                   .map((dest) => (
                     <Link
+                      prefetch={false}
                       key={`all-${fromSt.slug}-to-${dest.slug}`}
                       href={buildMetroRoutePath(fromSt.slug, dest.slug)}
                       className="truncate rounded-lg border border-line/70 bg-subcard/30 px-2.5 py-1.5 text-[11px] font-semibold text-ink-soft transition hover:border-[#1956b4] hover:text-[#1956b4]"
@@ -982,6 +983,7 @@ export default async function MetroDynamicSeoPage({
                   .sort((a, b) => a.name.localeCompare(b.name))
                   .map((dest) => (
                     <Link
+                      prefetch={false}
                       key={`st-${station.slug}-to-${dest.slug}`}
                       href={buildMetroRoutePath(station.slug, dest.slug)}
                       className="truncate rounded-lg border border-line/70 bg-subcard/30 px-2.5 py-1.5 text-[11px] font-semibold text-ink-soft transition hover:border-[#1956b4] hover:text-[#1956b4]"

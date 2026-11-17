@@ -3,17 +3,19 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
-  buildChartTimePath,
-  type EnrichedChartTimeData,
-  type OwnedChartTimeApiResponse,
-  POPULAR_CHART_TRAINS,
+import type {
+  EnrichedChartTimeData,
+  OwnedChartTimeApiResponse,
 } from "@/lib/chart-time-types";
 import {
-  buildTrainLiveStatusPath,
-  type OwnedTrainSearchApiResponse,
-  POPULAR_LIVE_TRAINS,
-  type TrainSearchItem,
+  buildClientChartTimePath as buildChartTimePath,
+  buildClientTrainLiveStatusPath as buildTrainLiveStatusPath,
+  CLIENT_POPULAR_CHART_TRAINS as POPULAR_CHART_TRAINS,
+  CLIENT_POPULAR_TRAINS as POPULAR_LIVE_TRAINS,
+} from "@/lib/live-train-client";
+import type {
+  OwnedTrainSearchApiResponse,
+  TrainSearchItem,
 } from "@/lib/live-train-types";
 import {
   AlertCircleIcon,
