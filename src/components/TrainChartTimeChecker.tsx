@@ -200,7 +200,7 @@ export function TrainChartTimeChecker({
         if (!res.ok || !json.success || !json.data) {
           setError(
             json.error?.message ||
-              `Could not find published chart preparation times for train ${digits}.`
+            `Could not find published chart preparation times for train ${digits}.`
           );
           setLoading(false);
           return;
@@ -420,11 +420,10 @@ export function TrainChartTimeChecker({
                       item.trainName
                     );
                   }}
-                  className={`inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-full border px-2.5 py-1 transition ${
-                    isCurrent
-                      ? "border-[#1956b4] bg-blue-50 font-bold text-[#1956b4] dark:bg-blue-500/20 dark:text-blue-300"
-                      : "border-line bg-subcard text-ink-soft hover:border-[#1956b4]"
-                  }`}
+                  className={`inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-full border px-2.5 py-1 transition ${isCurrent
+                    ? "border-[#1956b4] bg-blue-50 font-bold text-[#1956b4] dark:bg-blue-500/20 dark:text-blue-300"
+                    : "border-line bg-subcard text-ink-soft hover:border-[#1956b4]"
+                    }`}
                 >
                   <span className="font-mono font-bold">{item.trainNumber}</span>
                   <span className="hidden sm:inline">{item.trainName}</span>
@@ -659,11 +658,10 @@ export function TrainChartTimeChecker({
                       key={st.stationCode}
                       type="button"
                       onClick={() => setSelectedStationCode(st.stationCode)}
-                      className={`inline-flex shrink-0 cursor-pointer items-center gap-2 rounded-xl border px-3.5 py-2 text-xs font-bold transition ${
-                        active
-                          ? "border-[#1956b4] bg-[#1956b4] text-white shadow-sm"
-                          : "border-line bg-subcard text-ink hover:border-[#1956b4]"
-                      }`}
+                      className={`inline-flex shrink-0 cursor-pointer items-center gap-2 rounded-xl border px-3.5 py-2 text-xs font-bold transition ${active
+                        ? "border-[#1956b4] bg-[#1956b4] text-white shadow-sm"
+                        : "border-line bg-subcard text-ink hover:border-[#1956b4]"
+                        }`}
                     >
                       <span className="font-mono">{st.stationCode}</span>
                       <span
@@ -781,11 +779,10 @@ export function TrainChartTimeChecker({
                         Charting Location Status
                       </span>
                       <span
-                        className={`rounded px-2 py-0.5 text-[10px] font-bold ${
-                          selectedStation.isPrimaryChartHub
-                            ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300"
-                            : "bg-blue-50 text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300"
-                        }`}
+                        className={`rounded px-2 py-0.5 text-[10px] font-bold ${selectedStation.isPrimaryChartHub
+                          ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300"
+                          : "bg-blue-50 text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300"
+                          }`}
                       >
                         {selectedStation.isPrimaryChartHub
                           ? "Primary Chart Hub"
@@ -877,11 +874,10 @@ export function TrainChartTimeChecker({
                           key={code}
                           type="button"
                           onClick={() => setSelectedStationCode(code)}
-                          className={`cursor-pointer rounded-md px-2 py-0.5 font-mono text-[11px] font-bold transition ${
-                            selectedStation?.stationCode === code
-                              ? "bg-[#fc6203] text-white"
-                              : "border border-line bg-card text-ink hover:border-[#1956b4]"
-                          }`}
+                          className={`cursor-pointer rounded-md px-2 py-0.5 font-mono text-[11px] font-bold transition ${selectedStation?.stationCode === code
+                            ? "bg-[#fc6203] text-white"
+                            : "border border-line bg-card text-ink hover:border-[#1956b4]"
+                            }`}
                           title={zone.stationNames[sIdx]}
                         >
                           {code} ({zone.stationNames[sIdx]})
@@ -934,11 +930,10 @@ export function TrainChartTimeChecker({
                       <tr
                         key={st.stationCode}
                         onClick={() => setSelectedStationCode(st.stationCode)}
-                        className={`cursor-pointer transition ${
-                          isSelected
-                            ? "bg-blue-50/70 dark:bg-blue-500/10"
-                            : "hover:bg-subcard/60"
-                        }`}
+                        className={`cursor-pointer transition ${isSelected
+                          ? "bg-blue-50/70 dark:bg-blue-500/10"
+                          : "hover:bg-subcard/60"
+                          }`}
                       >
                         <td className="py-3.5 pl-5 pr-3 font-mono text-xs font-bold text-ink-muted">
                           {st.sequence}
@@ -1005,11 +1000,10 @@ export function TrainChartTimeChecker({
                         <td className="py-3.5 pl-3 pr-5">
                           <div className="inline-flex items-center gap-2 rounded-xl border border-line bg-subcard px-3 py-1.5">
                             <MapPinIcon
-                              className={`h-4 w-4 ${
-                                st.isPrimaryChartHub
-                                  ? "text-emerald-600 dark:text-emerald-400"
-                                  : "text-[#fc6203]"
-                              }`}
+                              className={`h-4 w-4 ${st.isPrimaryChartHub
+                                ? "text-emerald-600 dark:text-emerald-400"
+                                : "text-[#fc6203]"
+                                }`}
                             />
                             <div>
                               <p className="font-mono text-xs font-extrabold text-ink">
@@ -1051,11 +1045,10 @@ export function TrainChartTimeChecker({
                     </div>
 
                     <span
-                      className={`rounded-lg px-2.5 py-1 font-mono text-[11px] font-bold ${
-                        st.isPrimaryChartHub
-                          ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300"
-                          : "bg-amber-50 text-amber-800 dark:bg-amber-500/15 dark:text-amber-300"
-                      }`}
+                      className={`rounded-lg px-2.5 py-1 font-mono text-[11px] font-bold ${st.isPrimaryChartHub
+                        ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300"
+                        : "bg-amber-50 text-amber-800 dark:bg-amber-500/15 dark:text-amber-300"
+                        }`}
                     >
                       Hub: {st.chartRemoteStation}
                     </span>
