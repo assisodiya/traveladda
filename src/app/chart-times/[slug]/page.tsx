@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import { Suspense } from "react";
@@ -18,7 +17,6 @@ import { fetchSeoChartTimePageData } from "@/lib/chart-time-service";
 import {
   buildChartTimePath,
   extractTrainNumberFromChartSlug,
-  POPULAR_CHART_TRAINS,
 } from "@/lib/chart-time-types";
 import {
   buildTrainLiveStatusPath,
@@ -31,25 +29,11 @@ interface ChartTimeSlugPageProps {
   params: Promise<{ slug: string }>;
 }
 
-export function generateStaticParams() {
-  const slugSet = new Set<string>();
-  const params: { slug: string }[] = [];
-
-  for (const train of POPULAR_CHART_TRAINS.slice(0, 2)) {
-    if (!slugSet.has(train.slug)) {
-      slugSet.add(train.slug);
-      params.push({ slug: train.slug });
-    }
-  }
-
-  return params;
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
 }: ChartTimeSlugPageProps): Promise<Metadata> {
-  "use cache";
-  cacheLife("days");
 
   const { slug: rawSlug } = await params;
   const data = await fetchSeoChartTimePageData(rawSlug);
@@ -136,8 +120,6 @@ function ChartTimeFallback() {
 export default async function ChartTimeByTrainSlugPage({
   params,
 }: ChartTimeSlugPageProps) {
-  "use cache";
-  cacheLife("days");
 
   const { slug: rawSlug } = await params;
   const chartData = await fetchSeoChartTimePageData(rawSlug);

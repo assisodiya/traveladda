@@ -1,6 +1,5 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import { cacheLife } from "next/cache";
 import {
   AIRLINE_DISPLAY_ALIASES,
   type AirlineSearchItem,
@@ -895,9 +894,6 @@ export async function fetchCachedFlightStatusForSeo(
   flightNumber: string,
   departureDate?: string | null
 ): Promise<NormalizedFlightStatusData | null> {
-  "use cache";
-  cacheLife("minutes");
-
   const todayIst = getFlightTodayIstDateString();
   const primaryDate =
     departureDate && /^\d{4}-\d{2}-\d{2}$/.test(departureDate)

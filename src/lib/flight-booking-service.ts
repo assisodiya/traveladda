@@ -1,4 +1,3 @@
-import { cacheLife } from "next/cache";
 import {
   AIRPORT_BY_IATA_MAP,
   buildFlightRoutePath,
@@ -133,16 +132,7 @@ interface RawTravelpayoutsFlight {
   link?: string;
 }
 
-const MAX_TP_MEMORY_CACHE = 120;
-const tpMemoryCache = new Map<string, { expiresAt: number; payload: unknown }>();
-
 async function fetchTravelpayoutsJson<T>(url: string): Promise<T | null> {
-  const now = Date.now();
-  const hit = tpMemoryCache.get(url);
-  if (hit && hit.expiresAt > now) {
-    return hit.payload as T;
-  }
-
   try {
     const res = await fetch(url, {
       method: "GET",
@@ -154,13 +144,7 @@ async function fetchTravelpayoutsJson<T>(url: string): Promise<T | null> {
       signal: AbortSignal.timeout(6500),
     });
     if (!res.ok) return null;
-    const json = (await res.json()) as T;
-    if (tpMemoryCache.size >= MAX_TP_MEMORY_CACHE) {
-      const oldestKey = tpMemoryCache.keys().next().value;
-      if (oldestKey) tpMemoryCache.delete(oldestKey);
-    }
-    tpMemoryCache.set(url, { expiresAt: now + 30 * 60 * 1000, payload: json });
-    return json;
+    return (await res.json()) as T;
   } catch {
     return null;
   }
@@ -646,9 +630,6 @@ export async function fetchFlightRoutePageData(
 export async function fetchCachedSeoFlightRouteData(
   routeSlug: string
 ): Promise<FlightRoutePageData | null> {
-  "use cache";
-  cacheLife("days");
-
   const parsed = parseFlightRouteSlug(routeSlug);
   if (parsed) {
     return fetchFlightRoutePageData(

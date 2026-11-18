@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { Suspense } from "react";
 import {
@@ -150,8 +149,6 @@ function ChartTimeFallback() {
 }
 
 export default async function TrainChartTimePage() {
-  "use cache";
-  cacheLife("hours");
 
   const featuredChartBlog = FEATURED_SEO_BLOG_POSTS.find(
     (p) =>

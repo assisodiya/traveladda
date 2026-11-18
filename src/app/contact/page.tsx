@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { cacheLife } from "next/cache";
 import Link from "next/link";
 import {
   ArrowRightIcon,
@@ -53,8 +52,6 @@ const CONTACT_DESKS = [
 ];
 
 export default async function ContactPage() {
-  "use cache";
-  cacheLife("days");
 
   const contactJsonLd = {
     "@context": "https://schema.org",

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { Suspense } from "react";
 import {
@@ -79,8 +78,6 @@ function PnrCheckerFallback() {
 }
 
 export default async function PnrStatusPage() {
-  "use cache";
-  cacheLife("hours");
 
   return (
     <main className="pb-16 sm:pb-24">

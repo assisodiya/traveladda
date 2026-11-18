@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { CheckCircleIcon, ShieldCheckIcon } from "@/components/Icons";
 
@@ -86,8 +85,6 @@ const PRIVACY_SECTIONS = [
 ];
 
 export default async function PrivacyPolicyPage() {
-  "use cache";
-  cacheLife("days");
 
   const privacyJsonLd = {
     "@context": "https://schema.org",

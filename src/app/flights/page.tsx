@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { cacheLife } from "next/cache";
 import Link from "next/link";
 import {
   ArrowRightIcon,
@@ -79,8 +78,6 @@ const FLIGHT_HUB_FAQS = [
 ];
 
 export default async function FlightsHubPage() {
-  "use cache";
-  cacheLife("hours");
 
   const initialData = await fetchFlightRoutePageData("DEL", "BOM", null, "inr");
   const allRoutes = getAllIndexableFlightRouteSlugs();

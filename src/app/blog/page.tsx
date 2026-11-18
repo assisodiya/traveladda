@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { cacheLife } from "next/cache";
 import Link from "next/link";
 import {
   ArrowRightIcon,
@@ -55,8 +54,6 @@ export const metadata: Metadata = {
 };
 
 export default async function BlogIndexPage() {
-  "use cache";
-  cacheLife("hours");
 
   const structuredData = {
     "@context": "https://schema.org",

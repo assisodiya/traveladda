@@ -1,4 +1,3 @@
-import { cacheLife } from "next/cache";
 import {
   ALL_CATALOG_TRAINS,
   ALL_WEEK_DAYS,
@@ -1235,9 +1234,6 @@ function buildFallbackSeoTrainData(
 export async function fetchSeoTrainPageData(
   rawTrainInput: string
 ): Promise<NormalizedLiveTrainData | null> {
-  "use cache";
-  cacheLife("hours");
-
   let cleanTrain = extractTrainNumberFromParam(rawTrainInput || "");
   if (!/^\d{3,5}$/.test(cleanTrain)) {
     const nameQuery = decodeURIComponent(rawTrainInput || "")

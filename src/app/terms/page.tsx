@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { AlertCircleIcon, CheckCircleIcon } from "@/components/Icons";
 
@@ -49,8 +48,6 @@ const TERMS_SECTIONS = [
 ];
 
 export default async function TermsPage() {
-  "use cache";
-  cacheLife("days");
 
   return (
     <main className="pb-16 sm:pb-24">

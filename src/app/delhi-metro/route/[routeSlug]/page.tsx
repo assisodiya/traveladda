@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
@@ -15,25 +14,17 @@ import {
 import {
   buildMetroLinePath,
   buildMetroRoutePath,
-  buildMetroRouteSlug,
   buildMetroStationPath,
-  POPULAR_METRO_ROUTES,
   parseMetroRouteSlug,
 } from "@/lib/metro-types";
 
-export async function generateStaticParams() {
-  return POPULAR_METRO_ROUTES.slice(0, 2).map((r) => ({
-    routeSlug: buildMetroRouteSlug(r.fromSlug, r.toSlug),
-  }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ routeSlug: string }>;
 }): Promise<Metadata> {
-  "use cache";
-  cacheLife("days");
 
   const { routeSlug } = await params;
   const parsedPair = parseMetroRouteSlug(routeSlug);
@@ -212,8 +203,6 @@ export default async function MetroDynamicSeoPage({
 }: {
   params: Promise<{ routeSlug: string }>;
 }) {
-  "use cache";
-  cacheLife("days");
 
   const { routeSlug } = await params;
   const network = await fetchCachedMetroNetworkSummary();

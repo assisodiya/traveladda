@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { cacheLife } from "next/cache";
 import Link from "next/link";
 import {
   ArrowRightIcon,
@@ -58,8 +57,6 @@ const EDITORIAL_TEAM = [
 ];
 
 export default async function AboutPage() {
-  "use cache";
-  cacheLife("days");
 
   const aboutJsonLd = {
     "@context": "https://schema.org",

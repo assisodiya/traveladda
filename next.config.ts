@@ -1,11 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  cacheComponents: true,
-  partialPrefetching: true,
-  // Keep runtime page & "use cache" entries in a bounded 64 MB in-memory LRU
-  // and disable flushing on-demand ISR / fetch-cache files to disk across 18,500+ dynamic routes.
-  cacheMaxMemorySize: 64 * 1024 * 1024,
+  // Completely disable all Next.js server-side memory and disk caches
+  cacheHandler: "./cache-handler.js",
+  cacheMaxMemorySize: 0,
   experimental: {
     isrFlushToDisk: false,
     cpus: 2,

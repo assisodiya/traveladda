@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { AirToolsClient } from "@/components/AirToolsClient";
 import { ArrowRightIcon, PlaneIcon } from "@/components/Icons";
@@ -11,8 +10,6 @@ export const metadata: Metadata = {
 };
 
 export default async function AirToolsPage() {
-  "use cache";
-  cacheLife("hours");
 
   return (
     <main className="pb-16 sm:pb-24">

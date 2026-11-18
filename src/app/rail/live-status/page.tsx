@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { Suspense } from "react";
 import {
@@ -152,8 +151,6 @@ function LiveTrainFallback() {
 }
 
 export default async function LiveTrainStatusPage() {
-  "use cache";
-  cacheLife("hours");
 
   const structuredData = {
     "@context": "https://schema.org",

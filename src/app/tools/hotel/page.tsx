@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { HotelToolsClient } from "@/components/HotelToolsClient";
 import { ArrowRightIcon, ClockIcon } from "@/components/Icons";
@@ -15,8 +14,6 @@ export const metadata: Metadata = {
 };
 
 export default async function HotelToolsPage() {
-  "use cache";
-  cacheLife("hours");
 
   return (
     <main className="pb-16 sm:pb-24">

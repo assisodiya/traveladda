@@ -1,7 +1,6 @@
 import React from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { cacheLife } from "next/cache";
 import {
   ArrowRightIcon,
   MapPinIcon,
@@ -56,8 +55,6 @@ export const metadata: Metadata = {
 };
 
 export default async function HtmlSitemapDirectoryPage() {
-  "use cache";
-  cacheLife("days");
 
   const segments = buildSegmentedSitemaps();
   const totalUrls = buildAllSitemapEntries().length;

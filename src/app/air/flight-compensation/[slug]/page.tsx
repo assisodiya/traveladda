@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
@@ -20,17 +19,11 @@ interface AirlineCompensationPageProps {
   params: Promise<{ slug: string }>;
 }
 
-export function generateStaticParams() {
-  return DGCA_AIRLINE_PROFILES.slice(0, 2).map((a) => ({
-    slug: a.slug,
-  }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
 }: AirlineCompensationPageProps): Promise<Metadata> {
-  "use cache";
-  cacheLife("days");
 
   const { slug } = await params;
   const airline = findAirlineCompensationBySlug(slug);
@@ -74,8 +67,6 @@ export async function generateMetadata({
 export default async function AirlineCompensationSlugPage({
   params,
 }: AirlineCompensationPageProps) {
-  "use cache";
-  cacheLife("days");
 
   const { slug } = await params;
   const airline = findAirlineCompensationBySlug(slug);

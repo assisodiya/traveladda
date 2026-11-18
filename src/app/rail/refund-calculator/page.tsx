@@ -1,7 +1,6 @@
 import React from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { cacheLife } from "next/cache";
 import {
   AlertCircleIcon,
   ArrowRightIcon,
@@ -103,8 +102,6 @@ const REFUND_HUB_FAQS = [
 ];
 
 export default async function RailRefundCalculatorHubPage() {
-  "use cache";
-  cacheLife("days");
 
   const initialResult = computeRailRefund(DEFAULT_REFUND_STATE);
 

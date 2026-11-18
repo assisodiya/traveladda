@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
@@ -21,19 +20,13 @@ import {
   getBlogPostBySlug,
 } from "@/lib/blog-data";
 
-export function generateStaticParams() {
-  return ALL_BLOG_POSTS.slice(0, 4).map((post) => ({
-    slug: post.slug,
-  }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  "use cache";
-  cacheLife("days");
   const { slug } = await params;
   const post = getBlogPostBySlug(slug);
   if (!post) {
@@ -87,8 +80,6 @@ async function BlogArticleContent({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  "use cache";
-  cacheLife("days");
 
   const { slug } = await params;
   const post = getBlogPostBySlug(slug);

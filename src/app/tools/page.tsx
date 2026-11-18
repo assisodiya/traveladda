@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { cacheLife } from "next/cache";
 import Link from "next/link";
 import {
   ArrowRightIcon,
@@ -48,8 +47,6 @@ function renderToolIcon(iconKey: ToolMenuItem["iconKey"]) {
 }
 
 export default async function AllToolsPage() {
-  "use cache";
-  cacheLife("hours");
 
   const allItems = TOOL_CATEGORIES.flatMap((cat) => cat.items);
 

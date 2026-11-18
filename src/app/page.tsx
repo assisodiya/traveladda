@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { AirlineLogo } from "@/components/AirlineLogo";
 import { HeroSearchWidget } from "@/components/HeroSearchWidget";
@@ -71,8 +70,6 @@ const QUICK_SERVICES = [
 ];
 
 export default async function Home() {
-  "use cache";
-  cacheLife("hours");
 
   const homeJsonLd = {
     "@context": "https://schema.org",

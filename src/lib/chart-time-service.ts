@@ -1,4 +1,3 @@
-import { cacheLife } from "next/cache";
 import {
   buildChartTimeSlug,
   type ChartingZoneCluster,
@@ -377,9 +376,6 @@ export async function fetchOwnedTrainChartTime(
 export async function fetchSeoChartTimePageData(
   rawSlugOrTrain: string
 ): Promise<EnrichedChartTimeData | null> {
-  "use cache";
-  cacheLife("days");
-
   const cleanTrainNumber = extractTrainNumberFromChartSlug(
     rawSlugOrTrain || ""
   );

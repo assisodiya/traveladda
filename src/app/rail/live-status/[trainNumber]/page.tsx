@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import { Suspense } from "react";
@@ -20,7 +19,6 @@ import { fetchSeoTrainPageData } from "@/lib/live-train-service";
 import {
   ALL_WEEK_DAYS,
   buildTrainLiveStatusPath,
-  buildTrainSeoSlug,
   deriveTrainClasses,
   extractTrainNumberFromParam,
   findCatalogTrain,
@@ -29,34 +27,17 @@ import {
   getRelatedCatalogTrains,
   isReservedChartEligibleTrain,
   isSuburbanLocalEmuTrain,
-  POPULAR_LIVE_TRAINS,
 } from "@/lib/live-train-types";
 
 interface TrainPageProps {
   params: Promise<{ trainNumber: string }>;
 }
 
-export function generateStaticParams() {
-  const seen = new Set<string>();
-  const params: { trainNumber: string }[] = [];
-
-  for (const train of POPULAR_LIVE_TRAINS.slice(0, 2)) {
-    if (isSuburbanLocalEmuTrain(train)) continue;
-    const slug = buildTrainSeoSlug(train.trainNumber, train.trainName);
-    if (slug && !seen.has(slug)) {
-      seen.add(slug);
-      params.push({ trainNumber: slug });
-    }
-  }
-
-  return params;
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
 }: TrainPageProps): Promise<Metadata> {
-  "use cache";
-  cacheLife("hours");
 
   const { trainNumber: rawParam } = await params;
   const data = await fetchSeoTrainPageData(rawParam);
@@ -170,8 +151,6 @@ const SUNDAY_FIRST_DAYS = [
 export default async function TrainLiveStatusByNumberPage({
   params,
 }: TrainPageProps) {
-  "use cache";
-  cacheLife("hours");
 
   const { trainNumber: rawParam } = await params;
   const trainData = await fetchSeoTrainPageData(rawParam);

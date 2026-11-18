@@ -2,7 +2,6 @@ import React from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { cacheLife } from "next/cache";
 import {
   AlertCircleIcon,
   ArrowRightIcon,
@@ -23,17 +22,11 @@ interface ScenarioPageProps {
   params: Promise<{ slug: string }>;
 }
 
-export async function generateStaticParams() {
-  return REFUND_SEO_SCENARIOS.slice(0, 2).map((sc) => ({
-    slug: sc.slug,
-  }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
 }: ScenarioPageProps): Promise<Metadata> {
-  "use cache";
-  cacheLife("days");
 
   const { slug } = await params;
   const scenario = getRefundScenarioBySlug(slug);
@@ -97,8 +90,6 @@ export async function generateMetadata({
 export default async function RailRefundScenarioPage({
   params,
 }: ScenarioPageProps) {
-  "use cache";
-  cacheLife("days");
 
   const { slug } = await params;
   const scenario = getRefundScenarioBySlug(slug);

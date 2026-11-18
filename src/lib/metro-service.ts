@@ -1,6 +1,5 @@
 import fs from "node:fs";
 import path from "node:path";
-import { cacheLife } from "next/cache";
 import {
   buildMetroRouteSlug,
   type MetroFareBreakdown,
@@ -761,14 +760,10 @@ export async function fetchCachedMetroRoutePlan(
   toQuery: string,
   preference: MetroRoutePreference = "fastest",
 ): Promise<MetroRoutePlanResult | null> {
-  "use cache";
-  cacheLife("days");
   return planMetroRoute(fromQuery, toQuery, preference);
 }
 
 export async function fetchCachedMetroNetworkSummary() {
-  "use cache";
-  cacheLife("days");
   const graph = getMetroNetworkGraph();
   return {
     agency: graph.agency,

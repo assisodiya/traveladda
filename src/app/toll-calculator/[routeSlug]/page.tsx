@@ -2,7 +2,6 @@ import React from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { cacheLife } from "next/cache";
 import {
   AlertCircleIcon,
   ArrowRightIcon,
@@ -25,18 +24,11 @@ interface RoutePageProps {
   params: Promise<{ routeSlug: string }>;
 }
 
-export async function generateStaticParams() {
-  const routes = getAllIndexableTollRouteSlugs().slice(0, 2);
-  return routes.map((r) => ({
-    routeSlug: r.routeSlug,
-  }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
 }: RoutePageProps): Promise<Metadata> {
-  "use cache";
-  cacheLife("days");
 
   const { routeSlug } = await params;
   const parsed = parseTollRouteSlug(routeSlug);
@@ -116,8 +108,6 @@ export async function generateMetadata({
 }
 
 export default async function TollRouteDetailPage({ params }: RoutePageProps) {
-  "use cache";
-  cacheLife("days");
 
   const { routeSlug } = await params;
   const parsed = parseTollRouteSlug(routeSlug);

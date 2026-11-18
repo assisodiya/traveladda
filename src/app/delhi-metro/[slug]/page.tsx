@@ -3,9 +3,7 @@ import MetroDynamicSeoPage, {
   generateMetadata as baseGenerateMetadata,
 } from "@/app/delhi-metro/route/[routeSlug]/page";
 
-export async function generateStaticParams() {
-  return ["yellow-line", "rajiv-chowk"].map((slug) => ({ slug }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,

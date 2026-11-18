@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { Suspense } from "react";
 import { ArrowRightIcon, ClockIcon, TrainIcon } from "@/components/Icons";
@@ -67,8 +66,6 @@ const METRO_HUB_FAQS = [
 ];
 
 export default async function MetroHubPage() {
-    "use cache";
-    cacheLife("days");
 
     const network = await fetchCachedMetroNetworkSummary();
 

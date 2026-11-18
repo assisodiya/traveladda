@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import { Suspense } from "react";
@@ -16,29 +15,18 @@ import { FLIGHT_BLOG_POSTS } from "@/lib/blog-data";
 import { fetchCachedFlightStatusForSeo } from "@/lib/flight-service";
 import {
   buildFlightStatusPath,
-  buildFlightStatusSlug,
   POPULAR_AIRLINES,
   POPULAR_LIVE_FLIGHTS,
   parseFlightStatusSlug,
 } from "@/lib/flight-types";
 
-export async function generateStaticParams() {
-  return POPULAR_LIVE_FLIGHTS.slice(0, 2).map((item) => ({
-    slug: buildFlightStatusSlug(
-      item.airlineCode,
-      item.flightNumber,
-      item.airlineName
-    ),
-  }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  "use cache";
-  cacheLife("hours");
 
   const { slug } = await params;
   const parsed = parseFlightStatusSlug(slug);
@@ -138,8 +126,6 @@ export default async function FlightStatusSeoDetailPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  "use cache";
-  cacheLife("hours");
 
   const { slug } = await params;
   const parsed = parseFlightStatusSlug(slug);

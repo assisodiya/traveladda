@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import {
@@ -13,11 +12,8 @@ import {
 import { IxigoStyleFlightExplorer } from "@/components/IxigoStyleFlightExplorer";
 import { fetchCachedSeoFlightRouteData } from "@/lib/flight-booking-service";
 import {
-  AIRPORT_BY_IATA_MAP,
   buildFlightRoutePath,
-  buildFlightRouteSlug,
   getRelatedFlightRoutes,
-  POPULAR_FLIGHT_CORRIDORS,
 } from "@/lib/flight-booking-types";
 import { buildFlightStatusPath } from "@/lib/flight-types";
 
@@ -25,24 +21,11 @@ interface FlightRoutePageProps {
   params: Promise<{ routeSlug: string }>;
 }
 
-export function generateStaticParams() {
-  return POPULAR_FLIGHT_CORRIDORS.slice(0, 2)
-    .map((c) => {
-      const from = AIRPORT_BY_IATA_MAP.get(c.fromIata);
-      const to = AIRPORT_BY_IATA_MAP.get(c.toIata);
-      if (!from || !to) return null;
-      return {
-        routeSlug: buildFlightRouteSlug(from.citySlug, to.citySlug),
-      };
-    })
-    .filter((item): item is { routeSlug: string } => Boolean(item));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
 }: FlightRoutePageProps): Promise<Metadata> {
-  "use cache";
-  cacheLife("days");
 
   const { routeSlug } = await params;
   const data = await fetchCachedSeoFlightRouteData(routeSlug);
@@ -99,8 +82,6 @@ export async function generateMetadata({
 export default async function FlightRouteSeoPage({
   params,
 }: FlightRoutePageProps) {
-  "use cache";
-  cacheLife("days");
 
   const { routeSlug } = await params;
   const routeData = await fetchCachedSeoFlightRouteData(routeSlug);
