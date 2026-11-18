@@ -3859,7 +3859,6 @@ export const METRO_BLOG_POSTS: BlogPost[] = [
       },
     ],
   },
-  /* RECENT METRO BLOGS TEMPORARILY COMMENTED OUT
   {
     slug: "delhi-metro-first-and-last-train-timings-today-sunday-schedule",
     domain: "metro",
@@ -4242,11 +4241,9 @@ export const METRO_BLOG_POSTS: BlogPost[] = [
       },
     ],
   },
-  */
 ];
 
 export const INDIA_CITY_METRO_BLOG_POSTS: BlogPost[] = [
-  /* RECENT PAN-INDIA CITY METRO BLOGS TEMPORARILY COMMENTED OUT
   {
     slug: "mumbai-metro-route-map-lines-ticket-price-fare-chart-guide",
     domain: "metro",
@@ -4906,7 +4903,6 @@ export const INDIA_CITY_METRO_BLOG_POSTS: BlogPost[] = [
       },
     ],
   },
-  */
 ];
 
 export const TOLL_BLOG_POSTS: BlogPost[] = [
