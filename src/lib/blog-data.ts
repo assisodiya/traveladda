@@ -42,6 +42,7 @@ export type BlogCategory =
   | "Metro Phase 4 Updates"
   | "Rail-to-Metro Transit"
   | "NCR Commuter Guide"
+  | "India City Metro Guide"
   | "Highway & FASTag Guide"
   | "Road Trip & Fuel";
 
@@ -2768,8 +2769,10 @@ export const METRO_BLOG_POSTS: BlogPost[] = [
     },
     accentColor: "from-orange-600 via-amber-500 to-blue-700",
     heroTagline: "Zero-Traffic Metro Transit to IGI Airport T1, T2 & T3",
-    primaryKeyword: "delhi airport metro timings and fare",
+    primaryKeyword: "delhi metro airport line",
     seoKeywords: [
+      "how to reach igi airport by delhi metro",
+      "delhi metro airport line",
       "delhi airport metro timings and fare",
       "new delhi to igi airport metro route",
       "airport express line timings",
@@ -3146,8 +3149,9 @@ export const METRO_BLOG_POSTS: BlogPost[] = [
     },
     accentColor: "from-indigo-700 via-blue-600 to-emerald-600",
     heroTagline: "Platform-to-Metro Exit Guide for Every Major Delhi Railway Terminal",
-    primaryKeyword: "new delhi railway station metro gate and route",
+    primaryKeyword: "delhi metro nearest station to railway station",
     seoKeywords: [
+      "delhi metro nearest station to railway station",
       "new delhi railway station metro gate and route",
       "hazrat nizamuddin railway station nearest metro",
       "anand vihar railway station to rajiv chowk metro",
@@ -3386,8 +3390,9 @@ export const METRO_BLOG_POSTS: BlogPost[] = [
     },
     accentColor: "from-blue-600 via-indigo-600 to-emerald-600",
     heroTagline: "Step-by-Step DMRC Smart Card & NCMC Online Recharge + AVM Top-Up Guide",
-    primaryKeyword: "how to recharge delhi metro card online",
+    primaryKeyword: "metro card recharge online",
     seoKeywords: [
+      "metro card recharge online",
       "how to recharge delhi metro card online",
       "how to check delhi metro card balance online",
       "dmrc smart card avm top up validation",
@@ -3851,6 +3856,1050 @@ export const METRO_BLOG_POSTS: BlogPost[] = [
         question: "Can I leave my car overnight in a Delhi Metro parking lot?",
         answer:
           "Yes, overnight parking is permitted at most DMRC Park-and-Ride lots with an additional Night Parking charge of ₹60 per night for cars and ₹30 per night for two-wheelers (applicable between 11:00 PM and 5:00 AM).",
+      },
+    ],
+  },
+  {
+    slug: "delhi-metro-first-and-last-train-timings-today-sunday-schedule",
+    domain: "metro",
+    title:
+      "Delhi Metro Timings (2026): First & Last Train Timings Today + Sunday Morning Schedule",
+    excerpt:
+      "Check line-wise Delhi Metro first and last train timings today across Yellow, Blue, Pink, Magenta, Red, Violet, and Airport Express lines—including the official Sunday morning 6:00 AM vs 8:00 AM Phase-3 start rule.",
+    category: "Delhi Metro Guide",
+    readTime: "7 min read",
+    publishedDate: "November 2026",
+    publishedIso: "2026-11-18",
+    author: {
+      name: "Siddharth Verma",
+      role: "Urban Transit & NCR Mobility Analyst",
+    },
+    accentColor: "from-blue-700 via-indigo-600 to-amber-500",
+    heroTagline: "Official Line-by-Line DMRC First Train, Last Train & Sunday Schedule",
+    primaryKeyword: "delhi metro timings",
+    seoKeywords: [
+      "delhi metro timings",
+      "first and last metro timings",
+      "delhi metro first train timing on sunday",
+      "delhi metro last train timing today",
+      "yellow line first and last metro time",
+      "blue line last metro timing from rajiv chowk",
+      "airport express first metro timing 4 45 am",
+      "delhi metro sunday timing pink and magenta line",
+    ],
+    keyTakeaways: [
+      "Monday to Saturday, Phase-1 & Phase-2 lines (Yellow, Blue, Red, Violet, Green) start between 05:15 AM and 05:45 AM, while the Orange Airport Express Line starts earliest at 04:45 AM.",
+      "On Sundays, Phase-3 corridors (Pink Line, Magenta Line, Grey Line, and extensions like Noida City Centre–Electronic City & Mundka–Brigadier Hoshiar Singh) start later around 07:00 AM to 08:00 AM unless DMRC announces a special exam schedule.",
+      "Terminal-to-terminal last metro departures leave origin terminals at 11:00 PM sharp—meaning central interchange hubs like Rajiv Chowk see their final connecting trains between 11:25 PM and 11:35 PM.",
+    ],
+    quickActionLinks: [
+      {
+        label: "Check Station-Specific First & Last Train",
+        sublabel: "Search any of the 262 Delhi NCR Metro stations",
+        href: "/delhi-metro",
+      },
+      {
+        label: "New Delhi → IGI Airport (04:45 AM Start)",
+        sublabel: "Orange Airport Express Line timings & ₹60 fare",
+        href: "/delhi-metro/route/new-delhi-to-igi-airport",
+      },
+      {
+        label: "Rajiv Chowk → Millennium City Centre",
+        sublabel: "Yellow Line last train & peak frequency",
+        href: "/delhi-metro/route/rajiv-chowk-to-huda-city-centre",
+      },
+      {
+        label: "Rajiv Chowk → Noida Electronic City",
+        sublabel: "Blue Line timings, stops & smart card fare",
+        href: "/delhi-metro/route/rajiv-chowk-to-noida-electronic-city",
+      },
+    ],
+    sections: [
+      {
+        heading: "1. Line-Wise First & Last Delhi Metro Timings (Monday to Saturday)",
+        paragraphs: [
+          "When planning an early-morning railway departure from New Delhi (NDLS) or catching a late-evening train back to Gurgaon, Noida, or Ghaziabad, remember that DMRC publishes terminal departure times—not mid-corridor passing times. A train departing Samaypur Badli or Dwarka Sector-21 at 11:00 PM reaches central stations like Kashmere Gate and Rajiv Chowk 25 to 38 minutes later.",
+          "Across regular working days (Monday through Saturday), revenue services operate at 2.5 to 4-minute headways during morning (08:00 AM–11:00 AM) and evening (05:00 PM–08:30 PM) peak hours, and every 5 to 8 minutes during off-peak daytime and late-night windows.",
+        ],
+        bullets: [
+          {
+            label: "Airport Express (Orange Line): 04:45 AM – 11:30 PM",
+            detail:
+              "First train departs both New Delhi and Yashobhoomi Dwarka Sector-25 around 04:45 AM; last train from New Delhi to Dwarka Sec-25 leaves at 11:40 PM.",
+          },
+          {
+            label: "Yellow Line (Samaypur Badli ↔ Millennium City Centre): 05:30 AM – 11:00 PM",
+            detail:
+              "Selected intermediate depot starts (Vishwavidyalaya, Kashmere Gate, Qutab Minar) begin as early as 05:15 AM, while final terminal trains depart at 11:00 PM.",
+          },
+          {
+            label: "Blue Line (Dwarka Sec-21 ↔ Noida Electronic City / Vaishali): 05:30 AM – 11:00 PM",
+            detail:
+              "Last Vaishali and Noida Electronic City trains depart Dwarka Sector-21 between 10:50 PM and 11:05 PM, crossing Rajiv Chowk around 11:30 PM.",
+          },
+          {
+            label: "Pink, Magenta, Red & Violet Lines: 05:45 AM – 11:00 PM",
+            detail:
+              "Weekday services begin between 05:30 AM and 06:00 AM from terminal stations and close terminal departures at 11:00 PM.",
+          },
+        ],
+        callout: {
+          title: "Never Miss the Last Interchange Connection at 11:00 PM",
+          text: "If your journey requires switching lines (for example, Magenta Line to Yellow Line at Hauz Khas, or Blue Line to Yellow Line at Rajiv Chowk), board your first metro no later than 10:25 PM so you reach the interchange platform before the last connecting train departs!",
+        },
+      },
+      {
+        heading: "2. Delhi Metro First Train Timing on Sunday (6:00 AM vs 8:00 AM Rule Explained)",
+        paragraphs: [
+          "Thousands of Sunday morning travellers and exam candidates get caught off guard because Sunday morning start timings differ between older Phase-1/2 lines and newer Phase-3 driverless/extended sections due to overnight track maintenance blocks.",
+          "While core Yellow, Blue, Red, and Airport Express sections run from early morning on Sundays (04:45 AM on Airport Express and ~06:00 AM on core Yellow/Blue corridors), Phase-3 corridors commence passenger operations later on Sunday mornings:",
+        ],
+        bullets: [
+          {
+            label: "Pink Line & Magenta Line on Sundays (07:00 AM – 08:00 AM Start)",
+            detail:
+              "Routine Sunday services on Majlis Park–Shiv Vihar (Pink Line) and Janakpuri West–Botanical Garden (Magenta Line) start later than weekdays—typically between 07:00 AM and 08:00 AM depending on the section.",
+          },
+          {
+            label: "Extended Outer Sections on Sundays (08:00 AM Start)",
+            detail:
+              "Outer Phase-3 extensions such as Noida City Centre–Noida Electronic City, Mundka–Brigadier Hoshiar Singh, Kashmere Gate–Raja Nahar Singh (select stretches), and Grey Line (Dwarka–Dhansa Bus Stand) open at 08:00 AM on Sundays.",
+          },
+          {
+            label: "UPSC / SSC / Marathon Special Sunday Announcements",
+            detail:
+              "On major competitive exam Sundays and the Delhi Half Marathon, DMRC advances Phase-3 Sunday start times to 06:00 AM or 04:00 AM via official X (@OfficialDMRC) advisories.",
+          },
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "What is the Delhi Metro last train timing today from Rajiv Chowk?",
+        answer:
+          "Because terminal stations dispatch their final trains at 11:00 PM, the last trains passing through Rajiv Chowk depart between 11:25 PM and 11:38 PM towards Millennium City Centre, Samaypur Badli, Dwarka Sector-21, Noida Electronic City, and Vaishali. AFC entry gates at Rajiv Chowk close around 11:20 PM for connecting lines.",
+      },
+      {
+        question: "What is the Delhi Metro first train timing on Sunday?",
+        answer:
+          "On Sundays, the Airport Express Line starts at 04:45 AM and core Yellow/Blue/Red Line sections start around 06:00 AM, whereas Phase-3 lines (Pink Line, Magenta Line, Grey Line, and Noida Electronic City extension) begin Sunday service between 07:00 AM and 08:00 AM.",
+      },
+    ],
+  },
+  {
+    slug: "how-to-change-metro-lines-in-delhi-blue-yellow-interchange-stations-guide",
+    domain: "metro",
+    title:
+      "How to Change Metro Lines in Delhi: All 29 Interchange Stations & Blue-to-Yellow Line Rajiv Chowk Guide",
+    excerpt:
+      "First time switching lines in the Delhi Metro? Learn exactly how to change between Blue and Yellow Line at Rajiv Chowk, navigate Kashmere Gate, Hauz Khas & Mandi House without exiting AFC gates, and save 15 minutes using colored floor footprints.",
+    category: "Delhi Metro Guide",
+    readTime: "8 min read",
+    publishedDate: "November 2026",
+    publishedIso: "2026-11-18",
+    author: {
+      name: "Siddharth Verma",
+      role: "Urban Transit & NCR Mobility Analyst",
+    },
+    accentColor: "from-amber-500 via-blue-600 to-indigo-700",
+    heroTagline: "Step-by-Step Delhi Metro Platform & Interchange Navigation Guide",
+    primaryKeyword: "delhi metro interchange stations",
+    seoKeywords: [
+      "delhi metro interchange stations",
+      "delhi metro interchange between blue and yellow line",
+      "how to change metro lines in delhi",
+      "rajiv chowk platform 1 2 3 4 guide",
+      "kashmere gate triple interchange yellow red violet",
+      "hauz khas yellow to magenta line walk time",
+      "do i need another ticket to change metro line in delhi",
+    ],
+    keyTakeaways: [
+      "Rajiv Chowk is the sole direct interchange between the Blue Line (Upper Underground Level — Platforms 3 & 4) and Yellow Line (Lower Underground Level — Platforms 1 & 2).",
+      "Within DMRC's 9 color lines, you NEVER tap out at AFC gates when changing lines—one single QR ticket or Smart Card tap at origin covers up to 3 interchanges until your final exit.",
+      "Only 3 out-of-paid-area skywalk transfers require tapping out and re-entering: Dhaula Kuan ↔ Durgabai Deshmukh South Campus, Noida Sector 52 (Blue) ↔ Sector 51 (Aqua), and New Delhi (Yellow) ↔ New Delhi (Airport Express).",
+    ],
+    quickActionLinks: [
+      {
+        label: "Plan Shortest Interchange Metro Route",
+        sublabel: "Compare Fastest vs Minimum Interchange options",
+        href: "/delhi-metro",
+      },
+      {
+        label: "Dwarka Sec-21 → Millennium City Centre",
+        sublabel: "Blue to Yellow Line switch at Rajiv Chowk",
+        href: "/delhi-metro/route/dwarka-sector-21-to-huda-city-centre",
+      },
+      {
+        label: "Noida Electronic City → Hauz Khas",
+        sublabel: "Blue to Magenta Line shortcut via Botanical Garden",
+        href: "/delhi-metro/route/noida-electronic-city-to-hauz-khas",
+      },
+      {
+        label: "Kashmere Gate Interchange Hub Page",
+        sublabel: "Yellow, Red & Violet Line triple transfer details",
+        href: "/delhi-metro/route/kashmere-gate",
+      },
+    ],
+    sections: [
+      {
+        heading: "1. Delhi Metro Interchange Between Blue and Yellow Line (Rajiv Chowk Platform Guide)",
+        paragraphs: [
+          "Rajiv Chowk (located directly beneath Connaught Place Central Park) is India's busiest two-level underground interchange connecting the East–West Blue Line with the North–South Yellow Line. Because both corridors sit inside the same paid area, switching between Blue and Yellow Line takes just 3 to 5 minutes via direct inter-platform escalators and staircases—do NOT exit through the AFC token gates.",
+          "Memorizing the 4 platform numbers at Rajiv Chowk eliminates 90% of rush-hour confusion:",
+        ],
+        bullets: [
+          {
+            label: "Platform 1 (Lower Level — Yellow Line Southbound)",
+            detail:
+              "Trains towards Millennium City Centre Gurugram (via Patel Chowk, Central Secretariat, AIIMS, Hauz Khas, Saket, MG Road).",
+          },
+          {
+            label: "Platform 2 (Lower Level — Yellow Line Northbound)",
+            detail:
+              "Trains towards Samaypur Badli (via New Delhi Railway Station, Chawri Bazar, Chandni Chowk, Kashmere Gate, Vishwavidyalaya).",
+          },
+          {
+            label: "Platform 3 (Upper Level — Blue Line Eastbound)",
+            detail:
+              "Trains towards Noida Electronic City AND Vaishali (check the front LED display on the approaching train—Vaishali and Noida trains alternate on Platform 3!).",
+          },
+          {
+            label: "Platform 4 (Upper Level — Blue Line Westbound)",
+            detail:
+              "Trains towards Dwarka Sector-21 (via RK Ashram Marg, Karol Bagh, Rajendra Place, Rajouri Garden, Janakpuri West).",
+          },
+        ],
+        callout: {
+          title: "Follow Colored Footprints on the Station Floor",
+          text: "At every Delhi Metro interchange (Rajiv Chowk, Hauz Khas, Kashmere Gate, Mandi House, Botanical Garden, Central Secretariat, Lajpat Nagar), DMRC paints bright color-coded footprints and overhead ribbons in the exact color of the connecting line—just follow the colored trail from your coach door!",
+        },
+      },
+      {
+        heading: "2. Major Delhi NCR Metro Interchange Hubs & Transfer Walk Times",
+        paragraphs: [
+          "With 29+ interchange hubs across Delhi NCR, picking the right transfer station can cut 15 minutes of walking and crowd queuing. While Mandi House (Blue ↔ Violet) and Botanical Garden (Blue ↔ Magenta) are compact cross-concourse transfers (~2–3 minutes), Phase-3 megahubs involve longer paid-area travellators:",
+        ],
+        bullets: [
+          {
+            label: "Kashmere Gate (Yellow ↔ Red ↔ Violet — India's Largest Triple Interchange)",
+            detail:
+              "Connects Underground Yellow & Violet lines with Elevated Red Line across 3 stacked levels (~4–6 mins transfer).",
+          },
+          {
+            label: "Hauz Khas (Yellow ↔ Magenta) & Rajouri Garden (Blue ↔ Pink)",
+            detail:
+              "Connected via air-conditioned underground/elevated paid walkways equipped with moving travellators (~6–8 mins transfer).",
+          },
+          {
+            label: "Central Secretariat (Yellow ↔ Violet) & Mandi House (Blue ↔ Violet)",
+            detail:
+              "Fastest central Delhi transfers (~2–3 mins) ideal for bypassing Rajiv Chowk when commuting towards Faridabad, Lajpat Nagar, or Nehru Place.",
+          },
+          {
+            label: "Sikanderpur (Yellow ↔ Rapid Metro) & Noida Sec-52/51 (Blue ↔ Aqua Line)",
+            detail:
+              "Sikanderpur connects DMRC Yellow Line to Gurgaon Cyber Hub Rapid Metro; Noida Sector-52 connects via dedicated 300m walkway/free e-rickshaw to NMRC Noida Sector-51.",
+          },
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "Which station is the interchange between Blue Line and Yellow Line in Delhi Metro?",
+        answer:
+          "Rajiv Chowk is the direct interchange station between the Blue Line (Platforms 3 & 4 on the upper underground level) and the Yellow Line (Platforms 1 & 2 on the lower underground level).",
+      },
+      {
+        question: "Do I have to buy a separate metro ticket when changing lines in Delhi?",
+        answer:
+          "No. For all transfers within DMRC lines (Red, Yellow, Blue, Green, Violet, Pink, Magenta, Grey) and Gurgaon Rapid Metro, one single QR ticket or Smart Card tap covers your entire journey. Only switching to the Orange Airport Express Line or NMRC Noida Aqua Line requires tapping out and using a separate QR/NCMC tap.",
+      },
+    ],
+  },
+  {
+    slug: "how-to-book-delhi-metro-tickets-online-upi-smart-card-vs-qr-ticket",
+    domain: "metro",
+    title:
+      "How to Book Delhi Metro Tickets Online via UPI & WhatsApp (2026): Smart Card vs QR Ticket + New Delhi to Rajiv Chowk Fare",
+    excerpt:
+      "Skip long token queues! Learn how to book Delhi Metro QR tickets in 10 seconds using UPI, WhatsApp (+91 9650855800), Paytm, PhonePe & DMRC Momentum 2.0, compare Smart Card vs QR Ticket savings, and check exact short-hop fares like New Delhi to Rajiv Chowk (₹10).",
+    category: "Metro Fare & Tickets",
+    readTime: "7 min read",
+    publishedDate: "November 2026",
+    publishedIso: "2026-11-18",
+    author: {
+      name: "Siddharth Verma",
+      role: "Urban Transit & NCR Mobility Analyst",
+    },
+    accentColor: "from-emerald-600 via-teal-600 to-blue-700",
+    heroTagline: "UPI QR Ticketing, WhatsApp Bot & Smart Card Savings Breakdown",
+    primaryKeyword: "how to book metro tickets online",
+    seoKeywords: [
+      "how to book metro tickets online",
+      "can i use upi for metro tickets",
+      "delhi metro smart card vs qr ticket",
+      "delhi metro ticket price from new delhi to rajiv chowk",
+      "delhi metro whatsapp ticket number 9650855800",
+      "dmrc momentum 2.0 qr ticket booking",
+      "upi metro ticket paytm phonepe amazon pay",
+    ],
+    keyTakeaways: [
+      "Yes—you can pay via UPI (GPay, PhonePe, Paytm, BHIM) both online (WhatsApp +91 9650855800, DMRC Momentum 2.0, Paytm, PhonePe, ONDC apps) and at station Ticket Vending Machines (TVMs).",
+      "The Delhi Metro ticket price from New Delhi to Rajiv Chowk (1.1 km, 1 stop, 2 mins on Yellow Line) is just ₹10 via QR/Token, ₹9 on Smart Card Peak, and ₹8 on Smart Card Off-Peak.",
+      "While Mobile QR tickets are best for occasional visitors (zero ₹150 card deposit), regular commuters save 10% to 20% on every trip with a DMRC Smart Card or NCMC One Nation One Card.",
+    ],
+    quickActionLinks: [
+      {
+        label: "New Delhi → Rajiv Chowk Fare (₹10)",
+        sublabel: "1 Stop • 2 Mins • Yellow Line Platform 1",
+        href: "/delhi-metro/route/new-delhi-to-rajiv-chowk",
+      },
+      {
+        label: "Kashmere Gate → Rajiv Chowk Fare",
+        sublabel: "Check Token/QR vs Smart Card Peak/Off-Peak fare",
+        href: "/delhi-metro/route/kashmere-gate-to-rajiv-chowk",
+      },
+      {
+        label: "New Delhi → Millennium City Centre",
+        sublabel: "Full Yellow Line fare & travel time calculator",
+        href: "/delhi-metro/route/new-delhi-to-huda-city-centre",
+      },
+      {
+        label: "Open Delhi Metro Fare Calculator",
+        sublabel: "Check exact fare between any 262 stations",
+        href: "/delhi-metro",
+      },
+    ],
+    sections: [
+      {
+        heading: "1. Can I Use UPI for Metro Tickets? 4 Ways to Book Delhi Metro QR Tickets Online",
+        paragraphs: [
+          "You no longer need cash or plastic tokens to ride any Delhi NCR Metro line. Every AFC gate across all 262 DMRC, Airport Express, and Rapid Metro stations is equipped with a glass optical QR scanner right beside the Smart Card tap pad.",
+          "You can book an instant Mobile QR Ticket using any UPI app in under 15 seconds:",
+        ],
+        bullets: [
+          {
+            label: "1. Official DMRC WhatsApp Bot (+91 9650855800)",
+            detail:
+              "Send 'Hi' on WhatsApp to +91 9650855800, choose English/Hindi, select Origin & Destination (up to 6 tickets at once), and pay via UPI with ₹0 convenience fee.",
+          },
+          {
+            label: "2. DMRC Momentum 2.0 (Delhi Sarthi 2.0) Official App",
+            detail:
+              "Supports single/return QR tickets, virtual smart cards, Airport Express QR tickets, and station locker bookings.",
+          },
+          {
+            label: "3. Paytm, PhonePe, Amazon Pay & ONDC Apps (RedBus / Rapido / Uber)",
+            detail:
+              "Open the 'Metro' icon inside Paytm, PhonePe, or Amazon Pay, choose 'Delhi Metro QR Ticket', pay via UPI PIN, and scan the live QR code directly from your phone screen (note: screenshots do not scan on dynamic QR apps—keep the app screen open at max brightness).",
+          },
+          {
+            label: "4. UPI QR Payment on Station TVM Touchscreens",
+            detail:
+              "Even at physical station Ticket Vending Machines, select your destination station, tap 'UPI QR' on screen, scan with GPay/PhonePe, and collect a printed paper QR slip.",
+          },
+        ],
+        callout: {
+          title: "Quick Example: New Delhi to Rajiv Chowk Metro Ticket Price",
+          text: "Traveling 1 stop from New Delhi Railway Station (Platform 16 exit) to Rajiv Chowk (Connaught Place) on the Yellow Line covers 1.1 km in 2 minutes: QR/Token Fare is ₹10, Smart Card Peak Fare is ₹9, and Off-Peak Fare (before 8 AM, 12–5 PM, after 9 PM) is just ₹8!",
+        },
+      },
+      {
+        heading: "2. Delhi Metro Smart Card vs QR Ticket: Which Should You Use?",
+        paragraphs: [
+          "Choosing between a Mobile QR Ticket and a physical DMRC Smart Card / NCMC Card comes down to how many rides you take in a week:",
+        ],
+        bullets: [
+          {
+            label: "Fare Discount (Smart Card Wins: 10%–20% Off vs 0% on QR)",
+            detail:
+              "Mobile QR tickets charge the full base token slab (₹10 to ₹60). DMRC Smart Cards automatically deduct 10% less during peak hours and 20% less during off-peak hours.",
+          },
+          {
+            label: "Station Flexibility (Smart Card Allows Mid-Trip Destination Changes)",
+            detail:
+              "A QR ticket is locked to your booked destination (over-traveling requires paying the difference at Customer Care). With a Smart Card, you can exit at any station seamlessly.",
+          },
+          {
+            label: "Zero Upfront Deposit & Group Travel (QR Ticket Wins for Tourists)",
+            detail:
+              "A physical Smart Card carries a ₹50 non-refundable security fee (₹150 minimum issue price), whereas WhatsApp/UPI QR lets a family book up to 6 tickets on one phone with zero deposit.",
+          },
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "What is the Delhi Metro ticket price from New Delhi to Rajiv Chowk?",
+        answer:
+          "The Delhi Metro fare from New Delhi to Rajiv Chowk (1 stop on the Yellow Line towards Millennium City Centre, 2 minutes travel time) is ₹10 for a single-journey QR/Token ticket, ₹9 with a Smart Card during peak hours, and ₹8 during off-peak hours.",
+      },
+      {
+        question: "Can I use UPI to buy Delhi Metro tickets?",
+        answer:
+          "Yes! You can pay via any UPI app (Google Pay, PhonePe, Paytm, BHIM) on the official DMRC WhatsApp number (+91 9650855800), DMRC Momentum 2.0 app, Paytm/PhonePe Metro sections, and at station Ticket Vending Machines (TVMs).",
+      },
+    ],
+  },
+];
+
+export const INDIA_CITY_METRO_BLOG_POSTS: BlogPost[] = [
+  {
+    slug: "mumbai-metro-route-map-lines-ticket-price-fare-chart-guide",
+    domain: "metro",
+    title:
+      "Mumbai Metro Complete Route Guide (2026): Aqua Line 3, Line 1, 2A & 7 Route Map, Stations & Ticket Price",
+    excerpt:
+      "Complete 2026 commuter guide to Mumbai Metro's operational corridors: Blue Line 1 (Versova–Ghatkopar), Yellow Line 2A & Red Line 7 (Dahisar–Andheri), and Underground Aqua Line 3 (Aarey JVLR–BKC–Worli–Cuffe Parade + CSIA T1/T2 Airport)—with full ₹10–₹80 fare chart & WhatsApp QR booking.",
+    category: "India City Metro Guide",
+    readTime: "8 min read",
+    publishedDate: "November 2026",
+    publishedIso: "2026-11-18",
+    author: {
+      name: "Siddharth Deshmukh",
+      role: "Western & Southern Corridor Mobility Researcher",
+    },
+    accentColor: "from-blue-700 via-cyan-600 to-teal-600",
+    heroTagline: "Complete MMRDA, MMOPL & Underground Aqua Line 3 Route & Fare Handbook",
+    primaryKeyword: "mumbai metro route map",
+    seoKeywords: [
+      "mumbai metro route map",
+      "mumbai metro fare",
+      "mumbai metro ticket price",
+      "mumbai metro aqua line 3 stations and fare",
+      "versova to ghatkopar metro line 1 fare timings",
+      "mumbai metro line 2a and line 7 route",
+      "how to reach mumbai airport t1 t2 by metro",
+      "mumbai metro whatsapp ticket number",
+    ],
+    keyTakeaways: [
+      "Mumbai's operational metro network spans 4 primary corridors: Blue Line 1 (Versova–Andheri–Ghatkopar), Yellow Line 2A (Dahisar East–DN Nagar), Red Line 7 (Dahisar East–Gundavali), and the game-changing Underground Aqua Line 3 (Aarey JVLR–BKC–Dadar–Cuffe Parade).",
+      "Underground Aqua Line 3 directly connects both Chhatrapati Shivaji Maharaj International Airport Terminal 2 (CSMIA T2) and Domestic Terminal 1 (CSMIA T1) to BKC, Marol Naka (Line 1 interchange), Dadar, Churchgate, and Cuffe Parade.",
+      "Mumbai Metro ticket prices start at just ₹10 (0–3 km) on MMRDA Lines 2A, 7 & Aqua Line 3 (up to ₹60–₹80 for full-corridor rides) and ₹10–₹40 on Line 1.",
+    ],
+    quickActionLinks: [
+      {
+        label: "Check Live Flights to/from Mumbai (BOM)",
+        sublabel: "Verify CSMIA Terminal 1 vs Terminal 2 before boarding Metro",
+        href: "/air/flight-status",
+      },
+      {
+        label: "Delhi to Mumbai Flight Schedules & Fares",
+        sublabel: "Compare non-stop DEL–BOM flights & T1/T2 terminals",
+        href: "/flights/del-to-bom",
+      },
+      {
+        label: "Spot 12952 Mumbai Tejas Rajdhani Live",
+        sublabel: "Mumbai Central (MMCT) live train status & schedule",
+        href: "/rail/live-status/12952-new-delhi-mumbai-central-tejas-rajdhani-express",
+      },
+      {
+        label: "Mumbai → Pune Expressway Toll & Fuel",
+        sublabel: "Calculate Khalapur & Talegaon FASTag toll",
+        href: "/toll-calculator/mumbai-to-pune-toll-tax-and-fuel-cost",
+      },
+    ],
+    sections: [
+      {
+        heading: "1. Mumbai Metro Route Map (2026): All 4 Operational Lines & Key Interchanges",
+        paragraphs: [
+          "Over the past three years, Mumbai's rapid transit grid has evolved from a single East–West link into an integrated multi-corridor network linking the Western Suburbs, Central Railway Suburban Line, Bandra Kurla Complex (BKC), Mumbai Airport (T1 & T2), and South Mumbai.",
+          "Understanding where each corridor connects saves up to 60 minutes over Western Express Highway (WEH) and SV Road traffic:",
+        ],
+        bullets: [
+          {
+            label: "Blue Line 1 (Versova ↔ Andheri ↔ Ghatkopar — 11.4 km, 12 Stations)",
+            detail:
+              "Mumbai's busiest East–West bridge connecting Western Railway (Andheri) to Central Railway (Ghatkopar) in 21 minutes, with metro interchanges at DN Nagar (Line 2A), WEH/Gundavali (Line 7), and Marol Naka (Aqua Line 3).",
+          },
+          {
+            label: "Underground Aqua Line 3 (Aarey JVLR ↔ BKC ↔ Worli ↔ Cuffe Parade — 33.5 km, 27 Stations)",
+            detail:
+              "Mumbai's first fully underground corridor connecting SEEPZ, Marol Naka (Line 1), CSMIA T2, Sahar Road, CSMIA T1, Santacruz, Bandra Colony, BKC, Dadar, Siddhivinayak, Worli, Mahalaxmi, CSMT, Churchgate, and Cuffe Parade.",
+          },
+          {
+            label: "Yellow Line 2A (Dahisar East ↔ Andheri West / DN Nagar — 18.6 km, 17 Stations)",
+            detail:
+              "Runs along New Link Road through Borivali West, Kandivali West, Malad West, Goregaon West (Oshiwara), and Lower Oshiwara to DN Nagar (interchange with Line 1).",
+          },
+          {
+            label: "Red Line 7 (Dahisar East ↔ Gundavali / Andheri East — 16.5 km, 14 Stations)",
+            detail:
+              "Runs parallel along the Western Express Highway serving National Park, Devipada, Magathane, Poisar, Akurli, Goregaon East, Jogeshwari East, and Gundavali (skywalk interchange to Line 1 WEH station).",
+          },
+        ],
+      },
+      {
+        heading: "2. Mumbai Metro Ticket Price & Distance-Based Fare Chart (2026)",
+        paragraphs: [
+          "Mumbai Metro fares are distance-graduated, though tickets are issued separately for MMOPL (Line 1), Maha Mumbai Metro (Lines 2A & 7), and MMRC (Aqua Line 3) unless using an interoperable NCMC 'Mumbai 1' National Common Mobility Card or unified QR app (MetroConnect3 / Mumbai One):",
+        ],
+        bullets: [
+          {
+            label: "Maha Mumbai Metro Lines 2A & 7 Fare Slabs (₹10 to ₹60)",
+            detail:
+              "0–3 km: ₹10 | 3–12 km: ₹20 | 12–18 km: ₹30 | 18–24 km: ₹40 | 24–30 km: ₹50 | 30–36 km: ₹60.",
+          },
+          {
+            label: "Mumbai Metro Aqua Line 3 (MMRC) Fare Slabs (₹10 to ₹70)",
+            detail:
+              "0–3 km: ₹10 | 3–12 km: ₹20 | 12–18 km: ₹30 | 18–24 km: ₹40 | 24–30 km: ₹50 | 30–36 km: ₹60 | Above 36 km: ₹70. (Aarey JVLR to BKC is ₹50; CSMIA T2 to BKC is ₹30–₹40).",
+          },
+          {
+            label: "Mumbai Metro Line 1 (Versova–Ghatkopar) Fare Slabs (₹10 to ₹40)",
+            detail:
+              "Single journey QR fares range from ₹10, ₹20, ₹30 to ₹40 end-to-end; book instantly via WhatsApp (+91 9670008889 for Line 1; +91 8652635500 for Lines 2A/7).",
+          },
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "What is the minimum and maximum Mumbai Metro ticket price?",
+        answer:
+          "The minimum Mumbai Metro ticket price across Line 1, Line 2A, Line 7, and Underground Aqua Line 3 is ₹10 (up to 3 km). Maximum end-to-end single fares are ₹40 on Line 1 (Versova–Ghatkopar), ₹60 on Lines 2A & 7, and ₹70 across the full Aqua Line 3.",
+      },
+      {
+        question: "Does Mumbai Metro connect directly to Mumbai Airport Terminal 1 and Terminal 2?",
+        answer:
+          "Yes! Underground Mumbai Metro Aqua Line 3 has dedicated stations right outside both CSMIA Terminal 2 (International & Domestic) and CSMIA Terminal 1 (Domestic), with a quick interchange to Blue Line 1 at Marol Naka.",
+      },
+    ],
+  },
+  {
+    slug: "bangalore-namma-metro-timings-routes-purple-green-yellow-line-fare-guide",
+    domain: "metro",
+    title:
+      "Bangalore Namma Metro Timings & Route Guide (2026): Purple, Green & Yellow Line Stations & Fare",
+    excerpt:
+      "Complete 2026 BMRCL Namma Metro commuter guide: Purple Line (Challaghatta–Majestic–Whitefield Kadugodi), Green Line (Madavara–Silk Institute), and Yellow Line (RV Road–Electronic City–Bommasandra)—with 05:00 AM weekday vs 07:00 AM Sunday timings & QR/Smart Card discounts.",
+    category: "India City Metro Guide",
+    readTime: "7 min read",
+    publishedDate: "November 2026",
+    publishedIso: "2026-11-18",
+    author: {
+      name: "Siddharth Deshmukh",
+      role: "Western & Southern Corridor Mobility Researcher",
+    },
+    accentColor: "from-purple-700 via-emerald-600 to-amber-500",
+    heroTagline: "Official BMRCL Namma Metro Corridors, Majestic Transfer & Timings Guide",
+    primaryKeyword: "bangalore metro timings",
+    seoKeywords: [
+      "bangalore metro timings",
+      "namma metro timings and routes",
+      "bangalore metro route map",
+      "namma metro yellow line electronic city stations",
+      "whitefield to majestic metro timings and fare",
+      "bangalore metro sunday morning first train time",
+      "namma metro whatsapp qr ticket number 8105556677",
+    ],
+    keyTakeaways: [
+      "Monday to Saturday, Namma Metro first trains start at 05:00 AM from terminal stations (Whitefield Kadugodi, Challaghatta, Madavara/Nagasandra, Silk Institute, RV Road & Bommasandra), and last terminal trains depart at 11:00 PM (11:35 PM from Majestic).",
+      "On Sundays, Namma Metro starts at 07:00 AM across terminals instead of 05:00 AM.",
+      "Using a Namma Metro Smart Card / NCMC or Mobile QR Ticket (WhatsApp +91 8105556677) saves 5% over single tokens across BMRCL's distance slabs.",
+    ],
+    quickActionLinks: [
+      {
+        label: "Delhi to Bengaluru Flight Schedules",
+        sublabel: "Compare non-stop flights to Kempegowda Airport (BLR)",
+        href: "/flights/del-to-blr",
+      },
+      {
+        label: "Track 12627 Karnataka Express Live",
+        sublabel: "KSR Bengaluru (SBC) live running status & platform",
+        href: "/rail/live-status/12627-ksr-bengaluru-new-delhi-karnataka-express",
+      },
+      {
+        label: "Bengaluru → Mysuru Expressway Toll",
+        sublabel: "NH-275 Kaniminike & Gananguru FASTag rates",
+        href: "/toll-calculator/bengaluru-to-mysuru-toll-tax-and-fuel-cost",
+      },
+    ],
+    sections: [
+      {
+        heading: "1. Bangalore Namma Metro Corridors & Interchanges (Purple, Green & Yellow Line)",
+        paragraphs: [
+          "Operated by Bangalore Metro Rail Corporation Limited (BMRCL), Namma Metro is the fastest way to cross Silk Board, ORR/ITPL Whitefield, MG Road, Peenya Industrial Area, and KSR Bengaluru City Railway Station without getting trapped in 2-hour road gridlock:",
+        ],
+        bullets: [
+          {
+            label: "Purple Line (Whitefield / Kadugodi ↔ Challaghatta — 43.49 km, 37 Stations)",
+            detail:
+              "Connects ITPL, Hoodi, KR Pura, Baiyappanahalli, Indiranagar, MG Road, Cubbon Park, Vidhana Soudha, Nadaprabhu Kempegowda Station (Majestic), KSR Bengaluru City Railway Station, Vijayanagar, Mysore Road, and Kengeri to Challaghatta.",
+          },
+          {
+            label: "Green Line (Madavara / BIEC ↔ Silk Institute — 33.46 km, 32 Stations)",
+            detail:
+              "Connects BIEC Tumkur Road, Nagasandra, Peenya, Yeshwanthpur Railway Station, Mantri Square Sampige Road, Majestic (Purple Line interchange), Chickpet, Lalbagh, South End Circle, Jayanagar, RV Road (Yellow Line interchange), Banashankari, and Kanakapura Road.",
+          },
+          {
+            label: "Yellow Line (RV Road ↔ Electronic City ↔ Bommasandra — 19.15 km, 16 Stations)",
+            detail:
+              "Connects Green Line at Rashtreeya Vidyalaya Road (RV Road) directly to Ragigudda, Jayadeva Hospital, BTM Layout, Central Silk Board, Bommanahalli, Kudlu Gate, Hosa Road, Infosys Foundation Konappana Agrahara, Electronic City, and Bommasandra.",
+          },
+        ],
+      },
+      {
+        heading: "2. Namma Metro First & Last Train Timings (Weekday vs Sunday) & WhatsApp QR",
+        paragraphs: [
+          "During weekday IT peak hours (08:30 AM–10:30 AM and 05:00 PM–08:00 PM), Purple Line trains run every 3.5 to 5 minutes (with extra short-loop trains between Majestic and Garudacharpalya/Whitefield).",
+        ],
+        bullets: [
+          {
+            label: "Monday to Saturday Timings: 05:00 AM – 11:00 PM",
+            detail:
+              "First trains depart terminal stations at 05:00 AM; final terminal departures leave at 11:00 PM (with the final four-direction connecting dispatch at Majestic held until 11:35 PM).",
+          },
+          {
+            label: "Sunday Timings: 07:00 AM – 11:00 PM",
+            detail:
+              "On Sundays, passenger service commences at 07:00 AM from terminals (except on KPSC/UPSC exam Sundays when BMRCL starts early at 06:00 AM).",
+          },
+          {
+            label: "WhatsApp QR Booking (+91 8105556677) & 5% Discount",
+            detail:
+              "Send 'Hi' to BMRCL's WhatsApp chatbot (+91 8105556677) or use Namma Metro / Paytm / Amazon Pay QR tickets for an instant 5% discount over counter tokens.",
+          },
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "What are Bangalore Namma Metro timings on weekdays and Sundays?",
+        answer:
+          "From Monday to Saturday, Bangalore Namma Metro starts at 05:00 AM from terminal stations and runs its last terminal departures at 11:00 PM (11:35 PM from Majestic). On Sundays, the first metro starts at 07:00 AM.",
+      },
+      {
+        question: "How do I reach KSR Bengaluru City Railway Station or Yeshwanthpur by Metro?",
+        answer:
+          "KSR Bengaluru City Railway Station has a direct skywalk into 'Krantivira Sangolli Rayanna Railway Station' Metro Station on the Purple Line (1 stop west of Majestic). Yeshwanthpur Railway Station is directly served by 'Yeshwanthpur' Metro Station on the Green Line.",
+      },
+    ],
+  },
+  {
+    slug: "hyderabad-metro-fare-ticket-price-route-map-timings-guide",
+    domain: "metro",
+    title:
+      "Hyderabad Metro Ticket Price & Route Guide (2026): Red, Blue & Green Line Fare Chart & Timings",
+    excerpt:
+      "Check official 2026 L&T Hyderabad Metro Rail (HMR) ticket prices (₹10 to ₹60 distance slabs), Red Line (Miyapur–LB Nagar), Blue Line (Raidurg HITEC City–Nagole) & Green Line (JBS–MGBS) route map, interchanges, and 06:00 AM–11:00 PM timings.",
+    category: "India City Metro Guide",
+    readTime: "6 min read",
+    publishedDate: "November 2026",
+    publishedIso: "2026-11-18",
+    author: {
+      name: "Siddharth Deshmukh",
+      role: "Western & Southern Corridor Mobility Researcher",
+    },
+    accentColor: "from-red-600 via-blue-600 to-emerald-600",
+    heroTagline: "Official L&T Hyderabad Metro Rail Fare Slabs, Interchanges & Timings",
+    primaryKeyword: "hyderabad metro fare",
+    seoKeywords: [
+      "hyderabad metro fare",
+      "hyderabad metro ticket price",
+      "hyderabad metro route map",
+      "hyderabad metro timings first and last train",
+      "miyapur to lb nagar metro fare",
+      "secunderabad to hitec city raidurg metro route",
+      "hyderabad metro whatsapp qr ticket",
+    ],
+    keyTakeaways: [
+      "Hyderabad Metro Rail spans 69.2 km across 3 elevated corridors (57 stations): Red Line (Miyapur–LB Nagar), Blue Line (Nagole–Raidurg/HITEC City), and Green Line (JBS Parade Ground–MG Bus Station).",
+      "Single-journey Hyderabad Metro ticket prices range from ₹10 (up to 2 km) to a maximum of ₹60 (beyond 26 km), with 10% off-peak / Smart Card promotional savings on TSavaari & HMR cards.",
+      "Trains operate daily from 06:00 AM (first terminal departure) to 11:00 PM (last terminal departure, reaching final destination around 11:45 PM).",
+    ],
+    quickActionLinks: [
+      {
+        label: "Delhi to Hyderabad Flight Schedules",
+        sublabel: "Check non-stop flights to RGIA Shamshabad (HYD)",
+        href: "/flights/del-to-hyd",
+      },
+      {
+        label: "Spot 12724 Telangana Express Live",
+        sublabel: "Hyderabad Deccan (HYB) & Secunderabad (SC) train status",
+        href: "/rail/live-status/12724-new-delhi-hyderabad-deccan-telangana-express",
+      },
+      {
+        label: "Hyderabad → Vijayawada NH-65 Toll",
+        sublabel: "Pantangi, Korlaphad & Chillakallu FASTag rates",
+        href: "/toll-calculator/hyderabad-to-vijayawada-toll-tax-and-fuel-cost",
+      },
+    ],
+    sections: [
+      {
+        heading: "1. Hyderabad Metro Ticket Price & Official Distance Fare Chart (₹10 – ₹60)",
+        paragraphs: [
+          "L&T Metro Rail (Hyderabad) Limited calculates fares across 10 distance-graduated slabs between ₹10 and ₹60 based on track distance between your entry and exit stations:",
+        ],
+        bullets: [
+          {
+            label: "Short Hops (0 – 6 km): ₹10 to ₹25",
+            detail:
+              "0–2 km: ₹10 | 2–4 km: ₹15 | 4–6 km: ₹25 (e.g., Ameerpet to Begumpet or HITEC City to Raidurg).",
+          },
+          {
+            label: "Mid-City Commutes (6 – 18 km): ₹30 to ₹45",
+            detail:
+              "6–8 km: ₹30 | 8–10 km: ₹35 | 10–14 km: ₹40 | 14–18 km: ₹45 (e.g., Secunderabad East to HITEC City / Raidurg is ₹45–₹50).",
+          },
+          {
+            label: "Cross-City Rides (18 km – 26+ km): ₹50 to ₹60 Max",
+            detail:
+              "18–22 km: ₹50 | 22–26 km: ₹55 | Above 26 km: ₹60 maximum cap (e.g., Miyapur to LB Nagar end-to-end 29 km).",
+          },
+        ],
+      },
+      {
+        heading: "2. Hyderabad Metro Route Map: 3 Lines & 3 Interchange Hubs",
+        paragraphs: [
+          "Navigating Hyderabad Metro is remarkably intuitive because every line meets the other two at dedicated elevated interchange hubs:",
+        ],
+        bullets: [
+          {
+            label: "Ameerpet Interchange (Red Line ↔ Blue Line)",
+            detail:
+              "Connects Miyapur–Kukatpally–Punjagutta–Dilsukhnagar–LB Nagar (Red Line) with Raidurg–HITEC City–Madhapur–Begumpet–Secunderabad–Uppal–Nagole (Blue Line).",
+          },
+          {
+            label: "MG Bus Station / MGBS Interchange (Red Line ↔ Green Line)",
+            detail:
+              "Links Mahatma Gandhi Bus Station (TSRTC intercity hub) across Red Line and Green Line over the Musi River.",
+          },
+          {
+            label: "Parade Ground / JBS Interchange (Blue Line ↔ Green Line)",
+            detail:
+              "Connects Jubilee Bus Station (JBS) on the Green Line directly to Parade Ground on the Blue Line just 1 km from Secunderabad Railway Station.",
+          },
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "What is the Hyderabad Metro ticket price from Secunderabad to HITEC City?",
+        answer:
+          "Traveling directly on the Blue Line from Secunderabad East to HITEC City or Raidurg (~15–16.5 km, ~32 minutes, 0 interchanges) costs ₹45 to ₹50 on a single-journey QR ticket.",
+      },
+      {
+        question: "What are the first and last timings of Hyderabad Metro?",
+        answer:
+          "Hyderabad Metro trains start daily at 06:00 AM from all terminal stations (Miyapur, LB Nagar, Nagole, Raidurg, and JBS Parade Ground), and the last train departs terminal stations at 11:00 PM.",
+      },
+    ],
+  },
+  {
+    slug: "kolkata-metro-route-map-underwater-howrah-esplanade-stations-fare-guide",
+    domain: "metro",
+    title:
+      "Kolkata Metro Route & Station Guide (2026): Underwater Howrah–Esplanade Green Line, Blue, Orange & Purple Lines",
+    excerpt:
+      "Explore India's oldest—and first underwater—metro network in 2026: Green Line (Howrah Maidan–Esplanade–Sealdah–Salt Lake Sector V under the Hooghly River), Blue Line (Dakshineswar–Kavi Subhash), Orange & Purple Lines, and India's lowest ₹5–₹50 metro fare chart.",
+    category: "India City Metro Guide",
+    readTime: "7 min read",
+    publishedDate: "November 2026",
+    publishedIso: "2026-11-18",
+    author: {
+      name: "Aarav Deshmukh",
+      role: "Principal Rail Systems & PRS Analyst",
+    },
+    accentColor: "from-emerald-700 via-blue-700 to-orange-600",
+    heroTagline: "Indian Railways Zone 17 Metro Network: Howrah, Sealdah & Airport Links",
+    primaryKeyword: "kolkata metro route map",
+    seoKeywords: [
+      "kolkata metro route map",
+      "kolkata metro route and station guide",
+      "howrah to sealdah esplanade underwater metro timings",
+      "kolkata metro fare chart 5 rupees",
+      "dakshineswar to kavi subhash blue line stations",
+      "esplanade interchange blue and green line kolkata",
+      "aamar kolkata metro app qr ticket",
+    ],
+    keyTakeaways: [
+      "Kolkata Metro is the ONLY metro system in India operated directly as an Indian Railways zone, featuring India's cheapest metro fares starting at just ₹5 (up to 2 km) and ₹10 (2–5 km).",
+      "India's first underwater river metro tunnel on the East–West Green Line carries passengers 16 meters beneath the Hooghly River between Howrah Maidan, Howrah Railway Station, Mahakaran, Esplanade (Blue Line interchange), and Sealdah.",
+      "With Esplanade connecting Blue & Green Lines and Kavi Subhash connecting Blue & Orange Lines, rail passengers arriving at Howrah Jn (HWH) or Sealdah (SDAH) reach Park Street, Kalighat, Dum Dum, or Salt Lake Sector V in minutes.",
+    ],
+    quickActionLinks: [
+      {
+        label: "Spot 12301 Howrah Rajdhani Express Live",
+        sublabel: "Howrah Jn (HWH) live train arrival & platform status",
+        href: "/rail/live-status/12301-howrah-new-delhi-rajdhani-express",
+      },
+      {
+        label: "Delhi to Kolkata Flight Schedules",
+        sublabel: "Compare non-stop flights to Netaji Subhas Airport (CCU)",
+        href: "/flights/del-to-ccu",
+      },
+      {
+        label: "Check Train Chart Preparation Time",
+        sublabel: "1st & 2nd reservation chart times for HWH & SDAH trains",
+        href: "/rail/chart-time",
+      },
+    ],
+    sections: [
+      {
+        heading: "1. Kolkata Metro Operational Lines & Underwater Hooghly Tunnel Route",
+        paragraphs: [
+          "Kolkata Metro now connects India's two busiest suburban/long-distance railway terminals—Howrah Junction and Sealdah—directly with North–South Kolkata and the Salt Lake IT hub:",
+        ],
+        bullets: [
+          {
+            label: "Blue Line 1 (Dakshineswar ↔ Dum Dum ↔ Esplanade ↔ Kavi Subhash — 32.13 km, 26 Stations)",
+            detail:
+              "Kolkata's North–South spine serving Dakshineswar Temple, Baranagar, Dum Dum Jn, Shyambazar, MG Road, Central, Esplanade (Green Line interchange), Park Street, Maidan, Rabindra Sadan, Kalighat, Tollygunge, and Kavi Subhash (New Garia).",
+          },
+          {
+            label: "Green Line 2 (Howrah Maidan ↔ Howrah Jn ↔ Esplanade ↔ Sealdah ↔ Salt Lake Sector V)",
+            detail:
+              "Runs through the 520-meter twin underwater tunnels beneath the Hooghly River in just 45 seconds, linking Howrah Station (India's deepest metro station at 30m depth) to Esplanade, Sealdah, Salt Lake Stadium, Karunamoyee, and Sector V.",
+          },
+          {
+            label: "Purple Line 3 (Joka ↔ Majerhat) & Orange Line 6 (Kavi Subhash ↔ Hemanta Mukhopadhyay / Beleghata)",
+            detail:
+              "Connects South-West Behala/Joka and the EM Bypass hospital/hotel corridor (Satyajit Ray, Jyotirindra Nandi, Ruby Crossing) into the main network.",
+          },
+        ],
+      },
+      {
+        heading: "2. Kolkata Metro Fare Chart (₹5 to ₹50) & Aamar Kolkata Metro UPI Booking",
+        paragraphs: [
+          "Kolkata Metro remains the most affordable urban rapid transit system in Asia, with a additional 5% bonus value awarded on every Kolkata Metro Smart Card recharge:",
+        ],
+        bullets: [
+          {
+            label: "Blue Line & Green Line Fare Slabs",
+            detail:
+              "0–2 km: ₹5 | 2–5 km: ₹10 | 5–10 km: ₹15 | 10–20 km: ₹20 | Above 20 km: ₹25 (single-line) up to ₹50 max for multi-line integrated Blue + Green + Orange journeys.",
+          },
+          {
+            label: "Aamar Kolkata Metro App (Mobile QR via UPI)",
+            detail:
+              "Download the official 'Metro Ride Kolkata / Aamar Kolkata Metro' app to generate UPI QR tickets or top up your Metro Smart Card without queuing at Howrah or Esplanade counters.",
+          },
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "What is the metro fare from Howrah Railway Station to Esplanade or Park Street?",
+        answer:
+          "From Howrah Metro Station to Esplanade on the underwater Green Line (~3.2 km, 6 minutes), the fare is just ₹10. Continuing via the Esplanade interchange onto the Blue Line to Park Street or Kalighat uses a single integrated QR/Smart Card ticket costing ₹15 to ₹20.",
+      },
+      {
+        question: "What are the Kolkata Metro timings?",
+        answer:
+          "On Monday to Saturday, Kolkata Metro Blue and Green Line services generally run from ~06:50 AM / 07:00 AM up to 09:40 PM – 10:40 PM (including special late-night 10:40 PM Blue Line services). On Sundays, services begin around 09:00 AM.",
+      },
+    ],
+  },
+  {
+    slug: "chennai-metro-fare-timings-route-map-airport-to-central-guide",
+    domain: "metro",
+    title:
+      "Chennai Metro Fare, Timings & Route Guide (2026): Airport to MGR Central Blue & Green Line Map",
+    excerpt:
+      "Complete 2026 CMRL Chennai Metro guide: Blue Line (Wimco Nagar–MGR Central–Chennai Airport) and Green Line (MGR Central–CMBT–St. Thomas Mount), ₹10–₹50 fare chart, flat 20% Singara Chennai NCMC/WhatsApp QR discount, and 05:00 AM–11:00 PM timings.",
+    category: "India City Metro Guide",
+    readTime: "7 min read",
+    publishedDate: "November 2026",
+    publishedIso: "2026-11-18",
+    author: {
+      name: "Siddharth Deshmukh",
+      role: "Western & Southern Corridor Mobility Researcher",
+    },
+    accentColor: "from-sky-700 via-blue-600 to-emerald-600",
+    heroTagline: "Official CMRL Airport-to-Railway-to-Bus Hub Transit & 20% Fare Savings Guide",
+    primaryKeyword: "chennai metro fare",
+    seoKeywords: [
+      "chennai metro fare",
+      "chennai metro fare and timings",
+      "chennai metro route map",
+      "chennai airport to chennai central metro fare and time",
+      "cmrl whatsapp ticket number 8300086000",
+      "singara chennai card 20 percent discount",
+      "alandur and chennai central metro interchange",
+    ],
+    keyTakeaways: [
+      "Chennai Metro (CMRL) offers one of India's best transit connections—linking Chennai International Airport (MAA), MGR Chennai Central Railway Station (MAS), Egmore Railway Station (MS), Guindy Suburban, and CMBT Koyambedu on two intersecting lines.",
+      "CMRL base fares are capped at just ₹10, ₹20, ₹30, ₹40, and ₹50—and paying via Singara Chennai NCMC Card or WhatsApp/CMRL Mobile QR (+91 8300086000) gives an instant flat 20% discount (dropping the max ₹50 fare to ₹40!).",
+      "Chennai Metro trains run daily from 05:00 AM to 11:00 PM at 4.5–6 minute peak frequency.",
+    ],
+    quickActionLinks: [
+      {
+        label: "Spot 12622 Tamil Nadu Express Live",
+        sublabel: "MGR Chennai Central (MAS) live running status",
+        href: "/rail/live-status/12622-new-delhi-mgr-chennai-central-tamil-nadu-express",
+      },
+      {
+        label: "12622 Tamil Nadu Express Chart Time",
+        sublabel: "Check 1st & 2nd reservation chart time",
+        href: "/chart-times/12622-tamil-nadu-express-chart-times",
+      },
+      {
+        label: "Delhi to Chennai Flight Schedules",
+        sublabel: "Compare non-stop flights to Chennai Airport (MAA)",
+        href: "/flights/del-to-maa",
+      },
+      {
+        label: "Bengaluru → Chennai NH-48 Toll & Fuel",
+        sublabel: "6-plaza FASTag toll & fuel breakdown",
+        href: "/toll-calculator/bengaluru-to-chennai-toll-tax-and-fuel-cost",
+      },
+    ],
+    sections: [
+      {
+        heading: "1. Chennai Metro Fare Chart (₹10–₹50) & Flat 20% Digital / Card Discount",
+        paragraphs: [
+          "Chennai Metro Rail Limited (CMRL) keeps its tariff structure clean across 5 flat slabs, rewarding cashless riders with a generous 20% discount on every single trip when using WhatsApp QR (+91 8300086000), Paytm/PhonePe QR, or the SBI Singara Chennai NCMC Card:",
+        ],
+        bullets: [
+          {
+            label: "0 – 2 km: ₹10 Counter QR | ₹8 Digital / NCMC (20% Off)",
+            detail: "Ideal for short central hops such as LIC to Thousand Lights or Guindy to Little Mount.",
+          },
+          {
+            label: "2 – 5 km: ₹20 Counter QR | ₹16 Digital / NCMC (20% Off)",
+            detail: "Covers 3 to 5 stations across Anna Salai, T. Nagar (Nandanam), or Anna Nagar.",
+          },
+          {
+            label: "5 – 12 km: ₹30 Counter QR | ₹24 Digital / NCMC (20% Off)",
+            detail: "Covers mid-city rides such as MGR Chennai Central to Anna Nagar Tower or Guindy to Chennai Airport.",
+          },
+          {
+            label: "12 – 21 km: ₹40 (₹32 Digital) & Above 21 km: ₹50 Max (₹40 Digital)",
+            detail:
+              "Direct ride from Chennai International Airport to MGR Chennai Central (~21 km on Blue Line, 38 mins) costs ₹40 with WhatsApp/NCMC (₹50 paper counter ticket).",
+          },
+        ],
+      },
+      {
+        heading: "2. Blue Line vs Green Line: Reaching Chennai Airport, MGR Central & Egmore",
+        paragraphs: [
+          "CMRL's Phase-1 & Phase-1 Extension network forms a closed loop between two major interchanges—Puratchi Thalaivar Dr. M.G. Ramachandran Central Metro (north) and Alandur (south):",
+        ],
+        bullets: [
+          {
+            label: "Blue Line (Wimco Nagar Depot ↔ MGR Central ↔ Anna Salai ↔ Guindy ↔ Chennai Airport)",
+            detail:
+              "Direct 38-minute underground-to-elevated link between MGR Chennai Central Railway Station, High Court, Government Estate, Thousand Lights, Saidapet, Guindy, Alandur, and the Chennai Airport T1/T2/T4 glass skywalk.",
+          },
+          {
+            label: "Green Line (MGR Central ↔ Chennai Egmore ↔ Koyambedu CMBT ↔ Alandur ↔ St. Thomas Mount)",
+            detail:
+              "Connects Chennai Egmore Railway Station (for South Tamil Nadu trains), Kilpauk, Shenoy Nagar, Anna Nagar, CMBT Bus Terminus, Vadapalani, Ashok Nagar, and Alandur.",
+          },
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "What is the Chennai Metro fare and travel time from Chennai Airport to Chennai Central?",
+        answer:
+          "Take a direct Blue Line train from Chennai Airport Metro Station to Puratchi Thalaivar Dr. M.G. Ramachandran Central Metro (no interchange required). Travel time is ~38 minutes, and the fare is ₹40 via WhatsApp QR / Singara Chennai Card (or ₹50 at the ticket counter).",
+      },
+      {
+        question: "What are the Chennai Metro timings today?",
+        answer:
+          "Chennai Metro operates from 05:00 AM to 11:00 PM on weekdays and Saturdays (and 05:00 AM to 11:00 PM on Sundays with 7–10 minute headways).",
+      },
+    ],
+  },
+  {
+    slug: "pune-metro-route-map-stations-fare-timings-civil-court-guide",
+    domain: "metro",
+    title:
+      "Pune Metro Complete Route Guide (2026): Purple & Aqua Line Map, Civil Court Interchange, Fare & Timings",
+    excerpt:
+      "Plan your Pune Metro ride across Purple Line (PCMC–District Court–Mandai–Swargate) and Aqua Line (Vanaz–Deccan Gymkhana–Pune Railway Station–Yerawada–Ramwadi): complete station list, ₹10–₹35 fare chart, One Pune Card discounts, and 06:00 AM–10:00 PM timings.",
+    category: "India City Metro Guide",
+    readTime: "6 min read",
+    publishedDate: "November 2026",
+    publishedIso: "2026-11-18",
+    author: {
+      name: "Siddharth Deshmukh",
+      role: "Western & Southern Corridor Mobility Researcher",
+    },
+    accentColor: "from-purple-700 via-indigo-600 to-cyan-500",
+    heroTagline: "Maha Metro Pune Purple & Aqua Corridors, Pune Jn & Airport Shuttle Guide",
+    primaryKeyword: "pune metro route map",
+    seoKeywords: [
+      "pune metro route map",
+      "pune metro complete route guide",
+      "pune metro fare and timings",
+      "pcmc to swargate purple line stations",
+      "vanaz to ramwadi aqua line stations",
+      "district court civil court pune metro interchange",
+      "pune metro whatsapp ticket number 9420101990",
+    ],
+    keyTakeaways: [
+      "Maha Metro Pune operates two fully connected cross-city lines meeting at District Court (Civil Court): the North–South Purple Line (PCMC Bhavan to Swargate) and East–West Aqua Line (Vanaz to Ramwadi).",
+      "Pune Metro ticket prices are highly affordable—ranging from ₹10 minimum to ₹35 maximum across the entire network, with 10% off on weekdays and 30% off on weekends for 'Ek Pune / One Pune' NCMC Card holders (plus student discounts).",
+      "Pune Railway Station is directly served on the Aqua Line, Swargate MSRTC Bus Hub on the Purple Line, and Ramwadi Metro Station connects via PMPML AC electric Airport Feeder Bus to Pune Lohegaon Airport (PNQ).",
+    ],
+    quickActionLinks: [
+      {
+        label: "Mumbai → Pune Expressway Toll & Fuel",
+        sublabel: "Calculate Khalapur & Talegaon FASTag toll",
+        href: "/toll-calculator/mumbai-to-pune-toll-tax-and-fuel-cost",
+      },
+      {
+        label: "Delhi to Pune Flight Schedules",
+        sublabel: "Check non-stop flights to Pune Airport (PNQ)",
+        href: "/flights/del-to-pnq",
+      },
+      {
+        label: "Live Train Status for Pune Jn (PUNE)",
+        sublabel: "Track Deccan Queen, Shatabdi & Vande Bharat live",
+        href: "/rail/live-status",
+      },
+    ],
+    sections: [
+      {
+        heading: "1. Pune Metro Purple Line & Aqua Line Stations + District Court Interchange",
+        paragraphs: [
+          "Operated by Maharashtra Metro Rail Corporation Limited (Maha-Metro), Pune Metro bypasses Old Mumbai–Pune Highway, Shivajinagar, JM/FC Road, Peth areas, and Nagar Road traffic:",
+        ],
+        bullets: [
+          {
+            label: "Purple Line 1 (PCMC ↔ Shivajinagar ↔ District Court ↔ Mandai ↔ Swargate — 16.59 km)",
+            detail:
+              "Elevated from PCMC, Sant Tukaram Nagar, Nashik Phata, Kasarwadi, Phugewadi, Dapodi, Bopodi, and Khadki before diving 108 feet underground at Range Hill through Shivajinagar, District Court (Aqua Line interchange), Kasba Peth, Mandai, and Swargate.",
+          },
+          {
+            label: "Aqua Line 2 (Vanaz ↔ Deccan ↔ District Court ↔ Pune Railway Station ↔ Ramwadi — 15.7 km)",
+            detail:
+              "Connects Kothrud (Vanaz, Anand Nagar, Ideal Colony), Nal Stop, Garware College, Deccan Gymkhana, Chhatrapati Sambhaji Udyan, PMC, District Court (Purple Line interchange), Mangalwar Peth, Pune Railway Station, Ruby Hall Clinic, Bund Garden, Yerawada, Kalyani Nagar, and Ramwadi.",
+          },
+        ],
+      },
+      {
+        heading: "2. Pune Metro Timings (06:00 AM – 10:00 PM), Fare Slabs & WhatsApp QR",
+        paragraphs: [
+          "Pune Metro operates daily from 06:00 AM to 10:00 PM (with 7-minute peak headways and 10-minute off-peak headways).",
+        ],
+        bullets: [
+          {
+            label: "Affordable ₹10 to ₹35 Fare Slabs",
+            detail:
+              "Short 1–2 station hops cost ₹10–₹15, mid-corridor rides (like Pune Railway Station to Deccan Gymkhana or Shivajinagar to Swargate) cost ₹15–₹20, and end-to-end PCMC–Swargate or Vanaz–Ramwadi rides cost ₹30–₹35.",
+          },
+          {
+            label: "WhatsApp E-Ticket (+91 9420101990) & One Pune Card",
+            detail:
+              "Send 'Hi' on WhatsApp to +91 9420101990 or use the official Pune Metro app to generate an instant UPI QR ticket; regular commuters get 10% weekday and 30% Saturday/Sunday fare discounts with the One Pune NCMC card.",
+          },
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "Where do Purple Line and Aqua Line meet on the Pune Metro route map?",
+        answer:
+          "The Purple Line (PCMC–Swargate) and Aqua Line (Vanaz–Ramwadi) intersect at 'District Court' (Civil Court) Interchange Station—where the Purple Line runs deep underground and the Aqua Line sits on the elevated viaduct directly above, connected by high-speed escalators inside the paid area.",
+      },
+      {
+        question: "How do I reach Pune Airport or Pune Railway Station using Pune Metro?",
+        answer:
+          "Pune Railway Station has its own dedicated 'Pune Railway Station' stop on the Aqua Line. For Pune International Airport (Lohegaon), alight at 'Ramwadi' or 'Yerawada' on the Aqua Line and board the dedicated PMPML AC feeder shuttle (~3.5 km to the terminal).",
       },
     ],
   },
@@ -4351,6 +5400,7 @@ export const ALL_BLOG_POSTS: BlogPost[] = [
   ...TOLL_BLOG_POSTS,
   ...DGCA_BLOG_POSTS,
   ...METRO_BLOG_POSTS,
+  ...INDIA_CITY_METRO_BLOG_POSTS,
   ...FLIGHT_BLOG_POSTS,
   ...RAIL_BLOG_POSTS,
 ];

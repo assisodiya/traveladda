@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { ArrowRightIcon, ClockIcon, SwapIcon } from "@/components/Icons";
 import { MetroRouteFinder } from "@/components/MetroRouteFinder";
-import { METRO_BLOG_POSTS } from "@/lib/blog-data";
+import { INDIA_CITY_METRO_BLOG_POSTS, METRO_BLOG_POSTS } from "@/lib/blog-data";
 import {
   fetchCachedMetroNetworkSummary,
   fetchCachedMetroRoutePlan,
@@ -150,7 +150,9 @@ function MetroBlogGuidesSection() {
                 </span>
               </div>
               <h3 className="mt-2.5 text-sm font-extrabold leading-snug text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-300">
-                <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+                <Link prefetch={false} href={`/blog/${post.slug}`}>
+                  {post.title}
+                </Link>
               </h3>
               <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-ink-soft">
                 {post.excerpt}
@@ -166,6 +168,7 @@ function MetroBlogGuidesSection() {
                 <span className="text-ink-muted">{post.publishedDate}</span>
               )}
               <Link
+                prefetch={false}
                 href={`/blog/${post.slug}`}
                 className="inline-flex items-center gap-1 font-extrabold text-[#1956b4] dark:text-blue-300"
               >
@@ -175,6 +178,28 @@ function MetroBlogGuidesSection() {
             </div>
           </article>
         ))}
+      </div>
+
+      {/* Pan-India City Metro Guides Internal Links */}
+      <div className="mt-5 border-t border-line pt-4">
+        <h3 className="text-xs font-extrabold uppercase tracking-wider text-ink-muted">
+          Explore India City Metro Route &amp; Fare Guides
+        </h3>
+        <div className="mt-2.5 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          {INDIA_CITY_METRO_BLOG_POSTS.map((post) => (
+            <Link
+              prefetch={false}
+              key={post.slug}
+              href={`/blog/${post.slug}`}
+              className="flex items-center justify-between gap-2 rounded-xl border border-line bg-subcard/35 px-3 py-2.5 text-xs font-bold text-ink transition hover:border-[#1956b4] hover:text-[#1956b4]"
+            >
+              <span className="truncate">
+                {post.title.replace(/ \(2026\):.*$/, "")}
+              </span>
+              <ArrowRightIcon className="h-3.5 w-3.5 shrink-0 text-ink-muted" />
+            </Link>
+          ))}
+        </div>
       </div>
     </section>
   );
