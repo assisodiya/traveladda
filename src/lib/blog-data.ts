@@ -4912,9 +4912,9 @@ export const TOLL_BLOG_POSTS: BlogPost[] = [
     title:
       "NHAI FASTag Rules 2026: 24-Hour Return Discount, KYV Verification & Blacklist Double Toll Penalty Explained",
     excerpt:
-      "Everything Indian highway drivers need to know about NHAI FASTag tolling in 2026: how the automatic 24-hour return concession saves 25%, NPCI KYV verification rules, One Vehicle One FASTag, and how to avoid the 200% cash penalty.",
+      "Everything Indian highway drivers need to know about NHAI FASTag tolling in 2026: how the automatic 24-hour return concession saves 25%, NPCI KYV verification rules, One Vehicle One FASTag, 10-second lane turnaround rule, and how to avoid the 200% cash penalty.",
     category: "Highway & FASTag Guide",
-    readTime: "7 min read",
+    readTime: "8 min read",
     publishedDate: "November 2026",
     publishedIso: "2026-11-12",
     author: {
@@ -4931,7 +4931,7 @@ export const TOLL_BLOG_POSTS: BlogPost[] = [
       "One Vehicle One FASTag rule India",
       "FASTag blacklist double toll penalty",
       "NHAI toll calculator India",
-      "FASTag minimum balance requirement",
+      "FASTag 100 meter queue free toll rule",
     ],
     keyTakeaways: [
       "Crossing the same NHAI toll plaza on your return journey within 24 hours automatically triggers a ~1.5x return pass deduction instead of 2x single fares, saving roughly 25% on toll tax.",
@@ -4989,7 +4989,7 @@ export const TOLL_BLOG_POSTS: BlogPost[] = [
         heading: "2. One Vehicle, One FASTag & NPCI Know Your Vehicle (KYV) Rules",
         paragraphs: [
           "To eliminate toll leakage where commercial vehicles or multi-car households swapped tags across vehicles, IHMCL and NPCI strictly enforce the 'One Vehicle, One FASTag' policy alongside mandatory Know Your Vehicle (KYV) verification.",
-          "Issuer banks require clear photographs of the vehicle's Registration Certificate (RC), front windshield showing the affixed FASTag, and side profile. If a tag remains unverified or is linked to a chassis number without a updated Vahan registration number, the issuer bank places the tag on the NETC Low-Balance / Hotlist file.",
+          "Issuer banks require clear photographs of the vehicle's Registration Certificate (RC), front windshield showing the affixed FASTag, and side profile. If a tag remains unverified or is linked to a chassis number without an updated Vahan registration number, the issuer bank places the tag on the NETC Low-Balance / Hotlist file.",
         ],
         bullets: [
           {
@@ -5004,6 +5004,24 @@ export const TOLL_BLOG_POSTS: BlogPost[] = [
           },
         ],
       },
+      {
+        heading: "3. NHAI 100-Metre Yellow Line Queue & 10-Second Service Time Guidelines",
+        paragraphs: [
+          "To prevent bottlenecks at busy intercity toll plazas, NHAI's service-level agreement (SLA) with toll concessionaires specifies a maximum 10-second processing window per vehicle in operational FASTag lanes and a 100-metre yellow reference line painted ahead of each toll booth.",
+        ],
+        bullets: [
+          {
+            label: "Yellow Line 100-Metre Queue Threshold",
+            detail:
+              "Under NHAI operational circulars, if vehicle queues extend beyond the 100-metre yellow marker line in a lane due to plaza server lag or lane closures, the operator is required to release queued vehicles until the queue drops back inside the 100-metre mark.",
+          },
+          {
+            label: "Faulty Plaza Scanner vs Faulty Tag Rule",
+            detail:
+              "Under the National Highways Fee (Determination of Rates and Collection) Rules, if a vehicle has a valid, active, affixed FASTag with sufficient balance and the plaza's RFID overhead AND handheld scanners both fail to read it due to plaza hardware malfunction, the driver is entitled to a zero-fee pass receipt.",
+          },
+        ],
+      },
     ],
     faqs: [
       {
@@ -5015,6 +5033,11 @@ export const TOLL_BLOG_POSTS: BlogPost[] = [
         question: "How long before reaching a toll plaza should I recharge my FASTag?",
         answer:
           "Always recharge your FASTag wallet at least 30 to 45 minutes before approaching a toll plaza so the updated status syncs from your issuer bank to the NPCI NETC plaza whitelist.",
+      },
+      {
+        question: "What happens if the toll plaza RFID scanner fails to read my active FASTag?",
+        answer:
+          "First ask the lane attendant to scan the tag with their handheld POS RFID reader. If your tag is active with sufficient balance and the plaza's equipment is completely offline/non-functional, NHAI Fee Rules mandate a free-passage zero-value receipt without penalty.",
       },
     ],
   },
@@ -5047,18 +5070,18 @@ export const TOLL_BLOG_POSTS: BlogPost[] = [
     ],
     keyTakeaways: [
       "Driving from Delhi NCR (Sohna) to Jaipur via the Delhi–Mumbai Expressway (NE-4) up to Dausa (Barkheda) cuts travel time to ~4 hours with a ₹555 one-way car toll across Hilalpur, Barkheda, and Raja Dhok.",
-      "The 628 km Delhi to Lucknow expressway corridor combines the 165 km Yamuna Expressway (₹495 car toll across Jewar, Mathura & Agra) and the 302 km Agra–Lucknow Expressway (₹655 car toll).",
+      "The 534 km Delhi to Lucknow expressway corridor combines the 165 km Yamuna Expressway (₹495 car toll across Jewar, Mathura & Agra) and the 302 km Agra–Lucknow Expressway (₹655 car toll).",
       "Heading north on NH-44 from Delhi to Chandigarh (248 km) crosses Murthal (Bhalgarh), Panipat Elevated, Gharaunda (Karnal), and Ghaggar (Ambala) for ₹375 one-way car toll.",
     ],
     quickActionLinks: [
       {
         label: "Delhi → Jaipur Toll & Fuel",
-        sublabel: "278 km • NE-4 + NH-21 • ₹555 Car Toll",
+        sublabel: "274 km • NE-4 + NH-21 • ₹555 Car Toll",
         href: "/toll-calculator/delhi-to-jaipur-toll-tax-and-fuel-cost",
       },
       {
         label: "Delhi → Agra Yamuna Expy",
-        sublabel: "231 km • Jewar, Mathura, Agra • ₹495 Toll",
+        sublabel: "233 km • Jewar, Mathura, Agra • ₹495 Toll",
         href: "/toll-calculator/delhi-to-agra-toll-tax-and-fuel-cost",
       },
       {
@@ -5073,12 +5096,12 @@ export const TOLL_BLOG_POSTS: BlogPost[] = [
       },
       {
         label: "Delhi → Manali Highway",
-        sublabel: "538 km • NH-44 + NH-205 + NH-3 • ₹530 Toll",
+        sublabel: "508 km • NH-44 + NH-205 + NH-3 • ₹530 Toll",
         href: "/toll-calculator/delhi-to-manali-toll-tax-and-fuel-cost",
       },
       {
         label: "Delhi → Haridwar (NE-3)",
-        sublabel: "222 km • Kashi, Chhapar, Bahadrabad • ₹365 Toll",
+        sublabel: "220 km • Kashi, Chhapar, Bahadrabad • ₹365 Toll",
         href: "/toll-calculator/delhi-to-haridwar-toll-tax-and-fuel-cost",
       },
     ],
@@ -5091,9 +5114,9 @@ export const TOLL_BLOG_POSTS: BlogPost[] = [
         ],
         bullets: [
           {
-            label: "Delhi to Jaipur via NE-4 (278 km)",
+            label: "Delhi to Jaipur via NE-4 (274 km)",
             detail:
-              "Car One-Way Toll: ₹555 | 24h Return: ₹830 | Estimated Petrol Cost (16 km/l): ~₹1,646.",
+              "Car One-Way Toll: ₹555 | 24h Return: ₹830 | Estimated Petrol Cost (16 km/l): ~₹1,622.",
           },
           {
             label: "Gurugram to Jaipur via NH-48 (242 km)",
@@ -5108,6 +5131,36 @@ export const TOLL_BLOG_POSTS: BlogPost[] = [
           "Uttar Pradesh's contiguous access-controlled expressway spine allows drivers to travel from Greater Noida (Pari Chowk) all the way to Agra, Lucknow, Ayodhya, and Varanasi without encountering a single traffic signal.",
           "On the 165 km Yamuna Expressway (YEIDA), car toll is collected across Jewar (₹170), Mathura (₹165), and Agra (₹160) totaling ₹495 one-way. Continuing onto the 302 km UPEIDA Agra–Lucknow Expressway adds ₹655 across Fatehabad and Kakori ramps.",
         ],
+        bullets: [
+          {
+            label: "Delhi to Agra (233 km via Yamuna Expressway)",
+            detail:
+              "One-Way Car Toll: ₹495 (Jewar ₹170 + Mathura ₹165 + Agra ₹160) | 24h Return: ₹790.",
+          },
+          {
+            label: "Delhi to Lucknow (534 km via Yamuna + Agra–Lucknow Expy)",
+            detail:
+              "One-Way Car Toll: ₹1,150 | Driving Time: ~6 hrs 45 mins | Petrol Cost: ~₹3,160 | CNG Cost: ~₹1,690.",
+          },
+        ],
+      },
+      {
+        heading: "3. Delhi to Chandigarh, Shimla & Manali on NH-44 Grand Trunk Road",
+        paragraphs: [
+          "Heading north from Singhu Border on NH-44 takes motorists through Sonipat (Bhalgarh/Murthal), Panipat Elevated Corridor, Karnal (Gharaunda), and Ambala (Ghaggar). From Chandigarh/Kharar, the Kiratpur–Nerchowk 4-lane greenfield highway with 5 twin-tube tunnels cuts the Bilaspur–Mandi mountain climb by over 90 minutes.",
+        ],
+        bullets: [
+          {
+            label: "Delhi to Chandigarh (248 km via NH-44)",
+            detail:
+              "One-Way Car Toll: ₹375 across Bhalgarh/Murthal (₹105), Panipat (₹45), Gharaunda (₹150), and Ghaggar (₹75).",
+          },
+          {
+            label: "Delhi to Shimla (345 km) & Delhi to Manali (508 km)",
+            detail:
+              "Shimla adds Chandimandir (₹70) and Sanwara (₹75) on NH-5 (total ₹520), while Manali crosses Behram/Kiratpur and Takoli (Kullu) on NH-205/NH-3 (total ₹530).",
+          },
+        ],
       },
     ],
     faqs: [
@@ -5120,6 +5173,11 @@ export const TOLL_BLOG_POSTS: BlogPost[] = [
         question: "What is the Yamuna Expressway toll from Greater Noida to Agra in 2026?",
         answer:
           "For a light motor vehicle (Car/Jeep/Van), the one-way Yamuna Expressway toll from Greater Noida to Agra across Jewar, Mathura, and Agra plazas is ₹495 (₹790 for a 24-hour return pass).",
+      },
+      {
+        question: "How many toll plazas are there between Delhi and Chandigarh on NH-44?",
+        answer:
+          "There are 4 toll plazas between Delhi and Chandigarh on NH-44/NH-152: Bhalgarh (Murthal), Panipat Elevated, Gharaunda (Karnal), and Ghaggar (Ambala), totaling ₹375 one-way for a car.",
       },
     ],
   },
@@ -5158,17 +5216,17 @@ export const TOLL_BLOG_POSTS: BlogPost[] = [
     quickActionLinks: [
       {
         label: "Mumbai → Pune Expressway Toll",
-        sublabel: "149 km • Khalapur & Talegaon • ₹320 Car Toll",
+        sublabel: "150 km • Khalapur & Talegaon • ₹320 Car Toll",
         href: "/toll-calculator/mumbai-to-pune-toll-tax-and-fuel-cost",
       },
       {
         label: "Mumbai → Shirdi (Samruddhi)",
-        sublabel: "248 km • NH-160 + Samruddhi ME-2 • ₹370 Toll",
+        sublabel: "242 km • NH-160 + Samruddhi ME-2 • ₹370 Toll",
         href: "/toll-calculator/mumbai-to-shirdi-toll-tax-and-fuel-cost",
       },
       {
         label: "Mumbai → Nagpur (Samruddhi)",
-        sublabel: "788 km • Full Samruddhi Mahamarg • ₹1,385 Toll",
+        sublabel: "765 km • Full Samruddhi Mahamarg • ₹1,385 Toll",
         href: "/toll-calculator/mumbai-to-nagpur-toll-tax-and-fuel-cost",
       },
       {
@@ -5194,9 +5252,39 @@ export const TOLL_BLOG_POSTS: BlogPost[] = [
           "Operated under MSRDC, the 94.5 km Yashwantrao Chavan Mumbai–Pune Expressway collects user fees at two main plazas: Khalapur (near Khopoli before the Bhor Ghat section) and Talegaon (near Vadgaon Maval before Dehu Road).",
           "For private cars, jeeps, and SUVs, the combined one-way tariff is ₹320 (₹240 at Khalapur + ₹80 at Talegaon). Unlike NHAI national highways, MSRDC does not offer a 1.5x 24-hour return concession, meaning a same-day Mumbai–Pune–Mumbai round trip costs ₹640 in FASTag toll.",
         ],
+        bullets: [
+          {
+            label: "Khalapur Toll Plaza (Mumbai → Lonavala Section)",
+            detail:
+              "Car/SUV: ₹240 | LCV/Tempo: ₹375 | Bus: ₹795 | Multi-Axle Truck: ₹1,835. If exiting at Lonavala/Khandala, only the Khalapur tariff applies.",
+          },
+          {
+            label: "Talegaon Toll Plaza (Lonavala → Pune Section)",
+            detail:
+              "Drivers continuing past Lonavala toward Pune pay the remaining ₹80 balance at Talegaon (bringing the full corridor total to ₹320).",
+          },
+        ],
       },
       {
-        heading: "2. Bengaluru–Mysuru Access-Controlled Highway (NH-275) & Southern Corridors",
+        heading: "2. Maharashtra Samruddhi Mahamarg (Mumbai–Shirdi–Sambhajinagar–Nagpur)",
+        paragraphs: [
+          "The 701 km access-controlled Samruddhi Mahamarg (ME-2) charges closed-loop distance-based user fees (~₹1.73/km for cars) deducted at your exit interchange plaza. Driving from Mumbai/Thane via NH-160 (Arjunali & Ghoti plazas) onto the Samruddhi Mahamarg at Igatpuri/Ghoti reaches Shirdi (Kokamthan exit) in under 4 hours.",
+        ],
+        bullets: [
+          {
+            label: "Mumbai to Shirdi (242 km)",
+            detail:
+              "Total Car Toll: ~₹370 (Arjunali NH-160 ₹115 + Ghoti ₹110 + Samruddhi Igatpuri–Kokamthan ₹145).",
+          },
+          {
+            label: "Mumbai to Nagpur Full Corridor (765 km)",
+            detail:
+              "Total Car Toll: ~₹1,385 across NH-160 and the full Igatpuri-to-Waifal (Nagpur) Samruddhi Mahamarg stretch.",
+          },
+        ],
+      },
+      {
+        heading: "3. Bengaluru–Mysuru Access-Controlled Highway (NH-275) & Southern Corridors",
         paragraphs: [
           "The 10-lane Bengaluru–Nidaghatta–Mysuru NH-275 corridor reduces travel time between Bengaluru and Mysuru to 90 minutes, bypassing Ramanagara, Channapatna, Maddur, and Mandya town traffic.",
           "NHAI collects ₹170 one-way (₹255 24-hour return) at Kaniminike / Sheshagirihalli for the first phase and ₹160 one-way (₹240 24-hour return) at Gananguru near Srirangapatna for the second phase, totaling ₹330 one-way or ₹495 for a same-day return journey.",
@@ -5214,6 +5302,11 @@ export const TOLL_BLOG_POSTS: BlogPost[] = [
         answer:
           "For a Car/SUV, the total one-way NHAI FASTag toll on the Bengaluru–Mysuru Expressway (NH-275) is ₹330 (₹170 at Kaniminike + ₹160 at Gananguru), or ₹495 if returning within 24 hours.",
       },
+      {
+        question: "How is toll deducted on the Samruddhi Mahamarg?",
+        answer:
+          "Samruddhi Mahamarg uses a closed-loop entry-exit system: your FASTag is scanned when you enter an interchange ramp and the exact distance-based fee is deducted only at the exit ramp plaza where you leave the expressway.",
+      },
     ],
   },
   {
@@ -5224,7 +5317,7 @@ export const TOLL_BLOG_POSTS: BlogPost[] = [
     excerpt:
       "Data-backed 2026 comparison of real-world Indian highway road trip costs across Petrol, Diesel, Factory CNG, and Electric Vehicles (DC Fast Charging)—including per-km running cost and FASTag toll impact.",
     category: "Road Trip & Fuel",
-    readTime: "6 min read",
+    readTime: "7 min read",
     publishedDate: "November 2026",
     publishedIso: "2026-11-12",
     author: {
@@ -5262,6 +5355,11 @@ export const TOLL_BLOG_POSTS: BlogPost[] = [
         sublabel: "588 km Coastal & Highway Fuel Budget",
         href: "/toll-calculator/mumbai-to-goa-toll-tax-and-fuel-cost",
       },
+      {
+        label: "Bengaluru → Hyderabad NH-44 Cost",
+        sublabel: "574 km 4-Fuel Highway Comparison",
+        href: "/toll-calculator/bengaluru-to-hyderabad-toll-tax-and-fuel-cost",
+      },
     ],
     sections: [
       {
@@ -5293,12 +5391,876 @@ export const TOLL_BLOG_POSTS: BlogPost[] = [
           },
         ],
       },
+      {
+        heading: "2. Why FASTag Tolls Are Now 35% to 48% of CNG & EV Road Trip Budgets",
+        paragraphs: [
+          "On a 534 km Delhi to Lucknow expressway drive, the one-way car toll across the Yamuna Expressway and Agra–Lucknow Expressway is ₹1,150. For a Petrol car spending ~₹3,160 on petrol, toll represents 26.7% of total trip expenditure. However, for an EV spending ~₹1,420 on DC charging or a CNG car spending ~₹1,690 on gas, that same ₹1,150 FASTag toll represents 40% to 45% of the entire road trip cost.",
+        ],
+        callout: {
+          title: "Always Factor Per-Passenger Split Into Flight vs Train vs Car Decisions",
+          text: "When 3 or 4 travellers share a car, even an expressway-heavy Petrol drive drops below ₹2.10 per passenger-km—beating 2A/3A Rajdhani or last-minute economy airfares while offering door-to-door flexibility.",
+        },
+      },
     ],
     faqs: [
       {
         question: "Are Electric Vehicles (EVs) exempt from NHAI FASTag toll across all of India?",
         answer:
           "While select state-operated routes in Maharashtra (such as Mumbai–Pune Expressway, Samruddhi Mahamarg, and Atal Setu) have announced state-level EV toll waivers/notifications subject to FASTag EV category mapping, standard NHAI National Highway plazas continue to levy Light Motor Vehicle (Car/Jeep/Van) FASTag user fees unless specifically exempted by a central MoRTH gazette notification.",
+      },
+      {
+        question: "What is the average cost per kWh on highway DC fast chargers in India?",
+        answer:
+          "Most commercial 60 kW to 120 kW CCS2 highway DC fast chargers (Tata Power EZ Charge, Statiq, ChargeZone, Jio-bp, Zeon) charge between ₹16 and ₹21 per kWh including 18% GST, averaging ~₹18/kWh.",
+      },
+    ],
+  },
+  {
+    slug: "fastag-annual-pass-3000-rupees-monthly-local-pass-nhai-rules-eligibility-guide",
+    domain: "road",
+    title:
+      "FASTag Annual Pass (₹3,000) & 20-Km Local Monthly Pass (₹340): NHAI Eligibility, Rules & How to Apply (2026)",
+    excerpt:
+      "Complete 2026 guide to NHAI's ₹3,000 Annual FASTag Pass (200 toll plaza crossings per year for private cars) and the ₹340/month 20-km Local Resident Pass: eligibility criteria, Rajmargyatra activation steps, required RC/Aadhaar documents, and state expressway exclusions.",
+    category: "Highway & FASTag Guide",
+    readTime: "7 min read",
+    publishedDate: "November 2026",
+    publishedIso: "2026-11-18",
+    author: {
+      name: "Raghavendra Singhania",
+      role: "National Highway Infrastructure & Toll Systems Analyst",
+    },
+    accentColor: "from-blue-700 via-indigo-600 to-teal-600",
+    heroTagline: "How Frequent Highway Commuters Cut NHAI FASTag Bills by Up to 80%",
+    primaryKeyword: "FASTag annual pass 3000 rupees",
+    seoKeywords: [
+      "FASTag annual pass 3000 rupees",
+      "NHAI 3000 annual toll pass rules",
+      "how to apply FASTag monthly local pass 20 km",
+      "Rajmargyatra app annual FASTag pass",
+      "FASTag local resident monthly pass 340 rupees",
+      "which expressways accept NHAI annual pass",
+      "NHAI toll pass calculator India",
+    ],
+    keyTakeaways: [
+      "NHAI's Annual FASTag Pass for non-commercial private cars/jeeps/vans (LMV) costs ₹3,000 and covers up to 200 toll plaza crossings (or 1 year from activation, whichever comes first) across NHAI-operated National Highways.",
+      "At an average ₹110–₹150 per NHAI plaza crossing, 200 crossings would normally cost ₹22,000–₹30,000—meaning the ₹3,000 Annual Pass drops effective cost to just ₹15 per toll plaza for frequent intercity drivers.",
+      "Residents living within 20 km of a specific NHAI toll plaza can instead opt for the ₹340/month Local Non-Commercial Monthly Pass for unlimited crossings at that single designated plaza.",
+      "State-administered expressways (such as YEIDA Yamuna Expressway, UPEIDA Agra–Lucknow/Purvanchal Expressways, and MSRDC Mumbai–Pune Expressway & Samruddhi Mahamarg) are NOT covered by the NHAI ₹3,000 Annual Pass.",
+    ],
+    quickActionLinks: [
+      {
+        label: "Calculate Your Annual Route Toll",
+        sublabel: "Compare Pay-Per-Trip vs ₹3,000 Pass",
+        href: "/toll-calculator",
+      },
+      {
+        label: "Delhi → Chandigarh NH-44 Toll",
+        sublabel: "4 NHAI Plazas • ₹375 One-Way",
+        href: "/toll-calculator/delhi-to-chandigarh-toll-tax-and-fuel-cost",
+      },
+      {
+        label: "Delhi → Jaipur NE-4 / NH-48",
+        sublabel: "3–4 NHAI Plazas • ₹395–₹555 One-Way",
+        href: "/toll-calculator/delhi-to-jaipur-toll-tax-and-fuel-cost",
+      },
+      {
+        label: "Bengaluru → Chennai NH-48 Toll",
+        sublabel: "6 NHAI Plazas • ₹500 One-Way",
+        href: "/toll-calculator/bengaluru-to-chennai-toll-tax-and-fuel-cost",
+      },
+    ],
+    sections: [
+      {
+        heading: "1. How the ₹3,000 NHAI Annual FASTag Pass (200 Crossings) Works",
+        paragraphs: [
+          "Introduced by the Ministry of Road Transport and Highways (MoRTH) and NHAI to provide relief to regular intercity motorists, the ₹3,000 Annual FASTag Pass is linked directly to your existing KYV-verified private car FASTag via the official Rajmargyatra app and NHAI/IHMCL portal.",
+          "Once activated, every time your private car crosses an eligible NHAI National Highway toll plaza, 1 crossing is deducted from your 200-crossing annual quota instead of deducting ₹80–₹200 from your wallet balance. On a closed-loop NHAI expressway (like NE-4 Delhi–Mumbai Expressway or NE-3 Delhi–Meerut Expressway), one complete entry-to-exit trip counts as 1 crossing.",
+        ],
+        bullets: [
+          {
+            label: "Break-Even Math: Just 4 to 5 Round Trips Pay for the Entire Year",
+            detail:
+              "A single Delhi–Jaipur–Delhi round trip crosses 6 to 8 toll scans (~₹830–₹1,110). Completing just 3 to 4 intercity round trips in a year fully recovers the ₹3,000 pass price.",
+          },
+          {
+            label: "Strictly for Private Non-Commercial Cars/SUVs (White Number Plate)",
+            detail:
+              "Yellow-board commercial cabs, taxis, LCVs, and goods vehicles are ineligible; the tag must be mapped to a private White-Plate Vahan RC with completed KYV.",
+          },
+        ],
+      },
+      {
+        heading: "2. ₹340/Month 20-Km Local Resident FASTag Pass: Eligibility & Documents",
+        paragraphs: [
+          "If you only commute daily across one specific toll plaza near your home or workplace (for example, Kherki Daula in Gurugram, Devanahalli near Bengaluru Airport, or Bhalgarh in Sonipat), the 20-Km Local Resident Monthly Pass (₹340/month for FY 2026) offers unlimited trips across that single plaza for 30 days.",
+        ],
+        bullets: [
+          {
+            label: "Required Address & Vehicle Proof",
+            detail:
+              "Your vehicle's Registration Certificate (RC) and Aadhaar/Electricity Bill/Property Tax receipt must establish permanent residence within a 20 km radius of that specific NHAI toll plaza.",
+          },
+          {
+            label: "Where the ₹3,000 Annual Pass Does NOT Work",
+            detail:
+              "State authority expressways—including Yamuna Expressway (YEIDA), Agra–Lucknow & Purvanchal Expressways (UPEIDA), Mumbai–Pune Expressway & Samruddhi Mahamarg (MSRDC), and Rajiv Gandhi Sea Link / Atal Setu—deduct normal rupee tariff from your main FASTag wallet balance.",
+          },
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "What happens after I finish 200 toll crossings on the ₹3,000 Annual FASTag Pass?",
+        answer:
+          "Once your 200th toll crossing is consumed (or 365 days elapse from activation, whichever occurs earlier), your FASTag automatically reverts to standard pay-per-plaza wallet deductions, or you can renew another ₹3,000 pack for the next 200 crossings.",
+      },
+      {
+        question: "Does the NHAI ₹3,000 Annual Pass work on Yamuna Expressway or Mumbai–Pune Expressway?",
+        answer:
+          "No. The ₹3,000 NHAI Annual Pass is valid only at NHAI-operated National Highway and National Expressway plazas (like NH-44, NH-48, NE-4, NH-275). State-operated expressways (Yamuna Expressway, Agra–Lucknow Expressway, Mumbai–Pune Expressway, Samruddhi Mahamarg) deduct regular rupee fares from your main FASTag wallet.",
+      },
+    ],
+  },
+  {
+    slug: "gnss-satellite-gps-based-toll-collection-india-20-km-free-daily-quota-nhai-guide",
+    domain: "road",
+    title:
+      "GNSS Satellite & Barrier-Free ANPR Tolling in India (2026): 20 Km Free Daily Quota & Pay-Per-Km Rules Explained",
+    excerpt:
+      "How India's new GNSS (Global Navigation Satellite System) and Multi-Lane Free Flow (MLFF) ANPR camera tolling works on National Highways: the 20 km daily free highway allowance for private cars, virtual toll gantries, and how pay-per-km fares compare to physical toll plazas.",
+    category: "Highway & FASTag Guide",
+    readTime: "7 min read",
+    publishedDate: "November 2026",
+    publishedIso: "2026-11-18",
+    author: {
+      name: "Raghavendra Singhania",
+      role: "National Highway Infrastructure & Toll Systems Analyst",
+    },
+    accentColor: "from-cyan-700 via-blue-600 to-indigo-700",
+    heroTagline: "Inside NHAI & IHMCL's Next-Gen Virtual Gantry & Pay-As-You-Use Architecture",
+    primaryKeyword: "GNSS satellite toll system India 2026",
+    seoKeywords: [
+      "GNSS satellite toll system India 2026",
+      "GPS based toll collection NHAI 20 km free",
+      "ANPR barrier free tolling India highways",
+      "pay per km highway toll rule India",
+      "how GNSS toll works with FASTag",
+      "virtual toll plaza NHAI",
+    ],
+    keyTakeaways: [
+      "Under MoRTH's updated National Highways Fee Rules for GNSS (Global Navigation Satellite System) tolling, private non-commercial vehicles receive up to 20 km of free highway travel each day in each direction before distance-based user fees apply.",
+      "Once a trip exceeds the 20 km daily threshold on a GNSS-enabled corridor, toll is calculated strictly on actual kilometres driven rather than charging a flat 60-km plaza slab for a 15-km highway hop.",
+      "High-density corridors like NH-44 (Panipat–Hisar), NH-275 (Bengaluru–Mysuru), and NE-4 (Delhi–Mumbai Expressway) combine overhead Multi-Lane Free Flow (MLFF) ANPR cameras, high-speed RFID readers, and virtual geofenced gantries so cars cruise past without slowing down.",
+    ],
+    quickActionLinks: [
+      {
+        label: "Compare Distance vs Plaza Tolls",
+        sublabel: "Open NHAI Highway Toll Calculator",
+        href: "/toll-calculator",
+      },
+      {
+        label: "Bengaluru → Mysuru NH-275 Toll",
+        sublabel: "145 km Pilot Corridor Breakdown",
+        href: "/toll-calculator/bengaluru-to-mysuru-toll-tax-and-fuel-cost",
+      },
+      {
+        label: "Delhi → Jaipur NE-4 Expressway",
+        sublabel: "Closed-Loop Per-Km Toll Breakdown",
+        href: "/toll-calculator/delhi-to-jaipur-toll-tax-and-fuel-cost",
+      },
+      {
+        label: "Delhi → Chandigarh NH-44 Toll",
+        sublabel: "248 km Grand Trunk Road Plazas",
+        href: "/toll-calculator/delhi-to-chandigarh-toll-tax-and-fuel-cost",
+      },
+    ],
+    sections: [
+      {
+        heading: "1. Fixed 60-Km Plaza Tolling vs Pay-Per-Kilometre GNSS & ANPR Tolling",
+        paragraphs: [
+          "On traditional open-system National Highways, toll plazas are spaced roughly 60 km apart, and every motorist crossing a plaza pays for the entire 60 km section—even if they entered the highway 8 km before the booth and exited 4 km after it.",
+          "With Multi-Lane Free Flow (MLFF) ANPR-FASTag overhead gantries and GNSS virtual tolling, your entry coordinate and exit coordinate on the tolled stretch are logged electronically. You pay only for the exact kilometres travelled on the tolled highway.",
+        ],
+        bullets: [
+          {
+            label: "20 Km Daily Free Quota for GNSS-Equipped Private Vehicles",
+            detail:
+              "Under the amended National Highways Fee Rules notification for GNSS On-Board Units (OBU), private vehicles travelling up to 20 km per day on a GNSS-tolled National Highway pay ₹0 user fee.",
+          },
+          {
+            label: "Automatic E-Challan Integration via Vahan for Non-Payers",
+            detail:
+              "Because barrier-free MLFF lanes have no physical boom barriers, high-shutter ANPR cameras cross-verify the license plate against the FASTag RFID scan. Vehicles without a valid tag or sufficient balance receive an automated Vahan digital notice.",
+          },
+        ],
+      },
+      {
+        heading: "2. Do You Need to Remove Your Existing FASTag in 2026?",
+        paragraphs: [
+          "No. FASTag remains the primary nationwide payment rail across all 1,200+ National and State toll plazas in India. Even on barrierless ANPR and GNSS corridors, the backend financial settlement continues to debit your linked NETC FASTag wallet or UPI auto-topup account.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "Is FASTag being replaced by GPS/GNSS tolling in 2026?",
+        answer:
+          "No—FASTag is not being discontinued. Instead, NHAI is upgrading busy plazas to barrier-free Multi-Lane Free Flow (MLFF) overhead RFID + ANPR cameras and rolling out GNSS in phases for commercial fleets and voluntarly equipped vehicles, while still settling payments through the NETC FASTag ecosystem.",
+      },
+      {
+        question: "Who gets the 20 km free daily travel on National Highways?",
+        answer:
+          "Under the MoRTH GNSS Gazette amendment to the National Highways Fee Rules, drivers using a compliant GNSS On-Board Unit on GNSS-notified highway stretches get up to 20 km of toll-free travel per day; once distance exceeds 20 km, fee is charged for actual distance travelled.",
+      },
+    ],
+  },
+  {
+    slug: "commercial-vehicle-toll-rates-india-lcv-2-axle-truck-bus-multi-axle-hcv-nhai-tariff",
+    domain: "road",
+    title:
+      "Commercial Vehicle NHAI Toll Tariff Guide (2026): Car vs LCV vs 2-Axle Bus/Truck vs Multi-Axle HCV Rates",
+    excerpt:
+      "Complete 2026 NHAI commercial toll rate chart for logistics fleets, tempo travellers, intercity buses, and trucks: exact fee multipliers across Car (1x), LCV/Mini-Bus (1.6x), 2-Axle Truck/Bus (3.35x), and 3–6 Axle HCV (5.25x), plus MoRTH 10x overloading penalties.",
+    category: "Highway & FASTag Guide",
+    readTime: "8 min read",
+    publishedDate: "November 2026",
+    publishedIso: "2026-11-18",
+    author: {
+      name: "Raghavendra Singhania",
+      role: "National Highway Infrastructure & Toll Systems Analyst",
+    },
+    accentColor: "from-slate-800 via-blue-700 to-amber-600",
+    heroTagline: "Official NHAI 7-Category Axle Classification & Fleet Cost Reference",
+    primaryKeyword: "commercial vehicle toll rates India LCV truck bus",
+    seoKeywords: [
+      "commercial vehicle toll rates India",
+      "LCV vs 2 axle truck vs multi axle toll rate NHAI",
+      "tempo traveller toll tax category India",
+      "bus and truck toll calculator India",
+      "NHAI overloading penalty 10 times toll rule",
+      "FASTag vehicle class 4 class 5 class 7 colour code",
+    ],
+    keyTakeaways: [
+      "Under the National Highways Fee Rules, commercial toll tariffs scale sharply by axle load: compared to a Private Car/SUV (1.0x), an LCV/Mini-Bus pays ~1.6x, a 2-Axle Bus or Truck pays ~3.35x, and a 3-to-6 Axle Heavy Commercial Vehicle (HCV) pays ~5.25x.",
+      "Select any of the 4 vehicle classes ('Car / SUV', 'LCV / Pickup', 'Bus / 2-Axle Truck', or 'Multi-Axle HCV') in TravelAdda's NHAI Toll Calculator to compute exact plaza-by-plaza commercial tolls and diesel consumption.",
+      "Under MoRTH's Weigh-in-Motion (WIM) enforcement at toll plazas, overloaded goods vehicles carrying weight beyond permissible Gross Vehicle Weight (GVW) (+5% tolerance) face up to 10x user fee penalty and mandatory off-loading.",
+    ],
+    quickActionLinks: [
+      {
+        label: "Calculate Truck, Bus & LCV Toll",
+        sublabel: "Switch Vehicle Category in Calculator",
+        href: "/toll-calculator",
+      },
+      {
+        label: "Delhi → Mumbai / Ahmedabad NH-48",
+        sublabel: "Check Multi-Axle & 2-Axle Freight Toll",
+        href: "/toll-calculator/mumbai-to-ahmedabad-toll-tax-and-fuel-cost",
+      },
+      {
+        label: "Delhi → Kolkata NH-19 Grand Trunk",
+        sublabel: "Full Eastern Freight Corridor Toll",
+        href: "/toll-calculator/delhi-to-varanasi-toll-tax-and-fuel-cost",
+      },
+      {
+        label: "Bengaluru → Hyderabad NH-44 Toll",
+        sublabel: "North–South Logistics Spine Rates",
+        href: "/toll-calculator/bengaluru-to-hyderabad-toll-tax-and-fuel-cost",
+      },
+    ],
+    sections: [
+      {
+        heading: "1. NHAI Toll Multipliers by Vehicle Class & FASTag Mapper Category",
+        paragraphs: [
+          "Every FASTag issued by an NPCI member bank is programmed with a specific NPCI Tag Class (Class 4 through Class 16) tied to the vehicle's Gross Vehicle Weight (GVW) and axle count on the Vahan portal. When your vehicle crosses a plaza, the overhead reader bills the tariff corresponding to your programmed tag class:",
+        ],
+        bullets: [
+          {
+            label: "Car / Jeep / Van /LMV (Tag Class 4 — Base 1.0x Multiplier)",
+            detail:
+              "Covers all private and commercial 4-wheeler passenger cars, hatchbacks, sedans, MPVs (Innova/Ertiga), and SUVs with GVW up to 7,500 kg. Example Delhi–Jaipur (NE-4) one-way toll: ₹555.",
+          },
+          {
+            label: "LCV / Light Goods Vehicle / Mini-Bus / Tempo Traveller (Tag Class 5 — ~1.6x Multiplier)",
+            detail:
+              "Covers Tata Ace/407, Mahindra Bolero Pickup, Eicher Pro light trucks, and 12-to-26 seater Tempo Travellers / Mini-Buses (GVW 7,500 kg to 12,000 kg). Example Delhi–Jaipur one-way toll: ~₹895.",
+          },
+          {
+            label: "Bus or 2-Axle Rigid Truck (Tag Class 7 — ~3.35x Multiplier)",
+            detail:
+              "Covers standard intercity state transport/sleeper buses (Volvo/Scania/Ashok Leyland) and 2-axle 6-tyre rigid goods trucks (GVW 12,000 kg to 16,200 kg). Example Delhi–Jaipur one-way toll: ~₹1,875.",
+          },
+          {
+            label: "Multi-Axle Heavy Commercial Vehicle: 3 to 6 Axles (Tag Class 6/12/15 — ~5.25x Multiplier)",
+            detail:
+              "Covers 10-tyre (3-axle), 12-tyre (4-axle), 14-tyre (5-axle), and 18-tyre (6-axle) trailer trucks hauling containers, steel, cement, and bulk cargo. Example Delhi–Jaipur one-way toll: ~₹2,930.",
+          },
+        ],
+      },
+      {
+        heading: "2. Weigh-in-Motion (WIM) Pads & Overloaded Truck Penalty Rules",
+        paragraphs: [
+          "Every modern NHAI toll lane is equipped with embedded Weigh-in-Motion (WIM) sensor plates right before the RFID boom barrier. When a commercial goods vehicle rolls over the WIM pad, its real-time gross weight is compared against the statutory maximum GVW for its axle configuration:",
+        ],
+        bullets: [
+          {
+            label: "Up to 5% Weight Tolerance Window",
+            detail:
+              "To account for dynamic axle oscillation on WIM pads, MoRTH permits a 5% tolerance above permissible GVW without levying an overloading surcharge.",
+          },
+          {
+            label: "Penalty for Excess Load Beyond Permissible GVW",
+            detail:
+              "Under Rule 10 of the National Highways Fee Rules, overloaded commercial vehicles are liable to pay stiff multiplied toll penalties (up to 10x the applicable category fee depending on overload percentage) and can be detained at plaza holding yards to offload excess cargo.",
+          },
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "Which toll category does a 12-seater or 17-seater Force Tempo Traveller fall under?",
+        answer:
+          "A Force Tempo Traveller or Mini-Bus is classified under the LCV / Mini-Bus (Light Commercial Vehicle, Tag Class 5) category at NHAI toll plazas, paying approximately 1.6x the standard Car/Jeep tariff.",
+      },
+      {
+        question: "How can I calculate 2-Axle Bus or Multi-Axle Truck toll + diesel cost between two cities?",
+        answer:
+          "Open TravelAdda's NHAI Toll Calculator, choose your Origin and Destination city, and select 'LCV / Pickup', 'Bus / 2-Axle Truck', or 'Multi-Axle HCV' under Vehicle Category. The calculator automatically adjusts both the plaza-by-plaza toll rates and realistic commercial diesel mileage (14 km/l for LCV, 6 km/l for Bus/2-Axle, 4 km/l for Multi-Axle).",
+      },
+    ],
+  },
+  {
+    slug: "delhi-to-kashmir-katra-vaishno-devi-amritsar-manali-shimla-nh44-toll-tax-guide",
+    domain: "road",
+    title:
+      "Delhi to Katra (Vaishno Devi), Amritsar, Manali & Shimla NH-44 Road Trip Guide (2026): All Toll Plazas & Fuel Cost",
+    excerpt:
+      "Complete 2026 plaza-by-plaza NH-44 FASTag toll tax and fuel budget from Delhi NCR to Katra (Mata Vaishno Devi), Jammu, Amritsar Golden Temple, Manali (via Kiratpur–Nerchowk 5-Tunnel Expressway), and Shimla.",
+    category: "Highway & FASTag Guide",
+    readTime: "8 min read",
+    publishedDate: "November 2026",
+    publishedIso: "2026-11-18",
+    author: {
+      name: "Raghavendra Singhania",
+      role: "National Highway Infrastructure & Toll Systems Analyst",
+    },
+    accentColor: "from-blue-800 via-sky-600 to-emerald-600",
+    heroTagline: "Complete NH-44 Grand Trunk Road, Punjab, Himachal & Jammu Toll Matrix",
+    primaryKeyword: "Delhi to Katra Amritsar Manali NH-44 toll tax",
+    seoKeywords: [
+      "Delhi to Katra Vaishno Devi toll tax by car",
+      "Delhi to Amritsar NH-44 toll plazas list",
+      "Ladowal toll plaza Ludhiana rate 2026",
+      "Kiratpur Nerchowk expressway toll rate Manali",
+      "Delhi to Shimla Sanwara Chandimandir toll",
+      "Bann toll plaza Jammu Katra rate",
+    ],
+    keyTakeaways: [
+      "Driving 655 km from Delhi to Katra (Mata Vaishno Devi base camp) on NH-44 crosses 10 toll plazas across Haryana, Punjab, and J&K with a one-way Car FASTag toll of ~₹1,115 (or ~₹1,675 if returning within 24 hours).",
+      "Ladowal Toll Plaza (between Ludhiana and Phillaur over the Sutlej River on NH-44) and Bann Toll Plaza (between Jammu and Udhampur/Katra) are the two highest-tariff single plazas on the northern NH-44 spine (₹165–₹175 for a car one-way).",
+      "The 452 km Delhi to Amritsar Golden Temple drive crosses 7 plazas on NH-44 and NH-3 for ₹725 one-way car toll, while the 508 km Delhi to Manali drive costs ₹530 one-way via the new Kiratpur–Nerchowk tunnel corridor.",
+    ],
+    quickActionLinks: [
+      {
+        label: "Delhi → Katra (Vaishno Devi) Toll",
+        sublabel: "655 km • 10 NH-44 Plazas • ₹1,115 Car Toll",
+        href: "/toll-calculator/delhi-to-katra-toll-tax-and-fuel-cost",
+      },
+      {
+        label: "Delhi → Amritsar Golden Temple",
+        sublabel: "452 km • 7 NH-44/NH-3 Plazas • ₹725 Toll",
+        href: "/toll-calculator/delhi-to-amritsar-toll-tax-and-fuel-cost",
+      },
+      {
+        label: "Delhi → Manali (Kiratpur Expy)",
+        sublabel: "508 km • 6 Plazas via Mandi • ₹530 Toll",
+        href: "/toll-calculator/delhi-to-manali-toll-tax-and-fuel-cost",
+      },
+      {
+        label: "Delhi → Shimla Himalayan Expy",
+        sublabel: "345 km • 6 Plazas via Solan • ₹520 Toll",
+        href: "/toll-calculator/delhi-to-shimla-toll-tax-and-fuel-cost",
+      },
+    ],
+    sections: [
+      {
+        heading: "1. Plaza-by-Plaza Breakdown: Delhi to Amritsar, Jammu & Katra on NH-44",
+        paragraphs: [
+          "NH-44 (the historic Grand Trunk Road) is North India's most heavily travelled 6-to-8 lane highway spine. Starting from Singhu Border (North Delhi), here is the exact sequence of toll plazas you will cross heading toward Punjab and Jammu & Kashmir:",
+        ],
+        bullets: [
+          {
+            label: "Haryana Section (Singhu Border → Ambala: 3 Plazas, ₹300 Car Toll)",
+            detail:
+              "1. Bhalgarh / Murthal (Sonipat): ₹105 | 2. Panipat Elevated Corridor: ₹45 | 3. Gharaunda (Karnal): ₹150.",
+          },
+          {
+            label: "Punjab Section to Amritsar (Ambala → Ludhiana → Amritsar: +4 Plazas, ₹725 Cumulative)",
+            detail:
+              "4. Shambhu / Ambala–Khanna Section: ₹75 | 5. Ladowal (Ludhiana Sutlej Bridge): ₹165 | 6. Hilalpur / Jalandhar–Amritsar (Dhilwan): ₹95 | 7. Nijjarpura (Amritsar Entry): ₹90.",
+          },
+          {
+            label: "Jammu & Katra Section (Jalandhar → Pathankot → Jammu → Katra: ₹1,115 Cumulative)",
+            detail:
+              "Continuing north on NH-44 from Jalandhar instead of turning toward Amritsar crosses Choukimann/Harsa Mansar (Mukerian), Chakdayala/Lakhanpur (Punjab–J&K border), Sarore/Thandikhui (Samba), and Bann Toll Plaza (Nagrota–Domel before the Katra turnoff).",
+          },
+        ],
+      },
+      {
+        heading: "2. Delhi to Manali via Kiratpur–Nerchowk 5-Tunnel 4-Lane Expressway",
+        paragraphs: [
+          "Gone are the days of stuck-in-first-gear truck convoys through Swarghat and Bilaspur. After crossing Ghaggar (Ambala) and Kharar (Mohali), NH-205 leads onto the 4-lane greenfield Kiratpur–Nerchowk Expressway featuring 5 all-weather twin-tube tunnels and 37 major bridges along the Gobind Sagar reservoir.",
+        ],
+        bullets: [
+          {
+            label: "Kiratpur–Mandi–Kullu–Manali Toll Plazas",
+            detail:
+              "After the ₹375 Delhi–Chandigarh plazas, you cross Behram / Kiratpur (₹80) and Takoli Toll Plaza before Kullu/Bhuntar (₹75) for a total Delhi–Manali one-way car toll of ₹530.",
+          },
+          {
+            label: "Delhi to Shimla via NH-5 Himalayan Expressway",
+            detail:
+              "After Zirakpur, NH-5 climbs past Chandimandir Toll Plaza (Pinjore, ₹70) and Sanwara Toll Plaza (Dharampur–Solan, ₹75) for a total Delhi–Shimla one-way car toll of ₹520.",
+          },
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "What is the total car toll and fuel cost from Delhi to Katra (Vaishno Devi)?",
+        answer:
+          "The 655 km one-way drive from Delhi to Katra on NH-44 costs approximately ₹1,115 in FASTag car toll across 10 plazas. Combined with ~₹3,875 in Petrol (or ~₹2,870 in Diesel), the total one-way road trip cost is roughly ₹4,990 for a Petrol car.",
+      },
+      {
+        question: "Why is Ladowal Toll Plaza in Ludhiana famous on NH-44?",
+        answer:
+          "Ladowal Toll Plaza (located on NH-44 between Ludhiana and Phillaur in Punjab) is one of North India's highest-revenue and highest-tariff open-highway toll plazas because its concession funds the 6-lane elevated corridors and Sutlej river bridge complex.",
+      },
+    ],
+  },
+  {
+    slug: "delhi-to-ayodhya-varanasi-prayagraj-haridwar-rishikesh-pilgrimage-highway-toll-guide",
+    domain: "road",
+    title:
+      "Delhi to Ayodhya Ram Mandir, Varanasi, Prayagraj, Haridwar & Rishikesh Highway Toll & Fuel Budget (2026)",
+    excerpt:
+      "Plan your 2026 family road trip from Delhi NCR to Ayodhya Shri Ram Janmabhoomi, Kashi Vishwanath (Varanasi), Prayagraj Sangam, Haridwar, Rishikesh, and Dehradun: complete expressway route options, plaza-by-plaza FASTag tolls, and 4-passenger cost split.",
+    category: "Road Trip & Fuel",
+    readTime: "7 min read",
+    publishedDate: "November 2026",
+    publishedIso: "2026-11-18",
+    author: {
+      name: "Raghavendra Singhania",
+      role: "National Highway Infrastructure & Toll Systems Analyst",
+    },
+    accentColor: "from-orange-600 via-amber-600 to-rose-600",
+    heroTagline: "Complete UP & Uttarakhand Spiritual Circuit Expressway Cost Planner",
+    primaryKeyword: "Delhi to Ayodhya Varanasi Haridwar toll tax 2026",
+    seoKeywords: [
+      "Delhi to Ayodhya by car toll tax and fuel cost",
+      "Delhi to Varanasi expressway toll cost",
+      "Delhi to Haridwar Rishikesh Kashi toll plaza rate",
+      "Delhi Meerut Expressway NE-3 toll rate 2026",
+      "Purvanchal Expressway toll rate Lucknow to Ayodhya Ghazipur",
+      "Delhi to Dehradun highway toll tax",
+    ],
+    keyTakeaways: [
+      "Driving 668 km from Delhi NCR to Ayodhya Dham takes under 8.5 hours via the Yamuna Expressway (₹495), Agra–Lucknow Expressway (₹655), and NH-27 Lucknow–Ayodhya 4-lane highway (₹235 across Nawabganj/Ahmadpur & Ronahi) for a total ₹1,385 one-way car toll.",
+      "Continuing to Varanasi (Kashi Vishwanath, 824 km from Delhi) via the Purvanchal Expressway / NH-19 brings one-way car toll to ~₹1,540 with signal-free 100–120 km/h expressway cruising for 85% of the journey.",
+      "For Uttarakhand trips, the 220 km Delhi to Haridwar drive uses the NE-3 Delhi–Meerut Expressway (Kashi Toll Plaza ₹165) plus NH-334 via Muzaffarnagar (Chhapar ₹110) and Roorkee (Bahadrabad ₹90) for ₹365 total car toll.",
+    ],
+    quickActionLinks: [
+      {
+        label: "Delhi → Ayodhya Ram Mandir Toll",
+        sublabel: "668 km • Yamuna + Agra–LKO + NH-27 • ₹1,385",
+        href: "/toll-calculator/delhi-to-ayodhya-toll-tax-and-fuel-cost",
+      },
+      {
+        label: "Delhi → Varanasi Expressways",
+        sublabel: "824 km • 3 Expressways • ₹1,540 Car Toll",
+        href: "/toll-calculator/delhi-to-varanasi-toll-tax-and-fuel-cost",
+      },
+      {
+        label: "Delhi → Rishikesh (NE-3 + NH-334)",
+        sublabel: "244 km • Kashi, Chhapar, Bahadrabad • ₹365",
+        href: "/toll-calculator/delhi-to-rishikesh-toll-tax-and-fuel-cost",
+      },
+      {
+        label: "Delhi → Dehradun Highway Toll",
+        sublabel: "255 km • NE-3 + NH-334 + NH-7 • ₹355 Toll",
+        href: "/toll-calculator/delhi-to-dehradun-toll-tax-and-fuel-cost",
+      },
+    ],
+    sections: [
+      {
+        heading: "1. Delhi NCR to Ayodhya & Varanasi: The Triple-Expressway Corridor",
+        paragraphs: [
+          "Thanks to the seamless interconnection between the Yamuna Expressway (165 km), Agra–Lucknow Expressway (302 km), and Purvanchal Expressway / NH-27, a drive from Delhi/Noida to Ayodhya or Varanasi that once took 14–16 hours on crowded two-lane highways is now a smooth single-day expressway cruise.",
+        ],
+        bullets: [
+          {
+            label: "Leg 1: Greater Noida to Agra via Yamuna Expressway (₹495 Car Toll)",
+            detail:
+              "Crosses Jewar (₹170), Mathura (₹165), and Agra (₹160) with an direct loop onto the Agra Inner Ring Road connecting into the Agra–Lucknow Expressway.",
+          },
+          {
+            label: "Leg 2: Agra to Lucknow via UPEIDA Agra–Lucknow Expressway (₹655 Car Toll)",
+            detail:
+              "302 km 6-lane access-controlled expressway bypassing Firozabad, Etawah, Kannauj, and Unnao with wayside amenities and fuel stations every 50 km.",
+          },
+          {
+            label: "Leg 3A (To Ayodhya, +134 km): NH-27 via Barabanki & Ramsanehighat (+₹235 Toll)",
+            detail:
+              "From Lucknow Outer Ring Road (Kisan Path), join NH-27 across Ahmadpur (₹120) and Ronahi (₹115) directly into Ayodhya Dham (total Delhi–Ayodhya toll: ₹1,385).",
+          },
+          {
+            label: "Leg 3B (To Varanasi, +290 km): Purvanchal Expressway + NH-31/NH-19 (+₹390 Toll)",
+            detail:
+              "Take Purvanchal Expressway from Chand Sarai (Lucknow) to Sultanpur/Azamgarh exit and join the 4-lane Varanasi highway (total Delhi–Varanasi toll: ₹1,540).",
+          },
+        ],
+      },
+      {
+        heading: "2. Delhi to Haridwar, Rishikesh & Dehradun via NE-3 Delhi–Meerut Expressway",
+        paragraphs: [
+          "Entering the 14-lane NE-3 Delhi–Meerut Expressway at Sarai Kale Khan (Nizamuddin Bridge) or Indirapuram lets you bypass Ghaziabad and Modinagar completely, reaching Partapur (Meerut) in 45 minutes.",
+          "On NE-3, ANPR cameras read your entry gantry and deduct ₹165 for a full Sarai Kale Khan-to-Kashi (Meerut) car passage. Beyond Meerut, NH-334 crosses Chhapar (before Muzaffarnagar, ₹110) and Bahadrabad (before Haridwar, ₹90) for a ₹365 one-way toll to Haridwar or Rishikesh.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "How much does a Delhi to Ayodhya road trip cost by car (Toll + Fuel)?",
+        answer:
+          "For the 668 km one-way drive from Delhi to Ayodhya, Car FASTag toll is ₹1,385. Fuel costs ~₹3,955 for Petrol (16 km/l), ~₹2,930 for Diesel (20 km/l), or ~₹2,115 for CNG (24 km/kg)—bringing a full round-trip family car budget (4 passengers) to ~₹10,600 in Petrol (~₹2,650 per person).",
+      },
+      {
+        question: "How is toll charged on the Delhi–Meerut Expressway (NE-3)?",
+        answer:
+          "Delhi–Meerut Expressway (NE-3) uses High-Speed ANPR + FASTag gantry billing based on your entry point (Sarai Kale Khan, Indirapuram, Dundahera, Dasna) and exit point (Bhojpur or Kashi Toll Plaza Meerut), charging ₹165 for the full Delhi-to-Meerut car journey.",
+      },
+    ],
+  },
+  {
+    slug: "mumbai-to-goa-pune-to-goa-ahmedabad-surat-nashik-shirdi-western-india-toll-guide",
+    domain: "road",
+    title:
+      "Western India Highway Toll & Fuel Guide (2026): Mumbai/Pune to Goa, Mumbai to Ahmedabad (NH-48) & Nashik/Shirdi",
+    excerpt:
+      "Complete 2026 plaza-by-plaza FASTag toll tax and fuel budget for Western India's top road trips: Mumbai & Pune to Goa (NH-48 via Kolhapur/Belagavi vs NH-66 Konkan Highway), Mumbai to Surat, Vadodara & Ahmedabad (NH-48 + NE-1), and Mumbai to Nashik/Shirdi.",
+    category: "Highway & FASTag Guide",
+    readTime: "8 min read",
+    publishedDate: "November 2026",
+    publishedIso: "2026-11-18",
+    author: {
+      name: "Siddharth Deshmukh",
+      role: "Western & Southern Corridor Mobility Researcher",
+    },
+    accentColor: "from-teal-700 via-emerald-600 to-blue-700",
+    heroTagline: "Maharashtra, Goa & Gujarat Golden Quadrilateral Toll & Fuel Matrix",
+    primaryKeyword: "Mumbai to Goa Ahmedabad Surat toll tax 2026",
+    seoKeywords: [
+      "Mumbai to Goa by car toll tax and fuel cost",
+      "Pune to Goa NH-48 toll plazas list",
+      "Mumbai to Ahmedabad NH-48 toll tax 2026",
+      "Mumbai to Surat highway toll plazas",
+      "Ahmedabad Vadodara Expressway NE-1 toll rate",
+      "Mumbai to Nashik Shirdi toll tax",
+    ],
+    keyTakeaways: [
+      "For Mumbai to Goa (588 km via Mumbai–Pune Expressway + NH-48 Satara–Kolhapur–Nipani–Amboli Ghat), total one-way Car FASTag toll is ₹890 across 8 plazas (₹320 on Mumbai–Pune Expy + ₹570 across Khed Shivapur, Anewadi, Tasawade, Kini, and Kognoli).",
+      "From Pune to Goa (445 km via NH-48 and Amboli/Chorla Ghat), drivers pay ₹570 one-way car toll across the 5 NH-48 plazas between Khed Shivapur (Pune) and Kognoli (Maharashtra–Karnataka border).",
+      "Driving north on the Golden Quadrilateral NH-48 from Mumbai to Ahmedabad (526 km via Surat, Bharuch & Vadodara NE-1 Expressway) crosses 9 toll plazas for ₹845 one-way car toll.",
+    ],
+    quickActionLinks: [
+      {
+        label: "Mumbai → Goa Toll & Fuel Cost",
+        sublabel: "588 km • Expy + NH-48 • ₹890 Car Toll",
+        href: "/toll-calculator/mumbai-to-goa-toll-tax-and-fuel-cost",
+      },
+      {
+        label: "Pune → Goa NH-48 Toll & Fuel",
+        sublabel: "445 km • 5 Plazas via Kolhapur • ₹570 Toll",
+        href: "/toll-calculator/pune-to-goa-toll-tax-and-fuel-cost",
+      },
+      {
+        label: "Mumbai → Ahmedabad NH-48 + NE-1",
+        sublabel: "526 km • 9 Plazas via Surat/Vadodara • ₹845",
+        href: "/toll-calculator/mumbai-to-ahmedabad-toll-tax-and-fuel-cost",
+      },
+      {
+        label: "Mumbai → Surat NH-48 Toll",
+        sublabel: "284 km • 5 Plazas • ₹445 Car Toll",
+        href: "/toll-calculator/mumbai-to-surat-toll-tax-and-fuel-cost",
+      },
+    ],
+    sections: [
+      {
+        heading: "1. Mumbai & Pune to Goa: NH-48 (Kolhapur–Amboli/Anmod) vs NH-66 Konkan Route",
+        paragraphs: [
+          "Most experienced Mumbai and Pune motorists driving to North Goa (Mapusa, Calangute, Candolim, Panaji) prefer the 6-lane NH-48 route via Pune, Satara, Karad, and Kolhapur (turning right at Nipani/Sankeshwar for Amboli Ghat or continuing to Belagavi for Chorla/Anmod Ghat) because 80% of the distance is divided high-speed national highway.",
+        ],
+        bullets: [
+          {
+            label: "Mumbai–Pune Expressway Section (₹320 Car Toll)",
+            detail:
+              "Khalapur (₹240) + Talegaon (₹80) onto the Pune Bypass (Wakad–Katraj Tunnel).",
+          },
+          {
+            label: "Pune toNipani / Belagavi NH-48 Section (5 Plazas, ₹570 Car Toll)",
+            detail:
+              "1. Khed Shivapur (Pune South): ₹115 | 2. Anewadi (Satara): ₹85 | 3. Tasawade (Karad): ₹85 | 4. Kini (Kolhapur North): ₹85 | 5. Kognoli (MH–KA Border Nipani): ₹200 (or ₹110 before Nipani turnoff).",
+          },
+        ],
+      },
+      {
+        heading: "2. Mumbai to Surat, Vadodara & Ahmedabad on NH-48 & NE-1 Expressway",
+        paragraphs: [
+          "India's busiest western industrial and passenger corridor runs north from Dahisar Check Naka along NH-48 through Palghar, Vapi, Valsad, Navsari, Surat, Ankleshwar, Bharuch (Narmada Cable Bridge), and Vadodara before joining India's first National Expressway—the 93 km NE-1 Mahatma Gandhi Ahmedabad–Vadodara Expressway.",
+        ],
+        bullets: [
+          {
+            label: "Mumbai to Surat Section (284 km — 5 Plazas, ₹445 Car Toll)",
+            detail:
+              "Crosses Khanivade (Virar, ₹80), Charoti (Dahanu, ₹90), Bhagwada (Vapi/Pardi, ₹95), Boriach (Navsari, ₹90), and Choryasi/Kamrej (Surat, ₹90).",
+          },
+          {
+            label: "Surat to Vadodara & Ahmedabad Section (+242 km — +4 Plazas, ₹845 Total)",
+            detail:
+              "Crosses Mulad/Bharuch Narmada Bridge (₹95), Karjan (₹110), Vasad (₹60), and the closed-loop NE-1 Vadodara–Ahmedabad Ring Road Expressway (₹135).",
+          },
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "What is the total toll tax from Mumbai to Goa by car?",
+        answer:
+          "Driving from Mumbai to Goa via the Mumbai–Pune Expressway and NH-48 (Satara–Kolhapur–Nipani) costs roughly ₹890 one-way in FASTag car toll (or ~₹780 if turning off at Tawandi/Nipani before Kognoli plaza toward Amboli Ghat).",
+      },
+      {
+        question: "What is the car toll on the Ahmedabad–Vadodara Expressway (NE-1)?",
+        answer:
+          "The 93 km NE-1 Ahmedabad–Vadodara Expressway charges ₹135 one-way for a Car/Jeep/SUV between Vadodara and Ahmedabad Ring Road (₹200 for a 24-hour return pass).",
+      },
+    ],
+  },
+  {
+    slug: "south-india-highway-toll-guide-bengaluru-to-chennai-tirupati-hyderabad-coimbatore",
+    domain: "road",
+    title:
+      "South India Highway Toll & Fuel Guide (2026): Bengaluru to Chennai, Tirupati, Hyderabad (NH-44), Mysuru & Coimbatore",
+    excerpt:
+      "Complete 2026 plaza-by-plaza NHAI FASTag toll tax and Petrol/Diesel/CNG/EV road trip cost breakdown from Bengaluru to Chennai, Tirupati Balaji, Hyderabad, Mysuru, and Coimbatore/Kochi.",
+    category: "Highway & FASTag Guide",
+    readTime: "8 min read",
+    publishedDate: "November 2026",
+    publishedIso: "2026-11-18",
+    author: {
+      name: "Siddharth Deshmukh",
+      role: "Western & Southern Corridor Mobility Researcher",
+    },
+    accentColor: "from-emerald-700 via-cyan-600 to-indigo-700",
+    heroTagline: "Karnataka, Tamil Nadu, Andhra Pradesh & Telangana Highway Toll Matrix",
+    primaryKeyword: "Bengaluru to Chennai Tirupati Hyderabad toll tax 2026",
+    seoKeywords: [
+      "Bengaluru to Chennai toll tax 2026",
+      "Bengaluru to Tirupati toll plazas and fuel cost",
+      "Bengaluru to Hyderabad NH-44 toll tax",
+      "Bengaluru to Coimbatore NH-544 toll rate",
+      "Electronic City BETL and Attibele toll rate",
+      "Devanahalli airport toll plaza rate ₹115",
+    ],
+    keyTakeaways: [
+      "Driving 348 km from Bengaluru to Chennai via Hosur, Krishnagiri, Vellore, and Sriperumbudur (NH-44 + NH-48) crosses 6 NHAI toll plazas for ₹500 one-way Car FASTag toll (₹755 if returning within 24 hours).",
+      "The 252 km pilgrimage drive from Bengaluru (KR Puram/Hoskote) to Tirupati via Kolar, Mulbagal, and Chittoor (NH-75 + NH-69/NH-140) crosses 4 plazas for only ₹305 one-way car toll.",
+      "The 574 km high-speed NH-44 drive from Bengaluru to Hyderabad (Shamshabad) via Anantapur and Kurnool crosses 8 toll plazas for ₹895 one-way car toll.",
+    ],
+    quickActionLinks: [
+      {
+        label: "Bengaluru → Chennai NH-48 Toll",
+        sublabel: "348 km • 6 Plazas via Vellore • ₹500 Toll",
+        href: "/toll-calculator/bengaluru-to-chennai-toll-tax-and-fuel-cost",
+      },
+      {
+        label: "Bengaluru → Tirupati NH-75 Toll",
+        sublabel: "252 km • 4 Plazas via Kolar • ₹305 Toll",
+        href: "/toll-calculator/bengaluru-to-tirupati-toll-tax-and-fuel-cost",
+      },
+      {
+        label: "Bengaluru → Hyderabad NH-44",
+        sublabel: "574 km • 8 Plazas via Kurnool • ₹895 Toll",
+        href: "/toll-calculator/bengaluru-to-hyderabad-toll-tax-and-fuel-cost",
+      },
+      {
+        label: "Bengaluru → Coimbatore NH-544",
+        sublabel: "365 km • 6 Plazas via Salem • ₹560 Toll",
+        href: "/toll-calculator/bengaluru-to-coimbatore-toll-tax-and-fuel-cost",
+      },
+    ],
+    sections: [
+      {
+        heading: "1. Bengaluru to Chennai (NH-44 & NH-48 via Krishnagiri & Vellore) vs NH-75 Kolar Route",
+        paragraphs: [
+          "Departing South/East Bengaluru via the Electronic City Elevated Expressway (BETL) and Attibele onto NH-44 to Krishnagiri, then turning east onto the 6-lane NH-48 through Ambur, Vellore, Ranipet, Kanchipuram, and Sriperumbudur is the primary 348 km Bengaluru–Chennai corridor.",
+        ],
+        bullets: [
+          {
+            label: "All 6 Plazas on Bengaluru → Chennai (₹500 One-Way Car Toll)",
+            detail:
+              "1. BETL / Attibele (Bengaluru–Hosur): ₹60 | 2. Krishnagiri (NH-44/48 Junction): ₹85 | 3. Pallikonda (Vellore): ₹95 | 4. Chennasamudram (Walajahpet): ₹85 | 5. Nemili (Sriperumbudur): ₹90 | 6. Vanagaram / Poonamallee entry: ₹85.",
+          },
+          {
+            label: "Bengaluru to Tirupati via NH-75 & Chittoor (252 km — ₹305 Car Toll)",
+            detail:
+              "Starting from KR Puram, you cross Hoskote (₹45), Bellur/Kolar (₹75), Mulbagal/Nangli (₹90), and Gaddur/Chittoor (₹95) onto the smooth 6-lane Puthalapattu–Naidupeta NH-140 approach into Tirupati.",
+          },
+        ],
+      },
+      {
+        heading: "2. Bengaluru to Hyderabad on NH-44 (574 km Signal-Free 4/6-Lane Highway)",
+        paragraphs: [
+          "The Bengaluru–Hyderabad NH-44 stretch is one of India's smoothest long-distance cruising highways, allowing drivers to maintain steady 90–100 km/h speeds past Chikballapur, Penukonda (Kia Motors hub), Anantapur, Gooty, Kurnool (Tungabhadra crossing), Jadcherla, and Shamshabad (Hyderabad ORR).",
+        ],
+        bullets: [
+          {
+            label: "All 8 Plazas on Bengaluru → Hyderabad (₹895 One-Way Car Toll)",
+            detail:
+              "1. Sadahalli / Devanahalli (BLR Airport): ₹115 | 2. Bagepalli (KA–AP Border): ₹105 | 3. Maruru (Penukonda/Anantapur): ₹115 | 4. Kasepalli (Gooty): ₹110 | 5. Amakathadu (Dhone): ₹105 | 6. Pullur (Kurnool): ₹115 | 7. Konetipuram / Addakal: ₹110 | 8. Raikal (Shadnagar before Shamshabad ORR): ₹120.",
+          },
+          {
+            label: "Bengaluru to Salem & Coimbatore (365 km via NH-44 & NH-544 — ₹560 Car Toll)",
+            detail:
+              "Crosses Attibele (₹60), Krishnagiri (₹85), Thoppur Ghat (Dharmapuri, ₹105), Omalur (Salem, ₹95), Vaigundam (Sankagiri, ₹105), and Vijayamangalam (Perundurai/Erode, ₹110).",
+          },
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "How can I avoid the ₹115 Sadahalli (Bengaluru Airport) toll plaza only for local airport drops?",
+        answer:
+          "While some local cab drivers use the narrow Hennur–Bagalur–Begur backroad to reach Kempegowda International Airport, for intercity NH-44 highway trips toward Hyderabad or Nandi Hills, staying on the main Bellary Road elevated highway via Sadahalli Toll Plaza (₹115 one-way, ₹175 24-hour return) is much faster and safer.",
+      },
+      {
+        question: "What is the total car toll and fuel cost from Bengaluru to Tirupati?",
+        answer:
+          "For the 252 km one-way drive from Bengaluru to Tirupati via Hoskote, Kolar, Mulbagal, and Chittoor, Car FASTag toll is ₹305 and Petrol cost (at 16 km/l) is ~₹1,620, making the one-way total ~₹1,925 (or ~₹3,800 for a full round trip).",
+      },
+    ],
+  },
+  {
+    slug: "fastag-wrong-toll-deduction-double-charge-refund-complaint-nhai-1033-dispute-guide",
+    domain: "road",
+    title:
+      "FASTag Double Deduction or Wrong Toll Charged? How to Claim 100% NPCI Chargeback Refund & Call NHAI 1033 (2026)",
+    excerpt:
+      "Step-by-step 2026 guide to recovering money from a wrong FASTag deduction: double scan at the same plaza, Car wrongly billed as LCV/Truck, phantom toll deducted while your car was parked at home, NPCI NETC chargeback timelines, and NHAI 1033 escalation.",
+    category: "Highway & FASTag Guide",
+    readTime: "6 min read",
+    publishedDate: "November 2026",
+    publishedIso: "2026-11-18",
+    author: {
+      name: "Raghavendra Singhania",
+      role: "National Highway Infrastructure & Toll Systems Analyst",
+    },
+    accentColor: "from-rose-700 via-red-600 to-orange-600",
+    heroTagline: "Official NPCI NETC Chargeback & IHMCL Dispute Escalation Playbook",
+    primaryKeyword: "FASTag wrong toll deduction refund complaint",
+    seoKeywords: [
+      "FASTag wrong toll deduction refund complaint",
+      "FASTag double deduction refund process",
+      "toll deducted while car parked at home FASTag",
+      "NHAI 1033 helpline FASTag complaint email",
+      "car charged truck toll FASTag refund",
+      "NPCI NETC FASTag dispute status",
+    ],
+    keyTakeaways: [
+      "Wait 24 hours before raising a double-deduction dispute at a single plaza—NPCI's automated NETC reconciliation engine automatically reverses 85%+ of duplicate same-plaza scans within T+1 working day.",
+      "If your car was parked at home in one city and toll was deducted at a faraway plaza (caused by a manual license-plate typo by a lane operator), upload a timestamped photo of your parked car in your issuer bank's FASTag dispute portal to receive a 100% NPCI chargeback refund.",
+      "If a Car (Class 4) is wrongly billed at LCV or Truck tariff (Class 5/7), raise a 'Wrong Vehicle Class Charged' chargeback with a copy of your Vahan RC; the acquirer plaza bank must refund the differential within 7 to 15 working days.",
+      "You can also lodge a formal grievance on the 24x7 National Highway Helpline 1033, the Rajmargyatra app, or by emailing false-deduction proof to etchelts@nhai.org.",
+    ],
+    quickActionLinks: [
+      {
+        label: "Verify Official Plaza Toll Rate",
+        sublabel: "Check Exact Car vs LCV vs Truck Fare",
+        href: "/toll-calculator",
+      },
+      {
+        label: "Delhi → Jaipur Official Plaza Rates",
+        sublabel: "Verify Hilalpur, Barkheda & Kherki Daula",
+        href: "/toll-calculator/delhi-to-jaipur-toll-tax-and-fuel-cost",
+      },
+      {
+        label: "Mumbai → Pune Official Plaza Rates",
+        sublabel: "Verify Khalapur (₹240) & Talegaon (₹80)",
+        href: "/toll-calculator/mumbai-to-pune-toll-tax-and-fuel-cost",
+      },
+      {
+        label: "Bengaluru → Mysuru Official Rates",
+        sublabel: "Verify Kaniminike (₹170) & Gananguru (₹160)",
+        href: "/toll-calculator/bengaluru-to-mysuru-toll-tax-and-fuel-cost",
+      },
+    ],
+    sections: [
+      {
+        heading: "1. The 4 Most Common Wrong FASTag Deductions & How Each Is Resolved",
+        paragraphs: [
+          "Every FASTag transaction travels across four entities: the Toll Plaza Operator, the Acquirer Bank (the bank managing that plaza's server), NPCI's central NETC switch, and your Issuer Bank (ICICI, HDFC, SBI, IDFC First, Axis, Kotak, Airtel, etc.). Because offline plaza transactions can batch-sync hours after you cross a booth, first check the exact 'Transaction Date & Time' (not the SMS delivery time) in your FASTag statement.",
+        ],
+        bullets: [
+          {
+            label: "Case A: Double Deduction at the Same Toll Plaza (Or Paid Cash + FASTag Also Debited)",
+            detail:
+              "If the boom barrier didn't open and you paid cash (always keep the physical cash receipt!) or your tag was scanned twice within 5 minutes, file a 'Duplicate Transaction / Paid by Cash' dispute in your issuer bank app and attach the cash slip or double-SMS screenshot.",
+          },
+          {
+            label: "Case B: Phantom Toll Deducted While Your Car Was Parked at Home",
+            detail:
+              "When a commercial vehicle's tag is unreadable at a remote plaza, lane attendants sometimes manually type the vehicle registration number into the POS terminal—and a 1-digit typo (e.g., DL01AB1234 instead of DL01AB1284) bills your linked FASTag. Immediately take a geo-tagged/timestamped photo of your car parked at home and raise an 'Incorrect Manual Entry / Vehicle Not at Plaza' chargeback.",
+          },
+          {
+            label: "Case C: 24-Hour Return Discount Not Applied on Return Journey",
+            detail:
+              "Verify using TravelAdda's NHAI Toll Calculator that the plaza is an NHAI open-system plaza (where 24h return discount applies) and not a closed-loop state expressway (like Mumbai–Pune Expy). If an NHAI plaza charged 2x full single fare within 24 hours, raise an 'Excess Fare Charged' dispute.",
+          },
+          {
+            label: "Case D: Private Car Billed as LCV, Bus, or Multi-Axle Truck",
+            detail:
+              "Attach your vehicle's Registration Certificate (RC) showing Vehicle Class = LMV (Car) in your issuer bank's dispute ticket to claim back the excess deduction.",
+          },
+        ],
+      },
+      {
+        heading: "2. Step-by-Step Escalation: Issuer Bank → NHAI 1033 → NPCI NETC Ombudsman",
+        paragraphs: [
+          "Follow this 3-tier escalation path to ensure your refund is credited back to your FASTag wallet within the mandatory NPCI TAT (Turnaround Time):",
+        ],
+        bullets: [
+          {
+            label: "Step 1: Raise Chargeback in Your Issuer Bank FASTag Portal (Within 15 Days)",
+            detail:
+              "Log in to your FASTag issuer bank app/portal, select the disputed transaction ID, choose the reason code, and upload your RC / cash receipt / parked car photo. The issuer bank raises an electronic chargeback to the plaza's Acquirer Bank on the NPCI NETC switch.",
+          },
+          {
+            label: "Step 2: Call 1033 or Email IHMCL/NHAI (etchelts@nhai.org)",
+            detail:
+              "Dial the toll-free 1033 National Highway Helpline or email etchelts@nhai.org with your Vehicle Registration Number, Tag ID, Plaza Name, Transaction Timestamp, and Amount.",
+          },
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "Why did I receive a FASTag deduction SMS at 2:00 AM when I was sleeping at home?",
+        answer:
+          "Before panicking, open your FASTag statement and check the 'Actual Plaza Scan Time' vs 'Debit Posting Time'. Many highway plazas experience temporary connectivity drops and upload batch transactions 6 to 18 hours later at night. However, if the plaza name is a highway you never drove on, raise an immediate 'Vehicle Not at Plaza' chargeback with your issuer bank.",
+      },
+      {
+        question: "How many days does a FASTag wrong-deduction chargeback refund take?",
+        answer:
+          "Under NPCI NETC dispute settlement guidelines, the plaza Acquirer Bank must respond to a chargeback with CCTV/ANPR lane proof within 7 to 15 working days. If the plaza fails to provide valid ANPR photo evidence of your vehicle crossing the lane, the disputed amount is automatically credited back to your FASTag wallet.",
       },
     ],
   },

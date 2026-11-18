@@ -172,11 +172,23 @@ async function BlogArticleContent({
             name: "TravelAdda Hotel Room GST Calculator & Stay Guide",
             url: "https://traveladda.in/tools/hotel",
           }
-          : {
-            "@type": "WebApplication",
-            name: "TravelAdda Indian Railways Live & PNR Suite",
-            url: "https://traveladda.in/rail/live-status",
-          },
+          : isMetroPost
+            ? {
+              "@type": "WebApplication",
+              name: "TravelAdda Delhi NCR Metro Route & Fare Calculator",
+              url: "https://traveladda.in/delhi-metro",
+            }
+            : isRoadPost
+              ? {
+                "@type": "WebApplication",
+                name: "TravelAdda NHAI FASTag Highway Toll & Fuel Cost Calculator",
+                url: "https://traveladda.in/toll-calculator",
+              }
+              : {
+                "@type": "WebApplication",
+                name: "TravelAdda Indian Railways Live & PNR Suite",
+                url: "https://traveladda.in/rail/live-status",
+              },
     },
     {
       "@type": "BreadcrumbList",
@@ -672,6 +684,40 @@ async function BlogArticleContent({
                   >
                     <PlaneIcon className="h-3.5 w-3.5 text-[#1956b4] dark:text-blue-400" />
                     <span>New Delhi → IGI Airport Route</span>
+                  </Link>
+                </div>
+              </div>
+            ) : isRoadPost ? (
+              <div className="rounded-2xl border border-line bg-card p-5 shadow-xs">
+                <h3 className="text-base font-extrabold text-ink">
+                  Calculate NHAI Toll &amp; Fuel Cost
+                </h3>
+                <p className="mt-1 text-xs leading-relaxed text-ink-soft">
+                  Check plaza-by-plaza NHAI FASTag tolls, 24-hour return savings,
+                  and Petrol, Diesel, CNG &amp; EV charging costs across 1,560+
+                  city pairs.
+                </p>
+                <div className="mt-4 space-y-2">
+                  <Link
+                    href="/toll-calculator"
+                    className="ta-btn-primary inline-flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-xs font-bold"
+                  >
+                    <TicketIcon className="h-3.5 w-3.5" />
+                    <span>Open NHAI Toll Calculator</span>
+                  </Link>
+                  <Link
+                    href="/toll-calculator/delhi-to-jaipur-toll-tax-and-fuel-cost"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-line bg-subcard px-4 py-2.5 text-xs font-bold text-ink hover:border-[#1956b4]"
+                  >
+                    <ArrowRightIcon className="h-3.5 w-3.5 text-[#fc6203]" />
+                    <span>Delhi → Jaipur NE-4 Toll &amp; Fuel</span>
+                  </Link>
+                  <Link
+                    href="/toll-calculator/mumbai-to-pune-toll-tax-and-fuel-cost"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-line bg-subcard px-4 py-2.5 text-xs font-bold text-ink hover:border-[#1956b4]"
+                  >
+                    <ArrowRightIcon className="h-3.5 w-3.5 text-[#1956b4] dark:text-blue-400" />
+                    <span>Mumbai → Pune Expy Toll &amp; Fuel</span>
                   </Link>
                 </div>
               </div>

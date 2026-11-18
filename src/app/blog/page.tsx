@@ -177,7 +177,7 @@ export default async function BlogIndexPage() {
               href="#highway-toll-guides"
               className="shrink-0 whitespace-nowrap rounded-full bg-white/10 px-3 py-1.5 font-medium text-slate-200 hover:bg-white/20 sm:py-1"
             >
-              FASTag &amp; Expressway Tolls
+              FASTag &amp; Expressway Tolls ({TOLL_BLOG_POSTS.length})
             </a>
             <a
               href="#rail-guides"
