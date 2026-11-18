@@ -4,28 +4,7 @@ import MetroDynamicSeoPage, {
 } from "@/app/delhi-metro/route/[routeSlug]/page";
 
 export async function generateStaticParams() {
-  return [
-    "red-line",
-    "yellow-line",
-    "blue-line",
-    "blue-line-vaishali",
-    "green-line",
-    "violet-line",
-    "pink-line",
-    "magenta-line",
-    "grey-line",
-    "airport-express-line",
-    "gurgaon-rapid-metro",
-    "noida-aqua-line",
-    "mg-road",
-    "anand-vihar",
-    "rajiv-chowk",
-    "new-delhi",
-    "kashmere-gate",
-    "huda-city-centre",
-    "igi-airport",
-    "noida-electronic-city",
-  ].map((slug) => ({ slug }));
+  return ["yellow-line", "rajiv-chowk"].map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({

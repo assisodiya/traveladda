@@ -26,7 +26,7 @@ interface FlightRoutePageProps {
 }
 
 export function generateStaticParams() {
-  return POPULAR_FLIGHT_CORRIDORS.slice(0, 16)
+  return POPULAR_FLIGHT_CORRIDORS.slice(0, 2)
     .map((c) => {
       const from = AIRPORT_BY_IATA_MAP.get(c.fromIata);
       const to = AIRPORT_BY_IATA_MAP.get(c.toIata);

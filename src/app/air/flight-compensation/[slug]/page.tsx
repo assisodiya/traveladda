@@ -21,7 +21,7 @@ interface AirlineCompensationPageProps {
 }
 
 export function generateStaticParams() {
-  return DGCA_AIRLINE_PROFILES.map((a) => ({
+  return DGCA_AIRLINE_PROFILES.slice(0, 2).map((a) => ({
     slug: a.slug,
   }));
 }

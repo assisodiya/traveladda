@@ -35,7 +35,7 @@ export function generateStaticParams() {
   const slugSet = new Set<string>();
   const params: { slug: string }[] = [];
 
-  for (const train of POPULAR_CHART_TRAINS) {
+  for (const train of POPULAR_CHART_TRAINS.slice(0, 2)) {
     if (!slugSet.has(train.slug)) {
       slugSet.add(train.slug);
       params.push({ slug: train.slug });

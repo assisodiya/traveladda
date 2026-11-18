@@ -22,7 +22,7 @@ import {
 } from "@/lib/blog-data";
 
 export function generateStaticParams() {
-  return ALL_BLOG_POSTS.map((post) => ({
+  return ALL_BLOG_POSTS.slice(0, 4).map((post) => ({
     slug: post.slug,
   }));
 }

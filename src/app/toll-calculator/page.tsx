@@ -498,7 +498,7 @@ export default async function TollCalculatorHubPage() {
                 </summary>
 
                 <div className="mt-3 grid grid-cols-1 gap-1.5 border-t border-line pt-3 sm:grid-cols-2">
-                  {group.routes.map((route) => (
+                  {group.routes.slice(0, 6).map((route) => (
                     <Link
                       key={route.routeSlug}
                       href={route.routePath}

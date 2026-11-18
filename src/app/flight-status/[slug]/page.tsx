@@ -23,7 +23,7 @@ import {
 } from "@/lib/flight-types";
 
 export async function generateStaticParams() {
-  return POPULAR_LIVE_FLIGHTS.map((item) => ({
+  return POPULAR_LIVE_FLIGHTS.slice(0, 2).map((item) => ({
     slug: buildFlightStatusSlug(
       item.airlineCode,
       item.flightNumber,

@@ -26,7 +26,7 @@ interface RoutePageProps {
 }
 
 export async function generateStaticParams() {
-  const routes = getAllIndexableTollRouteSlugs().slice(0, 30);
+  const routes = getAllIndexableTollRouteSlugs().slice(0, 2);
   return routes.map((r) => ({
     routeSlug: r.routeSlug,
   }));

@@ -22,7 +22,7 @@ import {
 } from "@/lib/metro-types";
 
 export async function generateStaticParams() {
-  return POPULAR_METRO_ROUTES.map((r) => ({
+  return POPULAR_METRO_ROUTES.slice(0, 2).map((r) => ({
     routeSlug: buildMetroRouteSlug(r.fromSlug, r.toSlug),
   }));
 }

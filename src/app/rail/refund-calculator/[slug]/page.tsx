@@ -24,7 +24,7 @@ interface ScenarioPageProps {
 }
 
 export async function generateStaticParams() {
-  return REFUND_SEO_SCENARIOS.map((sc) => ({
+  return REFUND_SEO_SCENARIOS.slice(0, 2).map((sc) => ({
     slug: sc.slug,
   }));
 }

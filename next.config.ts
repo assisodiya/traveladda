@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
   cacheMaxMemorySize: 64 * 1024 * 1024,
   experimental: {
     isrFlushToDisk: false,
+    cpus: 2,
   },
   compress: true,
   poweredByHeader: false,

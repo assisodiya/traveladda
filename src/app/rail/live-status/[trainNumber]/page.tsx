@@ -40,7 +40,7 @@ export function generateStaticParams() {
   const seen = new Set<string>();
   const params: { trainNumber: string }[] = [];
 
-  for (const train of POPULAR_LIVE_TRAINS.slice(0, 12)) {
+  for (const train of POPULAR_LIVE_TRAINS.slice(0, 2)) {
     if (isSuburbanLocalEmuTrain(train)) continue;
     const slug = buildTrainSeoSlug(train.trainNumber, train.trainName);
     if (slug && !seen.has(slug)) {
