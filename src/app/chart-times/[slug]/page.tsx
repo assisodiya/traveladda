@@ -17,7 +17,6 @@ import { TrainChartTimeChecker } from "@/components/TrainChartTimeChecker";
 import { fetchSeoChartTimePageData } from "@/lib/chart-time-service";
 import {
   buildChartTimePath,
-  buildChartTimeSlug,
   extractTrainNumberFromChartSlug,
   POPULAR_CHART_TRAINS,
 } from "@/lib/chart-time-types";
@@ -26,7 +25,6 @@ import {
   findCatalogTrain,
   getRelatedCatalogTrains,
   isReservedChartEligibleTrain,
-  POPULAR_LIVE_TRAINS,
 } from "@/lib/live-train-types";
 
 interface ChartTimeSlugPageProps {
@@ -41,15 +39,6 @@ export function generateStaticParams() {
     if (!slugSet.has(train.slug)) {
       slugSet.add(train.slug);
       params.push({ slug: train.slug });
-    }
-  }
-
-  for (const train of POPULAR_LIVE_TRAINS.slice(0, 40)) {
-    if (!isReservedChartEligibleTrain(train)) continue;
-    const slug = buildChartTimeSlug(train.trainNumber, train.trainName);
-    if (slug && !slugSet.has(slug)) {
-      slugSet.add(slug);
-      params.push({ slug });
     }
   }
 
