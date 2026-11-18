@@ -229,7 +229,7 @@ async function BlogArticleContent({
   };
 
   return (
-    <main className="pb-16 sm:pb-24">
+    <main className="overflow-x-hidden pb-16 sm:pb-24">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -238,7 +238,7 @@ async function BlogArticleContent({
       />
 
       {/* Clean Editorial Article Header */}
-      <section className="ta-hero py-10 sm:py-14">
+      <section className="ta-hero py-8 sm:py-14">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <nav
             aria-label="Breadcrumb"
@@ -259,11 +259,11 @@ async function BlogArticleContent({
             <span className="font-semibold text-ink">{post.category}</span>
           </nav>
 
-          <div className="mt-4 flex flex-wrap items-center gap-2.5 text-xs">
+          <div className="mt-4 flex flex-wrap items-center gap-2 text-xs">
             <span
               className={`rounded px-2.5 py-0.5 font-bold ${isAirPost
                   ? "bg-blue-50 text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300"
-                  : isHotelPost
+                  : isHotelPost || isRoadPost
                     ? "bg-amber-50 text-amber-800 dark:bg-amber-500/15 dark:text-amber-300"
                     : "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300"
                 }`}
@@ -271,39 +271,39 @@ async function BlogArticleContent({
               {post.category}
             </span>
             {post.primaryKeyword && (
-              <span className="rounded bg-subcard px-2 py-0.5 font-mono text-[11px] font-semibold text-ink-soft">
+              <span className="max-w-full break-words rounded bg-subcard px-2 py-0.5 font-mono text-[11px] font-semibold text-ink-soft">
                 #{post.primaryKeyword}
               </span>
             )}
             <span className="inline-flex items-center gap-1 text-ink-muted">
-              <ClockIcon className="h-3.5 w-3.5" />
+              <ClockIcon className="h-3.5 w-3.5 shrink-0" />
               <span>{post.readTime}</span>
             </span>
             <span className="text-ink-muted">·</span>
             <span className="text-ink-muted">{post.publishedDate}</span>
           </div>
 
-          <h1 className="mt-3 text-2xl font-extrabold leading-snug tracking-tight text-ink sm:text-4xl">
+          <h1 className="mt-3 break-words text-2xl font-extrabold leading-snug tracking-tight text-ink sm:text-4xl">
             {post.title}
           </h1>
-          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-ink-soft sm:text-base">
+          <p className="mt-3 max-w-2xl break-words text-sm leading-relaxed text-ink-soft sm:text-base">
             {post.excerpt}
           </p>
 
-          <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-4 text-sm">
-            <div className="flex items-center gap-2.5">
+          <div className="mt-6 flex flex-col gap-3.5 border-t border-line pt-4 text-sm sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-4">
+            <div className="flex min-w-0 items-center gap-2.5">
               <div className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#1956b4] text-sm font-bold text-white">
                 {post.author.name[0]}
               </div>
-              <div>
-                <p className="text-sm font-bold text-ink">{post.author.name}</p>
-                <p className="text-xs text-ink-muted">{post.author.role}</p>
+              <div className="min-w-0">
+                <p className="truncate text-sm font-bold text-ink">{post.author.name}</p>
+                <p className="truncate text-xs text-ink-muted">{post.author.role}</p>
               </div>
             </div>
 
             <Link
               href={domainBreadcrumbHref}
-              className="ta-btn-primary inline-flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-xs font-bold"
+              className="ta-btn-primary inline-flex w-full items-center justify-center gap-1.5 rounded-lg px-3.5 py-2.5 text-xs font-bold sm:w-auto sm:py-2"
             >
               <span>
                 {isAirPost
@@ -312,18 +312,20 @@ async function BlogArticleContent({
                     ? "Calculate Hotel GST"
                     : isMetroPost
                       ? "Find Metro Route & Fare"
-                      : "Spot Train Live"}
+                      : isRoadPost
+                        ? "Calculate Highway Toll"
+                        : "Spot Train Live"}
               </span>
-              <ArrowRightIcon className="h-3.5 w-3.5" />
+              <ArrowRightIcon className="h-3.5 w-3.5 shrink-0" />
             </Link>
           </div>
         </div>
       </section>
 
       {/* Main Content + Sticky Sidebar */}
-      <div className="mx-auto mt-8 grid max-w-6xl gap-8 px-4 sm:mt-10 sm:px-6 lg:grid-cols-[1fr_330px] lg:px-8">
+      <div className="mx-auto mt-6 grid max-w-6xl grid-cols-1 gap-6 px-4 sm:mt-10 sm:gap-8 sm:px-6 lg:grid-cols-[minmax(0,1fr)_330px] lg:px-8">
         {/* Clean Article Body */}
-        <article className="space-y-7 rounded-2xl border border-line bg-card p-5 shadow-xs sm:p-8">
+        <article className="min-w-0 space-y-6 rounded-2xl border border-line bg-card p-4 shadow-xs sm:space-y-7 sm:p-8">
           {/* Key Takeaways */}
           <div className="rounded-xl border border-blue-500/25 bg-blue-50/70 p-4 dark:bg-blue-500/10 sm:p-5">
             <h2 className="text-xs font-bold uppercase tracking-wider text-[#1956b4] dark:text-blue-300">
@@ -333,10 +335,10 @@ async function BlogArticleContent({
               {post.keyTakeaways.map((item) => (
                 <li
                   key={item}
-                  className="flex items-start gap-2 text-sm text-ink"
+                  className="flex min-w-0 items-start gap-2 text-sm text-ink"
                 >
                   <CheckCircleIcon className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
-                  <span>{item}</span>
+                  <span className="min-w-0 break-words">{item}</span>
                 </li>
               ))}
             </ul>
@@ -351,30 +353,30 @@ async function BlogArticleContent({
               <p className="text-[11px] font-bold uppercase tracking-wider text-ink-muted">
                 In This Guide
               </p>
-              <ol className="mt-2 grid gap-1.5 text-xs sm:grid-cols-2">
+              <ol className="mt-2.5 grid grid-cols-1 gap-2 text-xs sm:grid-cols-2 sm:gap-1.5">
                 {post.sections.map((sec, idx) => (
-                  <li key={sec.heading}>
+                  <li key={sec.heading} className="min-w-0">
                     <a
                       href={`#section-${idx + 1}`}
-                      className="inline-flex items-start gap-1.5 font-semibold text-ink-soft hover:text-[#1956b4] dark:hover:text-blue-400"
+                      className="flex min-w-0 items-start gap-1.5 font-semibold text-ink-soft hover:text-[#1956b4] dark:hover:text-blue-400"
                     >
-                      <span className="font-mono text-[#1956b4] dark:text-blue-400">
+                      <span className="shrink-0 font-mono text-[#1956b4] dark:text-blue-400">
                         {idx + 1}.
                       </span>
-                      <span className="line-clamp-1">{sec.heading}</span>
+                      <span className="min-w-0 break-words sm:line-clamp-1">{sec.heading}</span>
                     </a>
                   </li>
                 ))}
                 {post.faqs && post.faqs.length > 0 && (
-                  <li>
+                  <li className="min-w-0">
                     <a
                       href="#article-faqs"
-                      className="inline-flex items-start gap-1.5 font-semibold text-ink-soft hover:text-[#1956b4] dark:hover:text-blue-400"
+                      className="flex min-w-0 items-start gap-1.5 font-semibold text-ink-soft hover:text-[#1956b4] dark:hover:text-blue-400"
                     >
-                      <span className="font-mono text-[#1956b4] dark:text-blue-400">
+                      <span className="shrink-0 font-mono text-[#1956b4] dark:text-blue-400">
                         {post.sections.length + 1}.
                       </span>
-                      <span>Frequently Asked Questions</span>
+                      <span className="min-w-0 break-words">Frequently Asked Questions</span>
                     </a>
                   </li>
                 )}
@@ -384,29 +386,33 @@ async function BlogArticleContent({
 
           {/* Contextual Quick Lookups */}
           {post.quickActionLinks && post.quickActionLinks.length > 0 && (
-            <div className="rounded-xl border border-line bg-subcard/60 p-4">
+            <div className="rounded-xl border border-line bg-subcard/60 p-3.5 sm:p-4">
               <p className="text-[11px] font-bold uppercase tracking-wider text-ink-muted">
                 {isAirPost
                   ? "Quick Live Flight Lookups"
                   : isHotelPost
                     ? "Quick Travel & Stay Tools"
-                    : "Quick Railway Lookups"}
+                    : isMetroPost
+                      ? "Quick Metro Route & Line Lookups"
+                      : isRoadPost
+                        ? "Quick Highway Toll & Fuel Lookups"
+                        : "Quick Railway Lookups"}
               </p>
-              <div className="mt-2.5 grid gap-2 sm:grid-cols-2">
+              <div className="mt-2.5 grid grid-cols-1 gap-2 sm:grid-cols-2">
                 {post.quickActionLinks.map((action) => (
                   <Link
                     key={action.label}
                     href={action.href}
-                    className="group flex items-center justify-between gap-2.5 rounded-lg border border-line bg-card p-2.5 transition hover:border-[#1956b4]"
+                    className="group flex min-w-0 items-center justify-between gap-2.5 rounded-lg border border-line bg-card p-2.5 transition hover:border-[#1956b4]"
                   >
-                    <div className="flex min-w-0 items-center gap-2.5">
+                    <div className="flex min-w-0 flex-1 items-center gap-2.5">
                       {action.airlineCode ? (
                         <AirlineLogo code={action.airlineCode} size="sm" />
                       ) : action.href.includes("/hotel") ? (
                         <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300">
                           <HotelIcon className="h-4 w-4" />
                         </span>
-                      ) : action.href.includes("/air") ? (
+                      ) : action.href.includes("/air") || action.href.includes("/flight") ? (
                         <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
                           <PlaneIcon className="h-4 w-4" />
                         </span>
@@ -415,7 +421,7 @@ async function BlogArticleContent({
                           <TrainIcon className="h-4 w-4" />
                         </span>
                       )}
-                      <div className="min-w-0">
+                      <div className="min-w-0 flex-1">
                         <p className="truncate text-xs font-bold text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-400">
                           {action.label}
                         </p>
@@ -436,15 +442,15 @@ async function BlogArticleContent({
             <section
               id={`section-${idx + 1}`}
               key={section.heading}
-              className="scroll-mt-24 space-y-3.5"
+              className="min-w-0 scroll-mt-24 space-y-3.5"
             >
-              <h2 className="text-lg font-extrabold tracking-tight text-ink sm:text-xl">
+              <h2 className="break-words text-lg font-extrabold tracking-tight text-ink sm:text-xl">
                 {section.heading}
               </h2>
               {section.paragraphs.map((p) => (
                 <p
                   key={p.slice(0, 32)}
-                  className="text-sm leading-relaxed text-ink-soft sm:text-[15px]"
+                  className="break-words text-sm leading-relaxed text-ink-soft sm:text-[15px]"
                 >
                   {p}
                 </p>
@@ -455,13 +461,13 @@ async function BlogArticleContent({
                   {section.bullets.map((b) => (
                     <div
                       key={b.label}
-                      className="rounded-xl border border-line bg-subcard/70 p-3.5"
+                      className="min-w-0 rounded-xl border border-line bg-subcard/70 p-3.5"
                     >
-                      <p className="flex items-center gap-2 text-sm font-bold text-ink">
-                        <CheckCircleIcon className="h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
-                        <span>{b.label}</span>
+                      <p className="flex min-w-0 items-start gap-2 text-sm font-bold text-ink">
+                        <CheckCircleIcon className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
+                        <span className="min-w-0 break-words">{b.label}</span>
                       </p>
-                      <p className="mt-1 text-xs leading-relaxed text-ink-soft sm:text-sm">
+                      <p className="mt-1 break-words text-xs leading-relaxed text-ink-soft sm:text-sm">
                         {b.detail}
                       </p>
                     </div>
@@ -470,11 +476,11 @@ async function BlogArticleContent({
               )}
 
               {section.callout && (
-                <div className="rounded-xl border-l-4 border-[#1956b4] bg-subcard p-4">
-                  <p className="text-xs font-bold uppercase tracking-wider text-[#1956b4] dark:text-blue-300">
+                <div className="min-w-0 rounded-xl border-l-4 border-[#1956b4] bg-subcard p-3.5 sm:p-4">
+                  <p className="break-words text-xs font-bold uppercase tracking-wider text-[#1956b4] dark:text-blue-300">
                     {section.callout.title}
                   </p>
-                  <p className="mt-1 text-xs leading-relaxed text-ink-soft sm:text-sm">
+                  <p className="mt-1 break-words text-xs leading-relaxed text-ink-soft sm:text-sm">
                     {section.callout.text}
                   </p>
                 </div>
@@ -486,19 +492,19 @@ async function BlogArticleContent({
           {post.faqs && post.faqs.length > 0 && (
             <section
               id="article-faqs"
-              className="scroll-mt-24 space-y-3 border-t border-line pt-6"
+              className="min-w-0 scroll-mt-24 space-y-3 border-t border-line pt-6"
             >
               <h2 className="text-base font-extrabold text-ink sm:text-lg">
                 Frequently Asked Questions
               </h2>
               <div className="divide-y divide-line overflow-hidden rounded-xl border border-line">
                 {post.faqs.map((faq) => (
-                  <details key={faq.question} open className="group p-4">
-                    <summary className="flex cursor-pointer list-none items-center justify-between gap-2 text-sm font-bold text-ink">
-                      <span>{faq.question}</span>
-                      <ChevronDownIcon className="h-4 w-4 shrink-0 text-ink-muted transition-transform group-open:rotate-180" />
+                  <details key={faq.question} open className="group p-3.5 sm:p-4">
+                    <summary className="flex cursor-pointer list-none items-start justify-between gap-2.5 text-sm font-bold text-ink">
+                      <span className="min-w-0 break-words">{faq.question}</span>
+                      <ChevronDownIcon className="mt-0.5 h-4 w-4 shrink-0 text-ink-muted transition-transform group-open:rotate-180" />
                     </summary>
-                    <p className="mt-2 text-xs leading-relaxed text-ink-soft sm:text-sm">
+                    <p className="mt-2 break-words text-xs leading-relaxed text-ink-soft sm:text-sm">
                       {faq.answer}
                     </p>
                   </details>
@@ -509,7 +515,7 @@ async function BlogArticleContent({
 
           {/* SEO Topic Tags */}
           {post.seoKeywords.length > 0 && (
-            <div className="border-t border-line pt-4">
+            <div className="min-w-0 border-t border-line pt-4">
               <p className="text-[11px] font-bold uppercase tracking-wider text-ink-muted">
                 Related Search Topics
               </p>
@@ -517,7 +523,7 @@ async function BlogArticleContent({
                 {post.seoKeywords.map((kw) => (
                   <span
                     key={kw}
-                    className="rounded-md border border-line bg-subcard px-2.5 py-1 text-xs text-ink-soft"
+                    className="max-w-full break-words rounded-md border border-line bg-subcard px-2.5 py-1 text-xs text-ink-soft"
                   >
                     {kw}
                   </span>
@@ -527,30 +533,34 @@ async function BlogArticleContent({
           )}
 
           {/* Bottom In-Article CTA */}
-          <div className="ta-live-cockpit flex flex-col justify-between gap-4 rounded-xl p-5 sm:flex-row sm:items-center">
-            <div>
-              <h3 className="text-base font-extrabold text-white">
+          <div className="ta-live-cockpit flex flex-col justify-between gap-4 rounded-xl p-4 sm:flex-row sm:items-center sm:p-5">
+            <div className="min-w-0">
+              <h3 className="break-words text-base font-extrabold text-white">
                 {isAirPost
                   ? "Check Live Flight Status, Terminal & Boarding Gate"
                   : isHotelPost
                     ? "Calculate Hotel GST Slabs & Track Your Flight or Train"
                     : isMetroPost
                       ? "Find Fastest Delhi NCR Metro Route, Fare & Interchange Stops"
-                      : "Spot Your Train's Live Station & Coach Position"}
+                      : isRoadPost
+                        ? "Calculate NHAI Expressway Toll Tax, FASTag Pass & Fuel Cost"
+                        : "Spot Your Train's Live Station & Coach Position"}
               </h3>
-              <p className="mt-0.5 text-xs text-slate-300">
+              <p className="mt-0.5 break-words text-xs text-slate-300">
                 {isAirPost
                   ? "Real-time departure, arrival, gate, and baggage carousel updates."
                   : isHotelPost
                     ? "Compare 0%, 12%, and 18% hotel GST slabs and track live PNR & flight arrivals."
                     : isMetroPost
                       ? "Compare Fastest, Minimum Interchange, and Minimum Stops routes across all 12 Delhi NCR Metro lines."
-                      : "Real-time station progress, platform numbers, and coach sequence."}
+                      : isRoadPost
+                        ? "Compare plaza-by-plaza NHAI toll rates, 24-hour return FASTag discounts, and Petrol/Diesel/CNG/EV fuel cost."
+                        : "Real-time station progress, platform numbers, and coach sequence."}
               </p>
             </div>
             <Link
               href={domainBreadcrumbHref}
-              className="ta-btn-primary inline-flex shrink-0 items-center justify-center gap-1.5 rounded-lg px-4 py-2.5 text-xs font-bold"
+              className="ta-btn-primary inline-flex w-full shrink-0 items-center justify-center gap-1.5 rounded-lg px-4 py-2.5 text-xs font-bold sm:w-auto"
             >
               <span>
                 {isAirPost
@@ -559,16 +569,18 @@ async function BlogArticleContent({
                     ? "Open Hotel Tools"
                     : isMetroPost
                       ? "Open Metro Route Finder"
-                      : "Spot Train"}
+                      : isRoadPost
+                        ? "Open Toll Calculator"
+                        : "Spot Train"}
               </span>
-              <ArrowRightIcon className="h-3.5 w-3.5" />
+              <ArrowRightIcon className="h-3.5 w-3.5 shrink-0" />
             </Link>
           </div>
         </article>
 
         {/* Clean Sidebar */}
-        <aside className="space-y-5">
-          <div className="sticky top-20 space-y-5">
+        <aside className="min-w-0 space-y-5">
+          <div className="space-y-5 lg:sticky lg:top-20">
             {isAirPost ? (
               <div className="rounded-2xl border border-line bg-card p-5 shadow-xs">
                 <h3 className="text-base font-extrabold text-ink">
@@ -699,17 +711,21 @@ async function BlogArticleContent({
             )}
 
             <div className="rounded-2xl border border-line bg-card p-5">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between gap-2">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-ink-muted">
                   {isAirPost
                     ? "More Flight Guides"
                     : isHotelPost
                       ? "More Stay & Holiday Guides"
-                      : "More Rail Guides"}
+                      : isMetroPost
+                        ? "More Metro Transit Guides"
+                        : isRoadPost
+                          ? "More Highway & FASTag Guides"
+                          : "More Rail Guides"}
                 </h3>
                 <Link
                   href="/blog"
-                  className="text-xs font-bold text-[#1956b4] hover:underline dark:text-blue-400"
+                  className="shrink-0 text-xs font-bold text-[#1956b4] hover:underline dark:text-blue-400"
                 >
                   All →
                 </Link>
@@ -719,12 +735,12 @@ async function BlogArticleContent({
                   <Link
                     key={rel.slug}
                     href={`/blog/${rel.slug}`}
-                    className="block rounded-xl border border-line bg-subcard p-3 transition hover:border-[#1956b4]"
+                    className="block min-w-0 rounded-xl border border-line bg-subcard p-3 transition hover:border-[#1956b4]"
                   >
                     <span className="text-[10px] font-bold uppercase text-[#1956b4] dark:text-blue-400">
                       {rel.category}
                     </span>
-                    <p className="mt-0.5 text-xs font-bold leading-snug text-ink">
+                    <p className="mt-0.5 break-words text-xs font-bold leading-snug text-ink">
                       {rel.title}
                     </p>
                   </Link>
@@ -733,13 +749,13 @@ async function BlogArticleContent({
             </div>
 
             <div className="rounded-2xl border border-line bg-card p-5">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between gap-2">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-ink-muted">
                   2026–27 Trending Reads
                 </h3>
                 <Link
                   href="/blog#featured-2026-27-guides"
-                  className="text-xs font-bold text-[#fc6203] hover:underline"
+                  className="shrink-0 text-xs font-bold text-[#fc6203] hover:underline"
                 >
                   Top 10 →
                 </Link>
@@ -749,12 +765,12 @@ async function BlogArticleContent({
                   <Link
                     key={rel.slug}
                     href={`/blog/${rel.slug}`}
-                    className="block rounded-xl border border-line bg-subcard p-3 transition hover:border-[#1956b4]"
+                    className="block min-w-0 rounded-xl border border-line bg-subcard p-3 transition hover:border-[#1956b4]"
                   >
                     <span className="text-[10px] font-bold uppercase text-[#fc6203]">
                       {rel.category}
                     </span>
-                    <p className="mt-0.5 text-xs font-bold leading-snug text-ink">
+                    <p className="mt-0.5 break-words text-xs font-bold leading-snug text-ink">
                       {rel.title}
                     </p>
                   </Link>

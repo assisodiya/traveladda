@@ -78,7 +78,7 @@ export default async function BlogIndexPage() {
   };
 
   return (
-    <main className="pb-16 sm:pb-24">
+    <main className="overflow-x-hidden pb-16 sm:pb-24">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -87,7 +87,7 @@ export default async function BlogIndexPage() {
       />
 
       {/* Clean Compact Navy Header */}
-      <section className="ta-navy-hero pb-10 pt-5 sm:pb-12 sm:pt-7">
+      <section className="ta-navy-hero pb-8 pt-5 sm:pb-12 sm:pt-7">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <nav
             aria-label="Breadcrumb"
@@ -102,10 +102,10 @@ export default async function BlogIndexPage() {
 
           <div className="mt-4 flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
             <div className="max-w-3xl">
-              <h1 className="text-2xl font-extrabold tracking-tight text-white sm:text-4xl">
+              <h1 className="break-words text-2xl font-extrabold tracking-tight text-white sm:text-4xl">
                 2026–27 Travel, Flight, Train &amp; Hotel Guides
               </h1>
-              <p className="mt-1.5 text-xs text-slate-300 sm:text-sm">
+              <p className="mt-1.5 text-xs leading-relaxed text-slate-300 sm:text-sm">
                 Expert guides on winter destinations in India, cheap Christmas
                 flights, Vande Bharat Sleeper vs Rajdhani, budget international
                 trips, family hotels, AI flight booking, and live flight &amp;
@@ -113,75 +113,81 @@ export default async function BlogIndexPage() {
               </p>
             </div>
 
-            <div className="flex flex-wrap gap-2">
+            <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
               <Link
                 href="/air/flight-status"
-                className="ta-btn-primary inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-bold"
+                className="ta-btn-primary inline-flex items-center justify-center gap-1.5 rounded-lg px-3.5 py-2 text-xs font-bold sm:px-4"
               >
-                <PlaneIcon className="h-3.5 w-3.5" />
+                <PlaneIcon className="h-3.5 w-3.5 shrink-0" />
                 <span>Flight Status</span>
               </Link>
               <Link
                 href="/rail/live-status"
-                className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/10 px-4 py-2 text-xs font-bold text-white transition hover:bg-white/15"
+                className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-white/15 bg-white/10 px-3.5 py-2 text-xs font-bold text-white transition hover:bg-white/15 sm:px-4"
               >
-                <TrainIcon className="h-3.5 w-3.5" />
+                <TrainIcon className="h-3.5 w-3.5 shrink-0" />
                 <span>Train Status</span>
               </Link>
               <Link
                 href="/delhi-metro"
-                className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/10 px-4 py-2 text-xs font-bold text-white transition hover:bg-white/15"
+                className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-white/15 bg-white/10 px-3.5 py-2 text-xs font-bold text-white transition hover:bg-white/15 sm:px-4"
               >
-                <TrainIcon className="h-3.5 w-3.5 text-amber-300" />
+                <TrainIcon className="h-3.5 w-3.5 shrink-0 text-amber-300" />
                 <span>Delhi Metro</span>
               </Link>
               <Link
                 href="/tools/hotel"
-                className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/10 px-4 py-2 text-xs font-bold text-white transition hover:bg-white/15"
+                className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-white/15 bg-white/10 px-3.5 py-2 text-xs font-bold text-white transition hover:bg-white/15 sm:px-4"
               >
-                <HotelIcon className="h-3.5 w-3.5" />
+                <HotelIcon className="h-3.5 w-3.5 shrink-0" />
                 <span>Hotel GST</span>
               </Link>
             </div>
           </div>
 
-          {/* Quick Category Jump Bar */}
-          <div className="mt-5 flex flex-wrap gap-2 border-t border-white/10 pt-4 text-xs">
+          {/* Quick Category Jump Bar — touch-scrollable chip row on mobile, wrapped on desktop */}
+          <div className="-mx-4 mt-5 flex gap-2 overflow-x-auto border-t border-white/10 px-4 pb-1 pt-4 text-xs ta-no-scrollbar sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0">
             <a
               href="#featured-2026-27-guides"
-              className="rounded-full bg-white/15 px-3 py-1 font-semibold text-white hover:bg-white/25"
+              className="shrink-0 whitespace-nowrap rounded-full bg-white/15 px-3 py-1.5 font-semibold text-white hover:bg-white/25 sm:py-1"
             >
-              Top 10 Holiday &amp; Comparison Guides (2026–27)
+              Top 10 Holiday &amp; Comparison Guides
             </a>
             <a
               href="#delhi-metro-guides"
-              className="rounded-full bg-[#fc6203] px-3 py-1 font-bold text-white hover:bg-[#e55800]"
+              className="shrink-0 whitespace-nowrap rounded-full bg-[#fc6203] px-3 py-1.5 font-bold text-white hover:bg-[#e55800] sm:py-1"
             >
               Delhi NCR Metro Guides ({METRO_BLOG_POSTS.length})
             </a>
             {INDIA_CITY_METRO_BLOG_POSTS.length > 0 && (
               <a
                 href="#india-city-metro-guides"
-                className="rounded-full bg-white/15 px-3 py-1 font-semibold text-white hover:bg-white/25"
+                className="shrink-0 whitespace-nowrap rounded-full bg-white/15 px-3 py-1.5 font-semibold text-white hover:bg-white/25 sm:py-1"
               >
-                Mumbai, Bangalore, Hyderabad &amp; City Metros ({INDIA_CITY_METRO_BLOG_POSTS.length})
+                City Metros ({INDIA_CITY_METRO_BLOG_POSTS.length})
               </a>
             )}
             <a
               href="#flight-guides"
-              className="rounded-full bg-white/10 px-3 py-1 font-medium text-slate-200 hover:bg-white/20"
+              className="shrink-0 whitespace-nowrap rounded-full bg-white/10 px-3 py-1.5 font-medium text-slate-200 hover:bg-white/20 sm:py-1"
             >
               Flight Status &amp; Airport Guides
             </a>
             <a
+              href="#highway-toll-guides"
+              className="shrink-0 whitespace-nowrap rounded-full bg-white/10 px-3 py-1.5 font-medium text-slate-200 hover:bg-white/20 sm:py-1"
+            >
+              FASTag &amp; Expressway Tolls
+            </a>
+            <a
               href="#rail-guides"
-              className="rounded-full bg-white/10 px-3 py-1 font-medium text-slate-200 hover:bg-white/20"
+              className="shrink-0 whitespace-nowrap rounded-full bg-white/10 px-3 py-1.5 font-medium text-slate-200 hover:bg-white/20 sm:py-1"
             >
               Indian Railways &amp; PNR Guides
             </a>
             <a
               href="#hotel-destination-guides"
-              className="rounded-full bg-white/10 px-3 py-1 font-medium text-slate-200 hover:bg-white/20"
+              className="shrink-0 whitespace-nowrap rounded-full bg-white/10 px-3 py-1.5 font-medium text-slate-200 hover:bg-white/20 sm:py-1"
             >
               Hotels, Homestays &amp; Getaways
             </a>
@@ -192,7 +198,7 @@ export default async function BlogIndexPage() {
       {/* FEATURED 2026–27 SEO TRAVEL GUIDES (ALL 10 BLOGS) */}
       <section
         id="featured-2026-27-guides"
-        className="mx-auto mt-10 max-w-6xl px-4 sm:mt-12 sm:px-6 lg:px-8"
+        className="mx-auto mt-8 max-w-6xl px-4 sm:mt-12 sm:px-6 lg:px-8"
       >
         <div className="flex flex-wrap items-end justify-between gap-2">
           <div>
@@ -210,7 +216,7 @@ export default async function BlogIndexPage() {
           </div>
         </div>
 
-        <div className="mt-5 grid gap-4 md:grid-cols-2">
+        <div className="mt-4 grid grid-cols-1 gap-4 sm:mt-5 md:grid-cols-2">
           {FEATURED_SEO_BLOG_POSTS.map((post, idx) => {
             const badgeColor =
               post.domain === "air"
@@ -222,49 +228,49 @@ export default async function BlogIndexPage() {
             return (
               <article
                 key={post.slug}
-                className="group flex flex-col justify-between rounded-xl border border-line bg-card p-5 transition hover:border-[#1956b4] hover:shadow-md"
+                className="group flex min-w-0 flex-col justify-between rounded-xl border border-line bg-card p-4 transition hover:border-[#1956b4] hover:shadow-md sm:p-5"
               >
-                <div>
-                  <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
-                    <div className="flex items-center gap-2">
-                      <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-subcard font-mono text-[11px] font-bold text-ink-soft">
+                <div className="min-w-0">
+                  <div className="flex items-center justify-between gap-2 text-xs">
+                    <div className="flex min-w-0 items-center gap-2">
+                      <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-subcard font-mono text-[11px] font-bold text-ink-soft">
                         {idx + 1}
                       </span>
                       <span
-                        className={`rounded px-2 py-0.5 font-bold ${badgeColor}`}
+                        className={`truncate rounded px-2 py-0.5 font-bold ${badgeColor}`}
                       >
                         {post.category}
                       </span>
                     </div>
-                    <span className="inline-flex items-center gap-1 text-ink-muted">
-                      <ClockIcon className="h-3 w-3" />
+                    <span className="inline-flex shrink-0 items-center gap-1 text-ink-muted">
+                      <ClockIcon className="h-3 w-3 shrink-0" />
                       <span>{post.readTime}</span>
                     </span>
                   </div>
 
-                  <h3 className="mt-3 text-base font-bold leading-snug text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-400 sm:text-lg">
+                  <h3 className="mt-3 break-words text-base font-bold leading-snug text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-400 sm:text-lg">
                     <Link href={`/blog/${post.slug}`}>{post.title}</Link>
                   </h3>
 
-                  <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-ink-soft sm:text-sm">
+                  <p className="mt-2 line-clamp-3 break-words text-xs leading-relaxed text-ink-soft sm:text-sm">
                     {post.excerpt}
                   </p>
                 </div>
 
-                <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-line pt-3 text-xs">
+                <div className="mt-4 flex items-center justify-between gap-2 border-t border-line pt-3 text-xs">
                   {post.primaryKeyword ? (
-                    <span className="rounded bg-subcard px-2 py-0.5 font-mono text-[11px] text-ink-muted">
+                    <span className="min-w-0 max-w-[65%] truncate rounded bg-subcard px-2 py-0.5 font-mono text-[11px] text-ink-muted">
                       #{post.primaryKeyword}
                     </span>
                   ) : (
-                    <span className="text-ink-muted">{post.publishedDate}</span>
+                    <span className="shrink-0 text-ink-muted">{post.publishedDate}</span>
                   )}
                   <Link
                     href={`/blog/${post.slug}`}
-                    className="inline-flex items-center gap-1 font-bold text-[#1956b4] dark:text-blue-400"
+                    className="inline-flex shrink-0 items-center gap-1 font-bold text-[#1956b4] dark:text-blue-400"
                   >
                     <span>Read Full Guide</span>
-                    <ArrowRightIcon className="h-3.5 w-3.5" />
+                    <ArrowRightIcon className="h-3.5 w-3.5 shrink-0" />
                   </Link>
                 </div>
               </article>
@@ -276,7 +282,7 @@ export default async function BlogIndexPage() {
       {/* DELHI NCR METRO ROUTE, FARE & PHASE 4 GUIDES */}
       <section
         id="delhi-metro-guides"
-        className="mx-auto mt-12 max-w-6xl px-4 sm:mt-16 sm:px-6 lg:px-8"
+        className="mx-auto mt-10 max-w-6xl px-4 sm:mt-16 sm:px-6 lg:px-8"
       >
         <div className="flex flex-wrap items-end justify-between gap-2">
           <div>
@@ -299,47 +305,47 @@ export default async function BlogIndexPage() {
           </Link>
         </div>
 
-        <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {METRO_BLOG_POSTS.map((post) => (
             <article
               key={post.slug}
-              className="group flex flex-col justify-between rounded-xl border border-line bg-card p-5 transition hover:border-[#1956b4] hover:shadow-md"
+              className="group flex min-w-0 flex-col justify-between rounded-xl border border-line bg-card p-4 transition hover:border-[#1956b4] hover:shadow-md sm:p-5"
             >
-              <div>
+              <div className="min-w-0">
                 <div className="flex items-center justify-between gap-2 text-xs">
-                  <span className="rounded bg-blue-50 px-2 py-0.5 font-bold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
+                  <span className="truncate rounded bg-blue-50 px-2 py-0.5 font-bold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
                     {post.category}
                   </span>
-                  <span className="inline-flex items-center gap-1 text-ink-muted">
-                    <ClockIcon className="h-3 w-3" />
+                  <span className="inline-flex shrink-0 items-center gap-1 text-ink-muted">
+                    <ClockIcon className="h-3 w-3 shrink-0" />
                     <span>{post.readTime}</span>
                   </span>
                 </div>
 
-                <h3 className="mt-3 text-base font-bold leading-snug text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-400">
+                <h3 className="mt-3 break-words text-base font-bold leading-snug text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-400">
                   <Link href={`/blog/${post.slug}`}>{post.title}</Link>
                 </h3>
 
-                <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-ink-soft">
+                <p className="mt-2 line-clamp-3 break-words text-xs leading-relaxed text-ink-soft">
                   {post.excerpt}
                 </p>
               </div>
 
-              <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-line pt-3 text-xs">
+              <div className="mt-4 flex items-center justify-between gap-2 border-t border-line pt-3 text-xs">
                 {post.primaryKeyword ? (
-                  <span className="rounded bg-subcard px-2 py-0.5 font-mono text-[11px] text-ink-muted">
+                  <span className="min-w-0 max-w-[65%] truncate rounded bg-subcard px-2 py-0.5 font-mono text-[11px] text-ink-muted">
                     #{post.primaryKeyword}
                   </span>
                 ) : (
-                  <span className="text-ink-muted">{post.publishedDate}</span>
+                  <span className="shrink-0 text-ink-muted">{post.publishedDate}</span>
                 )}
                 <Link
                   prefetch={false}
                   href={`/blog/${post.slug}`}
-                  className="inline-flex items-center gap-1 font-bold text-[#1956b4] dark:text-blue-400"
+                  className="inline-flex shrink-0 items-center gap-1 font-bold text-[#1956b4] dark:text-blue-400"
                 >
                   <span>Read Guide</span>
-                  <ArrowRightIcon className="h-3.5 w-3.5" />
+                  <ArrowRightIcon className="h-3.5 w-3.5 shrink-0" />
                 </Link>
               </div>
             </article>
@@ -351,7 +357,7 @@ export default async function BlogIndexPage() {
       {INDIA_CITY_METRO_BLOG_POSTS.length > 0 && (
       <section
         id="india-city-metro-guides"
-        className="mx-auto mt-12 max-w-6xl px-4 sm:mt-16 sm:px-6 lg:px-8"
+        className="mx-auto mt-10 max-w-6xl px-4 sm:mt-16 sm:px-6 lg:px-8"
       >
         <div className="flex flex-wrap items-end justify-between gap-2">
           <div>
@@ -367,49 +373,49 @@ export default async function BlogIndexPage() {
           </div>
         </div>
 
-        <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {INDIA_CITY_METRO_BLOG_POSTS.map((post) => (
             <article
               key={post.slug}
-              className="group flex flex-col justify-between rounded-xl border border-line bg-card p-5 transition hover:border-[#1956b4] hover:shadow-md"
+              className="group flex min-w-0 flex-col justify-between rounded-xl border border-line bg-card p-4 transition hover:border-[#1956b4] hover:shadow-md sm:p-5"
             >
-              <div>
+              <div className="min-w-0">
                 <div className="flex items-center justify-between gap-2 text-xs">
-                  <span className="rounded bg-emerald-50 px-2 py-0.5 font-bold text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
+                  <span className="truncate rounded bg-emerald-50 px-2 py-0.5 font-bold text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
                     {post.category}
                   </span>
-                  <span className="inline-flex items-center gap-1 text-ink-muted">
-                    <ClockIcon className="h-3 w-3" />
+                  <span className="inline-flex shrink-0 items-center gap-1 text-ink-muted">
+                    <ClockIcon className="h-3 w-3 shrink-0" />
                     <span>{post.readTime}</span>
                   </span>
                 </div>
 
-                <h3 className="mt-3 text-base font-bold leading-snug text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-400">
+                <h3 className="mt-3 break-words text-base font-bold leading-snug text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-400">
                   <Link prefetch={false} href={`/blog/${post.slug}`}>
                     {post.title}
                   </Link>
                 </h3>
 
-                <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-ink-soft">
+                <p className="mt-2 line-clamp-3 break-words text-xs leading-relaxed text-ink-soft">
                   {post.excerpt}
                 </p>
               </div>
 
-              <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-line pt-3 text-xs">
+              <div className="mt-4 flex items-center justify-between gap-2 border-t border-line pt-3 text-xs">
                 {post.primaryKeyword ? (
-                  <span className="rounded bg-subcard px-2 py-0.5 font-mono text-[11px] text-ink-muted">
+                  <span className="min-w-0 max-w-[65%] truncate rounded bg-subcard px-2 py-0.5 font-mono text-[11px] text-ink-muted">
                     #{post.primaryKeyword}
                   </span>
                 ) : (
-                  <span className="text-ink-muted">{post.publishedDate}</span>
+                  <span className="shrink-0 text-ink-muted">{post.publishedDate}</span>
                 )}
                 <Link
                   prefetch={false}
                   href={`/blog/${post.slug}`}
-                  className="inline-flex items-center gap-1 font-bold text-[#1956b4] dark:text-blue-400"
+                  className="inline-flex shrink-0 items-center gap-1 font-bold text-[#1956b4] dark:text-blue-400"
                 >
                   <span>Read Guide</span>
-                  <ArrowRightIcon className="h-3.5 w-3.5" />
+                  <ArrowRightIcon className="h-3.5 w-3.5 shrink-0" />
                 </Link>
               </div>
             </article>
@@ -421,7 +427,7 @@ export default async function BlogIndexPage() {
       {/* HOTELS, HOMESTAYS & DESTINATION GUIDES */}
       <section
         id="hotel-destination-guides"
-        className="mx-auto mt-12 max-w-6xl px-4 sm:mt-16 sm:px-6 lg:px-8"
+        className="mx-auto mt-10 max-w-6xl px-4 sm:mt-16 sm:px-6 lg:px-8"
       >
         <div className="flex flex-wrap items-end justify-between gap-2">
           <div>
@@ -442,35 +448,35 @@ export default async function BlogIndexPage() {
           </Link>
         </div>
 
-        <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
           {HOTEL_BLOG_POSTS.map((post) => (
             <article
               key={post.slug}
-              className="group flex flex-col justify-between rounded-xl border border-line bg-card p-4 transition hover:border-[#1956b4] hover:shadow-sm sm:p-5"
+              className="group flex min-w-0 flex-col justify-between rounded-xl border border-line bg-card p-4 transition hover:border-[#1956b4] hover:shadow-sm sm:p-5"
             >
-              <div>
+              <div className="min-w-0">
                 <div className="flex items-center justify-between gap-2 text-xs">
-                  <span className="rounded bg-amber-50 px-2 py-0.5 font-bold text-amber-800 dark:bg-amber-500/15 dark:text-amber-300">
+                  <span className="truncate rounded bg-amber-50 px-2 py-0.5 font-bold text-amber-800 dark:bg-amber-500/15 dark:text-amber-300">
                     {post.category}
                   </span>
-                  <span className="text-ink-muted">{post.readTime}</span>
+                  <span className="shrink-0 text-ink-muted">{post.readTime}</span>
                 </div>
-                <h3 className="mt-3 text-sm font-bold leading-snug text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-400 sm:text-base">
+                <h3 className="mt-3 break-words text-sm font-bold leading-snug text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-400 sm:text-base">
                   <Link href={`/blog/${post.slug}`}>{post.title}</Link>
                 </h3>
-                <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-ink-soft">
+                <p className="mt-2 line-clamp-3 break-words text-xs leading-relaxed text-ink-soft">
                   {post.excerpt}
                 </p>
               </div>
 
-              <div className="mt-4 flex items-center justify-between border-t border-line pt-3 text-xs">
-                <span className="text-ink-muted">{post.author.name}</span>
+              <div className="mt-4 flex items-center justify-between gap-2 border-t border-line pt-3 text-xs">
+                <span className="truncate text-ink-muted">{post.author.name}</span>
                 <Link
                   href={`/blog/${post.slug}`}
-                  className="inline-flex items-center gap-1 font-bold text-[#1956b4] dark:text-blue-400"
+                  className="inline-flex shrink-0 items-center gap-1 font-bold text-[#1956b4] dark:text-blue-400"
                 >
                   <span>Read</span>
-                  <ArrowRightIcon className="h-3.5 w-3.5" />
+                  <ArrowRightIcon className="h-3.5 w-3.5 shrink-0" />
                 </Link>
               </div>
             </article>
@@ -481,7 +487,7 @@ export default async function BlogIndexPage() {
       {/* FLIGHT STATUS & AVIATION GUIDES */}
       <section
         id="flight-guides"
-        className="mx-auto mt-12 max-w-6xl px-4 sm:mt-16 sm:px-6 lg:px-8"
+        className="mx-auto mt-10 max-w-6xl px-4 sm:mt-16 sm:px-6 lg:px-8"
       >
         <div className="flex flex-wrap items-end justify-between gap-2">
           <div>
@@ -502,40 +508,40 @@ export default async function BlogIndexPage() {
           </Link>
         </div>
 
-        <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {[...DGCA_BLOG_POSTS, ...FLIGHT_BLOG_POSTS].map((post) => (
             <article
               key={post.slug}
-              className="group flex flex-col justify-between rounded-xl border border-line bg-card p-5 transition hover:border-[#1956b4] hover:shadow-sm"
+              className="group flex min-w-0 flex-col justify-between rounded-xl border border-line bg-card p-4 transition hover:border-[#1956b4] hover:shadow-sm sm:p-5"
             >
-              <div>
+              <div className="min-w-0">
                 <div className="flex items-center justify-between gap-2 text-xs">
-                  <span className="rounded bg-blue-50 px-2 py-0.5 font-bold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
+                  <span className="truncate rounded bg-blue-50 px-2 py-0.5 font-bold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
                     {post.category}
                   </span>
-                  <span className="inline-flex items-center gap-1 text-ink-muted">
-                    <ClockIcon className="h-3 w-3" />
+                  <span className="inline-flex shrink-0 items-center gap-1 text-ink-muted">
+                    <ClockIcon className="h-3 w-3 shrink-0" />
                     <span>{post.readTime}</span>
                   </span>
                 </div>
 
-                <h3 className="mt-3 text-base font-bold leading-snug text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-400">
+                <h3 className="mt-3 break-words text-base font-bold leading-snug text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-400">
                   <Link href={`/blog/${post.slug}`}>{post.title}</Link>
                 </h3>
 
-                <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-ink-soft">
+                <p className="mt-2 line-clamp-3 break-words text-xs leading-relaxed text-ink-soft">
                   {post.excerpt}
                 </p>
               </div>
 
-              <div className="mt-4 flex items-center justify-between border-t border-line pt-3 text-xs">
-                <span className="text-ink-muted">{post.publishedDate}</span>
+              <div className="mt-4 flex items-center justify-between gap-2 border-t border-line pt-3 text-xs">
+                <span className="truncate text-ink-muted">{post.publishedDate}</span>
                 <Link
                   href={`/blog/${post.slug}`}
-                  className="inline-flex items-center gap-1 font-bold text-[#1956b4] dark:text-blue-400"
+                  className="inline-flex shrink-0 items-center gap-1 font-bold text-[#1956b4] dark:text-blue-400"
                 >
                   <span>Read Guide</span>
-                  <ArrowRightIcon className="h-3.5 w-3.5" />
+                  <ArrowRightIcon className="h-3.5 w-3.5 shrink-0" />
                 </Link>
               </div>
             </article>
@@ -546,7 +552,7 @@ export default async function BlogIndexPage() {
       {/* NHAI HIGHWAY TOLL, FASTAG & ROAD TRIP GUIDES */}
       <section
         id="highway-toll-guides"
-        className="mx-auto mt-12 max-w-6xl px-4 sm:mt-16 sm:px-6 lg:px-8"
+        className="mx-auto mt-10 max-w-6xl px-4 sm:mt-16 sm:px-6 lg:px-8"
       >
         <div className="flex flex-wrap items-end justify-between gap-2">
           <div>
@@ -567,35 +573,35 @@ export default async function BlogIndexPage() {
           </Link>
         </div>
 
-        <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
           {TOLL_BLOG_POSTS.map((post) => (
             <article
               key={post.slug}
-              className="group flex flex-col justify-between rounded-xl border border-line bg-card p-4 transition hover:border-[#1956b4] hover:shadow-sm sm:p-5"
+              className="group flex min-w-0 flex-col justify-between rounded-xl border border-line bg-card p-4 transition hover:border-[#1956b4] hover:shadow-sm sm:p-5"
             >
-              <div>
+              <div className="min-w-0">
                 <div className="flex items-center justify-between gap-2 text-xs">
-                  <span className="rounded bg-amber-50 px-2 py-0.5 font-bold text-amber-700 dark:bg-amber-500/15 dark:text-amber-300">
+                  <span className="truncate rounded bg-amber-50 px-2 py-0.5 font-bold text-amber-700 dark:bg-amber-500/15 dark:text-amber-300">
                     {post.category}
                   </span>
-                  <span className="text-ink-muted">{post.readTime}</span>
+                  <span className="shrink-0 text-ink-muted">{post.readTime}</span>
                 </div>
-                <h3 className="mt-3 text-sm font-bold leading-snug text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-400 sm:text-base">
+                <h3 className="mt-3 break-words text-sm font-bold leading-snug text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-400 sm:text-base">
                   <Link href={`/blog/${post.slug}`}>{post.title}</Link>
                 </h3>
-                <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-ink-soft">
+                <p className="mt-2 line-clamp-3 break-words text-xs leading-relaxed text-ink-soft">
                   {post.excerpt}
                 </p>
               </div>
 
-              <div className="mt-4 flex items-center justify-between border-t border-line pt-3 text-xs">
-                <span className="text-ink-muted">{post.author.name}</span>
+              <div className="mt-4 flex items-center justify-between gap-2 border-t border-line pt-3 text-xs">
+                <span className="truncate text-ink-muted">{post.author.name}</span>
                 <Link
                   href={`/blog/${post.slug}`}
-                  className="inline-flex items-center gap-1 font-bold text-[#1956b4] dark:text-blue-400"
+                  className="inline-flex shrink-0 items-center gap-1 font-bold text-[#1956b4] dark:text-blue-400"
                 >
                   <span>Read</span>
-                  <ArrowRightIcon className="h-3.5 w-3.5" />
+                  <ArrowRightIcon className="h-3.5 w-3.5 shrink-0" />
                 </Link>
               </div>
             </article>
@@ -606,7 +612,7 @@ export default async function BlogIndexPage() {
       {/* INDIAN RAILWAYS & PNR GUIDES */}
       <section
         id="rail-guides"
-        className="mx-auto mt-12 max-w-6xl px-4 sm:mt-16 sm:px-6 lg:px-8"
+        className="mx-auto mt-10 max-w-6xl px-4 sm:mt-16 sm:px-6 lg:px-8"
       >
         <div className="flex flex-wrap items-end justify-between gap-2">
           <div>
@@ -627,35 +633,35 @@ export default async function BlogIndexPage() {
           </Link>
         </div>
 
-        <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
           {RAIL_BLOG_POSTS.map((post) => (
             <article
               key={post.slug}
-              className="group flex flex-col justify-between rounded-xl border border-line bg-card p-4 transition hover:border-[#1956b4] hover:shadow-sm sm:p-5"
+              className="group flex min-w-0 flex-col justify-between rounded-xl border border-line bg-card p-4 transition hover:border-[#1956b4] hover:shadow-sm sm:p-5"
             >
-              <div>
+              <div className="min-w-0">
                 <div className="flex items-center justify-between gap-2 text-xs">
-                  <span className="rounded bg-emerald-50 px-2 py-0.5 font-bold text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
+                  <span className="truncate rounded bg-emerald-50 px-2 py-0.5 font-bold text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
                     {post.category}
                   </span>
-                  <span className="text-ink-muted">{post.readTime}</span>
+                  <span className="shrink-0 text-ink-muted">{post.readTime}</span>
                 </div>
-                <h3 className="mt-3 text-sm font-bold leading-snug text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-400 sm:text-base">
+                <h3 className="mt-3 break-words text-sm font-bold leading-snug text-ink group-hover:text-[#1956b4] dark:group-hover:text-blue-400 sm:text-base">
                   <Link href={`/blog/${post.slug}`}>{post.title}</Link>
                 </h3>
-                <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-ink-soft">
+                <p className="mt-2 line-clamp-3 break-words text-xs leading-relaxed text-ink-soft">
                   {post.excerpt}
                 </p>
               </div>
 
-              <div className="mt-4 flex items-center justify-between border-t border-line pt-3 text-xs">
-                <span className="text-ink-muted">{post.author.name}</span>
+              <div className="mt-4 flex items-center justify-between gap-2 border-t border-line pt-3 text-xs">
+                <span className="truncate text-ink-muted">{post.author.name}</span>
                 <Link
                   href={`/blog/${post.slug}`}
-                  className="inline-flex items-center gap-1 font-bold text-[#1956b4] dark:text-blue-400"
+                  className="inline-flex shrink-0 items-center gap-1 font-bold text-[#1956b4] dark:text-blue-400"
                 >
                   <span>Read</span>
-                  <ArrowRightIcon className="h-3.5 w-3.5" />
+                  <ArrowRightIcon className="h-3.5 w-3.5 shrink-0" />
                 </Link>
               </div>
             </article>
