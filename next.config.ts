@@ -7,11 +7,6 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   productionBrowserSourceMaps: false,
   enablePrerenderSourceMaps: false,
-  experimental: {
-    webpackMemoryOptimizations: true,
-    preloadEntriesOnStart: false,
-    serverSourceMaps: false,
-  },
   images: {
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 2592000,

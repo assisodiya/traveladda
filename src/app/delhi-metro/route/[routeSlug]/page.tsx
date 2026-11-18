@@ -181,6 +181,7 @@ function MetroBlogGuidesSection() {
       </div>
 
       {/* Pan-India City Metro Guides Internal Links */}
+      {INDIA_CITY_METRO_BLOG_POSTS.length > 0 && (
       <div className="mt-5 border-t border-line pt-4">
         <h3 className="text-xs font-extrabold uppercase tracking-wider text-ink-muted">
           Explore India City Metro Route &amp; Fare Guides
@@ -201,6 +202,7 @@ function MetroBlogGuidesSection() {
           ))}
         </div>
       </div>
+      )}
     </section>
   );
 }

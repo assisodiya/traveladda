@@ -688,6 +688,7 @@ export default async function MetroHubPage() {
                     </div>
 
                     {/* Pan-India City Metro Guides Quick Strip */}
+                    {INDIA_CITY_METRO_BLOG_POSTS.length > 0 && (
                     <div className="mt-5 border-t border-line pt-4">
                         <h3 className="text-xs font-extrabold uppercase tracking-wider text-ink-muted">
                             Other Major Indian City Metro Guides (Routes, Fares &amp; Timings)
@@ -706,6 +707,7 @@ export default async function MetroHubPage() {
                             ))}
                         </div>
                     </div>
+                    )}
                 </section>
 
                 {/* Frequently Asked Questions */}

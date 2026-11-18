@@ -162,12 +162,14 @@ export default async function BlogIndexPage() {
             >
               Delhi NCR Metro Guides ({METRO_BLOG_POSTS.length})
             </a>
-            <a
-              href="#india-city-metro-guides"
-              className="rounded-full bg-white/15 px-3 py-1 font-semibold text-white hover:bg-white/25"
-            >
-              Mumbai, Bangalore, Hyderabad &amp; City Metros ({INDIA_CITY_METRO_BLOG_POSTS.length})
-            </a>
+            {INDIA_CITY_METRO_BLOG_POSTS.length > 0 && (
+              <a
+                href="#india-city-metro-guides"
+                className="rounded-full bg-white/15 px-3 py-1 font-semibold text-white hover:bg-white/25"
+              >
+                Mumbai, Bangalore, Hyderabad &amp; City Metros ({INDIA_CITY_METRO_BLOG_POSTS.length})
+              </a>
+            )}
             <a
               href="#flight-guides"
               className="rounded-full bg-white/10 px-3 py-1 font-medium text-slate-200 hover:bg-white/20"
@@ -349,6 +351,7 @@ export default async function BlogIndexPage() {
       </section>
 
       {/* PAN-INDIA CITY METRO GUIDES (MUMBAI, BANGALORE, HYDERABAD, KOLKATA, CHENNAI, PUNE) */}
+      {INDIA_CITY_METRO_BLOG_POSTS.length > 0 && (
       <section
         id="india-city-metro-guides"
         className="mx-auto mt-12 max-w-6xl px-4 sm:mt-16 sm:px-6 lg:px-8"
@@ -416,6 +419,7 @@ export default async function BlogIndexPage() {
           ))}
         </div>
       </section>
+      )}
 
       {/* HOTELS, HOMESTAYS & DESTINATION GUIDES */}
       <section
