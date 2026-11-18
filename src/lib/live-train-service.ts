@@ -169,7 +169,7 @@ async function fetchUpstreamTrainForDate(
       Accept: "application/json",
       "User-Agent": "TravelAdda-Portal/2.0 (+https://traveladda.in)",
     },
-    ...(options?.allowCache ? {} : { cache: "no-store" as const }),
+    cache: "no-store",
     signal: AbortSignal.timeout(options?.allowCache ? 2500 : 8000),
   });
 

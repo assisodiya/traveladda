@@ -398,9 +398,6 @@ export function buildSegmentedSitemaps(): Record<
     }
   };
 
-  for (const train of POPULAR_LIVE_TRAINS) {
-    pushTrainLiveStatusEntry(train);
-  }
   for (const train of ALL_CATALOG_TRAINS) {
     pushTrainLiveStatusEntry(train);
   }
@@ -426,23 +423,6 @@ export function buildSegmentedSitemaps(): Record<
     }
   }
 
-  for (const train of POPULAR_LIVE_TRAINS) {
-    if (!isReservedChartEligibleTrain(train)) continue;
-    const url = `${SITE_BASE_URL}${buildChartTimePath(
-      train.trainNumber,
-      train.trainName
-    )}`;
-    if (!chartUrlSet.has(url) && !popularChartSet.has(train.trainNumber)) {
-      chartUrlSet.add(url);
-      chartTimeRoutes.push({
-        url,
-        lastModified: trainChartLastMod,
-        changeFrequency: "weekly",
-        priority: flagshipTrainSet.has(train.trainNumber) ? 0.88 : 0.84,
-      });
-    }
-  }
-
   for (const train of ALL_CATALOG_TRAINS) {
     if (!isReservedChartEligibleTrain(train)) continue;
     const url = `${SITE_BASE_URL}${buildChartTimePath(
@@ -455,7 +435,7 @@ export function buildSegmentedSitemaps(): Record<
         url,
         lastModified: trainChartLastMod,
         changeFrequency: "weekly",
-        priority: 0.84,
+        priority: flagshipTrainSet.has(train.trainNumber) ? 0.88 : 0.84,
       });
     }
   }

@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build --webpack",
+    "build": "next build --webpack && rm -rf .next/cache",
     "start": "next start",
+    "clean:cache": "rm -rf .next/cache",
     "lint": "eslint"
   },
   "dependencies": {

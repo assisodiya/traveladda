@@ -401,7 +401,7 @@ export default async function TrainChartTimePage() {
           const hubDirectoryTrains: typeof allReserved = [];
 
           // 1. Include all flagship popular reserved trains first
-          for (const t of POPULAR_LIVE_TRAINS) {
+          for (const t of POPULAR_LIVE_TRAINS.slice(0, 32)) {
             if (
               isReservedChartEligibleTrain(t) &&
               !hubDirectorySet.has(t.trainNumber)

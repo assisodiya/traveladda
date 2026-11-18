@@ -393,7 +393,7 @@ export default async function LiveTrainStatusPage() {
           const dirSet = new Set<string>();
           const dirTrains: typeof indexableTrains = [];
 
-          for (const t of POPULAR_LIVE_TRAINS) {
+          for (const t of POPULAR_LIVE_TRAINS.slice(0, 32)) {
             if (!isSuburbanLocalEmuTrain(t) && !dirSet.has(t.trainNumber)) {
               dirSet.add(t.trainNumber);
               dirTrains.push(t);

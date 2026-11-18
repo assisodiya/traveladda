@@ -133,7 +133,16 @@ interface RawTravelpayoutsFlight {
   link?: string;
 }
 
+const MAX_TP_MEMORY_CACHE = 120;
+const tpMemoryCache = new Map<string, { expiresAt: number; payload: unknown }>();
+
 async function fetchTravelpayoutsJson<T>(url: string): Promise<T | null> {
+  const now = Date.now();
+  const hit = tpMemoryCache.get(url);
+  if (hit && hit.expiresAt > now) {
+    return hit.payload as T;
+  }
+
   try {
     const res = await fetch(url, {
       method: "GET",
@@ -141,11 +150,17 @@ async function fetchTravelpayoutsJson<T>(url: string): Promise<T | null> {
         Accept: "application/json",
         "X-Access-Token": TRAVELPAYOUTS_SERVER_CONFIG.apiToken,
       },
-      next: { revalidate: 1800 },
+      cache: "no-store",
       signal: AbortSignal.timeout(6500),
     });
     if (!res.ok) return null;
-    return (await res.json()) as T;
+    const json = (await res.json()) as T;
+    if (tpMemoryCache.size >= MAX_TP_MEMORY_CACHE) {
+      const oldestKey = tpMemoryCache.keys().next().value;
+      if (oldestKey) tpMemoryCache.delete(oldestKey);
+    }
+    tpMemoryCache.set(url, { expiresAt: now + 30 * 60 * 1000, payload: json });
+    return json;
   } catch {
     return null;
   }
@@ -194,7 +209,7 @@ async function resolveAirportHubServerSide(
     )}&locale=en&types[]=airport&types[]=city`;
     const res = await fetch(url, {
       headers: { Accept: "application/json" },
-      next: { revalidate: 86400 },
+      cache: "no-store",
       signal: AbortSignal.timeout(4000),
     });
     if (res.ok) {

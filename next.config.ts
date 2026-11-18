@@ -3,6 +3,12 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
+  // Keep runtime page & "use cache" entries in a bounded 64 MB in-memory LRU
+  // and disable flushing on-demand ISR / fetch-cache files to disk across 18,500+ dynamic routes.
+  cacheMaxMemorySize: 64 * 1024 * 1024,
+  experimental: {
+    isrFlushToDisk: false,
+  },
   compress: true,
   poweredByHeader: false,
   productionBrowserSourceMaps: false,
@@ -10,6 +16,15 @@ const nextConfig: NextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 2592000,
+    maximumDiskCacheSize: 0,
+    unoptimized: true,
+  },
+  webpack(config, { dev }) {
+    if (!dev) {
+      // Prevent Webpack from writing 120MB–300MB+ of .pack cache files to .next/cache/webpack in production
+      config.cache = false;
+    }
+    return config;
   },
   async headers() {
     return [

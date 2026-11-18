@@ -49,15 +49,11 @@ export interface AirlineIconResult {
 
 const inFlightIconDownloads = new Map<string, Promise<AirlineIconResult>>();
 const missingCdnIconDayCache = new Map<string, string>();
-
-function formatTimestampToIstDate(ms: number): string {
-  return new Intl.DateTimeFormat("en-CA", {
-    timeZone: "Asia/Kolkata",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(new Date(ms));
-}
+const MAX_MEMORY_AIRLINE_ICONS = 150;
+const memoryAirlineIconCache = new Map<
+  string,
+  { dayIst: string; buffer: Buffer; contentType: string }
+>();
 
 function getCurrentIstDateTimeLabel(): string {
   return new Intl.DateTimeFormat("en-IN", {
@@ -127,30 +123,44 @@ export async function ensureDailyAirlineIcon(
     const localFilePath = path.join(PUBLIC_AIRLINES_DIR, `${code}.png`);
     const publicRelPath = `/airlines/${code}.png`;
 
-    let staleBuffer: Buffer | null = null;
+    // 1. Check bounded in-memory daily cache first (zero disk writes)
+    const memCached = memoryAirlineIconCache.get(code);
+    if (memCached && memCached.dayIst === todayIst) {
+      return {
+        buffer: memCached.buffer,
+        contentType: memCached.contentType,
+        source: "local-public-daily-cache",
+        publicPath: publicRelPath,
+      };
+    }
 
+    // 2. Read-only check if pre-bundled static icon exists in public/airlines/
     try {
       const stat = await fs.stat(localFilePath);
       if (stat.isFile() && stat.size > 64) {
-        const fileDayIst = formatTimestampToIstDate(stat.mtimeMs);
-        const ageMs = Date.now() - stat.mtimeMs;
-        if (fileDayIst === todayIst && ageMs < 24 * 60 * 60 * 1000) {
-          const cachedBytes = await fs.readFile(localFilePath);
-          return {
-            buffer: cachedBytes,
-            contentType: "image/png",
-            source: "local-public-daily-cache",
-            publicPath: publicRelPath,
-          };
+        const cachedBytes = await fs.readFile(localFilePath);
+        if (memoryAirlineIconCache.size >= MAX_MEMORY_AIRLINE_ICONS) {
+          const oldestKey = memoryAirlineIconCache.keys().next().value;
+          if (oldestKey) memoryAirlineIconCache.delete(oldestKey);
         }
-        staleBuffer = await fs.readFile(localFilePath);
+        memoryAirlineIconCache.set(code, {
+          dayIst: todayIst,
+          buffer: cachedBytes,
+          contentType: "image/png",
+        });
+        return {
+          buffer: cachedBytes,
+          contentType: "image/png",
+          source: "local-public-daily-cache",
+          publicPath: publicRelPath,
+        };
       }
     } catch {
-      // File does not exist locally yet; proceed to download from CDN
+      // Static file does not exist on disk; proceed to fetch in-memory from CDN
     }
 
     // Avoid repeatedly hitting MMT CDN today if it already returned 404 today
-    if (missingCdnIconDayCache.get(code) === todayIst && !staleBuffer) {
+    if (missingCdnIconDayCache.get(code) === todayIst) {
       return {
         buffer: buildFallbackAirlineBadgeSvg(code),
         contentType: "image/svg+xml",
@@ -176,47 +186,34 @@ export async function ensureDailyAirlineIcon(
         const imgBuffer = Buffer.from(arrayBuf);
 
         if (imgBuffer.byteLength > 64) {
-          try {
-            await fs.mkdir(PUBLIC_AIRLINES_DIR, { recursive: true });
-            const tempPath = path.join(
-              PUBLIC_AIRLINES_DIR,
-              `${code}.${process.pid}.${Date.now()}.tmp`
-            );
-            await fs.writeFile(tempPath, imgBuffer);
-            await fs.rename(tempPath, localFilePath);
-          } catch {
-            // Even on read-only serverless fs, still serve the fetched buffer cleanly
-            try {
-              await fs.writeFile(localFilePath, imgBuffer);
-            } catch {
-              // Ignore fs write failure if read-only deployment environment
-            }
+          if (memoryAirlineIconCache.size >= MAX_MEMORY_AIRLINE_ICONS) {
+            const oldestKey = memoryAirlineIconCache.keys().next().value;
+            if (oldestKey) memoryAirlineIconCache.delete(oldestKey);
           }
+          memoryAirlineIconCache.set(code, {
+            dayIst: todayIst,
+            buffer: imgBuffer,
+            contentType: "image/png",
+          });
 
           missingCdnIconDayCache.delete(code);
           return {
             buffer: imgBuffer,
             contentType: "image/png",
             source: "mmt-cdn-saved-to-public",
-            publicPath: publicRelPath,
+            publicPath: null,
           };
         }
       }
 
       if (response.status === 404) {
+        if (missingCdnIconDayCache.size >= 300) {
+          missingCdnIconDayCache.clear();
+        }
         missingCdnIconDayCache.set(code, todayIst);
       }
     } catch {
-      // Network timeout; fall back to stale local icon or generated SVG badge
-    }
-
-    if (staleBuffer) {
-      return {
-        buffer: staleBuffer,
-        contentType: "image/png",
-        source: "local-public-stale-fallback",
-        publicPath: publicRelPath,
-      };
+      // Network timeout; fall back to generated SVG badge
     }
 
     return {

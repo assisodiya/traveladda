@@ -396,6 +396,7 @@ export async function fetchSeoChartTimePageData(
         "User-Agent":
           "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) TravelAdda-ChartTimeEngine/2.0",
       },
+      cache: "no-store",
       signal: AbortSignal.timeout(2500),
     });
 
