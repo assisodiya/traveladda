@@ -420,18 +420,81 @@ export default async function ChartTimeByTrainSlugPage({
         className="mx-auto mt-10 max-w-6xl scroll-mt-24 px-4 sm:mt-14 sm:px-6 lg:px-8"
       >
         <div className="overflow-hidden rounded-2xl border border-line bg-card shadow-sm">
-          <div className="border-b border-line bg-subcard px-4 py-4 sm:px-6">
-            <h2
-              id="about-charting-heading"
-              className="text-lg font-extrabold text-ink sm:text-xl"
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line bg-subcard px-4 py-4 sm:px-6">
+            <div>
+              <h2
+                id="about-charting-heading"
+                className="text-lg font-extrabold text-ink sm:text-xl"
+              >
+                About {chartData.trainName} ({chartData.trainNumber}) Chart
+                Preparation Times
+              </h2>
+              <p className="mt-0.5 text-xs text-ink-soft sm:text-sm">
+                Key charting summary, 1st &amp; 2nd reservation chart locks, and
+                remote charting hubs for Train {chartData.trainNumber}.
+              </p>
+            </div>
+            <Link
+              href={liveStatusPath}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-card px-3 py-1.5 text-xs font-bold text-[#1956b4] transition hover:border-[#1956b4] dark:text-blue-400"
             >
-              About {chartData.trainName} ({chartData.trainNumber}) Chart
-              Preparation Times
-            </h2>
-            <p className="mt-0.5 text-xs text-ink-soft sm:text-sm">
-              Key charting summary, 1st &amp; 2nd reservation chart locks, and
-              remote charting hubs for Train {chartData.trainNumber}.
-            </p>
+              <TrainIcon className="h-3.5 w-3.5" />
+              <span>Spot #{chartData.trainNumber} Live</span>
+            </Link>
+          </div>
+
+          {/* 4-Card Visual Highlights Grid */}
+          <div className="grid grid-cols-2 gap-3 border-b border-line bg-subcard/35 p-4 sm:grid-cols-4 sm:px-6">
+            <div className="rounded-xl border border-blue-200/80 bg-blue-50/50 p-3 dark:border-blue-500/25 dark:bg-blue-950/20">
+              <div className="text-[10px] font-extrabold uppercase tracking-wider text-[#1956b4] dark:text-blue-300">
+                Origin 1st Chart ({chartData.originStation})
+              </div>
+              <div className="mt-1 font-mono text-base font-extrabold text-ink sm:text-lg">
+                {chartData.originFirstChart12h}
+              </div>
+              <div className="mt-0.5 text-[11px] font-medium text-ink-muted">
+                {chartData.stations[0]?.chartOneDayLabel || "Before Departure"}
+              </div>
+            </div>
+
+            <div className="rounded-xl border border-emerald-200/80 bg-emerald-50/50 p-3 dark:border-emerald-500/25 dark:bg-emerald-950/20">
+              <div className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">
+                Origin 2nd Chart ({chartData.originStation})
+              </div>
+              <div className="mt-1 font-mono text-base font-extrabold text-ink sm:text-lg">
+                {chartData.originSecondChart12h}
+              </div>
+              <div className="mt-0.5 text-[11px] font-medium text-ink-muted">
+                Final Vacancy Lock
+              </div>
+            </div>
+
+            <div className="rounded-xl border border-orange-200/80 bg-orange-50/50 p-3 dark:border-orange-500/25 dark:bg-orange-950/20">
+              <div className="text-[10px] font-extrabold uppercase tracking-wider text-orange-700 dark:text-orange-300">
+                Charting Hubs
+              </div>
+              <div className="mt-1 font-mono text-base font-extrabold text-ink sm:text-lg">
+                {chartData.uniqueChartHubCount}{" "}
+                {chartData.uniqueChartHubCount === 1 ? "Hub" : "Hubs"}
+              </div>
+              <div className="mt-0.5 truncate text-[11px] font-medium text-ink-muted">
+                {chartData.chartingZones
+                  .map((z) => z.remoteStationCode)
+                  .join(" → ")}
+              </div>
+            </div>
+
+            <div className="rounded-xl border border-line bg-card p-3">
+              <div className="text-[10px] font-extrabold uppercase tracking-wider text-ink-muted">
+                Route Halts Covered
+              </div>
+              <div className="mt-1 font-mono text-base font-extrabold text-ink sm:text-lg">
+                {chartData.totalStations} Stops
+              </div>
+              <div className="mt-0.5 truncate text-[11px] font-medium text-ink-muted">
+                {chartData.originStation} → {chartData.destinationStation}
+              </div>
+            </div>
           </div>
 
           <div className="grid gap-4 p-4 sm:grid-cols-2 sm:p-6">
@@ -528,7 +591,7 @@ export default async function ChartTimeByTrainSlugPage({
         className="mx-auto mt-10 max-w-6xl scroll-mt-24 px-4 sm:mt-14 sm:px-6 lg:px-8"
       >
         <div className="overflow-hidden rounded-2xl border border-line bg-card shadow-sm">
-          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line bg-subcard px-4 py-4 sm:px-6">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line bg-subcard px-4 py-4 sm:px-6">
             <div>
               <h2
                 id="station-chart-table-heading"
@@ -544,94 +607,146 @@ export default async function ChartTimeByTrainSlugPage({
                 {chartData.destinationStation}).
               </p>
             </div>
-            <span className="rounded-lg border border-line bg-card px-3 py-1 font-mono text-xs font-bold text-ink-soft">
-              {chartData.totalStations} Stations ·{" "}
-              {chartData.uniqueChartHubCount} Chart Hubs
-            </span>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="rounded-lg border border-line bg-card px-3 py-1.5 font-mono text-xs font-bold text-ink-soft">
+                {chartData.totalStations} Stations ·{" "}
+                {chartData.uniqueChartHubCount} Chart Hubs
+              </span>
+              <Link
+                href="/rail/pnr-status"
+                className="ta-btn-primary inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-bold"
+              >
+                <TicketIcon className="h-3.5 w-3.5" />
+                <span>Check PNR Status</span>
+              </Link>
+            </div>
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[820px] border-collapse text-left text-xs sm:text-sm">
+            <table className="w-full min-w-[760px] border-collapse text-left text-xs sm:text-sm">
               <thead>
                 <tr className="border-b border-line bg-subcard/60 text-[11px] font-bold uppercase tracking-wider text-ink-muted">
                   <th className="px-4 py-3 sm:px-5">#</th>
-                  <th className="px-4 py-3">Station Name (Code)</th>
+                  <th className="px-4 py-3">Boarding Station</th>
                   <th className="px-4 py-3 text-center">Day</th>
                   <th className="px-4 py-3">Arr / Dep</th>
                   <th className="px-4 py-3">1st Reservation Chart</th>
                   <th className="px-4 py-3">2nd (Vacancy) Chart</th>
-                  <th className="px-4 py-3">Charting Station (Remote Hub)</th>
-                  <th className="px-4 py-3 text-right sm:px-5">Action</th>
+                  <th className="px-4 py-3 sm:px-5">Charting Station (Hub)</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-line">
-                {chartData.stations.map((st) => (
-                  <tr
-                    key={`${st.stationCode}-${st.sequence}`}
-                    className="transition hover:bg-subcard/50"
-                  >
-                    <td className="px-4 py-3.5 font-mono text-xs font-bold text-ink-muted sm:px-5">
-                      {st.sequence}
-                    </td>
-                    <td className="px-4 py-3.5">
-                      <div className="flex flex-wrap items-center gap-1.5">
-                        <span className="font-extrabold text-ink">
-                          {st.stationName}
+                {chartData.stations.map((st, idx) => {
+                  const isOrigin = idx === 0;
+                  const isTerminus = idx === chartData.stations.length - 1;
+
+                  return (
+                    <tr
+                      key={`${st.stationCode}-${st.sequence}`}
+                      className={`transition hover:bg-subcard/50 ${
+                        isOrigin
+                          ? "bg-emerald-50/30 dark:bg-emerald-950/10"
+                          : ""
+                      }`}
+                    >
+                      <td className="px-4 py-3.5 font-mono text-xs font-bold text-ink-muted sm:px-5">
+                        {st.sequence}
+                      </td>
+                      <td className="px-4 py-3.5">
+                        <div className="flex items-start gap-2.5">
+                          <span
+                            aria-hidden="true"
+                            className={`mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full ${
+                              isOrigin
+                                ? "bg-emerald-500 ring-4 ring-emerald-500/15"
+                                : isTerminus
+                                  ? "bg-[#fc6203] ring-4 ring-[#fc6203]/15"
+                                  : st.isPrimaryChartHub
+                                    ? "bg-[#1956b4] ring-4 ring-[#1956b4]/15"
+                                    : "bg-slate-300 dark:bg-slate-600"
+                            }`}
+                          />
+                          <div>
+                            <div className="flex flex-wrap items-center gap-1.5">
+                              <span className="font-extrabold text-ink">
+                                {st.stationName}
+                              </span>
+                              <span className="rounded bg-blue-50 px-1.5 py-0.5 font-mono text-[11px] font-bold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
+                                {st.stationCode}
+                              </span>
+                              {isOrigin ? (
+                                <span className="rounded bg-emerald-500/15 px-1.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-emerald-700 dark:text-emerald-300">
+                                  1st Boarding · Origin
+                                </span>
+                              ) : isTerminus ? (
+                                <span className="rounded bg-orange-500/15 px-1.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-orange-700 dark:text-orange-300">
+                                  Destination
+                                </span>
+                              ) : null}
+                            </div>
+                            <div className="mt-0.5 font-mono text-[11px] text-ink-muted">
+                              {st.distanceKm} km from origin
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3.5 text-center">
+                        <span className="inline-flex rounded-md border border-line bg-subcard px-2 py-0.5 font-mono text-xs font-bold text-ink">
+                          Day {st.day}
                         </span>
-                        <span className="rounded bg-blue-50 px-1.5 py-0.5 font-mono text-[11px] font-bold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
-                          {st.stationCode}
+                      </td>
+                      <td className="px-4 py-3.5 font-mono text-xs font-semibold text-ink-soft">
+                        <div>
+                          Arr:{" "}
+                          <span className="font-bold text-ink">
+                            {isOrigin ? "Origin" : st.arrivalTime || "--"}
+                          </span>
+                        </div>
+                        <div className="mt-0.5">
+                          Dep:{" "}
+                          <span className="font-bold text-ink">
+                            {isTerminus ? "End" : st.departureTime || "--"}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3.5">
+                        <span className="inline-flex rounded-md bg-blue-50 px-2 py-0.5 font-mono text-xs font-extrabold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
+                          {st.chartOneFormatted12h}
                         </span>
-                      </div>
-                      <div className="mt-0.5 font-mono text-[11px] text-ink-muted">
-                        {st.distanceKm} km from origin
-                      </div>
-                    </td>
-                    <td className="px-4 py-3.5 text-center font-mono font-bold text-ink">
-                      Day {st.day}
-                    </td>
-                    <td className="px-4 py-3.5 font-mono text-xs font-semibold text-ink-soft">
-                      <div>Arr: {st.arrivalTime || "--"}</div>
-                      <div>Dep: {st.departureTime || "--"}</div>
-                    </td>
-                    <td className="px-4 py-3.5">
-                      <div className="font-mono font-extrabold text-[#1956b4] dark:text-blue-300">
-                        {st.chartOneFormatted12h}
-                      </div>
-                      <div className="text-[11px] text-ink-muted">
-                        {st.chartTimeLocal} IST · {st.chartOneDayLabel}
-                      </div>
-                    </td>
-                    <td className="px-4 py-3.5">
-                      <div className="font-mono font-extrabold text-emerald-700 dark:text-emerald-400">
-                        {st.chartTwoFormatted12h}
-                      </div>
-                      <div className="text-[11px] text-ink-muted">
-                        {st.chartTwoTimeLocal} IST · {st.chartTwoDayLabel}
-                      </div>
-                    </td>
-                    <td className="px-4 py-3.5">
-                      <div className="inline-flex items-center gap-1.5">
-                        <BuildingStationIcon className="h-3.5 w-3.5 text-[#fc6203]" />
-                        <span className="font-bold text-ink">
-                          {st.chartRemoteStationName} ({st.chartRemoteStation})
+                        <div className="mt-1 text-[11px] text-ink-muted">
+                          {st.chartTimeLocal} IST · {st.chartOneDayLabel}
+                        </div>
+                      </td>
+                      <td className="px-4 py-3.5">
+                        <span className="inline-flex rounded-md bg-emerald-50 px-2 py-0.5 font-mono text-xs font-extrabold text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
+                          {st.chartTwoFormatted12h}
                         </span>
-                      </div>
-                      <div className="mt-0.5 text-[11px] text-ink-muted">
-                        {st.isPrimaryChartHub
-                          ? "Primary Charting Hub"
-                          : `Remote Hub (${st.chartRemoteStation})`}
-                      </div>
-                    </td>
-                    <td className="px-4 py-3.5 text-right sm:px-5">
-                      <Link
-                        href="/rail/pnr-status"
-                        className="ta-btn-primary inline-flex items-center justify-center rounded-md px-3 py-1.5 text-[11px] font-bold"
-                      >
-                        Check PNR
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
+                        <div className="mt-1 text-[11px] text-ink-muted">
+                          {st.chartTwoTimeLocal} IST · {st.chartTwoDayLabel}
+                        </div>
+                      </td>
+                      <td className="px-4 py-3.5 sm:px-5">
+                        <div className="inline-flex items-center gap-1.5">
+                          <BuildingStationIcon className="h-3.5 w-3.5 shrink-0 text-[#fc6203]" />
+                          <span className="font-bold text-ink">
+                            {st.chartRemoteStationName} ({st.chartRemoteStation})
+                          </span>
+                        </div>
+                        <div className="mt-0.5">
+                          {st.isPrimaryChartHub ? (
+                            <span className="inline-flex rounded bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-bold text-emerald-700 dark:text-emerald-300">
+                              Primary Charting Hub
+                            </span>
+                          ) : (
+                            <span className="text-[11px] text-ink-muted">
+                              Remote Hub ({st.chartRemoteStation})
+                            </span>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
