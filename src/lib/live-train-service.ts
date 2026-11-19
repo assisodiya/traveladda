@@ -27,6 +27,7 @@ import {
   type TrainSearchItem,
   type TrainTrackingState,
 } from "./live-train-types";
+import { normalizeBilingualRailQuery } from "./rail-bilingual";
 
 const UPSTREAM_TRAINS_BASE_URL = "https://railradar.in/app/v1/trains";
 
@@ -905,14 +906,16 @@ export async function searchOwnedTrains(
   rawQuery: string
 ): Promise<OwnedTrainSearchApiResponse> {
   const startedAt = Date.now();
-  const cleanQuery = (rawQuery || "").trim();
+  const rawTrimmed = (rawQuery || "").trim();
+  const { primaryQuery: cleanQuery, tokens: bilingualTokens } =
+    normalizeBilingualRailQuery(rawTrimmed);
 
-  if (cleanQuery.length < 2) {
+  if (rawTrimmed.length < 2 || cleanQuery.length < 2) {
     const topTrains = POPULAR_LIVE_TRAINS.slice(0, 28);
     return {
       success: true,
       provider: "TravelAdda Owned Rail API v2",
-      query: cleanQuery,
+      query: rawTrimmed,
       count: topTrains.length,
       data: topTrains,
       meta: {
@@ -939,78 +942,86 @@ export async function searchOwnedTrains(
     if (res.ok) {
       const json = (await res.json()) as Record<string, unknown>;
       const rawItems = Array.isArray(json.data) ? json.data : [];
-      const items: TrainSearchItem[] = rawItems.slice(0, 10).map((raw) => {
-        const o =
-          raw && typeof raw === "object"
-            ? (raw as Record<string, unknown>)
-            : {};
-        const runDays = Array.isArray(o.runDays)
-          ? o.runDays.map((d) => String(d).toLowerCase().slice(0, 3))
-          : [];
-        const name = String(o.name ?? "Indian Railways Express");
-        const inferredType =
-          typeof o.type === "string" && o.type.trim()
-            ? o.type.trim()
-            : /vande bharat/i.test(name)
-              ? "Vande Bharat"
-              : /rajdhani/i.test(name)
-                ? "Rajdhani"
-                : /shatabdi/i.test(name)
-                  ? "Shatabdi"
-                  : /duronto/i.test(name)
-                    ? "Duronto"
-                    : /garib rath/i.test(name)
-                      ? "Garib Rath"
-                      : /double decker/i.test(name)
-                        ? "Double Decker"
-                        : "Express";
+      const items: TrainSearchItem[] = rawItems
+        .slice(0, 10)
+        .map((raw) => {
+          const o =
+            raw && typeof raw === "object"
+              ? (raw as Record<string, unknown>)
+              : {};
+          const runDays = Array.isArray(o.runDays)
+            ? o.runDays.map((d) => String(d).toLowerCase().slice(0, 3))
+            : [];
+          const name = String(o.name ?? "Indian Railways Express");
+          const inferredType =
+            typeof o.type === "string" && o.type.trim()
+              ? o.type.trim()
+              : /vande bharat/i.test(name)
+                ? "Vande Bharat"
+                : /rajdhani/i.test(name)
+                  ? "Rajdhani"
+                  : /shatabdi/i.test(name)
+                    ? "Shatabdi"
+                    : /duronto/i.test(name)
+                      ? "Duronto"
+                      : /garib rath/i.test(name)
+                        ? "Garib Rath"
+                        : /double decker/i.test(name)
+                          ? "Double Decker"
+                          : "Express";
 
+          return {
+            trainNumber: String(o.number ?? o.trainNumber ?? ""),
+            trainName: name,
+            sourceCode: String(o.source ?? "---").toUpperCase(),
+            sourceName: String(o.sourceName ?? o.source ?? "Origin"),
+            destinationCode: String(
+              o.dest ?? o.destinationCode ?? "---"
+            ).toUpperCase(),
+            destinationName: String(
+              o.destName ?? o.destination ?? "Destination"
+            ),
+            type: inferredType,
+            runDays,
+            isDaily:
+              runDays.length >= 7 &&
+              ALL_WEEK_DAYS.every((d) => runDays.includes(d.key)),
+          };
+        })
+        .filter((item) => item.trainNumber.length >= 3);
+
+      if (items.length > 0) {
         return {
-          trainNumber: String(o.number ?? o.trainNumber ?? ""),
-          trainName: name,
-          sourceCode: String(o.source ?? "---").toUpperCase(),
-          sourceName: String(o.sourceName ?? o.source ?? "Origin"),
-          destinationCode: String(o.dest ?? o.destinationCode ?? "---").toUpperCase(),
-          destinationName: String(
-            o.destName ?? o.destination ?? "Destination"
-          ),
-          type: inferredType,
-          runDays,
-          isDaily:
-            runDays.length >= 7 &&
-            ALL_WEEK_DAYS.every((d) => runDays.includes(d.key)),
+          success: true,
+          provider: "TravelAdda Owned Rail API v2",
+          query: rawTrimmed,
+          count: items.length,
+          data: items,
+          meta: {
+            fetchedAt: new Date().toISOString(),
+            responseTimeMs: Date.now() - startedAt,
+          },
         };
-      });
-
-      return {
-        success: true,
-        provider: "TravelAdda Owned Rail API v2",
-        query: cleanQuery,
-        count: items.length,
-        data: items.filter((item) => item.trainNumber.length >= 3),
-        meta: {
-          fetchedAt: new Date().toISOString(),
-          responseTimeMs: Date.now() - startedAt,
-        },
-      };
+      }
     }
   } catch {
-    // Fall back to local popular train filter
+    // Fall back to local train catalog filter
   }
 
-  const lower = cleanQuery.toLowerCase();
-  const fallback = ALL_CATALOG_TRAINS.filter(
-    (t) =>
-      t.trainNumber.includes(lower) ||
-      t.trainName.toLowerCase().includes(lower) ||
-      t.sourceCode.toLowerCase().includes(lower) ||
-      t.destinationCode.toLowerCase().includes(lower)
-  ).slice(0, 20);
+  const searchTerms =
+    bilingualTokens.length > 0
+      ? bilingualTokens
+      : [cleanQuery.toLowerCase()];
+
+  const fallback = ALL_CATALOG_TRAINS.filter((t) => {
+    const hay = `${t.trainNumber} ${t.trainName} ${t.sourceCode} ${t.sourceName} ${t.destinationCode} ${t.destinationName}`.toLowerCase();
+    return searchTerms.some((tok) => tok.length >= 2 && hay.includes(tok));
+  }).slice(0, 20);
 
   return {
     success: true,
     provider: "TravelAdda Owned Rail API v2",
-    query: cleanQuery,
+    query: rawTrimmed,
     count: fallback.length,
     data: fallback,
     meta: {

@@ -41,6 +41,11 @@ export const metadata: Metadata = {
     "when is train chart prepared",
     "irctc 1st chart and 2nd chart time",
     "railway chart preparation time calculator",
+    "train ka chart kab banta hai",
+    "train ka chart kitne baje banta hai",
+    "ट्रेन का चार्ट कब बनता है",
+    "ट्रेन का पहला और दूसरा चार्ट कब बनता है",
+    "बोर्डिंग स्टेशन चार्ट टाइम",
   ],
   alternates: {
     canonical: "/rail/chart-time",
@@ -137,6 +142,18 @@ const CHART_TIME_FAQS = [
       "Can I book confirmed Current Availability tickets between the 1st and 2nd chart?",
     answer:
       "Yes! Immediately after the 1st reservation chart is prepared for a charting station, any leftover vacant berths open under IRCTC Current Booking (CURR_AVBL) until the 2nd (vacancy) chart is locked 15–30 minutes before departure.",
+  },
+  {
+    question:
+      "ट्रेन का पहला और दूसरा रिज़र्वेशन चार्ट कब बनता है? (Train ka chart kab banta hai?)",
+    answer:
+      "भारतीय रेलवे में पहला रिज़र्वेशन चार्ट (1st Chart) ट्रेन छूटने से लगभग 4 से 8 घंटे पहले बनता है (सुबह 12 बजे से पहले छूटने वाली ट्रेनों का चार्ट पिछली रात 8 से 9 बजे के बीच बन जाता है)। दूसरा वैकेंसी चार्ट (2nd Chart) ट्रेन के प्रस्थान से 15–30 मिनट पहले लॉक होता है। आप ऊपर सर्च बॉक्स में हिंदी या English में ट्रेन नंबर/नाम और अपना बोर्डिंग स्टेशन चुनकर सटीक समय देख सकते हैं।",
+  },
+  {
+    question:
+      "मेरे बोर्डिंग स्टेशन का चार्ट इतनी जल्दी क्यों बन जाता है? (Remote Charting Hub क्या है?)",
+    answer:
+      "हर छोटे स्टेशन पर अलग चार्ट नहीं बनता। भारतीय रेलवे कई बीच के स्टेशनों का कोटा पिछले बड़े जंक्शन (Remote Charting Station / चार्टिंग हब) के साथ जोड़ देता है—जैसे 12952 तेजस राजधानी में बोरीवली (BVI) का चार्ट सूरत (ST) पर ही बन जाता है। इसलिए वेटिंग (WL/RAC) टिकट की अंतिम स्थिति उसी चार्टिंग हब के समय तय हो जाती है।",
   },
 ];
 
@@ -278,17 +295,24 @@ export default async function TrainChartTimePage() {
           </div>
 
           <div className="mt-4 max-w-3xl">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/30 bg-emerald-500/15 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-emerald-300">
-              <ClockIcon className="h-3.5 w-3.5" />
-              <span>1st Chart · 2nd Vacancy Chart · Remote Charting Hub</span>
-            </span>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/30 bg-emerald-500/15 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-emerald-300">
+                <ClockIcon className="h-3.5 w-3.5" />
+                <span>1st Chart · 2nd Vacancy Chart · Remote Charting Hub</span>
+              </span>
+              <span className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-[11px] font-bold text-blue-100">
+                English + हिंदी
+              </span>
+            </div>
             <h1 className="mt-2.5 text-2xl font-extrabold tracking-tight text-white sm:text-4xl">
               Train Chart Preparation Time &amp; Charting Station Finder
             </h1>
             <p className="mt-1.5 text-xs text-slate-300 sm:text-sm">
               Check station-by-station 1st reservation chart timings, 2nd
-              vacancy chart timings, and discover which Remote Charting Station
-              prepares the chart for your boarding halt.
+              vacancy chart timings, and Remote Charting Hubs —{" "}
+              <span className="font-semibold text-blue-100">
+                ट्रेन का पहला और दूसरा चार्ट कब बनता है, बोर्डिंग स्टेशन चुनकर हिंदी व English में देखें।
+              </span>
             </p>
           </div>
         </div>

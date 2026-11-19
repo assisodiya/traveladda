@@ -88,6 +88,9 @@ export async function generateMetadata({
       `${data.slug.replace(/-/g, " ")}`,
       `when is chart prepared for ${data.trainNumber}`,
       `${data.originStation} to ${data.destinationStation} ${data.trainNumber} chart time`,
+      `${data.trainNumber} ka chart kab banta hai`,
+      `${data.trainNumber} का चार्ट कब बनता है`,
+      `${data.trainNumber} का पहला और दूसरा चार्ट टाइम`,
     ],
     robots: isChartIndexable ? undefined : { index: false, follow: true },
     alternates: {
@@ -186,6 +189,10 @@ export default async function ChartTimeByTrainSlugPage({
     {
       question: `How can I check my PNR confirmation and live train position for ${chartData.trainNumber}?`,
       answer: `Once your boarding station's chart is prepared, enter your 10-digit PNR on TravelAdda's PNR Status page to view your final coach and berth number, or open the ${chartData.trainNumber} Live Running Status page to track real-time delays, platform numbers, and coach position from the engine.`,
+    },
+    {
+      question: `ट्रेन ${chartData.trainNumber} (${chartData.trainName}) का पहला और दूसरा रिज़र्वेशन चार्ट कितने बजे बनता है?`,
+      answer: `ट्रेन ${chartData.trainNumber} (${chartData.trainName}) के प्रारंभिक स्टेशन ${chartData.originStationName} (${chartData.originStation}) पर पहला रिज़र्वेशन चार्ट लगभग ${chartData.originFirstChart12h} बजे और दूसरा (वैकेंसी) चार्ट लगभग ${chartData.originSecondChart12h} बजे तैयार होता है। बीच के बोर्डिंग स्टेशनों का सटीक पहला और दूसरा चार्ट समय देखने के लिए ऊपर बोर्डिंग स्टेशन चुनें (English / हिंदी)।`,
     },
   ];
 
@@ -324,6 +331,9 @@ export default async function ChartTimeByTrainSlugPage({
               <span className="rounded border border-white/15 bg-white/10 px-2.5 py-0.5 text-xs font-semibold text-slate-200">
                 {chartData.originStation} → {chartData.destinationStation}
               </span>
+              <span className="rounded border border-white/20 bg-white/10 px-2.5 py-0.5 text-xs font-bold text-blue-100">
+                English + हिंदी
+              </span>
             </div>
 
             <h1 className="mt-2.5 text-2xl font-extrabold tracking-tight text-white sm:text-4xl">
@@ -332,7 +342,10 @@ export default async function ChartTimeByTrainSlugPage({
             </h1>
 
             <p className="mt-2 max-w-4xl text-xs leading-relaxed text-slate-200 sm:text-sm">
-              {chartData.summary}
+              {chartData.summary}{" "}
+              <span className="font-semibold text-blue-100">
+                (नीचे अपना बोर्डिंग स्टेशन चुनकर हिंदी और English में पहला व दूसरा चार्ट समय देखें।)
+              </span>
             </p>
           </div>
         </div>
@@ -558,9 +571,33 @@ export default async function ChartTimeByTrainSlugPage({
               </ul>
             </div>
 
-            <div className="rounded-xl border border-line bg-subcard/70 p-4 text-xs leading-relaxed text-ink-soft sm:text-sm">
+            <div className="space-y-3 rounded-xl border border-line bg-subcard/70 p-4 text-xs leading-relaxed text-ink-soft sm:text-sm">
               <p>{chartData.summary}</p>
-              <p className="mt-2.5">
+              <div className="rounded-lg border border-blue-200/70 bg-blue-50/50 p-3 text-xs dark:border-blue-500/20 dark:bg-blue-950/20">
+                <p className="font-extrabold text-[#1956b4] dark:text-blue-300">
+                  हिंदी में जानकारी (Chart Time Summary in Hindi):
+                </p>
+                <p className="mt-1 text-ink-soft">
+                  ट्रेन{" "}
+                  <strong className="text-ink">
+                    {chartData.trainNumber} {chartData.trainName}
+                  </strong>{" "}
+                  के प्रारंभिक स्टेशन{" "}
+                  <strong className="text-ink">
+                    {chartData.originStationName} ({chartData.originStation})
+                  </strong>{" "}
+                  का पहला चार्ट लगभग{" "}
+                  <strong className="text-ink">
+                    {chartData.originFirstChart12h}
+                  </strong>{" "}
+                  और दूसरा वैकेंसी चार्ट{" "}
+                  <strong className="text-ink">
+                    {chartData.originSecondChart12h}
+                  </strong>{" "}
+                  पर तैयार होता है। बीच के स्टेशनों का समय ऊपर बोर्डिंग स्टेशन चुनकर देखें।
+                </p>
+              </div>
+              <p>
                 Once your boarding station&apos;s chart is prepared, verify your
                 final coach &amp; berth on our{" "}
                 <Link

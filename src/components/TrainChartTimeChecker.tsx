@@ -19,6 +19,14 @@ import type {
   TrainSearchItem,
 } from "@/lib/live-train-types";
 import {
+  type ChartUiLang,
+  formatChartDayLabelHi,
+  getStationHindiName,
+  matchesBilingualStation,
+  normalizeBilingualRailQuery,
+  normalizeRailHindiDigits,
+} from "@/lib/rail-bilingual";
+import {
   AlertCircleIcon,
   ArrowRightIcon,
   BuildingStationIcon,
@@ -37,6 +45,7 @@ import {
 import { WhatsAppIcon } from "./MetroCommuterToolkit";
 
 const RECENT_CHART_TRAINS_KEY = "traveladda_recent_chart_trains_v1";
+const CHART_LANG_STORAGE_KEY = "traveladda_chart_lang_v1";
 
 interface RecentChartSearch {
   trainNumber: string;
@@ -49,29 +58,71 @@ export interface TrainChartTimeCheckerProps {
   initialData?: EnrichedChartTimeData | null;
 }
 
+function formatBilingualStationName(
+  stationName: string,
+  stationCode: string,
+  lang: ChartUiLang
+): string {
+  const hi = getStationHindiName(stationCode);
+  if (!hi) return stationName;
+  if (lang === "en") return stationName;
+  if (lang === "hi") return `${hi} (${stationName})`;
+  return `${stationName} · ${hi}`;
+}
+
 function buildChartWhatsAppShareUrl(
   chartData: EnrichedChartTimeData,
-  station: EnrichedChartStation
+  station: EnrichedChartStation,
+  lang: ChartUiLang
 ): string {
   const pageUrl = `https://traveladda.in${buildChartTimePath(
     chartData.trainNumber,
     chartData.trainName,
     chartData.slug
   )}`;
+  const hiStation = getStationHindiName(station.stationCode);
+  const hiRemote = getStationHindiName(station.chartRemoteStation);
+  const dayOneHi = formatChartDayLabelHi(station.chartOneDayLabel);
+  const dayTwoHi = formatChartDayLabelHi(station.chartTwoDayLabel);
 
-  const message = [
-    `🕒 *Train Chart Preparation Time: #${chartData.trainNumber} ${chartData.trainName}*`,
-    `📍 *Boarding Station:* ${station.stationName} (${station.stationCode}) · Dep ${station.departureFormatted}`,
-    "",
-    `• *1st Reservation Chart:* ${station.chartOneFormatted12h} (${station.chartOneDayLabel})`,
-    `• *2nd Vacancy Chart:* ${station.chartTwoFormatted12h} (${station.chartTwoDayLabel})`,
-    `• *Charting Hub:* ${station.chartRemoteStationName} (${station.chartRemoteStation})`,
-    "",
-    `Check station-wise chart times & PNR status (Ad-Free):`,
-    pageUrl,
-  ].join("\n");
+  const lines =
+    lang === "hi"
+      ? [
+          `🕒 *ट्रेन चार्ट बनने का समय: #${chartData.trainNumber} ${chartData.trainName}*`,
+          `📍 *बोर्डिंग स्टेशन:* ${hiStation ? `${hiStation} / ${station.stationName}` : station.stationName} (${station.stationCode}) · प्रस्थान ${station.departureFormatted}`,
+          "",
+          `• *पहला रिज़र्वेशन चार्ट (1st Chart):* ${station.chartOneFormatted12h} (${dayOneHi})`,
+          `• *दूसरा वैकेंसी चार्ट (2nd Chart):* ${station.chartTwoFormatted12h} (${dayTwoHi})`,
+          `• *चार्टिंग स्टेशन (Hub):* ${hiRemote ? `${hiRemote} (${station.chartRemoteStation})` : `${station.chartRemoteStationName} (${station.chartRemoteStation})`}`,
+          "",
+          `हर स्टेशन का 1st व 2nd चार्ट टाइम और PNR स्टेटस देखें (Ad-Free):`,
+          pageUrl,
+        ]
+      : lang === "both"
+        ? [
+            `🕒 *Train Chart Time / चार्ट समय: #${chartData.trainNumber} ${chartData.trainName}*`,
+            `📍 *Boarding / बोर्डिंग:* ${station.stationName}${hiStation ? ` (${hiStation})` : ""} [${station.stationCode}] · Dep ${station.departureFormatted}`,
+            "",
+            `• *1st Chart (पहला चार्ट):* ${station.chartOneFormatted12h} (${station.chartOneDayLabel})`,
+            `• *2nd Vacancy Chart (दूसरा चार्ट):* ${station.chartTwoFormatted12h} (${station.chartTwoDayLabel})`,
+            `• *Charting Hub (चार्टिंग स्टेशन):* ${station.chartRemoteStationName} (${station.chartRemoteStation})`,
+            "",
+            `Check station-wise chart time & PNR status (English / हिंदी):`,
+            pageUrl,
+          ]
+        : [
+            `🕒 *Train Chart Preparation Time: #${chartData.trainNumber} ${chartData.trainName}*`,
+            `📍 *Boarding Station:* ${station.stationName} (${station.stationCode}) · Dep ${station.departureFormatted}`,
+            "",
+            `• *1st Reservation Chart:* ${station.chartOneFormatted12h} (${station.chartOneDayLabel})`,
+            `• *2nd Vacancy Chart:* ${station.chartTwoFormatted12h} (${station.chartTwoDayLabel})`,
+            `• *Charting Hub:* ${station.chartRemoteStationName} (${station.chartRemoteStation})`,
+            "",
+            `Check station-wise chart times & PNR status (Ad-Free):`,
+            pageUrl,
+          ];
 
-  return `https://wa.me/?text=${encodeURIComponent(message)}`;
+  return `https://wa.me/?text=${encodeURIComponent(lines.join("\n"))}`;
 }
 
 export function TrainChartTimeChecker({
@@ -86,6 +137,7 @@ export function TrainChartTimeChecker({
     searchParams.get("train") ||
     "12952";
 
+  const [lang, setLang] = useState<ChartUiLang>("both");
   const [query, setQuery] = useState(initialUrlTrain);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [boardingDropdownOpen, setBoardingDropdownOpen] = useState(false);
@@ -103,7 +155,7 @@ export function TrainChartTimeChecker({
     initialData
   );
 
-  // Default to the 1st boarding station (Origin — stations[0])
+  // Default strictly to the 1st boarding station (Origin — stations[0])
   const [selectedStationCode, setSelectedStationCode] = useState<string>(
     initialData?.stations[0]?.stationCode || initialData?.originStation || ""
   );
@@ -115,9 +167,23 @@ export function TrainChartTimeChecker({
   const boardingBoxRef = useRef<HTMLDivElement>(null);
   const spotlightRef = useRef<HTMLDivElement>(null);
 
-  // Hydrate recent searches safely on client
+  // Bilingual text helper: returns English, Hindi, or clean combined string
+  const t = useCallback(
+    (en: string, hi: string, bothSep = " · ") => {
+      if (lang === "en") return en;
+      if (lang === "hi") return hi;
+      return `${en}${bothSep}${hi}`;
+    },
+    [lang]
+  );
+
+  // Hydrate recent searches & saved language preference safely on client
   useEffect(() => {
     try {
+      const savedLang = window.localStorage.getItem(CHART_LANG_STORAGE_KEY);
+      if (savedLang === "both" || savedLang === "en" || savedLang === "hi") {
+        setLang(savedLang);
+      }
       const saved = window.localStorage.getItem(RECENT_CHART_TRAINS_KEY);
       if (saved) {
         const parsed = JSON.parse(saved) as RecentChartSearch[];
@@ -129,6 +195,15 @@ export function TrainChartTimeChecker({
       // Ignore storage errors
     }
   }, []);
+
+  const handleSetLang = (nextLang: ChartUiLang) => {
+    setLang(nextLang);
+    try {
+      window.localStorage.setItem(CHART_LANG_STORAGE_KEY, nextLang);
+    } catch {
+      // Ignore storage errors
+    }
+  };
 
   // Sync SSR initialData when navigating across train chart pages & select 1st boarding station by default
   useEffect(() => {
@@ -177,15 +252,18 @@ export function TrainChartTimeChecker({
     return () => document.removeEventListener("mousedown", handleOutside);
   }, []);
 
-  // Live train search autocomplete
+  // Live train search autocomplete (supports English, Hindi Devanagari, Hindi digits & Hinglish)
   useEffect(() => {
     const trimmed = query.trim();
     if (!dropdownOpen || trimmed.length < 2) return;
+    const { primaryQuery } = normalizeBilingualRailQuery(trimmed);
+    if (primaryQuery.length < 2) return;
+
     const controller = new AbortController();
     const timer = setTimeout(async () => {
       try {
         const res = await fetch(
-          `/api/trains/search?q=${encodeURIComponent(trimmed)}`,
+          `/api/trains/search?q=${encodeURIComponent(primaryQuery)}`,
           { signal: controller.signal }
         );
         if (res.ok) {
@@ -208,14 +286,14 @@ export function TrainChartTimeChecker({
     const trimmed = query.trim();
     if (trimmed.length < 2) return POPULAR_LIVE_TRAINS.slice(0, 6);
     if (remoteTrains && remoteTrains.length > 0) return remoteTrains;
-    const lower = trimmed.toLowerCase();
-    return POPULAR_LIVE_TRAINS.filter(
-      (t) =>
-        t.trainNumber.includes(lower) ||
-        t.trainName.toLowerCase().includes(lower) ||
-        t.sourceCode.toLowerCase().includes(lower) ||
-        t.destinationCode.toLowerCase().includes(lower)
-    ).slice(0, 6);
+    const { tokens } = normalizeBilingualRailQuery(trimmed);
+    const searchTokens = tokens.length > 0 ? tokens : [trimmed.toLowerCase()];
+    return POPULAR_LIVE_TRAINS.filter((tr) => {
+      const srcHi = getStationHindiName(tr.sourceCode) || "";
+      const dstHi = getStationHindiName(tr.destinationCode) || "";
+      const hay = `${tr.trainNumber} ${tr.trainName} ${tr.sourceCode} ${tr.sourceName} ${srcHi} ${tr.destinationCode} ${tr.destinationName} ${dstHi}`.toLowerCase();
+      return searchTokens.some((tok) => tok.length >= 2 && hay.includes(tok));
+    }).slice(0, 6);
   }, [query, remoteTrains]);
 
   const fetchChartSchedule = useCallback(
@@ -224,10 +302,16 @@ export function TrainChartTimeChecker({
       updateUrl = true,
       knownTrainName?: string
     ) => {
-      const digits = trainNumInput.replace(/\D/g, "").slice(0, 5);
-      if (digits.length < 3) {
+      const normalizedDigits = normalizeRailHindiDigits(trainNumInput)
+        .replace(/\D/g, "")
+        .slice(0, 5);
+      if (normalizedDigits.length < 3) {
         setError(
-          "Please enter a valid 4 or 5-digit Indian Railways train number (e.g., 12952)."
+          lang === "hi"
+            ? "कृपया सही 4 या 5 अंकों का ट्रेन नंबर दर्ज करें (जैसे 12952)।"
+            : lang === "both"
+              ? "Please enter a valid 4 or 5-digit train number (e.g., 12952) · कृपया सही ट्रेन नंबर दर्ज करें।"
+              : "Please enter a valid 4 or 5-digit Indian Railways train number (e.g., 12952)."
         );
         return;
       }
@@ -238,8 +322,8 @@ export function TrainChartTimeChecker({
       setBoardingDropdownOpen(false);
 
       if (updateUrl) {
-        const targetPath = buildChartTimePath(digits, knownTrainName);
-        if (initialTrainNumber === digits) {
+        const targetPath = buildChartTimePath(normalizedDigits, knownTrainName);
+        if (initialTrainNumber === normalizedDigits) {
           router.replace(targetPath, { scroll: false });
         } else {
           router.push(targetPath, { scroll: false });
@@ -247,13 +331,13 @@ export function TrainChartTimeChecker({
       }
 
       try {
-        const res = await fetch(`/api/trains/${digits}/chart-time`);
+        const res = await fetch(`/api/trains/${normalizedDigits}/chart-time`);
         const json = (await res.json()) as OwnedChartTimeApiResponse;
 
         if (!res.ok || !json.success || !json.data) {
           setError(
             json.error?.message ||
-              `Could not find published chart preparation times for train ${digits}.`
+              `Could not find published chart preparation times for train ${normalizedDigits}.`
           );
           setLoading(false);
           return;
@@ -276,13 +360,15 @@ export function TrainChartTimeChecker({
         });
       } catch {
         setError(
-          "Network error while fetching train chart preparation times. Please try again."
+          lang === "hi"
+            ? "चार्ट समय लोड करने में नेटवर्क त्रुटि हुई। कृपया पुनः प्रयास करें।"
+            : "Network error while fetching train chart preparation times. Please try again."
         );
       } finally {
         setLoading(false);
       }
     },
-    [initialTrainNumber, router, saveRecentTrain]
+    [initialTrainNumber, lang, router, saveRecentTrain]
   );
 
   // Initial & URL parameter load when landing on /rail/chart-time
@@ -299,9 +385,11 @@ export function TrainChartTimeChecker({
     return () => window.clearTimeout(timer);
   }, [initialData, initialTrainNumber, searchParams, fetchChartSchedule]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const digits = query.replace(/\D/g, "").slice(0, 5);
+    const digits = normalizeRailHindiDigits(query)
+      .replace(/\D/g, "")
+      .slice(0, 5);
     if (digits.length >= 3) {
       const matched = suggestions.find((s) => s.trainNumber === digits);
       void fetchChartSchedule(digits, true, matched?.trainName);
@@ -315,36 +403,56 @@ export function TrainChartTimeChecker({
       );
       return;
     }
-    setError("Please enter a valid 4 or 5-digit train number (e.g. 12952).");
+
+    // If user typed a Hindi/English train name and pressed Enter immediately before debounce completed
+    const { primaryQuery } = normalizeBilingualRailQuery(query);
+    if (primaryQuery.length >= 2) {
+      try {
+        const res = await fetch(
+          `/api/trains/search?q=${encodeURIComponent(primaryQuery)}`
+        );
+        if (res.ok) {
+          const json = (await res.json()) as OwnedTrainSearchApiResponse;
+          if (Array.isArray(json.data) && json.data.length > 0) {
+            void fetchChartSchedule(
+              json.data[0].trainNumber,
+              true,
+              json.data[0].trainName
+            );
+            return;
+          }
+        }
+      } catch {
+        // Fall through to error message
+      }
+    }
+
+    setError(
+      t(
+        "Please enter a valid 4 or 5-digit train number or name (e.g. 12952 / राजधानी)",
+        "कृपया सही ट्रेन नंबर या नाम लिखें (जैसे 12952 / राजधानी)"
+      )
+    );
   };
 
-  // Eligible boarding stations (excludes only if single station; marks final stop clearly while keeping #1 selected by default)
   const boardingStations = useMemo(() => {
     if (!chartData) return [];
-    if (chartData.stations.length <= 1) return chartData.stations;
-    // Passengers board from Station #1 up to the penultimate halt (though we still allow viewing all stations if searched)
     return chartData.stations;
   }, [chartData]);
 
+  // Supports filtering boarding stations in BOTH English & Hindi (e.g., "Surat", "ST", "सूरत")
   const filteredBoardingDropdownStations = useMemo(() => {
-    const q = boardingFilter.trim().toLowerCase();
-    if (!q) return boardingStations;
-    return boardingStations.filter(
-      (st) =>
-        st.stationCode.toLowerCase().includes(q) ||
-        st.stationName.toLowerCase().includes(q)
+    if (!boardingFilter.trim()) return boardingStations;
+    return boardingStations.filter((st) =>
+      matchesBilingualStation(st, boardingFilter)
     );
   }, [boardingStations, boardingFilter]);
 
   const filteredTableStations = useMemo(() => {
     if (!chartData) return [];
-    const q = tableFilter.trim().toLowerCase();
-    if (!q) return chartData.stations;
-    return chartData.stations.filter(
-      (st) =>
-        st.stationCode.toLowerCase().includes(q) ||
-        st.stationName.toLowerCase().includes(q) ||
-        st.chartRemoteStation.toLowerCase().includes(q)
+    if (!tableFilter.trim()) return chartData.stations;
+    return chartData.stations.filter((st) =>
+      matchesBilingualStation(st, tableFilter)
     );
   }, [chartData, tableFilter]);
 
@@ -356,6 +464,13 @@ export function TrainChartTimeChecker({
       chartData.stations[0]
     );
   }, [chartData, selectedStationCode]);
+
+  const selectedStationHindi = selectedStation
+    ? getStationHindiName(selectedStation.stationCode)
+    : null;
+  const selectedRemoteHindi = selectedStation
+    ? getStationHindiName(selectedStation.chartRemoteStation)
+    : null;
 
   const handleChooseBoardingStation = (
     code: string,
@@ -374,17 +489,30 @@ export function TrainChartTimeChecker({
 
   const handleCopySummary = async () => {
     if (!chartData || !selectedStation) return;
-    const text = [
-      `${chartData.trainName} (${chartData.trainNumber}) — Boarding at ${selectedStation.stationName} (${selectedStation.stationCode})`,
-      `1st Chart: ${selectedStation.chartOneFormatted12h} (${selectedStation.chartOneDayLabel})`,
-      `2nd Vacancy Chart: ${selectedStation.chartTwoFormatted12h} (${selectedStation.chartTwoDayLabel})`,
-      `Charting Station: ${selectedStation.chartRemoteStationName} (${selectedStation.chartRemoteStation})`,
-      `Check at https://traveladda.in${buildChartTimePath(
-        chartData.trainNumber,
-        chartData.trainName,
-        chartData.slug
-      )}`,
-    ].join("\n");
+    const text =
+      lang === "hi"
+        ? [
+            `${chartData.trainName} (${chartData.trainNumber}) — बोर्डिंग: ${selectedStationHindi ? `${selectedStationHindi} (${selectedStation.stationName})` : selectedStation.stationName} [${selectedStation.stationCode}]`,
+            `पहला चार्ट (1st Chart): ${selectedStation.chartOneFormatted12h} (${formatChartDayLabelHi(selectedStation.chartOneDayLabel)})`,
+            `दूसरा वैकेंसी चार्ट (2nd Chart): ${selectedStation.chartTwoFormatted12h} (${formatChartDayLabelHi(selectedStation.chartTwoDayLabel)})`,
+            `चार्टिंग स्टेशन (Hub): ${selectedStation.chartRemoteStationName} (${selectedStation.chartRemoteStation})`,
+            `देखें: https://traveladda.in${buildChartTimePath(
+              chartData.trainNumber,
+              chartData.trainName,
+              chartData.slug
+            )}`,
+          ].join("\n")
+        : [
+            `${chartData.trainName} (${chartData.trainNumber}) — Boarding at ${selectedStation.stationName} (${selectedStation.stationCode})`,
+            `1st Chart (पहला चार्ट): ${selectedStation.chartOneFormatted12h} (${selectedStation.chartOneDayLabel})`,
+            `2nd Vacancy Chart (दूसरा चार्ट): ${selectedStation.chartTwoFormatted12h} (${selectedStation.chartTwoDayLabel})`,
+            `Charting Station: ${selectedStation.chartRemoteStationName} (${selectedStation.chartRemoteStation})`,
+            `Check at https://traveladda.in${buildChartTimePath(
+              chartData.trainNumber,
+              chartData.trainName,
+              chartData.slug
+            )}`,
+          ].join("\n");
     try {
       await navigator.clipboard.writeText(text);
       setCopiedSummary(true);
@@ -394,11 +522,51 @@ export function TrainChartTimeChecker({
     }
   };
 
+  // Segmented Language Switcher UI (reused cleanly on mobile & desktop)
+  const renderLanguageSwitcher = () => (
+    <div
+      role="group"
+      aria-label="Select chart language (English or Hindi)"
+      className="inline-flex items-center rounded-xl border border-line bg-subcard p-0.5 text-[11px] font-extrabold"
+    >
+      {(
+        [
+          { id: "both", label: "EN + हिंदी" },
+          { id: "en", label: "English" },
+          { id: "hi", label: "हिंदी" },
+        ] as const
+      ).map((opt) => {
+        const active = lang === opt.id;
+        return (
+          <button
+            key={opt.id}
+            type="button"
+            onClick={() => handleSetLang(opt.id)}
+            className={`cursor-pointer rounded-lg px-2.5 py-1 transition ${
+              active
+                ? "bg-[#1956b4] text-white shadow-2xs"
+                : "text-ink-soft hover:text-ink"
+            }`}
+          >
+            {opt.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+
   return (
     <div className="space-y-5 sm:space-y-6">
-      {/* MOBILE COMPACT BAR (When train is already loaded, keeps screen clean & shows Edit button) */}
+      {/* MOBILE COMPACT BAR (When train is already loaded, keeps screen clean & shows Language + Change Train) */}
       {chartData && !mobileSearchExpanded && (
-        <div className="rounded-2xl border border-line bg-card p-3.5 shadow-md md:hidden">
+        <div className="space-y-2.5 rounded-2xl border border-line bg-card p-3.5 shadow-md md:hidden">
+          <div className="flex items-center justify-between gap-2 border-b border-line pb-2">
+            <span className="text-[10px] font-extrabold uppercase tracking-wider text-ink-muted">
+              Language / भाषा
+            </span>
+            {renderLanguageSwitcher()}
+          </div>
+
           <div className="flex items-center justify-between gap-2.5">
             <button
               type="button"
@@ -407,14 +575,20 @@ export function TrainChartTimeChecker({
             >
               <div className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-wider text-[#1956b4] dark:text-blue-300">
                 <ClockIcon className="h-3.5 w-3.5 shrink-0 text-[#fc6203]" />
-                <span>Train #{chartData.trainNumber} Chart Timings</span>
+                <span>
+                  {t(
+                    `Train #${chartData.trainNumber} Chart Time`,
+                    `ट्रेन #${chartData.trainNumber} चार्ट समय`
+                  )}
+                </span>
               </div>
               <p className="mt-0.5 truncate text-sm font-extrabold text-ink">
                 {chartData.trainName}
               </p>
               <p className="mt-0.5 text-[11px] font-semibold text-ink-muted">
                 {chartData.originStation} → {chartData.destinationStation} ·{" "}
-                {chartData.totalStations} Stops
+                {chartData.totalStations}{" "}
+                {lang === "hi" ? "स्टेशन" : "Stops"}
               </p>
             </button>
 
@@ -423,48 +597,64 @@ export function TrainChartTimeChecker({
               onClick={() => setMobileSearchExpanded(true)}
               className="inline-flex h-9 shrink-0 cursor-pointer items-center gap-1 rounded-xl border border-[#1956b4]/30 bg-blue-50/90 px-3 text-xs font-extrabold text-[#1956b4] transition hover:bg-[#1956b4] hover:text-white dark:border-blue-400/30 dark:bg-blue-500/15 dark:text-blue-300"
             >
-              <span>Change Train</span>
+              <span>{lang === "hi" ? "ट्रेन बदलें" : "Change Train"}</span>
               <ChevronDownIcon className="h-3.5 w-3.5" />
             </button>
           </div>
         </div>
       )}
 
-      {/* UNIFIED TRAIN + BOARDING STATION SEARCH CARD */}
+      {/* UNIFIED BILINGUAL TRAIN + BOARDING STATION SEARCH CARD */}
       <div
         className={`rounded-2xl border border-line bg-card p-4 shadow-lg sm:p-5 ${
           chartData && !mobileSearchExpanded ? "hidden md:block" : "block"
         }`}
       >
-        {chartData && mobileSearchExpanded && (
-          <div className="mb-3 flex items-center justify-between border-b border-line pb-2.5 md:hidden">
-            <span className="text-xs font-extrabold uppercase tracking-wider text-ink-muted">
-              Search Train &amp; Boarding Station
+        {/* Top Bar: Bilingual Search Hint + Language Switcher */}
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2 border-b border-line pb-2.5">
+          <div className="flex items-center gap-2">
+            <span className="inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+            <span className="text-xs font-bold text-ink-soft">
+              {lang === "hi"
+                ? "हिंदी या English में ट्रेन नंबर, नाम या स्टेशन खोजें (जैसे 12952, राजधानी, सूरत)"
+                : lang === "en"
+                  ? "Search train or boarding station in English or Hindi (e.g. 12952, Rajdhani, Surat)"
+                  : "Search in English or हिंदी — ट्रेन नंबर, नाम या बोर्डिंग स्टेशन खोजें"}
             </span>
-            <button
-              type="button"
-              onClick={() => {
-                setDropdownOpen(false);
-                setBoardingDropdownOpen(false);
-                setMobileSearchExpanded(false);
-              }}
-              className="inline-flex items-center gap-1 rounded-lg border border-line bg-subcard px-2.5 py-1 text-[11px] font-bold text-ink-soft hover:text-ink"
-            >
-              <CloseIcon className="h-3.5 w-3.5" />
-              <span>Close</span>
-            </button>
           </div>
-        )}
 
-        <form onSubmit={handleSubmit}>
-          <div className="grid divide-y divide-line rounded-xl border border-line-strong bg-input lg:grid-cols-[1.2fr_1.1fr_auto] lg:divide-x lg:divide-y-0">
-            {/* Field 1: Train Number or Name */}
+          <div className="flex items-center gap-2">
+            {renderLanguageSwitcher()}
+            {chartData && mobileSearchExpanded && (
+              <button
+                type="button"
+                onClick={() => {
+                  setDropdownOpen(false);
+                  setBoardingDropdownOpen(false);
+                  setMobileSearchExpanded(false);
+                }}
+                className="inline-flex items-center gap-1 rounded-lg border border-line bg-subcard px-2.5 py-1 text-[11px] font-bold text-ink-soft hover:text-ink md:hidden"
+              >
+                <CloseIcon className="h-3.5 w-3.5" />
+                <span>{lang === "hi" ? "बंद करें" : "Close"}</span>
+              </button>
+            )}
+          </div>
+        </div>
+
+        <form onSubmit={(e) => void handleSubmit(e)}>
+          <div className="grid divide-y divide-line rounded-xl border border-line-strong bg-input lg:grid-cols-[1.25fr_1.15fr_auto] lg:divide-x lg:divide-y-0">
+            {/* Field 1: Train Number or Name (English + Hindi) */}
             <div ref={searchBoxRef} className="relative px-3.5 py-2.5">
               <label
                 htmlFor="chart-train-input"
                 className="block text-[11px] font-bold uppercase tracking-wider text-ink-muted"
               >
-                1. Train Number or Name
+                {t(
+                  "1. Train No. or Name",
+                  "1. ट्रेन नंबर या नाम",
+                  " / "
+                )}
               </label>
               <div className="mt-1 flex items-center gap-2.5">
                 <TrainIcon className="h-4 w-4 shrink-0 text-[#1956b4] dark:text-blue-400" />
@@ -483,7 +673,13 @@ export function TrainChartTimeChecker({
                     setDropdownOpen(true);
                     if (error) setError(null);
                   }}
-                  placeholder="Enter 12952, 12622 or Rajdhani..."
+                  placeholder={
+                    lang === "hi"
+                      ? "12952, राजधानी, वंदे भारत या नई दिल्ली लिखें..."
+                      : lang === "en"
+                        ? "Enter 12952, Rajdhani, Vande Bharat..."
+                        : "12952, Rajdhani or राजधानी, वंदे भारत..."
+                  }
                   className="w-full bg-transparent text-sm font-bold text-ink placeholder:font-normal placeholder:text-ink-muted focus:outline-none sm:text-base"
                 />
                 {query && (
@@ -505,48 +701,84 @@ export function TrainChartTimeChecker({
               {dropdownOpen && suggestions.length > 0 && (
                 <div className="absolute top-full right-0 left-0 z-50 mt-1.5 max-h-64 overflow-y-auto rounded-xl border border-line-strong bg-card p-1.5 shadow-2xl">
                   <p className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-ink-muted">
-                    Select Train
+                    {t("Select Train", "ट्रेन चुनें", " / ")}
                   </p>
-                  {suggestions.map((t) => (
-                    <button
-                      key={t.trainNumber}
-                      type="button"
-                      onClick={() => {
-                        setQuery(t.trainNumber);
-                        setDropdownOpen(false);
-                        void fetchChartSchedule(
-                          t.trainNumber,
-                          true,
-                          t.trainName
-                        );
-                      }}
-                      className="flex w-full cursor-pointer items-center justify-between gap-2 rounded-lg px-3 py-2 text-left transition hover:bg-subcard"
-                    >
-                      <div className="flex min-w-0 items-center gap-2">
-                        <span className="rounded bg-blue-50 px-2 py-0.5 font-mono text-xs font-bold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
-                          #{t.trainNumber}
+                  {suggestions.map((tr) => {
+                    const srcHi = getStationHindiName(tr.sourceCode);
+                    const dstHi = getStationHindiName(tr.destinationCode);
+                    return (
+                      <button
+                        key={tr.trainNumber}
+                        type="button"
+                        onClick={() => {
+                          setQuery(tr.trainNumber);
+                          setDropdownOpen(false);
+                          void fetchChartSchedule(
+                            tr.trainNumber,
+                            true,
+                            tr.trainName
+                          );
+                        }}
+                        className="flex w-full cursor-pointer items-center justify-between gap-2 rounded-lg px-3 py-2 text-left transition hover:bg-subcard"
+                      >
+                        <div className="flex min-w-0 items-center gap-2">
+                          <span className="rounded bg-blue-50 px-2 py-0.5 font-mono text-xs font-bold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
+                            #{tr.trainNumber}
+                          </span>
+                          <div className="min-w-0">
+                            <p className="truncate text-xs font-bold text-ink sm:text-sm">
+                              {tr.trainName}
+                            </p>
+                            {lang !== "en" && (srcHi || dstHi) && (
+                              <p className="truncate text-[10px] text-ink-muted">
+                                {srcHi || tr.sourceCode} →{" "}
+                                {dstHi || tr.destinationCode}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                        <span className="shrink-0 font-mono text-xs text-ink-muted">
+                          {tr.sourceCode} → {tr.destinationCode}
                         </span>
-                        <span className="truncate text-xs font-bold text-ink sm:text-sm">
-                          {t.trainName}
-                        </span>
-                      </div>
-                      <span className="shrink-0 font-mono text-xs text-ink-muted">
-                        {t.sourceCode} → {t.destinationCode}
-                      </span>
-                    </button>
-                  ))}
+                      </button>
+                    );
+                  })}
                 </div>
               )}
             </div>
 
             {/* Field 2: Boarding Station Selector (Defaults to 1st Boarding Station!) */}
             <div className="px-3.5 py-2.5">
-              <label
-                htmlFor="chart-boarding-select-top"
-                className="block text-[11px] font-bold uppercase tracking-wider text-ink-muted"
-              >
-                2. Boarding Station
-              </label>
+              <div className="flex items-center justify-between gap-2">
+                <label
+                  htmlFor="chart-boarding-select-top"
+                  className="block text-[11px] font-bold uppercase tracking-wider text-ink-muted"
+                >
+                  {t(
+                    "2. Boarding Station",
+                    "2. बोर्डिंग स्टेशन",
+                    " / "
+                  )}
+                </label>
+                {chartData &&
+                  selectedStation &&
+                  selectedStation.sequence !== 1 && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleChooseBoardingStation(
+                          chartData.stations[0].stationCode,
+                          false
+                        )
+                      }
+                      className="cursor-pointer text-[10px] font-bold text-[#1956b4] hover:underline dark:text-blue-300"
+                    >
+                      {lang === "hi"
+                        ? "पहला स्टेशन चुनें"
+                        : "Reset to 1st Station"}
+                    </button>
+                  )}
+              </div>
               <div className="mt-1 flex items-center gap-2">
                 <MapPinIcon className="h-4 w-4 shrink-0 text-[#fc6203]" />
                 {chartData && chartData.stations.length > 0 ? (
@@ -558,20 +790,34 @@ export function TrainChartTimeChecker({
                     }
                     className="w-full cursor-pointer bg-transparent text-sm font-bold text-ink focus:outline-none sm:text-base"
                   >
-                    {chartData.stations.map((st, idx) => (
-                      <option key={st.stationCode} value={st.stationCode}>
-                        {idx + 1}. {st.stationName} ({st.stationCode})
-                        {idx === 0
-                          ? " — Origin (Default)"
-                          : st.isDestination
-                            ? " — Destination"
-                            : ` — Dep ${st.departureFormatted}`}
-                      </option>
-                    ))}
+                    {chartData.stations.map((st, idx) => {
+                      const stLabel = formatBilingualStationName(
+                        st.stationName,
+                        st.stationCode,
+                        lang
+                      );
+                      return (
+                        <option key={st.stationCode} value={st.stationCode}>
+                          {idx + 1}. {stLabel} ({st.stationCode})
+                          {idx === 0
+                            ? lang === "hi"
+                              ? " — पहला स्टेशन (डिफ़ॉल्ट)"
+                              : " — 1st Station (Origin)"
+                            : st.isDestination
+                              ? lang === "hi"
+                                ? " — अंतिम स्टेशन"
+                                : " — Destination"
+                              : ` — Dep ${st.departureFormatted}`}
+                        </option>
+                      );
+                    })}
                   </select>
                 ) : (
                   <span className="text-sm text-ink-muted">
-                    Auto-loads 1st boarding station...
+                    {t(
+                      "Auto-selects 1st boarding station...",
+                      "पहला बोर्डिंग स्टेशन अपने-आप चुनेगा..."
+                    )}
                   </span>
                 )}
               </div>
@@ -582,10 +828,20 @@ export function TrainChartTimeChecker({
               <button
                 type="submit"
                 disabled={loading}
-                className="ta-btn-primary inline-flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-lg px-6 text-xs font-extrabold uppercase tracking-wide disabled:opacity-60 lg:h-auto lg:w-auto sm:text-sm"
+                className="ta-btn-primary inline-flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-lg px-5 text-xs font-extrabold uppercase tracking-wide disabled:opacity-60 lg:h-auto lg:w-auto sm:text-sm"
               >
                 <ClockIcon className="h-4 w-4" />
-                <span>{loading ? "Loading..." : "Check Chart Time"}</span>
+                <span>
+                  {loading
+                    ? lang === "hi"
+                      ? "खोज रहे हैं..."
+                      : "Loading..."
+                    : lang === "hi"
+                      ? "चार्ट समय देखें"
+                      : lang === "both"
+                        ? "Check Chart / चार्ट देखें"
+                        : "Check Chart Time"}
+                </span>
               </button>
             </div>
           </div>
@@ -595,7 +851,7 @@ export function TrainChartTimeChecker({
         <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs">
           <div className="ta-no-scrollbar flex items-center gap-1.5 overflow-x-auto py-0.5">
             <span className="shrink-0 font-semibold text-ink-muted">
-              Popular:
+              {lang === "hi" ? "प्रमुख ट्रेनें:" : "Popular:"}
             </span>
             {POPULAR_CHART_TRAINS.slice(0, 6).map((item) => {
               const isCurrent = chartData?.trainNumber === item.trainNumber;
@@ -642,7 +898,7 @@ export function TrainChartTimeChecker({
               }}
               className="cursor-pointer text-[11px] font-semibold text-ink-muted hover:text-ink"
             >
-              Clear recent
+              {lang === "hi" ? "हाल की खोज हटाएं" : "Clear recent"}
             </button>
           )}
         </div>
@@ -653,7 +909,12 @@ export function TrainChartTimeChecker({
         <div className="flex items-start gap-3 rounded-2xl border border-rose-500/30 bg-rose-50/80 p-4 text-rose-900 dark:bg-rose-500/10 dark:text-rose-200">
           <AlertCircleIcon className="mt-0.5 h-5 w-5 shrink-0 text-rose-600 dark:text-rose-400" />
           <div className="text-xs sm:text-sm">
-            <p className="font-bold">Unable to Load Chart Schedule</p>
+            <p className="font-bold">
+              {t(
+                "Unable to Load Chart Schedule",
+                "चार्ट समय लोड नहीं हो सका"
+              )}
+            </p>
             <p className="mt-0.5">{error}</p>
           </div>
         </div>
@@ -690,28 +951,40 @@ export function TrainChartTimeChecker({
                     </span>
                     <span className="rounded-full border border-white/15 bg-white/10 px-2.5 py-0.5 text-[11px] font-semibold text-blue-100">
                       {chartData.originStation} → {chartData.destinationStation}{" "}
-                      · {chartData.totalStations} Stops
+                      · {chartData.totalStations}{" "}
+                      {lang === "hi" ? "स्टेशन" : "Stops"}
                     </span>
                     <span className="rounded-full border border-emerald-400/30 bg-emerald-500/15 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-300">
-                      {chartData.uniqueChartHubCount} Charting{" "}
-                      {chartData.uniqueChartHubCount === 1 ? "Hub" : "Hubs"}
+                      {chartData.uniqueChartHubCount}{" "}
+                      {lang === "hi"
+                        ? "चार्टिंग हब"
+                        : `Charting ${chartData.uniqueChartHubCount === 1 ? "Hub" : "Hubs"}`}
                     </span>
                   </div>
 
                   <h2 className="mt-2 text-lg font-extrabold tracking-tight text-white sm:text-2xl">
                     {chartData.trainName} ({chartData.trainNumber})
                   </h2>
+                  {lang !== "en" && (
+                    <p className="mt-0.5 text-xs font-medium text-blue-100/90">
+                      बोर्डिंग स्टेशन के अनुसार पहला और दूसरा रिज़र्वेशन चार्ट बनने का सटीक समय
+                    </p>
+                  )}
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2">
                   <a
-                    href={buildChartWhatsAppShareUrl(chartData, selectedStation)}
+                    href={buildChartWhatsAppShareUrl(
+                      chartData,
+                      selectedStation,
+                      lang
+                    )}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 rounded-xl bg-[#1fa855] px-3.5 py-2 text-xs font-extrabold text-white shadow-2xs transition hover:bg-[#198c46]"
                   >
                     <WhatsAppIcon className="h-3.5 w-3.5" />
-                    <span>WhatsApp</span>
+                    <span>{lang === "hi" ? "शेयर करें" : "WhatsApp"}</span>
                   </a>
 
                   <Link
@@ -722,7 +995,7 @@ export function TrainChartTimeChecker({
                     className="inline-flex items-center gap-1.5 rounded-xl border border-white/20 bg-white/12 px-3 py-2 text-xs font-bold text-white transition hover:bg-white/20"
                   >
                     <TrainIcon className="h-3.5 w-3.5 text-emerald-300" />
-                    <span>Live Status</span>
+                    <span>{lang === "hi" ? "लाइव स्टेटस" : "Live Status"}</span>
                   </Link>
 
                   <Link
@@ -730,13 +1003,13 @@ export function TrainChartTimeChecker({
                     className="ta-btn-primary inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-bold"
                   >
                     <TicketIcon className="h-3.5 w-3.5" />
-                    <span>Check PNR</span>
+                    <span>{lang === "hi" ? "PNR चेक करें" : "Check PNR"}</span>
                   </Link>
                 </div>
               </div>
             </div>
 
-            {/* PROMINENT BOARDING STATION SELECTOR BAR (Always Visible on Mobile & Desktop!) */}
+            {/* PROMINENT BOARDING STATION SELECTOR BAR (Supports English & Hindi Station Search!) */}
             <div className="border-b border-line bg-blue-50/60 px-4 py-3.5 sm:px-6 dark:bg-blue-950/25">
               <div className="flex flex-col justify-between gap-3 md:flex-row md:items-center">
                 <div className="flex items-center gap-2.5">
@@ -745,18 +1018,23 @@ export function TrainChartTimeChecker({
                   </span>
                   <div>
                     <p className="text-[11px] font-extrabold uppercase tracking-wider text-[#1956b4] dark:text-blue-300">
-                      Your Boarding Station{" "}
-                      {selectedStation.sequence === 1 ? "(Origin Default)" : ""}
+                      {t(
+                        `Your Boarding Station ${selectedStation.sequence === 1 ? "(1st Station Default)" : ""}`,
+                        `आपका बोर्डिंग स्टेशन ${selectedStation.sequence === 1 ? "(पहला स्टेशन डिफ़ॉल्ट)" : ""}`
+                      )}
                     </p>
                     <p className="text-xs text-ink-soft">
-                      Change station below to see its exact 1st &amp; 2nd chart
-                      preparation time
+                      {lang === "hi"
+                        ? "किसी भी बोर्डिंग स्टेशन का पहला और दूसरा चार्ट समय देखने के लिए स्टेशन चुनें"
+                        : lang === "en"
+                          ? "Select your boarding station to check its exact 1st & 2nd chart preparation time"
+                          : "Select boarding station (English / हिंदी) to see exact 1st & 2nd chart time"}
                     </p>
                   </div>
                 </div>
 
                 {/* Searchable Custom Boarding Station Picker */}
-                <div ref={boardingBoxRef} className="relative w-full md:w-80">
+                <div ref={boardingBoxRef} className="relative w-full md:w-88">
                   <button
                     type="button"
                     onClick={() =>
@@ -770,7 +1048,11 @@ export function TrainChartTimeChecker({
                       </span>
                       <span className="truncate text-sm font-extrabold text-ink">
                         {selectedStation.sequence}.{" "}
-                        {selectedStation.stationName}
+                        {formatBilingualStationName(
+                          selectedStation.stationName,
+                          selectedStation.stationCode,
+                          lang
+                        )}
                       </span>
                     </div>
                     <ChevronDownIcon
@@ -789,7 +1071,11 @@ export function TrainChartTimeChecker({
                             type="text"
                             value={boardingFilter}
                             onChange={(e) => setBoardingFilter(e.target.value)}
-                            placeholder="Filter boarding station..."
+                            placeholder={
+                              lang === "hi"
+                                ? "स्टेशन खोजें (जैसे सूरत, कोटा, ST)..."
+                                : "Search station (English / हिंदी e.g. Surat, सूरत)..."
+                            }
                             className="w-full rounded-lg border border-line bg-input py-1.5 pr-2.5 pl-8 text-xs font-semibold text-ink placeholder:font-normal focus:border-[#1956b4] focus:outline-none"
                           />
                         </div>
@@ -797,7 +1083,10 @@ export function TrainChartTimeChecker({
                       <div className="max-h-64 overflow-y-auto p-1.5">
                         {filteredBoardingDropdownStations.length === 0 ? (
                           <p className="px-3 py-4 text-center text-xs text-ink-muted">
-                            No station matching &ldquo;{boardingFilter}&rdquo;
+                            {t(
+                              `No station matching "${boardingFilter}"`,
+                              `"${boardingFilter}" से मिलता कोई स्टेशन नहीं मिला`
+                            )}
                           </p>
                         ) : (
                           filteredBoardingDropdownStations.map((st) => {
@@ -827,14 +1116,22 @@ export function TrainChartTimeChecker({
                                     {st.stationCode}
                                   </span>
                                   <span className="truncate">
-                                    {st.stationName}
+                                    {formatBilingualStationName(
+                                      st.stationName,
+                                      st.stationCode,
+                                      lang
+                                    )}
                                   </span>
                                 </div>
                                 <span className="shrink-0 font-mono text-[10px] text-ink-muted">
                                   {st.isOrigin
-                                    ? "Origin"
+                                    ? lang === "hi"
+                                      ? "प्रारंभ"
+                                      : "Origin"
                                     : st.isDestination
-                                      ? "End"
+                                      ? lang === "hi"
+                                        ? "अंतिम"
+                                        : "End"
                                       : `Dep ${st.departureTime}`}
                                 </span>
                               </button>
@@ -849,9 +1146,10 @@ export function TrainChartTimeChecker({
 
               {/* 1-Tap Horizontal Boarding Station Pills */}
               <div className="ta-no-scrollbar mt-3 flex items-center gap-1.5 overflow-x-auto pb-0.5">
-                {chartData.stations.map((st) => {
+                {chartData.stations.map((st, idx) => {
                   const active =
                     st.stationCode === selectedStation.stationCode;
+                  const hiName = getStationHindiName(st.stationCode);
                   return (
                     <button
                       key={st.stationCode}
@@ -867,12 +1165,23 @@ export function TrainChartTimeChecker({
                     >
                       <span className="font-mono">{st.stationCode}</span>
                       <span
-                        className={`max-w-[110px] truncate text-[11px] ${
+                        className={`max-w-[125px] truncate text-[11px] ${
                           active ? "text-blue-100" : "text-ink-muted"
                         }`}
                       >
-                        {st.stationName}
+                        {lang === "hi" && hiName ? hiName : st.stationName}
                       </span>
+                      {idx === 0 && (
+                        <span
+                          className={`rounded px-1 py-0.2 text-[9px] font-extrabold uppercase ${
+                            active
+                              ? "bg-white/20 text-white"
+                              : "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300"
+                          }`}
+                        >
+                          {lang === "hi" ? "पहला" : "1st"}
+                        </span>
+                      )}
                     </button>
                   );
                 })}
@@ -883,15 +1192,27 @@ export function TrainChartTimeChecker({
             <div className="p-4 sm:p-6">
               {/* Selected Station Context Header */}
               <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-                <div className="flex flex-wrap items-center gap-2">
-                  <h3 className="text-base font-black text-ink sm:text-xl">
-                    Chart Time for Boarding at {selectedStation.stationName} (
-                    {selectedStation.stationCode})
-                  </h3>
-                  <span className="rounded-full bg-subcard px-2.5 py-0.5 font-mono text-[11px] font-bold text-ink-soft ring-1 ring-line">
-                    Stop #{selectedStation.sequence} · Day {selectedStation.day}{" "}
-                    · {selectedStation.distanceKm} km
-                  </span>
+                <div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h3 className="text-base font-black text-ink sm:text-xl">
+                      {lang === "hi"
+                        ? `${selectedStationHindi || selectedStation.stationName} (${selectedStation.stationCode}) से बोर्डिंग का चार्ट समय`
+                        : `Chart Time for Boarding at ${selectedStation.stationName} (${selectedStation.stationCode})`}
+                    </h3>
+                    <span className="rounded-full bg-subcard px-2.5 py-0.5 font-mono text-[11px] font-bold text-ink-soft ring-1 ring-line">
+                      {lang === "hi"
+                        ? `स्टॉप #${selectedStation.sequence} · दिन ${selectedStation.day} · ${selectedStation.distanceKm} किमी`
+                        : `Stop #${selectedStation.sequence} · Day ${selectedStation.day} · ${selectedStation.distanceKm} km`}
+                    </span>
+                  </div>
+                  {lang === "both" && (
+                    <p className="mt-0.5 text-xs font-semibold text-ink-muted">
+                      {selectedStationHindi
+                        ? `${selectedStationHindi} (${selectedStation.stationCode})`
+                        : selectedStation.stationName}{" "}
+                      बोर्डिंग स्टेशन के लिए पहला और दूसरा रिज़र्वेशन चार्ट समय
+                    </p>
+                  )}
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -901,7 +1222,15 @@ export function TrainChartTimeChecker({
                     className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-line bg-subcard px-2.5 py-1 text-xs font-bold text-ink-soft transition hover:border-[#1956b4] hover:text-[#1956b4]"
                   >
                     <CopyIcon className="h-3.5 w-3.5" />
-                    <span>{copiedSummary ? "Copied!" : "Copy Timings"}</span>
+                    <span>
+                      {copiedSummary
+                        ? lang === "hi"
+                          ? "कॉपी हो गया!"
+                          : "Copied!"
+                        : lang === "hi"
+                          ? "कॉपी करें"
+                          : "Copy Timings"}
+                    </span>
                   </button>
                   <button
                     type="button"
@@ -913,7 +1242,7 @@ export function TrainChartTimeChecker({
                     <RefreshIcon
                       className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`}
                     />
-                    <span>Refresh</span>
+                    <span>{lang === "hi" ? "रीफ़्रेश" : "Refresh"}</span>
                   </button>
                 </div>
               </div>
@@ -922,13 +1251,26 @@ export function TrainChartTimeChecker({
               <div className="grid gap-3.5 md:grid-cols-3">
                 {/* CARD 1: 1ST RESERVATION CHART */}
                 <div className="relative overflow-hidden rounded-2xl border border-[#1956b4]/30 bg-gradient-to-br from-blue-50/80 via-card to-card p-4 shadow-2xs sm:p-5 dark:from-blue-950/30">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-[#1956b4] dark:text-blue-300">
-                      <ClockIcon className="h-4 w-4" />
-                      <span>1st Reservation Chart</span>
-                    </span>
-                    <span className="rounded-full bg-amber-500/15 px-2.5 py-0.5 text-[10px] font-extrabold text-amber-800 dark:text-amber-300">
-                      {selectedStation.chartOneDayLabel}
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <span className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-[#1956b4] dark:text-blue-300">
+                        <ClockIcon className="h-4 w-4 shrink-0" />
+                        <span>
+                          {lang === "hi"
+                            ? "पहला रिज़र्वेशन चार्ट"
+                            : "1st Reservation Chart"}
+                        </span>
+                      </span>
+                      {lang === "both" && (
+                        <span className="block pl-5 text-[11px] font-bold text-[#1956b4]/80 dark:text-blue-300/80">
+                          पहला चार्ट (Primary Chart)
+                        </span>
+                      )}
+                    </div>
+                    <span className="shrink-0 rounded-full bg-amber-500/15 px-2.5 py-0.5 text-[10px] font-extrabold text-amber-800 dark:text-amber-300">
+                      {lang === "hi"
+                        ? formatChartDayLabelHi(selectedStation.chartOneDayLabel)
+                        : selectedStation.chartOneDayLabel}
                     </span>
                   </div>
 
@@ -937,23 +1279,53 @@ export function TrainChartTimeChecker({
                   </p>
                   <p className="mt-0.5 font-mono text-xs font-semibold text-ink-muted">
                     24-Hour IST: {selectedStation.chartTimeLocal} hrs
+                    {lang === "both"
+                      ? ` · ${formatChartDayLabelHi(selectedStation.chartOneDayLabel)}`
+                      : ""}
                   </p>
 
-                  <p className="mt-3 border-t border-line/80 pt-2.5 text-xs leading-relaxed text-ink-soft">
-                    Main chart when <strong>WL &amp; RAC berths confirm</strong>
-                    , coach/seat numbers are allotted, and IRCTC SMS is sent.
-                  </p>
+                  <div className="mt-3 border-t border-line/80 pt-2.5 text-xs leading-relaxed text-ink-soft">
+                    {lang !== "hi" && (
+                      <p>
+                        Main chart when{" "}
+                        <strong className="text-ink">
+                          WL &amp; RAC berths confirm
+                        </strong>
+                        , coach/seat numbers are allotted, and IRCTC SMS is sent.
+                      </p>
+                    )}
+                    {lang !== "en" && (
+                      <p className={lang === "both" ? "mt-1 text-ink-muted" : ""}>
+                        इसी मुख्य चार्ट में{" "}
+                        <strong className="text-ink">WL और RAC टिकट कन्फर्म</strong>{" "}
+                        होते हैं व कोच/सीट नंबर SMS द्वारा मिलता है।
+                      </p>
+                    )}
+                  </div>
                 </div>
 
                 {/* CARD 2: 2ND (VACANCY / FINAL) CHART */}
                 <div className="relative overflow-hidden rounded-2xl border border-emerald-500/30 bg-gradient-to-br from-emerald-50/80 via-card to-card p-4 shadow-2xs sm:p-5 dark:from-emerald-950/30">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">
-                      <CheckCircleIcon className="h-4 w-4" />
-                      <span>2nd (Vacancy) Chart</span>
-                    </span>
-                    <span className="rounded-full bg-emerald-500/15 px-2.5 py-0.5 text-[10px] font-extrabold text-emerald-800 dark:text-emerald-300">
-                      {selectedStation.chartTwoDayLabel}
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <span className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">
+                        <CheckCircleIcon className="h-4 w-4 shrink-0" />
+                        <span>
+                          {lang === "hi"
+                            ? "दूसरा (वैकेंसी) चार्ट"
+                            : "2nd (Vacancy) Chart"}
+                        </span>
+                      </span>
+                      {lang === "both" && (
+                        <span className="block pl-5 text-[11px] font-bold text-emerald-700/80 dark:text-emerald-300/80">
+                          दूसरा / फ़ाइनल वैकेंसी चार्ट
+                        </span>
+                      )}
+                    </div>
+                    <span className="shrink-0 rounded-full bg-emerald-500/15 px-2.5 py-0.5 text-[10px] font-extrabold text-emerald-800 dark:text-emerald-300">
+                      {lang === "hi"
+                        ? formatChartDayLabelHi(selectedStation.chartTwoDayLabel)
+                        : selectedStation.chartTwoDayLabel}
                     </span>
                   </div>
 
@@ -962,40 +1334,67 @@ export function TrainChartTimeChecker({
                   </p>
                   <p className="mt-0.5 font-mono text-xs font-semibold text-ink-muted">
                     24-Hour IST: {selectedStation.chartTwoTimeLocal} hrs
+                    {lang === "both"
+                      ? ` · ${formatChartDayLabelHi(selectedStation.chartTwoDayLabel)}`
+                      : ""}
                   </p>
 
-                  <p className="mt-3 border-t border-line/80 pt-2.5 text-xs leading-relaxed text-ink-soft">
-                    Final chart (~30 mins before departure) locking{" "}
-                    <strong>Current Booking</strong> seats &amp; TTE Hand-Held
-                    Terminal.
-                  </p>
+                  <div className="mt-3 border-t border-line/80 pt-2.5 text-xs leading-relaxed text-ink-soft">
+                    {lang !== "hi" && (
+                      <p>
+                        Final chart (~30 mins before departure) locking{" "}
+                        <strong className="text-ink">Current Booking</strong>{" "}
+                        seats &amp; TTE Hand-Held Terminal.
+                      </p>
+                    )}
+                    {lang !== "en" && (
+                      <p className={lang === "both" ? "mt-1 text-ink-muted" : ""}>
+                        ट्रेन छूटने से ~30 मिनट पहले{" "}
+                        <strong className="text-ink">करंट बुकिंग (CURR_AVBL)</strong>{" "}
+                        और बची खाली सीटें लॉक होती हैं।
+                      </p>
+                    )}
+                  </div>
                 </div>
 
                 {/* CARD 3: BOARDING DEPARTURE + REMOTE CHARTING HUB */}
                 <div className="flex flex-col justify-between rounded-2xl border border-line bg-subcard/45 p-4 sm:p-5">
                   <div>
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-ink-soft">
-                        <BuildingStationIcon className="h-4 w-4 text-[#fc6203]" />
-                        <span>Charting Hub &amp; Train Time</span>
-                      </span>
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <span className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-ink-soft">
+                          <BuildingStationIcon className="h-4 w-4 shrink-0 text-[#fc6203]" />
+                          <span>
+                            {lang === "hi"
+                              ? "चार्टिंग स्टेशन व समय"
+                              : "Charting Hub & Train Time"}
+                          </span>
+                        </span>
+                        {lang === "both" && (
+                          <span className="block pl-5 text-[11px] font-bold text-ink-muted">
+                            चार्ट बनने का स्टेशन व ट्रेन समय
+                          </span>
+                        )}
+                      </div>
                       <span
-                        className={`rounded-full px-2 py-0.5 text-[10px] font-extrabold ${
+                        className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-extrabold ${
                           selectedStation.isPrimaryChartHub
                             ? "bg-emerald-500/15 text-emerald-800 dark:text-emerald-300"
                             : "bg-orange-500/15 text-[#fc6203]"
                         }`}
                       >
                         {selectedStation.isPrimaryChartHub
-                          ? "Self Charted"
-                          : `Remote Hub: ${selectedStation.chartRemoteStation}`}
+                          ? lang === "hi"
+                            ? "मुख्य चार्टिंग हब"
+                            : "Self Charted"
+                          : `Hub: ${selectedStation.chartRemoteStation}`}
                       </span>
                     </div>
 
                     <div className="mt-3 grid grid-cols-2 gap-2 rounded-xl border border-line bg-card p-2.5 text-xs">
                       <div>
                         <span className="block text-[10px] font-bold uppercase text-ink-muted">
-                          Arrival
+                          {t("Arrival", "आगमन", " / ")}
                         </span>
                         <span className="font-mono text-sm font-extrabold text-ink">
                           {selectedStation.arrivalFormatted}
@@ -1003,7 +1402,7 @@ export function TrainChartTimeChecker({
                       </div>
                       <div>
                         <span className="block text-[10px] font-bold uppercase text-ink-muted">
-                          Departure
+                          {t("Departure", "प्रस्थान", " / ")}
                         </span>
                         <span className="font-mono text-sm font-extrabold text-[#1956b4] dark:text-blue-300">
                           {selectedStation.departureFormatted}
@@ -1012,31 +1411,65 @@ export function TrainChartTimeChecker({
                     </div>
                   </div>
 
-                  <p className="mt-3 text-xs leading-relaxed text-ink-soft">
+                  <div className="mt-3 text-xs leading-relaxed text-ink-soft">
                     {selectedStation.isPrimaryChartHub ? (
                       <>
-                        Prepared directly at{" "}
-                        <strong className="text-ink">
-                          {selectedStation.chartRemoteStationName} (
-                          {selectedStation.chartRemoteStation})
-                        </strong>{" "}
-                        PRS charting hub.
+                        {lang !== "hi" && (
+                          <p>
+                            Prepared directly at{" "}
+                            <strong className="text-ink">
+                              {selectedStation.chartRemoteStationName} (
+                              {selectedStation.chartRemoteStation})
+                            </strong>{" "}
+                            PRS charting hub.
+                          </p>
+                        )}
+                        {lang !== "en" && (
+                          <p className={lang === "both" ? "mt-1 text-ink-muted" : ""}>
+                            इस स्टेशन का चार्ट सीधे{" "}
+                            <strong className="text-ink">
+                              {selectedRemoteHindi ||
+                                selectedStation.chartRemoteStationName}{" "}
+                              ({selectedStation.chartRemoteStation})
+                            </strong>{" "}
+                            पर ही तैयार होता है।
+                          </p>
+                        )}
                       </>
                     ) : (
                       <>
-                        Your chart for{" "}
-                        <strong className="text-ink">
-                          {selectedStation.stationCode}
-                        </strong>{" "}
-                        is prepared upstream at{" "}
-                        <strong className="text-ink">
-                          {selectedStation.chartRemoteStationName} (
-                          {selectedStation.chartRemoteStation})
-                        </strong>
-                        !
+                        {lang !== "hi" && (
+                          <p>
+                            Your chart for{" "}
+                            <strong className="text-ink">
+                              {selectedStation.stationCode}
+                            </strong>{" "}
+                            is prepared upstream at{" "}
+                            <strong className="text-ink">
+                              {selectedStation.chartRemoteStationName} (
+                              {selectedStation.chartRemoteStation})
+                            </strong>
+                            !
+                          </p>
+                        )}
+                        {lang !== "en" && (
+                          <p className={lang === "both" ? "mt-1 text-ink-muted" : ""}>
+                            ध्यान दें:{" "}
+                            <strong className="text-ink">
+                              {selectedStation.stationCode}
+                            </strong>{" "}
+                            का चार्ट पिछले मुख्य स्टेशन{" "}
+                            <strong className="text-ink">
+                              {selectedRemoteHindi ||
+                                selectedStation.chartRemoteStationName}{" "}
+                              ({selectedStation.chartRemoteStation})
+                            </strong>{" "}
+                            पर ही बन जाता है!
+                          </p>
+                        )}
                       </>
                     )}
-                  </p>
+                  </div>
                 </div>
               </div>
 
@@ -1048,12 +1481,12 @@ export function TrainChartTimeChecker({
                       1
                     </span>
                     <span>
-                      1st Chart:{" "}
+                      {t("1st Chart", "पहला चार्ट", " / ")}:{" "}
                       <strong className="font-mono text-ink">
                         {selectedStation.chartOneFormatted12h}
                       </strong>{" "}
                       <span className="text-ink-muted">
-                        (CURR_AVBL opens)
+                        ({lang === "hi" ? "करंट बुकिंग शुरू" : "CURR_AVBL opens"})
                       </span>
                     </span>
                   </div>
@@ -1065,11 +1498,13 @@ export function TrainChartTimeChecker({
                       2
                     </span>
                     <span>
-                      2nd Chart:{" "}
+                      {t("2nd Chart", "दूसरा चार्ट", " / ")}:{" "}
                       <strong className="font-mono text-ink">
                         {selectedStation.chartTwoFormatted12h}
                       </strong>{" "}
-                      <span className="text-ink-muted">(Final lock)</span>
+                      <span className="text-ink-muted">
+                        ({lang === "hi" ? "फ़ाइनल लॉक" : "Final lock"})
+                      </span>
                     </span>
                   </div>
 
@@ -1080,7 +1515,8 @@ export function TrainChartTimeChecker({
                       3
                     </span>
                     <span>
-                      {selectedStation.stationCode} Departure:{" "}
+                      {selectedStation.stationCode}{" "}
+                      {t("Departure", "प्रस्थान", " / ")}:{" "}
                       <strong className="font-mono text-ink">
                         {selectedStation.departureFormatted}
                       </strong>
@@ -1096,14 +1532,22 @@ export function TrainChartTimeChecker({
             <div className="flex flex-wrap items-end justify-between gap-2">
               <div>
                 <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#1956b4] dark:text-blue-400">
-                  Remote Charting Zones ({chartData.uniqueChartHubCount} Hubs)
+                  {t(
+                    `Remote Charting Zones (${chartData.uniqueChartHubCount} Hubs)`,
+                    `चार्टिंग स्टेशन ज़ोन (${chartData.uniqueChartHubCount} हब)`
+                  )}
                 </span>
                 <h3 className="text-base font-extrabold text-ink sm:text-lg">
-                  Which Station Prepares Your Boarding Quota&apos;s Chart?
+                  {lang === "hi"
+                    ? "आपके बोर्डिंग स्टेशन का चार्ट किस स्टेशन पर बनता है?"
+                    : lang === "both"
+                      ? "Which Station Prepares Your Boarding Quota's Chart? · आपका चार्ट कहाँ बनता है?"
+                      : "Which Station Prepares Your Boarding Quota's Chart?"}
                 </h3>
                 <p className="text-xs text-ink-soft">
-                  Tap any station badge below to view its 1st &amp; 2nd chart
-                  preparation timing above
+                  {lang === "hi"
+                    ? "नीचे किसी भी स्टेशन पर टैप करके उसका पहला और दूसरा चार्ट समय देखें"
+                    : "Tap any station badge below to view its 1st & 2nd chart preparation timing above"}
                 </p>
               </div>
             </div>
@@ -1122,18 +1566,26 @@ export function TrainChartTimeChecker({
                       </span>
                       <span className="text-[11px] font-semibold text-ink-muted">
                         Zone {idx + 1} · {zone.stationCount}{" "}
-                        {zone.stationCount === 1 ? "Stop" : "Stops"}
+                        {lang === "hi"
+                          ? "स्टेशन"
+                          : zone.stationCount === 1
+                            ? "Stop"
+                            : "Stops"}
                       </span>
                     </div>
 
                     <h4 className="mt-2 text-sm font-extrabold text-ink">
-                      {zone.remoteStationName}
+                      {formatBilingualStationName(
+                        zone.remoteStationName,
+                        zone.remoteStationCode,
+                        lang
+                      )}
                     </h4>
 
                     <div className="mt-2 grid grid-cols-2 gap-2 rounded-lg border border-line bg-card p-2 text-xs">
                       <div>
                         <span className="block text-[10px] font-semibold text-ink-muted">
-                          1st Chart
+                          {t("1st Chart", "पहला चार्ट", " / ")}
                         </span>
                         <span className="font-mono font-extrabold text-[#1956b4] dark:text-blue-300">
                           {zone.chartOneFormatted12h}
@@ -1141,7 +1593,7 @@ export function TrainChartTimeChecker({
                       </div>
                       <div>
                         <span className="block text-[10px] font-semibold text-ink-muted">
-                          2nd Chart
+                          {t("2nd Chart", "दूसरा चार्ट", " / ")}
                         </span>
                         <span className="font-mono font-extrabold text-emerald-600 dark:text-emerald-400">
                           {zone.chartTwoFormatted12h}
@@ -1154,6 +1606,7 @@ export function TrainChartTimeChecker({
                     <div className="flex flex-wrap gap-1.5">
                       {zone.stationCodes.map((code, sIdx) => {
                         const isSel = selectedStation.stationCode === code;
+                        const chipHi = getStationHindiName(code);
                         return (
                           <button
                             key={code}
@@ -1168,7 +1621,10 @@ export function TrainChartTimeChecker({
                             }`}
                             title={zone.stationNames[sIdx]}
                           >
-                            {code} · {zone.stationNames[sIdx]}
+                            {code} ·{" "}
+                            {lang === "hi" && chipHi
+                              ? chipHi
+                              : zone.stationNames[sIdx]}
                           </button>
                         );
                       })}
@@ -1184,22 +1640,29 @@ export function TrainChartTimeChecker({
             <div className="flex flex-col justify-between gap-3 border-b border-line bg-card px-4 py-4 sm:flex-row sm:items-center sm:px-6">
               <div>
                 <h3 className="text-base font-extrabold text-ink sm:text-lg">
-                  All {chartData.totalStations} Stations — 1st &amp; 2nd Chart
-                  Schedule ({chartData.trainNumber})
+                  {lang === "hi"
+                    ? `सभी ${chartData.totalStations} स्टेशनों का पहला और दूसरा चार्ट समय (${chartData.trainNumber})`
+                    : `All ${chartData.totalStations} Stations — 1st & 2nd Chart Schedule (${chartData.trainNumber})`}
                 </h3>
                 <p className="text-xs text-ink-soft">
-                  Tap any boarding station row to pin it in the chart spotlight
-                  above
+                  {t(
+                    "Tap any boarding station row to view its details above",
+                    "किसी भी स्टेशन पर क्लिक करके उसका चार्ट विवरण ऊपर देखें"
+                  )}
                 </p>
               </div>
 
-              <div className="relative w-full sm:w-56">
+              <div className="relative w-full sm:w-64">
                 <SearchIcon className="pointer-events-none absolute top-1/2 left-2.5 h-3.5 w-3.5 -translate-y-1/2 text-ink-muted" />
                 <input
                   type="text"
                   value={tableFilter}
                   onChange={(e) => setTableFilter(e.target.value)}
-                  placeholder="Filter station..."
+                  placeholder={
+                    lang === "hi"
+                      ? "स्टेशन खोजें (जैसे सूरत, कोटा)..."
+                      : "Filter station (English / हिंदी)..."
+                  }
                   className="w-full rounded-xl border border-line bg-input py-1.5 pr-2.5 pl-8 text-xs font-semibold text-ink placeholder:font-normal focus:border-[#1956b4] focus:outline-none"
                 />
               </div>
@@ -1211,12 +1674,24 @@ export function TrainChartTimeChecker({
                 <thead>
                   <tr className="border-b border-line bg-subcard/60 text-[11px] font-extrabold uppercase tracking-wider text-ink-muted">
                     <th className="py-3 pr-3 pl-5">#</th>
-                    <th className="px-3 py-3">Boarding Station</th>
-                    <th className="px-3 py-3">Arr / Dep</th>
-                    <th className="px-3 py-3">Day &amp; Dist</th>
-                    <th className="px-3 py-3">1st Chart Time</th>
-                    <th className="px-3 py-3">2nd (Vacancy) Chart</th>
-                    <th className="py-3 pr-5 pl-3">Charting Hub</th>
+                    <th className="px-3 py-3">
+                      {t("Boarding Station", "बोर्डिंग स्टेशन", " / ")}
+                    </th>
+                    <th className="px-3 py-3">
+                      {t("Arr / Dep", "आगमन / प्रस्थान", " · ")}
+                    </th>
+                    <th className="px-3 py-3">
+                      {t("Day & Dist", "दिन व दूरी", " · ")}
+                    </th>
+                    <th className="px-3 py-3">
+                      {t("1st Chart", "पहला चार्ट", " / ")}
+                    </th>
+                    <th className="px-3 py-3">
+                      {t("2nd Chart", "दूसरा चार्ट", " / ")}
+                    </th>
+                    <th className="py-3 pr-5 pl-3">
+                      {t("Charting Hub", "चार्टिंग हब", " / ")}
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-line/80">
@@ -1252,23 +1727,36 @@ export function TrainChartTimeChecker({
                             <div>
                               <div className="flex flex-wrap items-center gap-1.5">
                                 <span className="font-bold text-ink">
-                                  {st.stationName}
+                                  {formatBilingualStationName(
+                                    st.stationName,
+                                    st.stationCode,
+                                    lang
+                                  )}
                                 </span>
                                 <span className="rounded-md bg-blue-50 px-1.5 py-0.5 font-mono text-[11px] font-bold text-[#1956b4] dark:bg-blue-500/15 dark:text-blue-300">
                                   {st.stationCode}
                                 </span>
                                 {isSelected && (
                                   <span className="rounded-full bg-[#fc6203]/15 px-2 py-0.5 text-[10px] font-extrabold uppercase text-[#fc6203]">
-                                    Selected
+                                    {lang === "hi" ? "चयनित" : "Selected"}
                                   </span>
                                 )}
                               </div>
                               <p className="text-[11px] text-ink-muted">
                                 {st.isOrigin
-                                  ? "1st Boarding Station (Origin)"
+                                  ? t(
+                                      "1st Boarding Station (Origin)",
+                                      "पहला बोर्डिंग स्टेशन (प्रारंभ)"
+                                    )
                                   : st.isDestination
-                                    ? "Destination Terminal"
-                                    : "Intermediate Boarding Halt"}
+                                    ? t(
+                                        "Destination Terminal",
+                                        "अंतिम गंतव्य स्टेशन"
+                                      )
+                                    : t(
+                                        "Intermediate Boarding Halt",
+                                        "बीच का बोर्डिंग स्टेशन"
+                                      )}
                               </p>
                             </div>
                           </div>
@@ -1291,7 +1779,7 @@ export function TrainChartTimeChecker({
                         </td>
                         <td className="px-3 py-3 text-xs">
                           <span className="inline-block rounded-md bg-subcard px-2 py-0.5 font-mono font-bold text-ink">
-                            Day {st.day}
+                            {lang === "hi" ? `दिन ${st.day}` : `Day ${st.day}`}
                           </span>
                           <p className="mt-1 font-mono text-[11px] text-ink-muted">
                             {st.distanceKm} km
@@ -1302,7 +1790,10 @@ export function TrainChartTimeChecker({
                             {st.chartOneFormatted12h}
                           </p>
                           <p className="text-[11px] text-ink-muted">
-                            {st.chartTimeLocal} · {st.chartOneDayLabel}
+                            {st.chartTimeLocal} ·{" "}
+                            {lang === "hi"
+                              ? formatChartDayLabelHi(st.chartOneDayLabel)
+                              : st.chartOneDayLabel}
                           </p>
                         </td>
                         <td className="px-3 py-3">
@@ -1310,7 +1801,10 @@ export function TrainChartTimeChecker({
                             {st.chartTwoFormatted12h}
                           </p>
                           <p className="text-[11px] text-ink-muted">
-                            {st.chartTwoTimeLocal} · {st.chartTwoDayLabel}
+                            {st.chartTwoTimeLocal} ·{" "}
+                            {lang === "hi"
+                              ? formatChartDayLabelHi(st.chartTwoDayLabel)
+                              : st.chartTwoDayLabel}
                           </p>
                         </td>
                         <td className="py-3 pr-5 pl-3">
@@ -1328,7 +1822,9 @@ export function TrainChartTimeChecker({
                               </p>
                               <p className="text-[10px] text-ink-muted">
                                 {st.isPrimaryChartHub
-                                  ? "Self Charted"
+                                  ? lang === "hi"
+                                    ? "यहीं बनता है"
+                                    : "Self Charted"
                                   : `Via ${st.chartRemoteStationName}`}
                               </p>
                             </div>
@@ -1365,16 +1861,22 @@ export function TrainChartTimeChecker({
                         <div>
                           <div className="flex flex-wrap items-center gap-1.5">
                             <p className="text-sm font-extrabold text-ink">
-                              {st.sequence}. {st.stationName}
+                              {st.sequence}.{" "}
+                              {formatBilingualStationName(
+                                st.stationName,
+                                st.stationCode,
+                                lang
+                              )}
                             </p>
                             {isSelected && (
                               <span className="rounded-full bg-[#fc6203] px-2 py-0.5 text-[9px] font-extrabold uppercase text-white">
-                                Selected
+                                {lang === "hi" ? "चयनित" : "Selected"}
                               </span>
                             )}
                           </div>
                           <p className="text-[11px] text-ink-muted">
-                            Day {st.day} · {st.distanceKm} km · Dep:{" "}
+                            {lang === "hi" ? `दिन ${st.day}` : `Day ${st.day}`}{" "}
+                            · {st.distanceKm} km · Dep:{" "}
                             {st.departureTime || "Ends"}
                           </p>
                         </div>
@@ -1394,24 +1896,28 @@ export function TrainChartTimeChecker({
                     <div className="grid grid-cols-2 gap-2.5 rounded-xl border border-line bg-card p-2.5 text-xs">
                       <div>
                         <span className="block text-[10px] font-bold uppercase text-ink-muted">
-                          1st Chart
+                          {t("1st Chart", "पहला चार्ट", " / ")}
                         </span>
                         <span className="font-mono text-sm font-black text-[#1956b4] dark:text-blue-300">
                           {st.chartOneFormatted12h}
                         </span>
                         <span className="block text-[10px] text-ink-muted">
-                          {st.chartOneDayLabel}
+                          {lang === "hi"
+                            ? formatChartDayLabelHi(st.chartOneDayLabel)
+                            : st.chartOneDayLabel}
                         </span>
                       </div>
                       <div>
                         <span className="block text-[10px] font-bold uppercase text-ink-muted">
-                          2nd Vacancy Chart
+                          {t("2nd Chart", "दूसरा चार्ट", " / ")}
                         </span>
                         <span className="font-mono text-sm font-black text-emerald-600 dark:text-emerald-400">
                           {st.chartTwoFormatted12h}
                         </span>
                         <span className="block text-[10px] text-ink-muted">
-                          {st.chartTwoDayLabel}
+                          {lang === "hi"
+                            ? formatChartDayLabelHi(st.chartTwoDayLabel)
+                            : st.chartTwoDayLabel}
                         </span>
                       </div>
                     </div>
@@ -1433,10 +1939,15 @@ export function TrainChartTimeChecker({
                 </span>
                 <div>
                   <h4 className="text-sm font-extrabold text-ink group-hover:text-[#1956b4] sm:text-base dark:group-hover:text-blue-300">
-                    Has Your Chart Prepared? Check 10-Digit PNR
+                    {t(
+                      "Chart Prepared? Check 10-Digit PNR",
+                      "चार्ट बन गया? 10-अंकों का PNR स्टेटस देखें"
+                    )}
                   </h4>
                   <p className="text-xs text-ink-muted">
-                    Verify final coach, berth number &amp; RAC/WL confirmation
+                    {lang === "hi"
+                      ? "अपना कन्फर्म कोच, सीट/बर्थ नंबर और RAC/WL स्थिति जांचें"
+                      : "Verify final coach, berth number & RAC/WL confirmation"}
                   </p>
                 </div>
               </div>
@@ -1456,10 +1967,15 @@ export function TrainChartTimeChecker({
                 </span>
                 <div>
                   <h4 className="text-sm font-extrabold text-ink group-hover:text-[#1956b4] sm:text-base dark:group-hover:text-blue-300">
-                    Spot {chartData.trainNumber} Live Train Status
+                    {t(
+                      `Spot ${chartData.trainNumber} Live Train Status`,
+                      `ट्रेन ${chartData.trainNumber} की लाइव लोकेशन देखें`
+                    )}
                   </h4>
                   <p className="text-xs text-ink-muted">
-                    Check live GPS location, delay minutes &amp; coach position
+                    {lang === "hi"
+                      ? "ट्रेन अभी कहाँ है, देरी और कोच पोज़िशन लाइव देखें"
+                      : "Check live GPS location, delay minutes & coach position"}
                   </p>
                 </div>
               </div>
@@ -1469,44 +1985,81 @@ export function TrainChartTimeChecker({
         </div>
       )}
 
-      {/* Educational Footer Cards */}
+      {/* Educational Footer Cards (Bilingual Aware) */}
       <div className="grid gap-4 md:grid-cols-3">
         <div className="rounded-2xl border border-line bg-card p-5">
           <p className="flex items-center gap-2 text-sm font-extrabold text-ink">
-            <CheckCircleIcon className="h-4 w-4 text-[#1956b4] dark:text-blue-400" />
-            <span>What Is the 1st Reservation Chart?</span>
+            <CheckCircleIcon className="h-4 w-4 shrink-0 text-[#1956b4] dark:text-blue-400" />
+            <span>
+              {t(
+                "1st Reservation Chart",
+                "पहला चार्ट कब बनता है?",
+                " · "
+              )}
+            </span>
           </p>
-          <p className="mt-1.5 text-xs leading-relaxed text-ink-soft">
-            Prepared at least 4 to 8 hours before departure (or the previous
-            evening between 8:00 PM and 9:00 PM for morning trains departing
-            before 12:00 PM). Most GNWL, RLWL, and RAC upgrades happen here.
-          </p>
+          {lang !== "hi" && (
+            <p className="mt-1.5 text-xs leading-relaxed text-ink-soft">
+              Prepared at least 4 to 8 hours before departure (or the previous
+              evening between 8:00 PM and 9:00 PM for morning trains departing
+              before 12:00 PM). Most GNWL, RLWL, and RAC upgrades happen here.
+            </p>
+          )}
+          {lang !== "en" && (
+            <p className="mt-1.5 text-xs leading-relaxed text-ink-soft">
+              ट्रेन छूटने से 4–8 घंटे पहले (और सुबह 12 बजे से पहले की ट्रेनों के लिए पिछली रात 8–9 बजे के बीच) पहला चार्ट तैयार होता है। ज़्यादातर वेटिंग (WL) व RAC टिकट इसी समय कन्फर्म होते हैं।
+            </p>
+          )}
         </div>
 
         <div className="rounded-2xl border border-line bg-card p-5">
           <p className="flex items-center gap-2 text-sm font-extrabold text-ink">
-            <ShieldCheckIcon className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-            <span>What Is the 2nd (Vacancy) Chart?</span>
+            <ShieldCheckIcon className="h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
+            <span>
+              {t(
+                "2nd (Vacancy) Chart",
+                "दूसरा वैकेंसी चार्ट क्या है?",
+                " · "
+              )}
+            </span>
           </p>
-          <p className="mt-1.5 text-xs leading-relaxed text-ink-soft">
-            Prepared 15 to 30 minutes before train departure at the charting
-            station. It locks Current Booking (CURR_AVBL) seats, last-minute
-            cancellations, and syncs the final passenger manifest to the
-            TTE&apos;s Hand-Held Terminal (HHT).
-          </p>
+          {lang !== "hi" && (
+            <p className="mt-1.5 text-xs leading-relaxed text-ink-soft">
+              Prepared 15 to 30 minutes before train departure at the charting
+              station. It locks Current Booking (CURR_AVBL) seats, last-minute
+              cancellations, and syncs to the TTE&apos;s Hand-Held Terminal.
+            </p>
+          )}
+          {lang !== "en" && (
+            <p className="mt-1.5 text-xs leading-relaxed text-ink-soft">
+              ट्रेन छूटने से 15–30 मिनट पहले दूसरा (फ़ाइनल वैकेंसी) चार्ट लॉक होता है। इसमें करंट बुकिंग और अंतिम समय में रद्द हुई सीटें अपडेट होकर TTE के टैबलेट (HHT) पर जाती हैं।
+            </p>
+          )}
         </div>
 
         <div className="rounded-2xl border border-line bg-card p-5">
           <p className="flex items-center gap-2 text-sm font-extrabold text-ink">
-            <BuildingStationIcon className="h-4 w-4 text-[#fc6203]" />
-            <span>Why Does Charting Station Matter?</span>
+            <BuildingStationIcon className="h-4 w-4 shrink-0 text-[#fc6203]" />
+            <span>
+              {t(
+                "Remote Charting Hub",
+                "रिमोट चार्टिंग स्टेशन क्यों ज़रूरी है?",
+                " · "
+              )}
+            </span>
           </p>
-          <p className="mt-1.5 text-xs leading-relaxed text-ink-soft">
-            Smaller or late-night halts (such as Borivali BVI on 12952) do not
-            prepare their own separate chart; their quota is merged into an
-            upstream Remote Charting Hub (such as Surat ST). Your ticket status
-            freezes when that remote hub prepares its chart!
-          </p>
+          {lang !== "hi" && (
+            <p className="mt-1.5 text-xs leading-relaxed text-ink-soft">
+              Smaller or downstream halts do not prepare a separate chart; their
+              quota is merged into an upstream Remote Charting Hub. Your ticket
+              status locks when that upstream hub prepares its chart!
+            </p>
+          )}
+          {lang !== "en" && (
+            <p className="mt-1.5 text-xs leading-relaxed text-ink-soft">
+              छोटे या आगे के स्टेशनों का अलग चार्ट नहीं बनता—उनका कोटा पिछले बड़े चार्टिंग हब (Remote Hub) से जुड़ा होता है, इसलिए आपका टिकट उसी बड़े स्टेशन के चार्ट समय पर लॉक हो जाता है!
+            </p>
+          )}
         </div>
       </div>
     </div>
